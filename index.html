@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard PTS Informatika</title>
+    <link rel="shortcut icon" href="images/Logo Patbhe.png" type="image/x-icon" />
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <!-- FontAwesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <!-- Vanilla Tilt JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ["Inter", "sans-serif"],
+              mono: ["ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "monospace"],
+            },
+            colors: {
+              brandDark: "#0a0a0a",
+              brandGray: "#151515",
+              brandGreen: "#00e676",
+              textGray: "#a3a3a3",
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      .bg-grid {
+        background-size: 40px 40px;
+        background-image: linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+      }
+      .glow {
+        box-shadow: 0 0 80px 10px rgba(0, 230, 118, 0.15);
+      }
+      .tilt-card {
+        transform-style: preserve-3d;
+      }
+      .tilt-card-content {
+        transform: translateZ(30px);
+      }
+      @keyframes blink {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0;
+        }
+      }
+      .animate-blink {
+        animation: blink 1s step-end infinite;
+      }
+    </style>
+  </head>
+  <body class="bg-brandDark text-white font-sans antialiased overflow-x-hidden flex flex-col min-h-screen">
+    <!-- Navigation -->
+    <nav class="max-w-7xl mx-auto px-6 py-6 flex items-center justify-between border-b border-white/5 relative z-50 w-full">
+      <!-- Logo -->
+      <div class="flex items-center gap-3">
+        <i class="fa-solid fa-code text-brandGreen text-xl"></i>
+        <span class="text-xl font-bold tracking-tight text-brandGreen">RuangInformatika</span>
+      </div>
+
+      <!-- Menu Desktop (md ke atas) -->
+      <div class="hidden md:flex items-center gap-8 text-sm font-medium text-gray-300">
+        <a href="index.html" class="text-white">Dashboard</a>
+        <a href="index.html#materi" class="hover:text-white transition">Daftar Materi</a>
+        <a href="leaderboard.html" class="hover:text-white transition">Leaderboard</a>
+        <a href="forum.html" class="hover:text-white transition">Forum Diskusi</a>
+      </div>
+
+      <!-- Tombol Pak Ilyas (Desktop) -->
+      <button class="hidden md:flex items-center gap-2 border border-white/10 rounded-full px-5 py-2.5 text-sm font-medium hover:bg-white/5 transition"><i class="fa-solid fa-chalkboard-user text-brandGreen"></i> XE6</button>
+
+      <!-- Tombol Hamburger (Mobile) -->
+      <button id="hamburgerBtn" class="md:hidden text-white text-2xl focus:outline-none" aria-label="Menu">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+
+      <!-- Menu Mobile (Dropdown) -->
+      <div id="mobileMenu" class="hidden absolute top-full left-0 right-0 bg-brandDark border-b border-white/10 md:hidden z-[60] shadow-lg">
+        <div class="px-6 py-4 flex flex-col gap-4 text-sm font-medium text-gray-300">
+          <a href="index.html" class="text-white py-2">Dashboard</a>
+          <a href="index.html#materi" class="hover:text-white transition py-2">Daftar Materi</a>
+          <a href="leaderboard.html" class="hover:text-white transition py-2">Leaderboard</a>
+          <a href="forum.html" class="hover:text-white transition py-2">Forum Diskusi</a>
+          <button class="flex items-center gap-2 border border-white/10 rounded-full px-5 py-2.5 text-sm font-medium hover:bg-white/5 transition mt-2"><i class="fa-solid fa-chalkboard-user text-brandGreen"></i> XE6</button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content Wrapper (Agar footer selalu di bawah) -->
+    <div class="flex-grow">
+      <!-- Hero Section -->
+      <main class="relative bg-grid pb-16 pt-16">
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-brandGreen/10 rounded-full blur-[150px] pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-6 py-12 flex flex-col md:flex-row items-center gap-12 relative z-10">
+          <!-- Kolom Kiri: Teks -->
+          <div class="flex-1 text-left w-full md:pr-10">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-medium text-gray-300 mb-6">
+              <i class="fa-solid fa-rocket text-brandGreen"></i> Semangat Persiapan PTS PATBHE!
+            </div>
+
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.2] mb-6">
+              Taklukkan Logika, <br />
+              <span class="text-brandGreen">Kuasai Informatika</span>
+            </h1>
+
+            <p class="text-textGray text-base md:text-lg mb-8 leading-relaxed max-w-xl">
+              Setiap <i>error</i> adalah kesempatan belajar. Mari eksplorasi Berpikir Komputasional, Stack & Queue, hingga algoritma pencarian bersama-sama sebelum ujian tiba.
+            </p>
+
+            <div class="flex flex-wrap items-center gap-4">
+              <button onclick="window.location.href = '#materi'" class="bg-brandGreen text-black font-semibold rounded-xl px-6 py-3.5 hover:bg-green-400 transition flex items-center gap-2">
+                Mulai Belajar <i class="fa-solid fa-arrow-right"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Kolom Kanan: Ilustrasi Vektor Kode HTML/CSS -->
+          <div class="flex-1 w-full max-w-lg mx-auto mt-10 md:mt-0 relative">
+            <div class="tilt-card w-full" data-tilt data-tilt-glare data-tilt-max-glare="0.2">
+              <div class="tilt-card-content relative bg-[#111] border border-white/10 rounded-2xl overflow-hidden shadow-2xl glow">
+                <div class="bg-white/5 border-b border-white/5 px-4 py-3 flex items-center gap-2">
+                  <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                  <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                  <div class="w-3 h-3 rounded-full bg-brandGreen"></div>
+                  <div class="ml-4 text-xs text-textGray font-mono">persiapan_pts.js</div>
+                </div>
+
+                <div class="p-6 font-mono text-sm sm:text-base text-gray-300 space-y-2 overflow-x-auto">
+                  <div class="flex"><span class="text-pink-500 mr-2">function</span> <span class="text-blue-400">siapUjian</span>() {</div>
+                  <div class="pl-6 flex"><span class="text-pink-500 mr-2">const</span> pilar <span class="text-brandGreen">=</span> [<span class="text-yellow-300">'Dekomposisi'</span>, <span class="text-yellow-300">'Pola'</span>];</div>
+                  <div class="pl-6 flex"><span class="text-pink-500 mr-2">const</span> struktur <span class="text-brandGreen">=</span> [<span class="text-yellow-300">'Stack'</span>, <span class="text-yellow-300">'Queue'</span>];</div>
+                  <br />
+                  <div class="pl-6 flex"><span class="text-pink-500 mr-2">if</span> (paham_materi <span class="text-brandGreen">===</span> <span class="text-purple-400">true</span>) {</div>
+                  <div class="pl-12 flex"><span class="text-blue-400">console</span>.log(<span class="text-yellow-300">"Siap hadapi PTS!"</span>);</div>
+                  <div class="pl-6 flex">} <span class="text-pink-500 mx-2">else</span> {</div>
+                  <div class="pl-12 flex"><span class="text-blue-400">belajarLagi</span>(ruangInformatika);</div>
+                  <div class="pl-6 flex">}</div>
+                  <div class="flex">}</div>
+
+                  <div class="mt-4 flex items-center gap-1 text-brandGreen font-bold pt-4">
+                    > execute siapUjian();
+                    <div class="w-2.5 h-5 bg-brandGreen animate-blink ml-1"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <!-- Menu Modul Belajar (Bento Grid) -->
+      <section class="max-w-7xl mx-auto px-6 py-12" id="materi">
+        <h2 class="text-2xl font-bold mb-8 border-l-4 border-brandGreen pl-4">Pilih Modul Belajarmu</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 text-left">
+          <!-- 1. Berpikir Komputasional -->
+          <div class="tilt-card bg-[#0b4d24] border border-brandGreen/20 rounded-3xl p-8 cursor-pointer relative overflow-hidden flex flex-col" data-tilt data-tilt-glare data-tilt-max-glare="0.2">
+            <div class="absolute inset-0 bg-grid opacity-20 mix-blend-overlay pointer-events-none"></div>
+            <div class="tilt-card-content flex flex-col h-full relative z-10">
+              <div class="bg-black/30 backdrop-blur-md w-12 h-12 rounded-2xl flex items-center justify-center mb-6 border border-white/10">
+                <i class="fa-solid fa-brain text-2xl text-white"></i>
+              </div>
+              <h3 class="text-2xl font-bold mb-3 text-white">Berpikir Komputasional</h3>
+              <p class="text-white/80 text-sm mb-8 flex-grow">Kuasai 4 Pilar utama: Dekomposisi, Pengenalan Pola, Abstraksi, dan Perancangan Algoritma.</p>
+
+              <a href="materi-bk.html">
+                <button class="bg-white text-black w-full py-3 rounded-xl text-sm font-semibold hover:bg-gray-200 transition">Buka Modul</button>
+              </a>
+            </div>
+          </div>
+
+          <!-- 2. Stack & Queue -->
+          <div class="tilt-card bg-brandGray border border-white/5 rounded-3xl p-8 cursor-pointer hover:border-brandGreen/30 transition-colors flex flex-col" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
+            <div class="tilt-card-content flex flex-col h-full">
+              <div class="bg-brandGreen/10 w-12 h-12 rounded-2xl flex items-center justify-center mb-6 border border-brandGreen/20">
+                <i class="fa-solid fa-layer-group text-2xl text-brandGreen"></i>
+              </div>
+              <h3 class="text-2xl font-bold mb-3">Stack & Queue</h3>
+              <p class="text-textGray text-sm mb-8 flex-grow">Pelajari struktur data fundamental. Pahami konsep tumpukan (LIFO) dan antrean (FIFO).</p>
+
+              <a href="materi-stack-queue.html">
+                <button class="bg-white/5 border border-white/10 w-full py-3 rounded-xl text-sm font-semibold hover:bg-brandGreen hover:text-black transition">Buka Modul</button>
+              </a>
+            </div>
+          </div>
+
+          <!-- 3. Algoritma Standar: Searching & Sorting (lebar penuh) -->
+          <div
+            class="tilt-card bg-brandGray border border-white/5 rounded-3xl p-12 cursor-pointer hover:border-brandGreen/30 transition-colors lg:col-span-2 flex flex-col lg:flex-row items-center gap-8"
+            data-tilt
+            data-tilt-glare
+            data-tilt-max-glare="0.1"
+          >
+            <div class="tilt-card-content flex-grow w-full">
+              <div class="flex items-center gap-4 mb-4">
+                <div class="bg-brandGreen/10 w-12 h-12 rounded-2xl flex items-center justify-center border border-brandGreen/20">
+                  <i class="fa-solid fa-magnifying-glass-chart text-2xl text-brandGreen"></i>
+                </div>
+                <span class="px-3 py-1 bg-brandGreen/20 text-brandGreen text-xs font-bold rounded-full border border-brandGreen/30"> Materi Terpenting </span>
+              </div>
+              <h3 class="text-3xl font-bold mb-3">Algoritma Standar: Searching & Sorting</h3>
+              <p class="text-textGray text-sm md:text-base max-w-2xl">Dari Bubble Sort, Insertion Sort, hingga Binary Search. Dilengkapi dengan video penjelasan dan simulasi interaktif agar kamu bisa melihat langsung pergerakan datanya.</p>
+            </div>
+            <div class="tilt-card-content w-full lg:w-auto shrink-0 mt-4 lg:mt-0">
+              <a href="materi-search-sort.html">
+                <button class="bg-brandGreen text-black w-full lg:w-auto px-8 py-4 rounded-xl text-sm font-bold hover:bg-green-400 transition shadow-[0_0_20px_rgba(0,230,118,0.4)] flex items-center justify-center gap-2">
+                  Mulai Simulasi <i class="fa-solid fa-arrow-right"></i>
+                </button>
+              </a>
+            </div>
+          </div>
+
+          <!-- 4. Bedah Kisi-Kisi (lebar penuh agar baris terakhir terisi) -->
+          <div class="tilt-card bg-brandGray border border-white/5 rounded-3xl p-12 cursor-pointer hover:border-brandGreen/30 transition-colors lg:col-span-2 flex flex-col" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
+            <div class="tilt-card-content flex flex-col h-full">
+              <div class="bg-brandGreen/10 w-12 h-12 rounded-2xl flex items-center justify-center mb-6 border border-brandGreen/20">
+                <i class="fa-solid fa-bullseye text-2xl text-brandGreen"></i>
+              </div>
+              <h3 class="text-2xl font-bold mb-3">Bedah Kisi-Kisi</h3>
+              <p class="text-textGray text-sm mb-8 flex-grow">Pahami peta jalan ujianmu. Lihat bobot soal dan strategi jitu menaklukkan setiap materi PTS.</p>
+
+              <a href="kisi.html">
+                <button class="bg-white/5 border border-white/10 w-full py-3 rounded-xl text-sm font-semibold hover:bg-brandGreen hover:text-black transition">Buka Modul</button>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Footer Area -->
+    <footer class="border-t border-white/5 bg-[#080808] pt-12 pb-8 mt-12 relative z-10 w-full">
+      <div class="max-w-7xl mx-auto px-6">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+          <!-- Kolom 1: Brand Info -->
+          <div class="md:col-span-2">
+            <div class="flex items-center gap-3 mb-4">
+              <i class="fa-solid fa-code text-brandGreen text-xl"></i>
+              <span class="text-xl font-bold tracking-tight text-brandGreen">RuangInformatika</span>
+            </div>
+            <p class="text-textGray text-sm leading-relaxed max-w-sm">
+              Platform e-learning interaktif modern yang dirancang khusus untuk memfasilitasi gaya belajar visual dan praktik, memastikan pemahaman mendalam untuk menaklukkan soal-soal PTS.
+            </p>
+          </div>
+
+          <!-- Kolom 2: Tautan Cepat -->
+          <div>
+            <h4 class="text-white font-semibold mb-4">Pintasan Modul</h4>
+            <ul class="space-y-3 text-sm text-textGray">
+              <li><a href="kisi.html" class="hover:text-brandGreen transition">Bedah Kisi-Kisi</a></li>
+              <li><a href="berpikir-komputasional.html" class="hover:text-brandGreen transition">Berpikir Komputasional</a></li>
+              <li><a href="stack-queue.html" class="hover:text-brandGreen transition">Stack & Queue</a></li>
+              <li><a href="searching-sorting.html" class="hover:text-brandGreen transition">Searching & Sorting</a></li>
+            </ul>
+          </div>
+
+          <!-- Kolom 3: Bantuan -->
+          <div>
+            <h4 class="text-white font-semibold mb-4">Dukungan</h4>
+            <ul class="space-y-3 text-sm text-textGray">
+              <li>
+                <a href="#" class="hover:text-brandGreen transition"><i class="fa-solid fa-circle-question mr-2"></i> Cara Penggunaan</a>
+              </li>
+              <li>
+                <a href="#" class="hover:text-brandGreen transition"><i class="fa-solid fa-bug mr-2"></i> Lapor Masalah</a>
+              </li>
+              <li>
+                <a href="#" class="hover:text-brandGreen transition"><i class="fa-solid fa-paper-plane mr-2"></i> Hubungi Guru</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Copyright Bottom -->
+        <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-textGray">
+          <p>&copy; 2026 RuangInformatika. Dikembangkan oleh Pak Ilyas Fandhi untuk kelas Informatika SMA Negeri 4 Yogyakarta.</p>
+
+          <!-- Social Icons (Opsional) -->
+          <div class="flex gap-4 text-lg">
+            <a href="#" class="hover:text-brandGreen transition"><i class="fa-brands fa-github"></i></a>
+            <a href="#" class="hover:text-brandGreen transition"><i class="fa-brands fa-youtube"></i></a>
+            <a href="#" class="hover:text-brandGreen transition"><i class="fa-solid fa-envelope"></i></a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Script inisiasi Vanilla Tilt -->
+    <script>
+      VanillaTilt.init(document.querySelectorAll(".tilt-card"), {
+        max: 6,
+        speed: 400,
+        glare: true,
+        "max-glare": 0.15,
+      });
+
+      // Humberger Mobile
+      const hamburgerBtn = document.getElementById("hamburgerBtn");
+      const mobileMenu = document.getElementById("mobileMenu");
+
+      hamburgerBtn.addEventListener("click", function () {
+        mobileMenu.classList.toggle("hidden");
+        const icon = hamburgerBtn.querySelector("i");
+        icon.classList.toggle("fa-bars");
+        icon.classList.toggle("fa-xmark");
+      });
+
+      // Tutup menu saat salah satu link/button di dalamnya diklik
+      mobileMenu.querySelectorAll("a, button").forEach((item) => {
+        item.addEventListener("click", () => {
+          mobileMenu.classList.add("hidden");
+          const icon = hamburgerBtn.querySelector("i");
+          icon.classList.add("fa-bars");
+          icon.classList.remove("fa-xmark");
+        });
+      });
+    </script>
+  </body>
+</html>

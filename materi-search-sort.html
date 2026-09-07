@@ -1,0 +1,2077 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Searching & Sorting - RuangInformatika</title>
+    <link rel="shortcut icon" href="images/Logo Patbhe.png" type="image/x-icon" />
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <!-- FontAwesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <!-- Vanilla Tilt JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
+
+    <script>
+      tailwind.config = {
+        theme: { extend: { fontFamily: { sans: ["Inter", "sans-serif"], mono: ["ui-monospace", "SFMono-Regular", "monospace"] }, colors: { brandDark: "#0a0a0a", brandGray: "#151515", brandGreen: "#00e676", textGray: "#a3a3a3" } } },
+      };
+    </script>
+
+    <style>
+      .bg-grid {
+        background-size: 40px 40px;
+        background-image: linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+      }
+      .tilt-card {
+        transform-style: preserve-3d;
+      }
+      .tilt-card-content {
+        transform: translateZ(30px);
+      }
+      .sim-bar-container {
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        gap: 12px;
+        min-height: 220px;
+        padding: 16px;
+        flex-wrap: wrap;
+      }
+      .bar-wrap {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+      }
+      .bar {
+        width: 48px;
+        height: var(--h, 40px);
+        background: rgba(0, 230, 118, 0.2);
+        border: 1px solid rgba(0, 230, 118, 0.4);
+        color: #fff;
+        font-weight: bold;
+        font-size: 1.1rem;
+        border-radius: 8px 8px 0 0;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        padding-bottom: 6px;
+        transition: all 0.3s ease;
+      }
+      .bar.compare {
+        background: #ffd166;
+        color: #000;
+        border-color: #ffd166;
+      }
+      .bar.sorted {
+        background: #10b981;
+        color: #000;
+        border-color: #10b981;
+      }
+      .bar.active {
+        background: #a855f7;
+        color: #fff;
+        border-color: #c084fc;
+      }
+      .bar.min {
+        background: #a855f7;
+        color: #fff;
+        border-color: #c084fc;
+        transform: translateY(-4px);
+      }
+      .bar.shifted {
+        background: #3b82f6;
+        color: #fff;
+        border-color: #60a5fa;
+      }
+      .small {
+        font-size: 0.8rem;
+        color: #9ca3af;
+        text-align: center;
+      }
+
+      /* Insertion View Styles */
+      .insertion-view {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .insertion-head {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.9rem;
+        color: #cbd5e1;
+      }
+      .insertion-array {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        justify-content: center;
+        padding: 12px 0;
+      }
+      .insert-cell {
+        width: 56px;
+        height: 56px;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 1.1rem;
+        color: #fff;
+        position: relative;
+        transition: all 0.3s ease;
+      }
+      .insert-index {
+        font-size: 0.75rem;
+        color: #94a3b8;
+        font-weight: normal;
+        margin-top: 2px;
+      }
+      .insert-cell.sorted {
+        background: rgba(59, 130, 246, 0.15);
+        border-color: rgba(59, 130, 246, 0.4);
+        color: #60a5fa;
+      }
+      .insert-cell.key {
+        background: rgba(168, 85, 247, 0.3);
+        border-color: #a855f7;
+        color: #fff;
+        transform: translateY(-3px);
+      }
+      .insert-cell.compare {
+        background: #ffd166;
+        border-color: #ffd166;
+        color: #000;
+      }
+      .insert-cell.shift-target {
+        background: #ef4444;
+        border-color: #ef4444;
+        color: #fff;
+      }
+      .sorted-bracket {
+        font-size: 0.85rem;
+        color: #60a5fa;
+        text-align: center;
+        border-bottom: 2px dashed #3b82f6;
+        padding-bottom: 4px;
+        margin-bottom: 8px;
+        width: var(--prefix-width, 100%);
+        transition: width 0.3s ease;
+      }
+      .key-hold {
+        background: rgba(168, 85, 247, 0.15);
+        border: 1px solid rgba(168, 85, 247, 0.3);
+        color: #c084fc;
+        padding: 10px 14px;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        margin-bottom: 8px;
+      }
+      .key-card {
+        background: rgba(168, 85, 247, 0.2);
+        border: 1px solid #a855f7;
+        color: #e9d5ff;
+        padding: 8px 14px;
+        border-radius: 6px;
+        font-weight: bold;
+        font-size: 0.9rem;
+        display: inline-block;
+        margin-bottom: 6px;
+      }
+
+      .workflow-list {
+        counter-reset: step-counter;
+      }
+      .workflow-list li {
+        counter-increment: step-counter;
+        position: relative;
+        padding-left: 2.2rem;
+        font-size: 0.95rem;
+        line-height: 1.7;
+      }
+      .workflow-list li::before {
+        content: counter(step-counter);
+        position: absolute;
+        left: 0;
+        top: 0.15rem;
+        width: 1.5rem;
+        height: 1.5rem;
+        background: #3b82f6;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 0.8rem;
+      }
+    </style>
+  </head>
+  <body class="bg-brandDark text-white font-sans antialiased overflow-x-hidden flex flex-col min-h-screen">
+    <!-- Navigation Bar -->
+    <nav class="max-w-7xl mx-auto px-6 py-6 flex items-center justify-between border-b border-white/5 relative z-50 w-full">
+      <!-- Logo -->
+      <div class="flex items-center gap-3">
+        <i class="fa-solid fa-code text-brandGreen text-xl"></i>
+        <span class="text-xl font-bold tracking-tight text-brandGreen">RuangInformatika</span>
+      </div>
+
+      <!-- Menu Desktop (md ke atas) -->
+      <div class="hidden md:flex items-center gap-8 text-sm font-medium text-gray-300">
+        <a href="index.html" class="text-white">Dashboard</a>
+        <a href="index.html#materi" class="hover:text-white transition">Daftar Materi</a>
+        <a href="leaderboard.html" class="hover:text-white transition">Leaderboard</a>
+        <a href="forum.html" class="hover:text-white transition">Forum Diskusi</a>
+      </div>
+
+      <!-- Tombol Pak Ilyas (Desktop) -->
+      <button class="hidden md:flex items-center gap-2 border border-white/10 rounded-full px-5 py-2.5 text-sm font-medium hover:bg-white/5 transition"><i class="fa-solid fa-chalkboard-user text-brandGreen"></i> XE6</button>
+
+      <!-- Tombol Hamburger (Mobile) -->
+      <button id="hamburgerBtn" class="md:hidden text-white text-2xl focus:outline-none" aria-label="Menu">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+
+      <!-- Menu Mobile (Dropdown) -->
+      <div id="mobileMenu" class="hidden absolute top-full left-0 right-0 bg-brandDark border-b border-white/10 md:hidden z-[60] shadow-lg">
+        <div class="px-6 py-4 flex flex-col gap-4 text-sm font-medium text-gray-300">
+          <a href="index.html" class="text-white py-2">Dashboard</a>
+          <a href="index.html#materi" class="hover:text-white transition py-2">Daftar Materi</a>
+          <a href="leaderboard.html" class="hover:text-white transition py-2">Leaderboard</a>
+          <a href="forum.html" class="hover:text-white transition py-2">Forum Diskusi</a>
+          <button class="flex items-center gap-2 border border-white/10 rounded-full px-5 py-2.5 text-sm font-medium hover:bg-white/5 transition mt-2"><i class="fa-solid fa-chalkboard-user text-brandGreen"></i> XE6</button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content Wrapper -->
+    <div class="flex-grow relative bg-grid">
+      <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-brandGreen/5 rounded-full blur-[120px] pointer-events-none"></div>
+
+      <main class="max-w-5xl mx-auto px-6 py-12 relative z-10">
+        <!-- Header Materi -->
+        <div class="mb-10 text-center md:text-left">
+          <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brandGreen/10 border border-brandGreen/20 text-sm font-bold text-brandGreen mb-4"><i class="fa-solid fa-magnifying-glass-chart"></i> Modul 03</div>
+          <h1 class="text-4xl md:text-5xl font-bold tracking-tight mb-4">Searching & Sorting</h1>
+          <p class="text-gray-300 text-lg md:text-xl max-w-2xl">Teknik algoritmik dasar untuk mencari informasi spesifik dan mengurutkan data acak menjadi struktur yang rapi.</p>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="flex border-b border-white/10 mb-8 space-x-2 overflow-x-auto">
+          <button onclick="openTab(event, 'bacaan')" class="tab-btn py-3 px-6 text-base font-semibold border-b-2 border-brandGreen text-brandGreen flex items-center gap-2 transition whitespace-nowrap">
+            <i class="fa-solid fa-book-open"></i> Materi Baca
+          </button>
+          <button onclick="openTab(event, 'simulasi')" class="tab-btn py-3 px-6 text-base font-semibold border-b-2 border-transparent text-textGray hover:text-white flex items-center gap-2 transition whitespace-nowrap">
+            <i class="fa-solid fa-laptop-code"></i> Simulasi Visual
+          </button>
+          <button onclick="openTab(event, 'video')" class="tab-btn py-3 px-6 text-base font-semibold border-b-2 border-transparent text-textGray hover:text-white flex items-center gap-2 transition whitespace-nowrap">
+            <i class="fa-solid fa-play"></i> Video Penjelasan
+          </button>
+          <button onclick="openTab(event, 'latihan')" class="tab-btn py-3 px-6 text-base font-semibold border-b-2 border-transparent text-textGray hover:text-white flex items-center gap-2 transition whitespace-nowrap">
+            <i class="fa-solid fa-pen-to-square"></i> Latihan Soal
+          </button>
+        </div>
+
+        <!-- TAB 1: MATERI BACAAN -->
+        <div id="bacaan" class="tab-content block space-y-8">
+          <!-- BANNER INTRODUKSI -->
+          <div class="bg-brandGray border border-white/5 rounded-3xl p-6 md:p-10 relative overflow-hidden">
+            <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-8 relative z-10">
+              <div class="space-y-4 max-w-2xl">
+                <span class="text-sm font-bold text-brandGreen bg-brandGreen/10 px-4 py-1.5 rounded-full border border-brandGreen/20"> <i class="fa-solid fa-code-compare mr-1"></i> Materi Utama Informatika Kelas X </span>
+                <h2 class="text-3xl md:text-4xl font-extrabold text-white">Algoritma Standar: Searching & Sorting</h2>
+                <p class="text-gray-300 text-lg leading-relaxed">
+                  <strong class="text-white">Algoritma</strong> adalah langkah-langkah sistematis dan logis untuk menyelesaikan masalah. Dalam pemrograman, <strong class="text-white">Algoritma Standar</strong> digunakan untuk memproses dan
+                  mengelola data agar dapat diakses secara efisien.
+                </p>
+              </div>
+              <!-- Card Analogi Sederhana -->
+              <div class="w-full md:w-auto bg-black/30 border border-white/10 p-6 rounded-2xl md:min-w-[300px]">
+                <div class="flex items-center gap-3 mb-3 text-brandGreen font-bold text-lg"><i class="fa-solid fa-utensils"></i> Contoh Kehidupan Sehari-hari</div>
+                <p class="text-base text-gray-300 leading-relaxed">
+                  Membuat telur goreng: Siapkan telur → Panaskan minyak → Pecahkan & goreng → Matang → Sajikan.
+                  <span class="block text-gray-400 mt-2 italic">Semua langkah berurutan dan bertujuan = Algoritma!</span>
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2 PILAR UTAMA -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="bg-brandGreen/5 border border-brandGreen/20 rounded-2xl p-6 flex items-start gap-4">
+              <div class="w-14 h-14 rounded-xl bg-brandGreen/10 flex items-center justify-center text-brandGreen text-2xl font-bold shrink-0 border border-brandGreen/30">
+                <i class="fa-solid fa-magnifying-glass"></i>
+              </div>
+              <div>
+                <h4 class="text-xl font-bold text-white mb-2">1. Searching (Pencarian)</h4>
+                <p class="text-base text-gray-300 leading-relaxed mb-3">Proses menemukan posisi atau keberadaan suatu data tertentu dari sekumpulan data.</p>
+                <div class="text-base bg-black/40 p-4 rounded-xl border border-white/5 font-mono text-gray-300">
+                  Data: [30, 10, 50, 20, 40] <br />
+                  <span class="text-brandGreen font-bold">→ Cari angka 20</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-blue-500/5 border border-blue-500/20 rounded-2xl p-6 flex items-start gap-4">
+              <div class="w-14 h-14 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-400 text-2xl font-bold shrink-0 border border-blue-500/30">
+                <i class="fa-solid fa-arrow-down-a-z"></i>
+              </div>
+              <div>
+                <h4 class="text-xl font-bold text-white mb-2">2. Sorting (Pengurutan)</h4>
+                <p class="text-base text-gray-300 leading-relaxed mb-3">Proses mengatur dan menyusun data berdasarkan aturan tertentu (kecil ke besar atau sebaliknya).</p>
+                <div class="text-base bg-black/40 p-4 rounded-xl border border-white/5 font-mono text-gray-300">
+                  Data: [30, 10, 50, 20, 40] <br />
+                  <span class="text-blue-400 font-bold">→ Urutkan: [10, 20, 30, 40, 50]</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- BAGIAN 1: SEARCHING -->
+          <div class="space-y-6">
+            <div class="flex items-center gap-3 border-b border-white/10 pb-3">
+              <i class="fa-solid fa-magnifying-glass text-brandGreen text-2xl"></i>
+              <h3 class="text-3xl font-bold">1. Algoritma Searching</h3>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <!-- LINEAR SEARCH CARD -->
+              <div class="tilt-card bg-brandGray border border-white/5 rounded-3xl p-8 hover:border-brandGreen/30 transition-all" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
+                <div class="tilt-card-content space-y-5">
+                  <div class="flex items-center justify-between">
+                    <span class="text-sm font-bold text-yellow-400 bg-yellow-400/10 px-3 py-1 rounded-full border border-yellow-400/20">👀 Satu per Satu</span>
+                    <span class="text-sm text-gray-400">Cocok untuk Data Acak</span>
+                  </div>
+                  <h4 class="text-2xl font-bold text-white">Linear Search</h4>
+                  <p class="text-base text-gray-300 leading-relaxed">Memeriksa data satu per satu secara berurutan mulai dari awal sampai data yang dicari ditemukan atau seluruh data habis diperiksa.</p>
+
+                  <div class="bg-black/40 p-5 rounded-xl border border-white/5 space-y-3">
+                    <span class="text-base font-bold text-brandGreen block"><i class="fa-solid fa-lightbulb mr-1"></i> Analogi & Contoh Kerja</span>
+                    <p class="text-base text-gray-300">Mencari siswa "Citra" dalam barisan: Andi → Budi → Citra (Ketemu!).</p>
+                    <div class="font-mono text-base text-gray-300 bg-black/50 p-4 rounded-lg border border-white/5 mt-2">
+                      Data: [12, 25, 7, 30, 18] | Cari: 30<br />
+                      12 ≠ 30 ❌ → 25 ≠ 30 ❌ → 7 ≠ 30 ❌ → <span class="text-brandGreen font-bold">30 = 30 ✅</span>
+                    </div>
+                  </div>
+
+                  <div class="grid grid-cols-2 gap-3 text-sm pt-1">
+                    <div class="bg-green-500/10 border border-green-500/20 p-4 rounded-lg text-green-300"><strong class="block mb-1 text-green-400">✅ Kelebihan:</strong> Mudah dibuat & tidak butuh data terurut.</div>
+                    <div class="bg-red-500/10 border border-red-500/20 p-4 rounded-lg text-red-300"><strong class="block mb-1 text-red-400">❌ Kekurangan:</strong> Sangat lambat jika data sangat banyak.</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- BINARY SEARCH CARD -->
+              <div class="tilt-card bg-brandGray border border-white/5 rounded-3xl p-8 hover:border-brandGreen/30 transition-all" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
+                <div class="tilt-card-content space-y-5">
+                  <div class="flex items-center justify-between">
+                    <span class="text-sm font-bold text-brandGreen bg-brandGreen/10 px-3 py-1 rounded-full border border-brandGreen/20">✂️ Bagi Dua</span>
+                    <span class="text-sm text-red-400 font-bold"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Data Wajib Terurut!</span>
+                  </div>
+                  <h4 class="text-2xl font-bold text-white">Binary Search</h4>
+                  <p class="text-base text-gray-300 leading-relaxed">Membagi ruang pencarian menjadi dua bagian secara berulang dengan mengecek nilai tengah. Jauh lebih cepat untuk data berukuran besar.</p>
+
+                  <div class="bg-black/40 p-5 rounded-xl border border-white/5 space-y-3">
+                    <span class="text-base font-bold text-brandGreen block"><i class="fa-solid fa-book-bookmark mr-1"></i> Analogi Kamus & Cara Kerja</span>
+                    <p class="text-base text-gray-300">Mencari kata di kamus dengan membuka bagian tengah, lalu membuang setengah bagian yang tidak relevan.</p>
+                    <div class="font-mono text-base text-gray-300 bg-black/50 p-4 rounded-lg border border-white/5 mt-2">
+                      Data: [10, 20, 30, 40, 50, 60, 70] | Cari: 60<br />
+                      Tengah: 40 (60 > 40) → Buang kiri!<br />
+                      Kanan: [50, 60, 70] → Tengah: <span class="text-brandGreen font-bold">60 (Ketemu!) ✅</span>
+                    </div>
+                  </div>
+
+                  <div class="grid grid-cols-2 gap-3 text-sm pt-1">
+                    <div class="bg-green-500/10 border border-green-500/20 p-4 rounded-lg text-green-300"><strong class="block mb-1 text-green-400">✅ Kelebihan:</strong> Sangat cepat untuk data berukuran besar.</div>
+                    <div class="bg-red-500/10 border border-red-500/20 p-4 rounded-lg text-red-300"><strong class="block mb-1 text-red-400">❌ Syarat Mutlak:</strong> Data harus sudah terurut terlebih dahulu.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- TABEL PERBANDINGAN SEARCHING -->
+            <div class="bg-black/30 border border-white/10 rounded-2xl p-6 overflow-x-auto">
+              <h5 class="text-lg font-bold text-white mb-4 flex items-center gap-2"><i class="fa-solid fa-table-list text-brandGreen"></i> Tabel Perbandingan Searching</h5>
+              <table class="w-full text-base text-left text-gray-300 border-collapse">
+                <thead>
+                  <tr class="border-b border-white/10 text-brandGreen">
+                    <th class="p-3">Aspek</th>
+                    <th class="p-3">Linear Search</th>
+                    <th class="p-3">Binary Search</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-white/5">
+                  <tr>
+                    <td class="p-3 font-semibold text-white">Cara Mencari</td>
+                    <td class="p-3">Memeriksa satu per satu dari awal</td>
+                    <td class="p-3">Membagi ruang pencarian menjadi dua</td>
+                  </tr>
+                  <tr>
+                    <td class="p-3 font-semibold text-white">Syarat Data</td>
+                    <td class="p-3 text-yellow-400">Bebas (Tidak harus terurut)</td>
+                    <td class="p-3 text-red-400 font-bold">Wajib Sudah Terurut</td>
+                  </tr>
+                  <tr>
+                    <td class="p-3 font-semibold text-white">Kecepatan Data Besar</td>
+                    <td class="p-3">Cenderung Lambat</td>
+                    <td class="p-3 text-brandGreen font-bold">Sangat Cepat</td>
+                  </tr>
+                  <tr>
+                    <td class="p-3 font-semibold text-white">Analogi Sehari-hari</td>
+                    <td class="p-3">Mencari siswa dalam barisan acak</td>
+                    <td class="p-3">Mencari kata di dalam kamus</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- BAGIAN 2: SORTING -->
+          <div class="space-y-6 pt-4">
+            <div class="flex items-center gap-3 border-b border-white/10 pb-3">
+              <i class="fa-solid fa-arrow-down-a-z text-brandGreen text-2xl"></i>
+              <h3 class="text-3xl font-bold">2. Algoritma Sorting</h3>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <!-- BUBBLE SORT -->
+              <div class="bg-brandGray border border-white/5 rounded-3xl p-6 hover:border-brandGreen/30 transition-all space-y-4">
+                <div class="flex items-center justify-between">
+                  <div class="w-12 h-12 rounded-xl bg-brandGreen/10 flex items-center justify-center text-brandGreen text-2xl font-bold border border-brandGreen/20">🫧</div>
+                  <span class="text-sm font-bold text-brandGreen bg-brandGreen/10 px-3 py-1 rounded-full border border-brandGreen/20">Bandingkan & Tukar</span>
+                </div>
+                <h4 class="text-xl font-bold text-white">Bubble Sort</h4>
+                <p class="text-base text-gray-300 leading-relaxed">Membandingkan dua elemen yang bersebelahan. Jika urutannya salah, posisinya ditukar. Elemen terbesar perlahan bergerak ("mengapung") ke posisi paling kanan.</p>
+                <div class="bg-black/40 p-4 rounded-xl border border-white/5 text-base space-y-2">
+                  <strong class="text-brandGreen block">Analogi & Contoh:</strong>
+                  <p class="text-gray-300">Barisan siswa mengurutkan tinggi badan. Orang lebih tinggi di kiri bertukar ke kanan.</p>
+                  <div class="font-mono text-gray-300 bg-black/50 p-3 rounded border border-white/5 mt-1">
+                    [30, 10, 20, 40]<br />
+                    30 > 10 → Tukar: [10, 30, 20, 40]<br />
+                    30 > 20 → Tukar: [10, 20, 30, 40] ✅
+                  </div>
+                </div>
+              </div>
+
+              <!-- INSERTION SORT -->
+              <div class="bg-brandGray border border-white/5 rounded-3xl p-6 hover:border-brandGreen/30 transition-all space-y-4">
+                <div class="flex items-center justify-between">
+                  <div class="w-12 h-12 rounded-xl bg-brandGreen/10 flex items-center justify-center text-brandGreen text-2xl font-bold border border-brandGreen/20">🃏</div>
+                  <span class="text-sm font-bold text-brandGreen bg-brandGreen/10 px-3 py-1 rounded-full border border-brandGreen/20">Geser & Sisipkan</span>
+                </div>
+                <h4 class="text-xl font-bold text-white">Insertion Sort</h4>
+                <p class="text-base text-gray-300 leading-relaxed">Mengambil satu elemen data lalu membandingkannya dengan bagian yang sudah terurut. Elemen yang lebih besar digeser ke kanan, lalu data disisipkan pada posisi tepat.</p>
+                <div class="bg-black/40 p-4 rounded-xl border border-white/5 text-base space-y-2">
+                  <strong class="text-brandGreen block">Analogi & Contoh:</strong>
+                  <p class="text-gray-300">Menyusun kartu remi di tangan satu per satu dari kartu acak ke posisi yang benar.</p>
+                  <div class="font-mono text-gray-300 bg-black/50 p-3 rounded border border-white/5 mt-1">
+                    Kartu: [30] → dapat 21 → [21, 30]<br />
+                    Dapat 17 → geser 30, geser 21 → [17, 21, 30] ✅
+                  </div>
+                </div>
+              </div>
+
+              <!-- SELECTION SORT -->
+              <div class="bg-brandGray border border-white/5 rounded-3xl p-6 hover:border-brandGreen/30 transition-all space-y-4">
+                <div class="flex items-center justify-between">
+                  <div class="w-12 h-12 rounded-xl bg-brandGreen/10 flex items-center justify-center text-brandGreen text-2xl font-bold border border-brandGreen/20">🎯</div>
+                  <span class="text-sm font-bold text-brandGreen bg-brandGreen/10 px-3 py-1 rounded-full border border-brandGreen/20">Cari Terkecil & Tukar</span>
+                </div>
+                <h4 class="text-xl font-bold text-white">Selection Sort</h4>
+                <p class="text-base text-gray-300 leading-relaxed">Mencari nilai terkecil dari seluruh bagian yang belum terurut, kemudian menukarkannya langsung ke posisi paling depan.</p>
+                <div class="bg-black/40 p-4 rounded-xl border border-white/5 text-base space-y-2">
+                  <strong class="text-brandGreen block">Analogi & Contoh:</strong>
+                  <p class="text-gray-300">Guru memilih nilai terkecil dari tumpukan ujian, menaruhnya di depan, lalu mengulangi sisa lembaran.</p>
+                  <div class="font-mono text-gray-300 bg-black/50 p-3 rounded border border-white/5 mt-1">
+                    [30, 10, 40, 20] → Terkecil: 10<br />
+                    Tukar ke depan: [<span class="text-brandGreen font-bold">10</span>, 30, 40, 20] ✅
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- RINGKASAN RINGKAS 3 SORTING -->
+            <div class="bg-black/30 border border-white/10 rounded-2xl p-6 overflow-x-auto">
+              <h5 class="text-lg font-bold text-white mb-4 flex items-center gap-2"><i class="fa-solid fa-table-list text-brandGreen"></i> Ringkasan Metode Sorting</h5>
+              <table class="w-full text-base text-left text-gray-300 border-collapse">
+                <thead>
+                  <tr class="border-b border-white/10 text-brandGreen">
+                    <th class="p-3">Algoritma</th>
+                    <th class="p-3">Kata Kunci Utama</th>
+                    <th class="p-3">Cara Kerja Ringkas</th>
+                    <th class="p-3">Analogi Ingatan</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-white/5">
+                  <tr>
+                    <td class="p-3 font-bold text-white">Bubble Sort 🫧</td>
+                    <td class="p-3 text-brandGreen">Bandingkan & Tukar</td>
+                    <td class="p-3">Bandingkan 2 elemen berdampingan, tukar jika salah urut</td>
+                    <td class="p-3">Gelembung udara mengapung naik</td>
+                  </tr>
+                  <tr>
+                    <td class="p-3 font-bold text-white">Insertion Sort 🃏</td>
+                    <td class="p-3 text-brandGreen">Ambil, Geser, Sisipkan</td>
+                    <td class="p-3">Ambil data, geser elemen lain, sisipkan di posisi tepat</td>
+                    <td class="p-3">Menyusun kartu tangan</td>
+                  </tr>
+                  <tr>
+                    <td class="p-3 font-bold text-white">Selection Sort 🎯</td>
+                    <td class="p-3 text-brandGreen">Cari Terkecil & Tukar</td>
+                    <td class="p-3">Cari data terkecil dari sisa array, tukar ke depan</td>
+                    <td class="p-3">Memilih nilai terendah satu per satu</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- BAGIAN 3: HUBUNGAN -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
+            <div class="bg-brandGray border border-white/5 rounded-3xl p-6 space-y-4">
+              <h4 class="text-xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-link text-brandGreen"></i> Sinergi Searching & Sorting</h4>
+              <p class="text-base text-gray-300 leading-relaxed">Searching dan Sorting sering kali digunakan secara bersamaan dalam aplikasi nyata.</p>
+              <div class="bg-black/40 p-5 rounded-xl border border-white/5 text-base text-gray-300 space-y-3">
+                <div class="font-bold text-brandGreen">Contoh Kasus:</div>
+                <p>Data acak: <code class="text-brandGreen font-mono">[40, 10, 70, 20, 50, 30]</code> ingin dicari angka <strong class="text-white">50</strong> memakai <strong class="text-white">Binary Search</strong>.</p>
+                <ol class="list-decimal list-inside text-gray-400 space-y-2 pt-1">
+                  <li><strong>Langkah 1 (Sorting):</strong> Urutkan data dahulu menjadi <code class="text-brandGreen font-mono">[10, 20, 30, 40, 50, 70]</code>.</li>
+                  <li><strong>Langkah 2 (Searching):</strong> Gunakan Binary Search untuk menemukan posisi angka 50 secara cepat.</li>
+                </ol>
+              </div>
+            </div>
+
+            <div class="bg-brandGray border border-white/5 rounded-3xl p-6 space-y-4">
+              <h4 class="text-xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-brain text-brandGreen"></i> Penerapan 4 Pilar Berpikir Komputasional</h4>
+              <div class="grid grid-cols-2 gap-3 text-base">
+                <div class="bg-black/30 p-4 rounded-xl border border-white/5">
+                  <strong class="text-brandGreen block mb-1">🧩 Dekomposisi</strong>
+                  <span class="text-gray-400">Memecah proses pencarian/pengurutan menjadi langkah data input, target, dan metode.</span>
+                </div>
+                <div class="bg-black/30 p-4 rounded-xl border border-white/5">
+                  <strong class="text-brandGreen block mb-1">🔍 Pengenalan Pola</strong>
+                  <span class="text-gray-400">Melihat pola: data terurut cocok dengan Binary Search, dua data bersebelahan cocok dengan Bubble.</span>
+                </div>
+                <div class="bg-black/30 p-4 rounded-xl border border-white/5">
+                  <strong class="text-brandGreen block mb-1">💡 Abstraksi</strong>
+                  <span class="text-gray-400">Fokus pada angka/target, mengabaikan informasi yang tidak relevan dengan pencarian.</span>
+                </div>
+                <div class="bg-black/30 p-4 rounded-xl border border-white/5">
+                  <strong class="text-brandGreen block mb-1">📐 Algoritma</strong>
+                  <span class="text-gray-400">Menyusun instruksi berurutan (periksa → bandingkan → tukar/sisipkan).</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- BAGIAN 4: CHEAT SHEET -->
+          <div class="bg-gradient-to-r from-brandGreen/10 via-brandGray to-brandGreen/5 border border-brandGreen/20 rounded-3xl p-8 md:p-10">
+            <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
+              <div class="space-y-3">
+                <span class="text-sm font-bold text-brandGreen uppercase tracking-wider">🧠 Cheat Sheet / Rumus Cepat Ingatan</span>
+                <h4 class="text-3xl font-black text-white">Peta Konsep Ringkas Informatika</h4>
+              </div>
+              <div class="grid grid-cols-2 sm:grid-cols-5 gap-3 w-full md:w-auto">
+                <!-- LINEAR -->
+                <div class="bg-black/50 border border-white/10 p-4 rounded-xl text-center">
+                  <span class="block text-sm text-gray-400">LINEAR</span>
+                  <strong class="text-base text-brandGreen">👀 Satu per satu</strong>
+                </div>
+                <!-- BINARY -->
+                <div class="bg-black/50 border border-white/10 p-4 rounded-xl text-center">
+                  <span class="block text-sm text-gray-400">BINARY</span>
+                  <strong class="text-base text-brandGreen">✂️ Bagi dua</strong>
+                </div>
+                <!-- BUBBLE -->
+                <div class="bg-black/50 border border-white/10 p-4 rounded-xl text-center">
+                  <span class="block text-sm text-gray-400">BUBBLE</span>
+                  <strong class="text-base text-brandGreen">🫧 Banding & Tukar</strong>
+                </div>
+                <!-- INSERTION -->
+                <div class="bg-black/50 border border-white/10 p-4 rounded-xl text-center">
+                  <span class="block text-sm text-gray-400">INSERTION</span>
+                  <strong class="text-base text-brandGreen">🃏 Geser & Sisip</strong>
+                </div>
+                <!-- SELECTION -->
+                <div class="bg-black/50 border border-white/10 p-4 rounded-xl text-center">
+                  <span class="block text-sm text-gray-400">SELECTION</span>
+                  <strong class="text-base text-brandGreen">🎯 Cari Terkecil</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 2: SIMULASI -->
+        <div id="simulasi" class="tab-content hidden">
+          <div class="bg-brandGray border border-white/5 rounded-3xl p-6 md:p-10 space-y-6">
+            <div>
+              <h3 class="text-3xl font-bold mb-2 text-white">Algorithm Visualizer</h3>
+              <p class="text-lg text-gray-300">Lihat bagaimana Searching & Sorting bekerja, langkah demi langkah secara interaktif.</p>
+            </div>
+
+            <!-- Sub Navigation Tabs -->
+            <div class="flex flex-wrap gap-2 border-b border-white/10 pb-3">
+              <button onclick="setMode('linear')" class="algo-tab px-5 py-2.5 rounded-xl text-base font-semibold bg-brandGreen text-black transition flex items-center gap-2">
+                <i class="fa-solid fa-magnifying-glass"></i> Linear Search
+              </button>
+              <button onclick="setMode('binary')" class="algo-tab px-5 py-2.5 rounded-xl text-base font-semibold bg-white/5 text-textGray hover:text-white transition flex items-center gap-2">
+                <i class="fa-solid fa-bolt"></i> Binary Search
+              </button>
+              <button onclick="setMode('bubble')" class="algo-tab px-5 py-2.5 rounded-xl text-base font-semibold bg-white/5 text-textGray hover:text-white transition flex items-center gap-2">
+                <i class="fa-solid fa-arrows-rotate"></i> Bubble Sort
+              </button>
+              <button onclick="setMode('insertion')" class="algo-tab px-5 py-2.5 rounded-xl text-base font-semibold bg-white/5 text-textGray hover:text-white transition flex items-center gap-2">
+                <i class="fa-solid fa-right-to-bracket"></i> Insertion Sort
+              </button>
+              <button onclick="setMode('selection')" class="algo-tab px-5 py-2.5 rounded-xl text-base font-semibold bg-white/5 text-textGray hover:text-white transition flex items-center gap-2">
+                <i class="fa-solid fa-arrow-down-short-wide"></i> Selection Sort
+              </button>
+            </div>
+
+            <!-- Main Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+              <!-- Panel Kontrol -->
+              <div class="lg:col-span-4 bg-black/40 border border-white/10 rounded-2xl p-6 space-y-5">
+                <div>
+                  <h4 id="title" class="text-xl font-bold text-white mb-2">Linear Search</h4>
+                  <p id="desc" class="text-base text-gray-300 leading-relaxed">Mencari sebuah data dengan cara memeriksa setiap data satu-persatu mulai dari awal sampai data ditemukan.</p>
+                </div>
+
+                <div class="space-y-4 pt-2">
+                  <div>
+                    <label class="block text-base font-medium text-gray-300 mb-2">Data (pisahkan dengan koma):</label>
+                    <input id="dataInput" value="12, 7, 25, 4, 18, 9" class="w-full bg-black/60 border border-white/10 rounded-lg px-4 py-3 text-base text-white focus:outline-none focus:border-brandGreen font-mono" />
+                  </div>
+
+                  <div id="targetBox">
+                    <label class="block text-base font-medium text-gray-300 mb-2">Target yang dicari:</label>
+                    <input id="targetInput" value="18" type="number" class="w-full bg-black/60 border border-white/10 rounded-lg px-4 py-3 text-base text-white focus:outline-none focus:border-brandGreen font-mono" />
+                  </div>
+                </div>
+
+                <div class="space-y-3 pt-2">
+                  <div class="grid grid-cols-2 gap-3">
+                    <button onclick="randomData()" class="bg-white/10 hover:bg-white/20 text-white text-base font-semibold py-3 px-4 rounded-lg transition flex items-center justify-center gap-2">🎲 Acak</button>
+                    <button onclick="resetSim()" class="bg-white/10 hover:bg-white/20 text-white text-base font-semibold py-3 px-4 rounded-lg transition flex items-center justify-center gap-2">↺ Reset</button>
+                  </div>
+
+                  <div class="grid grid-cols-3 gap-2">
+                    <button onclick="startSim()" class="bg-brandGreen text-black font-bold text-base py-3 px-3 rounded-lg hover:opacity-90 transition text-center">▶ Mulai</button>
+                    <button onclick="nextStep()" class="bg-blue-500/20 text-blue-400 border border-blue-500/30 font-bold text-base py-3 px-3 rounded-lg hover:bg-blue-500/30 transition text-center">⏭ Next</button>
+                    <button onclick="autoPlay()" class="bg-amber-500/20 text-amber-400 border border-amber-500/30 font-bold text-base py-3 px-3 rounded-lg hover:bg-amber-500/30 transition text-center">⏩ Auto</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Area Visualisasi -->
+              <div class="lg:col-span-8 bg-black/40 border border-white/10 rounded-2xl p-6 space-y-4 flex flex-col justify-between">
+                <div class="space-y-4">
+                  <div id="status" class="bg-white/5 border border-white/10 p-4 rounded-xl text-base text-white font-mono min-h-[48px] flex items-center">Masukkan data lalu tekan <b>Mulai</b>.</div>
+
+                  <div id="legend" class="flex flex-wrap gap-4 text-sm text-gray-300"></div>
+                  <div id="keyPanel"></div>
+
+                  <div class="bg-black/60 rounded-xl border border-white/5 min-h-[240px] flex items-end justify-center relative overflow-hidden">
+                    <div id="insertionView" class="p-4 w-full" hidden>
+                      <div class="insertion-head mb-2">
+                        <div id="insertionRound">Mulai dengan satu nilai diurutkan</div>
+                        <div><b id="insertionSortedCount" class="text-brandGreen">1</b> diurutkan</div>
+                      </div>
+                      <div class="text-sm text-blue-400 uppercase font-mono tracking-wider">Prefiks terurut</div>
+                      <div id="sortedBracket" class="sorted-bracket">Bagian kiri sudah terurut</div>
+                      <div id="insertionArray" class="insertion-array"></div>
+                      <div id="insertionAction" class="text-base text-gray-300 mt-2">Tekan <b>Mulai</b>, lalu gunakan <b>Next Step</b> untuk melihat proses penyisipan.</div>
+                    </div>
+
+                    <div id="bars" class="sim-bar-container w-full"></div>
+                  </div>
+
+                  <div id="passInfo" class="text-base text-gray-300 font-mono"></div>
+                </div>
+
+                <div class="grid grid-cols-3 gap-3 pt-3 border-t border-white/10 text-center">
+                  <div class="bg-white/5 p-3 rounded-lg border border-white/5">
+                    <span class="block text-sm text-gray-400 uppercase tracking-wider">Langkah</span>
+                    <b id="steps" class="text-xl text-white font-mono">0</b>
+                  </div>
+                  <div class="bg-white/5 p-3 rounded-lg border border-white/5">
+                    <span class="block text-sm text-gray-400 uppercase tracking-wider">Perbandingan</span>
+                    <b id="comparisons" class="text-xl text-white font-mono">0</b>
+                  </div>
+                  <div class="bg-white/5 p-3 rounded-lg border border-white/5">
+                    <span class="block text-sm text-gray-400 uppercase tracking-wider">Status</span>
+                    <b id="result" class="text-xl text-brandGreen font-mono">—</b>
+                  </div>
+                </div>
+
+                <div id="explain" class="text-base text-gray-300 bg-white/5 p-4 rounded-xl border border-white/5">
+                  <b>💡 Inti konsep:</b> Searching menjawab "Di mana data yang kita cari?", sedangkan Sorting menjawab "Bagaimana data tersebut berurutan?".
+                </div>
+              </div>
+            </div>
+
+            <!-- Container Cara Kerja -->
+            <div id="workflowBox" class="bg-black/30 border border-white/10 rounded-2xl p-6 space-y-4">
+              <h4 class="text-xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-puzzle-piece text-brandGreen"></i> Cara Kerja Algoritma</h4>
+              <ul id="workflowList" class="workflow-list space-y-3 text-gray-300 leading-relaxed">
+                <!-- Diisi oleh JS -->
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 3: VIDEO -->
+        <div id="video" class="tab-content hidden space-y-6">
+          <div class="bg-brandGray border border-white/5 rounded-3xl p-6 md:p-10 space-y-10">
+            <div>
+              <h3 class="text-4xl md:text-5xl font-bold mb-3 text-white">Video Pembelajaran Algoritma</h3>
+              <p class="text-xl md:text-2xl text-gray-300 leading-relaxed">Pelajari visualisasi konsep Bubble, Insertion, dan Selection Sort melalui video singkat di bawah ini.</p>
+            </div>
+
+            <!-- Video list: satu kolom -->
+            <div class="grid grid-cols-1 gap-8">
+              <!-- 1. BUBBLE SORT -->
+              <div class="bg-black/40 border border-white/10 rounded-2xl p-6 md:p-8 flex flex-col md:flex-row gap-6 items-start">
+                <!-- Video container: potrait 9:16, tapi dengan max-width agar tidak terlalu besar dan object-contain agar tidak terpotong -->
+                <div class="w-full md:w-2/5 lg:w-1/3 max-w-sm mx-auto md:mx-0 flex-shrink-0">
+                  <div class="aspect-[9/16] w-full rounded-xl overflow-hidden bg-black border border-white/10 shadow-lg">
+                    <video class="w-full h-full object-contain" controls preload="metadata">
+                      <source src="video/Bubble Sort.mp4" type="video/mp4" />
+                      Browser kamu tidak mendukung pemutaran video.
+                    </video>
+                  </div>
+                </div>
+                <!-- Konten teks -->
+                <div class="flex-1 space-y-4">
+                  <div>
+                    <h4 class="text-2xl md:text-3xl font-bold text-white flex items-center gap-3">
+                      <span class="bg-amber-500/20 text-amber-400 text-base px-3 py-1 rounded border border-amber-500/30">1</span>
+                      Bubble Sort
+                    </h4>
+                    <p class="text-lg text-amber-400 font-medium mt-2">Tukar Tetangga</p>
+                  </div>
+                  <p class="text-xl text-gray-300 leading-relaxed">
+                    <b class="text-white">Cara Kerja:</b> Membandingkan dua angka yang bersebelahan, lalu menukarnya jika urutannya salah. Proses ini diulang terus-menerus hingga angka terbesar "terdorong" ke posisi paling kanan.
+                  </p>
+                  <div class="bg-white/5 border border-white/10 rounded-xl p-5 text-xl text-gray-300">
+                    <span class="block text-white font-semibold mb-2">💡 Analogi Murid:</span>
+                    Seperti gelembung udara di dalam air—angka yang nilainya besar akan bertahap "mengapung" naik ke posisi paling akhir.
+                  </div>
+                </div>
+              </div>
+
+              <!-- 2. INSERTION SORT -->
+              <div class="bg-black/40 border border-white/10 rounded-2xl p-6 md:p-8 flex flex-col md:flex-row gap-6 items-start">
+                <div class="w-full md:w-2/5 lg:w-1/3 max-w-sm mx-auto md:mx-0 flex-shrink-0">
+                  <div class="aspect-[9/16] w-full rounded-xl overflow-hidden bg-black border border-white/10 shadow-lg">
+                    <video class="w-full h-full object-contain" controls preload="metadata">
+                      <source src="video/Insertion Sort.mp4" type="video/mp4" />
+                      Browser kamu tidak mendukung pemutaran video.
+                    </video>
+                  </div>
+                </div>
+                <div class="flex-1 space-y-4">
+                  <div>
+                    <h4 class="text-2xl md:text-3xl font-bold text-white flex items-center gap-3">
+                      <span class="bg-blue-500/20 text-blue-400 text-base px-3 py-1 rounded border border-blue-500/30">2</span>
+                      Insertion Sort
+                    </h4>
+                    <p class="text-lg text-blue-400 font-medium mt-2">Sisip Kartu</p>
+                  </div>
+                  <p class="text-xl text-gray-300 leading-relaxed">
+                    <b class="text-white">Cara Kerja:</b> Mengambil satu angka sebagai fokus (key), lalu menyisipkannya ke posisi yang pas di antara kelompok angka sebelah kiri yang sudah terurut (sambil menggeser angka lain ke kanan).
+                  </p>
+                  <div class="bg-white/5 border border-white/10 rounded-xl p-5 text-xl text-gray-300">
+                    <span class="block text-white font-semibold mb-2">💡 Analogi Murid:</span>
+                    Seperti merapikan kartu remi di tangan—saat mengambil kartu baru, kita mencari celah yang tepat lalu menyisipkannya di antara kartu yang sudah rapi.
+                  </div>
+                </div>
+              </div>
+
+              <!-- 3. SELECTION SORT -->
+              <div class="bg-black/40 border border-white/10 rounded-2xl p-6 md:p-8 flex flex-col md:flex-row gap-6 items-start">
+                <div class="w-full md:w-2/5 lg:w-1/3 max-w-sm mx-auto md:mx-0 flex-shrink-0">
+                  <div class="aspect-[9/16] w-full rounded-xl overflow-hidden bg-black border border-white/10 shadow-lg">
+                    <video class="w-full h-full object-contain" controls preload="metadata">
+                      <source src="video/Selection Sort.mp4" type="video/mp4" />
+                      Browser kamu tidak mendukung pemutaran video.
+                    </video>
+                  </div>
+                </div>
+                <div class="flex-1 space-y-4">
+                  <div>
+                    <h4 class="text-2xl md:text-3xl font-bold text-white flex items-center gap-3">
+                      <span class="bg-purple-500/20 text-purple-400 text-base px-3 py-1 rounded border border-purple-500/30">3</span>
+                      Selection Sort
+                    </h4>
+                    <p class="text-lg text-purple-400 font-medium mt-2">Cari Terkecil</p>
+                  </div>
+                  <p class="text-xl text-gray-300 leading-relaxed"><b class="text-white">Cara Kerja:</b> Mencari angka terkecil di seluruh barisan yang belum terurut, lalu langsung menukarkannya ke posisi paling depan.</p>
+                  <div class="bg-white/5 border border-white/10 rounded-xl p-5 text-xl text-gray-300">
+                    <span class="block text-white font-semibold mb-2">💡 Analogi Murid:</span>
+                    Seperti memilih siswa terpendek dalam barisan untuk berdiri di paling depan, lalu mencari siswa terpendek berikutnya untuk menyusul di belakangnya.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 4: LATIHAN SOAL -->
+        <div id="latihan" class="tab-content hidden">
+          <div class="bg-brandGray border border-white/5 rounded-3xl p-6 md:p-10">
+            <div class="flex flex-col md:flex-row items-start md:items-center justify-between mb-8 gap-4 border-b border-white/10 pb-6">
+              <div>
+                <h3 class="text-3xl font-bold mb-2">Latihan Algoritma Searching & Sorting</h3>
+                <p class="text-lg text-gray-300">Uji pemahamanmu tentang pencarian dan pengurutan data secara mandiri.</p>
+              </div>
+              <span class="text-sm font-bold text-brandGreen bg-brandGreen/10 px-4 py-2 rounded-full border border-brandGreen/20"> <i class="fa-solid fa-list-check mr-1"></i> 10 Soal Pilihan Ganda </span>
+            </div>
+
+            <div id="quiz-container" class="space-y-8">
+              <div class="flex items-center gap-2 text-brandGreen font-bold border-b border-white/5 pb-2 text-base uppercase tracking-wider"><i class="fa-solid fa-circle-dot"></i> Pilihan Ganda</div>
+
+              <!-- Soal 1 -->
+              <div class="bg-white/5 border border-white/10 p-6 rounded-2xl space-y-4" id="q-block-1">
+                <p class="text-lg text-gray-200 font-medium leading-relaxed">
+                  <span class="text-brandGreen font-bold mr-2">1.</span>
+                  Apa yang dimaksud dengan searching dalam pengolahan data?
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q1" value="A" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">A. Menghapus data dari kumpulan data</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q1" value="B" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">B. Mengurutkan data dari kecil ke besar</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q1" value="C" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">C. Mencari data tertentu dari sekumpulan data</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q1" value="D" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">D. Menggandakan data</span>
+                  </label>
+                </div>
+                <div id="explain-1" class="hidden p-4 rounded-xl text-base bg-black/40 border border-white/10 mt-3 text-gray-300"></div>
+              </div>
+
+              <!-- Soal 2 -->
+              <div class="bg-white/5 border border-white/10 p-6 rounded-2xl space-y-4" id="q-block-2">
+                <p class="text-lg text-gray-200 font-medium leading-relaxed">
+                  <span class="text-brandGreen font-bold mr-2">2.</span>
+                  Linear Search bekerja dengan cara ....
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q2" value="A" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">A. Membagi data menjadi dua bagian</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q2" value="B" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">B. Memeriksa data satu per satu dari awal</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q2" value="C" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">C. Mengambil data terkecil terlebih dahulu</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q2" value="D" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">D. Menukar semua data secara acak</span>
+                  </label>
+                </div>
+                <div id="explain-2" class="hidden p-4 rounded-xl text-base bg-black/40 border border-white/10 mt-3 text-gray-300"></div>
+              </div>
+
+              <!-- Soal 3 -->
+              <div class="bg-white/5 border border-white/10 p-6 rounded-2xl space-y-4" id="q-block-3">
+                <p class="text-lg text-gray-200 font-medium leading-relaxed">
+                  <span class="text-brandGreen font-bold mr-2">3.</span>
+                  Perhatikan data berikut:<br />
+                  <code class="bg-black/50 px-3 py-1 rounded text-brandGreen font-mono text-base mt-2 inline-block">10 &nbsp; 20 &nbsp; 30 &nbsp; 40 &nbsp; 50 &nbsp; 60 &nbsp; 70</code><br /><br />
+                  Jika ingin mencari angka 60 menggunakan Binary Search, angka yang diperiksa pertama kali adalah ....
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q3" value="A" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">A. 10</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q3" value="B" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">B. 20</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q3" value="C" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">C. 30</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q3" value="D" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">D. 40</span>
+                  </label>
+                </div>
+                <div id="explain-3" class="hidden p-4 rounded-xl text-base bg-black/40 border border-white/10 mt-3 text-gray-300"></div>
+              </div>
+
+              <!-- Soal 4 -->
+              <div class="bg-white/5 border border-white/10 p-6 rounded-2xl space-y-4" id="q-block-4">
+                <p class="text-lg text-gray-200 font-medium leading-relaxed">
+                  <span class="text-brandGreen font-bold mr-2">4.</span>
+                  Salah satu syarat utama menggunakan Binary Search adalah ....
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q4" value="A" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">A. Data harus berupa huruf</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q4" value="B" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">B. Data harus berjumlah genap</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q4" value="C" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">C. Data harus sudah terurut</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q4" value="D" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">D. Data harus memiliki nilai yang sama</span>
+                  </label>
+                </div>
+                <div id="explain-4" class="hidden p-4 rounded-xl text-base bg-black/40 border border-white/10 mt-3 text-gray-300"></div>
+              </div>
+
+              <!-- Soal 5 -->
+              <div class="bg-white/5 border border-white/10 p-6 rounded-2xl space-y-4" id="q-block-5">
+                <p class="text-lg text-gray-200 font-medium leading-relaxed">
+                  <span class="text-brandGreen font-bold mr-2">5.</span>
+                  Perhatikan data berikut:<br />
+                  <code class="bg-black/50 px-3 py-1 rounded text-brandGreen font-mono text-base mt-2 inline-block">40 &nbsp; 10 &nbsp; 30 &nbsp; 20</code><br /><br />
+                  Jika data tersebut diurutkan dari kecil ke besar, hasilnya adalah ....
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q5" value="A" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">A. 40 30 20 10</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q5" value="B" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">B. 10 20 30 40</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q5" value="C" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">C. 20 10 40 30</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q5" value="D" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">D. 30 40 10 20</span>
+                  </label>
+                </div>
+                <div id="explain-5" class="hidden p-4 rounded-xl text-base bg-black/40 border border-white/10 mt-3 text-gray-300"></div>
+              </div>
+
+              <!-- Soal 6 -->
+              <div class="bg-white/5 border border-white/10 p-6 rounded-2xl space-y-4" id="q-block-6">
+                <p class="text-lg text-gray-200 font-medium leading-relaxed">
+                  <span class="text-brandGreen font-bold mr-2">6.</span>
+                  Algoritma sorting yang membandingkan dua data yang bersebelahan dan menukarnya jika urutannya salah adalah ....
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q6" value="A" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">A. Linear Search</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q6" value="B" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">B. Binary Search</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q6" value="C" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">C. Bubble Sort</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q6" value="D" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">D. Selection Sort</span>
+                  </label>
+                </div>
+                <div id="explain-6" class="hidden p-4 rounded-xl text-base bg-black/40 border border-white/10 mt-3 text-gray-300"></div>
+              </div>
+
+              <!-- Soal 7 -->
+              <div class="bg-white/5 border border-white/10 p-6 rounded-2xl space-y-4" id="q-block-7">
+                <p class="text-lg text-gray-200 font-medium leading-relaxed">
+                  <span class="text-brandGreen font-bold mr-2">7.</span>
+                  Perhatikan data berikut:<br />
+                  <code class="bg-black/50 px-3 py-1 rounded text-brandGreen font-mono text-base mt-2 inline-block">30 &nbsp; 21 &nbsp; 17 &nbsp; 8</code><br /><br />
+                  Dalam Insertion Sort, ketika angka 17 diproses, angka 17 dibandingkan dengan data sebelumnya. Apa yang terjadi karena 17 lebih kecil daripada 21 dan 30?
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q7" value="A" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">A. 17 dihapus</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q7" value="B" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">B. 21 dan 30 digeser ke kanan</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q7" value="C" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">C. 17 ditukar dengan semua angka sekaligus</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q7" value="D" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">D. 17 dipindahkan ke posisi terakhir</span>
+                  </label>
+                </div>
+                <div id="explain-7" class="hidden p-4 rounded-xl text-base bg-black/40 border border-white/10 mt-3 text-gray-300"></div>
+              </div>
+
+              <!-- Soal 8 -->
+              <div class="bg-white/5 border border-white/10 p-6 rounded-2xl space-y-4" id="q-block-8">
+                <p class="text-lg text-gray-200 font-medium leading-relaxed">
+                  <span class="text-brandGreen font-bold mr-2">8.</span>
+                  Perhatikan data berikut:<br />
+                  <code class="bg-black/50 px-3 py-1 rounded text-brandGreen font-mono text-base mt-2 inline-block">30 &nbsp; 10 &nbsp; 40 &nbsp; 20</code><br /><br />
+                  Pada langkah pertama Selection Sort untuk pengurutan dari kecil ke besar, data yang dipilih adalah ....
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q8" value="A" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">A. 30</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q8" value="B" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">B. 10</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q8" value="C" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">C. 40</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q8" value="D" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">D. 20</span>
+                  </label>
+                </div>
+                <div id="explain-8" class="hidden p-4 rounded-xl text-base bg-black/40 border border-white/10 mt-3 text-gray-300"></div>
+              </div>
+
+              <!-- Soal 9 -->
+              <div class="bg-white/5 border border-white/10 p-6 rounded-2xl space-y-4" id="q-block-9">
+                <p class="text-lg text-gray-200 font-medium leading-relaxed">
+                  <span class="text-brandGreen font-bold mr-2">9.</span>
+                  Perhatikan data berikut:<br />
+                  <code class="bg-black/50 px-3 py-1 rounded text-brandGreen font-mono text-base my-2 inline-block">25 &nbsp; 10 &nbsp; 40 &nbsp; 15 &nbsp; 30</code><br />
+                  Rani ingin mencari angka 15. Ia memeriksa angka pertama (25), angka kedua (10), angka ketiga (40), hingga akhirnya menemukan angka 15 di posisi keempat.<br /><br />
+                  Algoritma pencarian yang digunakan oleh Rani adalah ....
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q9" value="A" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">A. Binary Search</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q9" value="B" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">B. Linear Search</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q9" value="C" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">C. Selection Sort</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q9" value="D" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">D. Bubble Sort</span>
+                  </label>
+                </div>
+                <div id="explain-9" class="hidden p-4 rounded-xl text-base bg-black/40 border border-white/10 mt-3 text-gray-300"></div>
+              </div>
+
+              <!-- Soal 10 -->
+              <div class="bg-white/5 border border-white/10 p-6 rounded-2xl space-y-4" id="q-block-10">
+                <p class="text-lg text-gray-200 font-medium leading-relaxed">
+                  <span class="text-brandGreen font-bold mr-2">10.</span>
+                  Perhatikan data berikut:<br />
+                  <code class="bg-black/50 px-3 py-1 rounded text-brandGreen font-mono text-base my-2 inline-block">40 &nbsp; 10 &nbsp; 30 &nbsp; 20 &nbsp; 50</code><br />
+                  Andi mengurutkan data tersebut dari kecil ke besar dengan langkah-langkah berikut:<br />
+                  <span class="text-gray-400 font-mono text-sm block pl-4 my-2 space-y-1">
+                    40 &nbsp; 10 &nbsp; 30 &nbsp; 20 &nbsp; 50<br />
+                    10 &nbsp; 40 &nbsp; 30 &nbsp; 20 &nbsp; 50 &nbsp; <span class="text-gray-500">(40 dan 10 ditukar)</span><br />
+                    10 &nbsp; 30 &nbsp; 40 &nbsp; 20 &nbsp; 50 &nbsp; <span class="text-gray-500">(40 dan 30 ditukar)</span><br />
+                    10 &nbsp; 30 &nbsp; 20 &nbsp; 40 &nbsp; 50 &nbsp; <span class="text-gray-500">(40 dan 20 ditukar)</span>
+                  </span>
+                  Berdasarkan proses perbandingan dan penukaran dua angka bersebelahan tersebut, algoritma pengurutan yang digunakan Andi adalah ....
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q10" value="A" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">A. Linear Search</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q10" value="B" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">B. Insertion Sort</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q10" value="C" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">C. Bubble Sort</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q10" value="D" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">D. Binary Search</span>
+                  </label>
+                </div>
+                <div id="explain-10" class="hidden p-4 rounded-xl text-base bg-black/40 border border-white/10 mt-3 text-gray-300"></div>
+              </div>
+
+              <!-- Tombol Kirim -->
+              <div class="pt-4 flex flex-col md:flex-row items-center justify-between gap-4">
+                <button
+                  onclick="cekJawaban()"
+                  class="w-full md:w-auto bg-brandGreen text-black font-bold px-8 py-4 rounded-xl text-lg hover:bg-green-400 transition shadow-[0_0_15px_rgba(0,230,118,0.3)] flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  <i class="fa-solid fa-paper-plane"></i> Cek Jawaban
+                </button>
+              </div>
+
+              <!-- Ringkasan Hasil -->
+              <div id="quiz-result" class="hidden p-6 rounded-2xl text-base leading-relaxed border mt-6"></div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- Footer Area -->
+    <footer class="border-t border-white/5 bg-[#080808] pt-12 pb-8 relative z-10 w-full mt-auto">
+      <div class="max-w-7xl mx-auto px-6">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+          <div class="md:col-span-2">
+            <div class="flex items-center gap-3 mb-4">
+              <i class="fa-solid fa-code text-brandGreen text-2xl"></i>
+              <span class="text-2xl font-bold tracking-tight text-brandGreen">RuangInformatika</span>
+            </div>
+            <p class="text-gray-400 text-base leading-relaxed max-w-sm">
+              Platform e-learning interaktif modern yang dirancang khusus untuk memfasilitasi gaya belajar visual dan praktik, memastikan pemahaman mendalam untuk menaklukkan soal-soal PTS.
+            </p>
+          </div>
+          <div>
+            <h4 class="text-white font-semibold text-lg mb-4">Pintasan Modul</h4>
+            <ul class="space-y-3 text-base text-gray-400">
+              <li><a href="kisi.html" class="hover:text-brandGreen transition">Bedah Kisi-Kisi</a></li>
+              <li><a href="materi-bk.html" class="hover:text-brandGreen transition">Berpikir Komputasional</a></li>
+              <li><a href="materi-stack-queue.html" class="hover:text-brandGreen transition">Stack & Queue</a></li>
+              <li><a href="materi-search-sort.html" class="hover:text-brandGreen transition">Searching & Sorting</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="text-white font-semibold text-lg mb-4">Dukungan</h4>
+            <ul class="space-y-3 text-base text-gray-400">
+              <li>
+                <a href="#" class="hover:text-brandGreen transition"><i class="fa-solid fa-circle-question mr-2"></i> Cara Penggunaan</a>
+              </li>
+              <li>
+                <a href="#" class="hover:text-brandGreen transition"><i class="fa-solid fa-bug mr-2"></i> Lapor Masalah</a>
+              </li>
+              <li>
+                <a href="#" class="hover:text-brandGreen transition"><i class="fa-solid fa-paper-plane mr-2"></i> Hubungi Guru</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-gray-400">
+          <p>&copy; 2026 RuangInformatika. Dikembangkan oleh Pak Ilyas untuk kelas Informatika SMA Negeri 4 Yogyakarta.</p>
+          <div class="flex gap-4 text-xl">
+            <a href="#" class="hover:text-brandGreen transition"><i class="fa-brands fa-github"></i></a>
+            <a href="#" class="hover:text-brandGreen transition"><i class="fa-brands fa-youtube"></i></a>
+            <a href="#" class="hover:text-brandGreen transition"><i class="fa-solid fa-envelope"></i></a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+      VanillaTilt.init(document.querySelectorAll(".tilt-card"), { max: 6, speed: 400, glare: true, "max-glare": 0.15 });
+      function openTab(evt, tabName) {
+        const tabContents = document.getElementsByClassName("tab-content");
+        for (let i = 0; i < tabContents.length; i++) {
+          tabContents[i].classList.add("hidden");
+          tabContents[i].classList.remove("block");
+        }
+        const tabBtns = document.getElementsByClassName("tab-btn");
+        for (let i = 0; i < tabBtns.length; i++) {
+          tabBtns[i].classList.remove("border-brandGreen", "text-brandGreen");
+          tabBtns[i].classList.add("border-transparent", "text-textGray");
+        }
+        document.getElementById(tabName).classList.remove("hidden");
+        document.getElementById(tabName).classList.add("block");
+        evt.currentTarget.classList.remove("border-transparent", "text-textGray");
+        evt.currentTarget.classList.add("border-brandGreen", "text-brandGreen");
+      }
+
+      let mode = "linear";
+      let data = [];
+      let target = 18;
+      let step = 0;
+      let comparisons = 0;
+      let finished = false;
+      let timer = null;
+      let state = {};
+
+      const workflowInfo = {
+        linear: [
+          "Mulai dari indeks paling kiri (0).",
+          "Bandingkan elemen saat ini dengan target.",
+          "Jika cocok, pencarian selesai dan indeks ditemukan.",
+          "Jika tidak cocok, pindah ke indeks berikutnya.",
+          "Ulangi sampai target ditemukan atau seluruh data selesai diperiksa (tidak ditemukan).",
+        ],
+        binary: [
+          "Pastikan data sudah terurut.",
+          "Bagi data menjadi dua bagian.",
+          "Bandingkan elemen tengah dengan elemen yang dicari. Jika sama, pencarian selesai.",
+          "Jika elemen tengah lebih besar dari target, pencarian dilanjutkan ke bagian kiri.",
+          "Jika elemen tengah lebih kecil dari target, pencarian dilanjutkan ke bagian kanan.",
+          "Proses diulangi hingga elemen ditemukan atau tidak ada elemen tersisa.",
+        ],
+        bubble: ["Bandingkan elemen pertama dengan elemen kedua.", "Tukar jika urutannya salah (lebih besar di sebelah kiri).", "Lanjutkan ke pasangan berikutnya hingga ujung kanan.", "Ulangi proses hingga seluruh data terurut sempurna."],
+        insertion: [
+          "Anggap elemen pertama sudah terurut.",
+          "Ambil elemen berikutnya sebagai KEY.",
+          "Bandingkan dengan elemen-elemen sebelumnya di sebelah kiri.",
+          "Geser elemen yang lebih besar ke kanan.",
+          "Sisipkan KEY pada posisi yang tepat.",
+        ],
+        selection: [
+          "Cari elemen dengan nilai terkecil (minimum) dari bagian data yang belum terurut.",
+          "Tukar elemen terkecil tersebut dengan elemen pertama di bagian belum terurut.",
+          "Tandai elemen tersebut sebagai bagian yang sudah terurut.",
+          "Ulangi proses sampai seluruh data terurut sempurna.",
+        ],
+      };
+
+      const info = {
+        linear: {
+          title: "Linear Search",
+          desc: "Mencari sebuah data dengan cara memeriksa setiap data satu-persatu mulai dari awal sampai data ditemukan.",
+          explain: "Linear Search memeriksa data dari kiri ke kanan. Cocok untuk data yang belum terurut.",
+        },
+        binary: {
+          title: "Binary Search",
+          desc: "Mencari data dengan cara membagi dua bagian secara berulang sampai data tersebut ditemukan.",
+          explain: "Binary Search membutuhkan data terurut. Setiap langkah melihat nilai tengah, lalu membuang setengah bagian yang tidak mungkin berisi target.",
+        },
+        bubble: {
+          title: "Bubble Sort",
+          desc: "Pengurutan data dengan cara membandingkan dua data yang berdekatan lalu menukarnya jika posisinya salah.",
+          explain: "Bayangkan angka besar seperti 'gelembung' yang bergerak ke kanan. Satu putaran membuat angka terbesar bergerak ke posisi paling kanan.",
+        },
+        insertion: {
+          title: "Insertion Sort",
+          desc: "Pengurutan data dengan cara mengambil satu data, lalu menyisipkan ke posisi yang tepat di bagian data yang sudah terurut.",
+          explain: "Bayangkan menyusun kartu di tangan. Kartu baru diambil sebagai KEY, kartu yang lebih besar digeser ke kanan, lalu KEY dimasukkan ke celah yang tepat.",
+        },
+        selection: {
+          title: "Selection Sort",
+          desc: "Pengurutan data dengan cara mencari nilai terkecil dari bagian yang belum terurut, lalu menukarnya ke posisi terdepan.",
+          explain: "Bayangkan mencari nilai terkecil di tumpukan, lalu meletakkannya di urutan depan yang rapi satu per satu.",
+        },
+      };
+
+      function setMode(m) {
+        mode = m;
+
+        document.querySelectorAll(".algo-tab").forEach((btn, idx) => {
+          const modeNames = ["linear", "binary", "bubble", "insertion", "selection"];
+          if (modeNames[idx] === m) {
+            btn.className = "algo-tab px-5 py-2.5 rounded-xl text-base font-semibold bg-brandGreen text-black transition flex items-center gap-2";
+          } else {
+            btn.className = "algo-tab px-5 py-2.5 rounded-xl text-base font-semibold bg-white/5 text-textGray hover:text-white transition flex items-center gap-2";
+          }
+        });
+
+        document.getElementById("title").textContent = info[m].title;
+        document.getElementById("desc").textContent = info[m].desc;
+        document.getElementById("explain").innerHTML = "<b>💡 Inti konsep:</b> " + info[m].explain;
+        document.getElementById("targetBox").style.display = m === "linear" || m === "binary" ? "block" : "none";
+
+        renderWorkflow(m);
+        resetSim();
+      }
+
+      function renderWorkflow(modeKey) {
+        const list = document.getElementById("workflowList");
+        const steps = workflowInfo[modeKey] || [];
+        list.innerHTML = "";
+        steps.forEach((stepText) => {
+          const li = document.createElement("li");
+          li.textContent = stepText;
+          list.appendChild(li);
+        });
+      }
+
+      function parseData() {
+        return document
+          .getElementById("dataInput")
+          .value.split(",")
+          .map((x) => Number(x.trim()))
+          .filter((x) => Number.isFinite(x))
+          .slice(0, 12);
+      }
+
+      function render() {
+        const el = document.getElementById("bars");
+        el.innerHTML = "";
+
+        const insertionView = document.getElementById("insertionView");
+
+        if (mode === "insertion") {
+          insertionView.hidden = false;
+          renderInsertionView();
+          renderLegend();
+          renderPassInfo();
+          renderKeyPanel();
+          return;
+        }
+
+        insertionView.hidden = true;
+
+        if (!data.length) {
+          renderLegend();
+          renderPassInfo();
+          renderKeyPanel();
+          return;
+        }
+
+        const max = Math.max(...data, 1);
+
+        data.forEach((v, i) => {
+          let cls = "";
+
+          if (state.sorted?.includes(i)) cls += " sorted";
+          if (state.compare?.includes(i)) cls += " compare";
+          if (state.shifted?.includes(i)) cls += " shifted";
+          if (state.active === i) cls += " active";
+          if (state.minIdx === i && mode === "selection" && !finished) cls += " min";
+
+          const w = document.createElement("div");
+          w.className = "bar-wrap";
+          w.innerHTML = '<div class="bar' + cls + '" style="--h:' + Math.max(35, (v / max) * 160) + 'px">' + v + '</div><div class="small">indeks ' + i + "</div>";
+
+          el.appendChild(w);
+        });
+
+        renderLegend();
+        renderPassInfo();
+        renderKeyPanel();
+      }
+
+      function getInsertionDisplayValue(i) {
+        if (mode === "insertion" && !finished && state.keyValue !== undefined && state.phase !== "pick" && state.j !== undefined && i === state.j) {
+          return state.keyValue;
+        }
+        return data[i];
+      }
+
+      function renderInsertionView() {
+        const array = document.getElementById("insertionArray");
+        const round = document.getElementById("insertionRound");
+        const count = document.getElementById("insertionSortedCount");
+        const action = document.getElementById("insertionAction");
+        const bracket = document.getElementById("sortedBracket");
+
+        array.innerHTML = "";
+
+        if (!data.length) {
+          round.innerHTML = "Masukkan data terlebih dahulu";
+          count.textContent = "0";
+          action.innerHTML = "Tekan <b>Mulai</b> untuk memulai.";
+          return;
+        }
+
+        const sortedCount = state.sortedCount ?? 1;
+        count.textContent = finished ? data.length : sortedCount;
+
+        if (finished) {
+          round.innerHTML = "Semua nilai sudah terurut";
+        } else if (state.i === undefined) {
+          round.innerHTML = "Mulai dengan satu nilai diurutkan";
+        } else {
+          const totalRounds = Math.max(1, data.length - 1);
+          const currentRound = Math.min(state.i, totalRounds);
+          round.innerHTML = "Putaran <b>" + currentRound + "</b> dari " + totalRounds;
+        }
+
+        const prefix = Math.min(finished ? data.length : sortedCount, data.length);
+        bracket.style.setProperty("--prefix-width", Math.max(52, prefix * 62 - 8) + "px");
+
+        data.forEach((actualValue, i) => {
+          const cell = document.createElement("div");
+          cell.className = "insert-cell";
+
+          const displayValue = getInsertionDisplayValue(i);
+
+          if (i < prefix) cell.classList.add("sorted");
+
+          const isDisplayedKey = !finished && state.keyValue !== undefined && state.j !== undefined && i === state.j && state.phase !== "pick";
+
+          if (isDisplayedKey) {
+            cell.classList.remove("sorted");
+            cell.classList.add("key");
+          }
+
+          if (!finished && state.compare?.includes(i)) cell.classList.add("compare");
+          if (!finished && state.shifted?.includes(i)) cell.classList.add("shift-target");
+
+          if (isDisplayedKey) {
+            cell.classList.remove("compare");
+            cell.classList.remove("shift-target");
+            cell.classList.add("key");
+          }
+
+          cell.innerHTML = String(displayValue) + '<span class="insert-index">indeks ' + i + "</span>";
+          array.appendChild(cell);
+        });
+
+        document.querySelectorAll(".key-hold").forEach((x) => x.remove());
+
+        if (state.keyValue !== undefined && !finished) {
+          const keyHold = document.createElement("div");
+          keyHold.className = "key-hold";
+          keyHold.innerHTML = "🎯 <span>KEY disimpan sementara:</span> <b>" + state.keyValue + "</b>";
+          action.parentNode.insertBefore(keyHold, action);
+        }
+
+        const oldHolds = document.querySelectorAll(".key-hold");
+        oldHolds.forEach((x, idx) => {
+          if (idx < oldHolds.length - 1) x.remove();
+        });
+
+        let actionText = "Tekan <b>Next Step</b> untuk melihat langkah berikutnya.";
+
+        if (state.phase === "pick") {
+          actionText = "🎯 Ambil <b>" + state.keyValue + "</b> sebagai KEY. Bagian kiri sudah dianggap terurut.";
+        } else if (state.phase === "compare") {
+          const leftIndex = state.j - 1;
+          if (leftIndex >= 0) {
+            actionText = "🔎 Bandingkan <b>" + data[leftIndex] + "</b> dengan <b>KEY " + state.keyValue + "</b>.";
+          }
+        } else if (state.phase === "shift") {
+          const leftIndex = state.j - 1;
+          actionText = "↪️ <b>" + data[leftIndex] + "</b> lebih besar dari KEY. Geser satu posisi ke kanan.";
+        } else if (state.phase === "insert") {
+          actionText = "📌 Tempat ditemukan. Sekarang sisipkan <b>" + state.keyValue + "</b> ke posisi yang tepat.";
+        } else if (finished) {
+          actionText = "🎉 Semua nilai sudah terurut dari kecil ke besar.";
+        }
+
+        action.innerHTML = actionText;
+      }
+
+      function renderKeyPanel() {
+        const panel = document.getElementById("keyPanel");
+        if (!panel) return;
+
+        if (mode === "insertion" && state.key !== undefined && !finished) {
+          let text = "";
+          if (state.phase === "pick") text = "🎯 <b>KEY = " + state.key + "</b> — ambil angka baru.";
+          else if (state.phase === "compare") text = "🔎 <b>KEY = " + state.key + "</b> — bandingkan dengan angka di sebelah kiri.";
+          else if (state.phase === "shift") text = "↪️ <b>KEY = " + state.key + "</b> — KEY tetap dipegang; angka lebih besar digeser ke kanan.";
+          else if (state.phase === "insert") text = "📌 <b>KEY = " + state.key + "</b> — sisipkan ke posisi yang tepat.";
+
+          panel.innerHTML = '<div class="key-card">🎯 KEY = ' + state.key + " <small>disimpan sementara</small></div>" + " <span class='text-base text-gray-300'>" + text + "</span>";
+        } else {
+          panel.innerHTML = "";
+        }
+      }
+
+      function renderLegend() {
+        const legend = document.getElementById("legend");
+        if (mode === "bubble") {
+          legend.innerHTML =
+            '<span class="flex items-center gap-2"><i class="w-3 h-3 rounded-full inline-block bg-[#ffd166]"></i> Pasangan dibandingkan</span>' +
+            '<span class="flex items-center gap-2"><i class="w-3 h-3 rounded-full inline-block bg-[#10b981]"></i> Pasangan ditukar</span>' +
+            '<span class="flex items-center gap-2"><i class="w-3 h-3 rounded-full inline-block bg-[#3b82f6]"></i> Sudah di posisi akhir</span>';
+        } else if (mode === "insertion") {
+          legend.innerHTML =
+            '<span class="flex items-center gap-2"><i class="w-3 h-3 rounded-full inline-block bg-[#a855f7]"></i> KEY (dipegang)</span>' +
+            '<span class="flex items-center gap-2"><i class="w-3 h-3 rounded-full inline-block bg-[#ffd166]"></i> Angka digeser / dibanding</span>' +
+            '<span class="flex items-center gap-2"><i class="w-3 h-3 rounded-full inline-block bg-[#3b82f6]"></i> Bagian kiri terurut</span>';
+        } else if (mode === "selection") {
+          legend.innerHTML =
+            '<span class="flex items-center gap-2"><i class="w-3 h-3 rounded-full inline-block bg-[#a855f7]"></i> Nilai Minimum Sementara</span>' +
+            '<span class="flex items-center gap-2"><i class="w-3 h-3 rounded-full inline-block bg-[#ffd166]"></i> Elemen dibanding</span>' +
+            '<span class="flex items-center gap-2"><i class="w-3 h-3 rounded-full inline-block bg-[#10b981]"></i> Sudah terurut</span>';
+        } else {
+          legend.innerHTML = "";
+        }
+      }
+
+      function renderPassInfo() {
+        const box = document.getElementById("passInfo");
+        if (mode === "bubble") {
+          const pass = state.pass ?? 0;
+          const locked = state.locked ?? 0;
+          box.innerHTML = "<b>Putaran:</b> " + pass + " &nbsp;|&nbsp; <b>Bagian akhir terurut:</b> " + locked + " data";
+        } else if (mode === "insertion") {
+          const sortedCount = state.sorted ? state.sorted.length : 1;
+          box.innerHTML = "<b>Bagian kiri terurut:</b> " + sortedCount + " data &nbsp;|&nbsp; <b>KEY:</b> " + (state.key !== undefined ? state.key : "—");
+        } else if (mode === "selection") {
+          const pass = (state.i ?? 0) + 1;
+          const minText = state.minIdx !== undefined ? "indeks " + state.minIdx + " (nilai: " + data[state.minIdx] + ")" : "—";
+          box.innerHTML = "<b>Putaran:</b> " + pass + " &nbsp;|&nbsp; <b>Minimum ditemukan:</b> " + minText;
+        } else {
+          box.innerHTML = "";
+        }
+      }
+
+      function resetSim() {
+        document.querySelectorAll(".key-hold").forEach((x) => x.remove());
+        clearInterval(timer);
+        timer = null;
+
+        data = parseData();
+        target = Number(document.getElementById("targetInput").value);
+        step = 0;
+        comparisons = 0;
+        finished = false;
+        state = {};
+
+        document.getElementById("steps").textContent = "0";
+        document.getElementById("comparisons").textContent = "0";
+        document.getElementById("result").textContent = "—";
+        document.getElementById("status").innerHTML = "Masukkan data lalu tekan <b>Mulai</b>.";
+
+        render();
+      }
+
+      function startSim() {
+        data = parseData();
+
+        if (data.length < 2) {
+          alert("Masukkan minimal 2 data.");
+          return;
+        }
+
+        if (mode === "binary" && data.some((v, i) => i > 0 && data[i - 1] > v)) {
+          alert("Binary Search membutuhkan data yang sudah berurutan.");
+          return;
+        }
+
+        target = Number(document.getElementById("targetInput").value);
+        step = 0;
+        comparisons = 0;
+        finished = false;
+        state = {};
+
+        document.getElementById("result").textContent = "Berjalan";
+
+        if (mode === "bubble") {
+          state.pass = 1;
+          state.j = 0;
+          state.limit = data.length - 1;
+          state.locked = 0;
+        } else if (mode === "selection") {
+          state.i = 0;
+          state.minIdx = 0;
+          state.j = 1;
+          state.phase = "compare";
+          state.sorted = [];
+        }
+
+        nextStep();
+      }
+
+      function nextStep() {
+        if (finished) return;
+
+        if (mode === "linear") linearStep();
+        else if (mode === "binary") binaryStep();
+        else if (mode === "bubble") bubbleStep();
+        else if (mode === "insertion") insertionStep();
+        else if (mode === "selection") selectionStep();
+      }
+
+      function linearStep() {
+        if (state.i === undefined) state.i = 0;
+
+        if (state.i >= data.length) {
+          finish("Tidak ditemukan");
+          return;
+        }
+
+        const i = state.i;
+        comparisons++;
+        step++;
+
+        state.compare = [i];
+        render();
+
+        if (data[i] === target) {
+          state.active = i;
+          render();
+          document.getElementById("status").innerHTML = "🎉 Target <b>" + target + "</b> ditemukan pada indeks <b>" + i + "</b>.";
+          finish("Ditemukan");
+          return;
+        }
+
+        document.getElementById("status").innerHTML = "Langkah " + step + ": bandingkan <b>" + data[i] + "</b> dengan target <b>" + target + "</b>. Tidak sama → lanjut.";
+        state.i++;
+        update();
+      }
+
+      function binaryStep() {
+        if (state.low === undefined) {
+          state.low = 0;
+          state.high = data.length - 1;
+        }
+
+        if (state.low > state.high) {
+          finish("Tidak ditemukan");
+          return;
+        }
+
+        const mid = Math.floor((state.low + state.high) / 2);
+        comparisons++;
+        step++;
+
+        state.compare = [mid];
+        render();
+
+        if (data[mid] === target) {
+          state.active = mid;
+          render();
+          document.getElementById("status").innerHTML = "🎉 Target <b>" + target + "</b> ditemukan di indeks <b>" + mid + "</b>.";
+          finish("Ditemukan");
+          return;
+        }
+
+        if (target < data[mid]) {
+          document.getElementById("status").innerHTML = "Langkah " + step + ": nilai tengah <b>" + data[mid] + "</b>. Target lebih kecil → cari ke kiri.";
+          state.high = mid - 1;
+        } else {
+          document.getElementById("status").innerHTML = "Langkah " + step + ": nilai tengah <b>" + data[mid] + "</b>. Target lebih besar → cari ke kanan.";
+          state.low = mid + 1;
+        }
+
+        update();
+      }
+
+      function bubbleStep() {
+        if (state.j >= state.limit) {
+          state.locked++;
+          state.limit--;
+
+          if (state.limit <= 0) {
+            finish("Terurut");
+            return;
+          }
+
+          state.pass++;
+          state.j = 0;
+
+          state.sorted = [];
+          for (let k = data.length - state.locked; k < data.length; k++) {
+            state.sorted.push(k);
+          }
+
+          step++;
+          render();
+          document.getElementById("status").innerHTML = "✅ Putaran " + (state.pass - 1) + " selesai. Angka terbesar sudah berada di ujung kanan. Mulai putaran " + state.pass + ".";
+          update();
+          return;
+        }
+
+        const j = state.j;
+        const a = data[j];
+        const b = data[j + 1];
+
+        comparisons++;
+        step++;
+
+        state.compare = [j, j + 1];
+        render();
+
+        if (a > b) {
+          state.compare = [];
+          state.active = j;
+          state.sorted = [];
+
+          for (let k = data.length - state.locked; k < data.length; k++) {
+            state.sorted.push(k);
+          }
+
+          render();
+          [data[j], data[j + 1]] = [data[j + 1], data[j]];
+
+          state.active = undefined;
+          state.compare = [j, j + 1];
+          document.getElementById("status").innerHTML = "🔄 Putaran " + state.pass + ": <b>" + a + "</b> > <b>" + b + "</b> → <b>TUKAR</b> menjadi <b>" + data[j] + ", " + data[j + 1] + "</b>.";
+          render();
+        } else {
+          document.getElementById("status").innerHTML = "➡️ Putaran " + state.pass + ": <b>" + a + "</b> ≤ <b>" + b + "</b> → tidak ditukar.";
+        }
+
+        state.j++;
+        update();
+      }
+
+      function insertionStep() {
+        if (finished) return;
+
+        if (state.i === undefined) {
+          state.i = 1;
+          state.j = 1;
+          state.keyValue = data[1];
+          state.key = data[1];
+          state.keyIndex = 1;
+          state.sortedCount = 1;
+          state.phase = "compare";
+          state.compare = [];
+          state.shifted = [];
+
+          step++;
+          update();
+          render();
+          document.getElementById("status").innerHTML = "🎯 Mulai dengan <b>" + data[0] + "</b> sebagai nilai terurut. Sekarang ambil KEY <b>" + data[1] + "</b>.";
+          return;
+        }
+
+        if (state.i >= data.length) {
+          finish("Terurut");
+          return;
+        }
+
+        if (state.phase === "pick") {
+          state.keyValue = data[state.i];
+          state.key = data[state.i];
+          state.keyIndex = state.i;
+          state.j = state.i;
+
+          state.sortedCount = state.i;
+          state.compare = [];
+          state.shifted = [];
+          state.phase = "compare";
+
+          step++;
+          update();
+          render();
+          document.getElementById("status").innerHTML = "🎯 Ambil <b>" + state.keyValue + "</b> sebagai KEY. Bandingkan dengan elemen di sebelah kirinya.";
+          return;
+        }
+
+        if (state.phase === "compare") {
+          const leftIndex = state.j - 1;
+
+          if (leftIndex < 0) {
+            state.phase = "insert";
+            render();
+            return;
+          }
+
+          const leftValue = data[leftIndex];
+          state.compare = [leftIndex];
+          state.shifted = [];
+          state.keyIndex = state.i;
+
+          comparisons++;
+          step++;
+          update();
+          render();
+
+          if (leftValue > state.keyValue) {
+            state.phase = "shift";
+            document.getElementById("status").innerHTML = "🔎 Bandingkan <b>" + leftValue + "</b> dengan KEY <b>" + state.keyValue + "</b>. Karena " + leftValue + " > " + state.keyValue + ", geser " + leftValue + " ke kanan.";
+          } else {
+            state.phase = "insert";
+            document.getElementById("status").innerHTML = "🔎 Bandingkan <b>" + leftValue + "</b> dengan KEY <b>" + state.keyValue + "</b>. Karena " + leftValue + " ≤ " + state.keyValue + ", KEY sudah menemukan tempatnya.";
+          }
+
+          render();
+          return;
+        }
+
+        if (state.phase === "shift") {
+          const leftIndex = state.j - 1;
+          const leftValue = data[leftIndex];
+          const targetIndex = state.j;
+
+          data[targetIndex] = leftValue;
+          state.shifted = [targetIndex];
+          state.compare = [leftIndex];
+          state.j = leftIndex;
+          state.keyIndex = state.j;
+
+          step++;
+          update();
+          render();
+          document.getElementById("status").innerHTML = "↪️ Geser <b>" + leftValue + "</b> dari indeks " + leftIndex + " ke indeks " + targetIndex + ". KEY <b>" + state.keyValue + "</b> tetap disimpan.";
+
+          state.phase = state.j < 0 ? "insert" : "compare";
+          return;
+        }
+
+        if (state.phase === "insert") {
+          insertKey();
+          return;
+        }
+      }
+
+      function insertKey() {
+        const key = state.keyValue;
+        const insertIndex = state.j;
+
+        data[insertIndex] = key;
+        state.sortedCount = state.i + 1;
+        state.sorted = [];
+        for (let k = 0; k < state.sortedCount; k++) state.sorted.push(k);
+
+        state.shifted = [];
+        state.compare = [];
+        state.keyIndex = insertIndex;
+
+        step++;
+        update();
+        render();
+        document.getElementById("status").innerHTML = "📌 Sisipkan KEY <b>" + key + "</b> ke indeks <b>" + insertIndex + "</b>. Sekarang " + state.sortedCount + " nilai pertama terurut.";
+
+        state.i++;
+
+        if (state.i >= data.length) {
+          finish("Terurut");
+        } else {
+          state.phase = "pick";
+          state.keyIndex = undefined;
+        }
+      }
+
+      function selectionStep() {
+        if (finished) return;
+
+        if (state.i === undefined) {
+          state.i = 0;
+          state.minIdx = 0;
+          state.j = 1;
+          state.phase = "compare";
+          state.sorted = [];
+        }
+
+        if (state.i >= data.length - 1) {
+          finish("Terurut");
+          return;
+        }
+
+        if (state.phase === "compare") {
+          if (state.j < data.length) {
+            comparisons++;
+            step++;
+
+            state.compare = [state.j];
+
+            const currentMinVal = data[state.minIdx];
+            const checkVal = data[state.j];
+
+            if (checkVal < currentMinVal) {
+              document.getElementById("status").innerHTML =
+                "🔎 Bandingkan <b>" + checkVal + "</b> (indeks " + state.j + ") dengan Minimum saat ini <b>" + currentMinVal + "</b>. Ditemukan nilai lebih kecil! Minimum baru = <b>" + checkVal + "</b>.";
+              state.minIdx = state.j;
+            } else {
+              document.getElementById("status").innerHTML = "🔎 Bandingkan <b>" + checkVal + "</b> (indeks " + state.j + ") dengan Minimum <b>" + currentMinVal + "</b>. Lebih besar/sama → Minimum tetap <b>" + currentMinVal + "</b>.";
+            }
+
+            state.j++;
+            render();
+            update();
+
+            if (state.j >= data.length) {
+              state.phase = "swap";
+            }
+            return;
+          }
+        }
+
+        if (state.phase === "swap") {
+          step++;
+          const minVal = data[state.minIdx];
+          const targetVal = data[state.i];
+
+          if (state.minIdx !== state.i) {
+            [data[state.i], data[state.minIdx]] = [data[state.minIdx], data[state.i]];
+            document.getElementById("status").innerHTML = "🔄 Putaran " + (state.i + 1) + " selesai: Tukar nilai terkecil <b>" + minVal + "</b> ke indeks " + state.i + " (menukar <b>" + targetVal + "</b>).";
+          } else {
+            document.getElementById("status").innerHTML = "✅ Putaran " + (state.i + 1) + " selesai: Nilai minimum <b>" + minVal + "</b> sudah di posisi yang tepat.";
+          }
+
+          state.sorted.push(state.i);
+          state.i++;
+
+          if (state.i >= data.length - 1) {
+            finish("Terurut");
+          } else {
+            state.minIdx = state.i;
+            state.j = state.i + 1;
+            state.phase = "compare";
+            state.compare = [];
+            render();
+            update();
+          }
+        }
+      }
+
+      function finish(text) {
+        finished = true;
+        document.getElementById("result").textContent = text;
+
+        if (mode === "bubble" || mode === "insertion" || mode === "selection") {
+          state.sorted = data.map((_, i) => i);
+          state.compare = [];
+          state.shifted = [];
+          state.keyIndex = undefined;
+          state.keyValue = undefined;
+          state.minIdx = undefined;
+          state.sortedCount = data.length;
+          render();
+        }
+
+        update();
+      }
+
+      function update() {
+        document.getElementById("steps").textContent = step;
+        document.getElementById("comparisons").textContent = comparisons;
+      }
+
+      function autoPlay() {
+        clearInterval(timer);
+        if (finished) startSim();
+
+        timer = setInterval(() => {
+          nextStep();
+          if (finished) {
+            clearInterval(timer);
+            timer = null;
+          }
+        }, 1000);
+      }
+
+      function randomData() {
+        const arr = [];
+        while (arr.length < 7) {
+          const n = Math.floor(Math.random() * 30) + 1;
+          if (!arr.includes(n)) arr.push(n);
+        }
+
+        document.getElementById("dataInput").value = arr.join(", ");
+
+        if (mode === "binary") {
+          document.getElementById("dataInput").value = arr
+            .slice()
+            .sort((a, b) => a - b)
+            .join(", ");
+        }
+
+        document.getElementById("targetInput").value = arr[Math.floor(Math.random() * arr.length)];
+        resetSim();
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        renderWorkflow(mode);
+        resetSim();
+      });
+
+      function cekJawaban() {
+        const kunciJawaban = {
+          q1: { ans: "C", label: "C — Mencari data tertentu dari sekumpulan data", exp: "Searching adalah proses mencari data tertentu dari sekumpulan data. Contohnya mencari nama siswa atau angka tertentu." },
+          q2: { ans: "B", label: "B — Memeriksa data satu per satu dari awal", exp: "Linear Search memeriksa data secara berurutan mulai dari data pertama, kedua, dan seterusnya sampai ditemukan." },
+          q3: { ans: "D", label: "D — 40", exp: "Binary Search dimulai dengan memeriksa data tengah. Dari [10, 20, 30, 40, 50, 60, 70], angka tengahnya adalah 40." },
+          q4: { ans: "C", label: "C — Data harus sudah terurut", exp: "Agar dapat membagi ruang pencarian menjadi dua bagian secara akurat, data pada Binary Search harus sudah terurut." },
+          q5: { ans: "B", label: "B — 10 20 30 40", exp: "Sorting dari kecil ke besar pada data [40, 10, 30, 20] menghasilkan urutan terurut: 10 → 20 → 30 → 40." },
+          q6: { ans: "C", label: "C — Bubble Sort", exp: "Ciri khas Bubble Sort adalah membandingkan dua data bersebelahan dan menukarnya jika urutannya salah." },
+          q7: { ans: "B", label: "B — 21 dan 30 digeser ke kanan", exp: "Pada Insertion Sort, ketika 17 diproses dan lebih kecil dari 21 dan 30, maka 21 dan 30 digeser ke kanan baru 17 disisipkan." },
+          q8: { ans: "B", label: "B — 10", exp: "Selection Sort mencari nilai terkecil dari bagian belum terurut. Dari [30, 10, 40, 20], terkecil adalah 10." },
+          q9: { ans: "B", label: "B — Linear Search", exp: "Rani memeriksa data satu per satu secara berurutan dari depan (25 → 10 → 40 → 15) sampai angka 15 ditemukan, yang merupakan ciri utama Linear Search." },
+          q10: { ans: "C", label: "C — Bubble Sort", exp: "Proses membandingkan dua elemen yang berdekatan dan menukarnya jika nilainya belum urut adalah mekanisme khas algoritma Bubble Sort." },
+        };
+
+        let skor = 0;
+        let totalPG = 10;
+
+        for (let i = 1; i <= totalPG; i++) {
+          const qName = "q" + i;
+          const selectedOption = document.querySelector(`input[name="${qName}"]:checked`);
+          const blockEl = document.getElementById(`q-block-${i}`);
+          const explainEl = document.getElementById(`explain-${i}`);
+          const infoKey = kunciJawaban[qName];
+
+          explainEl.classList.remove("hidden");
+
+          if (selectedOption) {
+            if (selectedOption.value === infoKey.ans) {
+              skor += 10;
+              blockEl.className = "bg-green-500/10 border border-green-500/30 p-6 rounded-2xl space-y-4";
+              explainEl.innerHTML = `<strong class="text-green-400 block mb-1"><i class="fa-solid fa-circle-check mr-1"></i> Benar! (Jawaban: ${infoKey.label})</strong><span class="text-gray-300">${infoKey.exp}</span>`;
+            } else {
+              blockEl.className = "bg-red-500/10 border border-red-500/30 p-6 rounded-2xl space-y-4";
+              explainEl.innerHTML = `<strong class="text-red-400 block mb-1"><i class="fa-solid fa-circle-xmark mr-1"></i> Kurang Tepat (Jawaban Benar: ${infoKey.label})</strong><span class="text-gray-300">${infoKey.exp}</span>`;
+            }
+          } else {
+            blockEl.className = "bg-yellow-500/10 border border-yellow-500/30 p-6 rounded-2xl space-y-4";
+            explainEl.innerHTML = `<strong class="text-yellow-400 block mb-1"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Belum Dijawab (Jawaban Benar: ${infoKey.label})</strong><span class="text-gray-300">${infoKey.exp}</span>`;
+          }
+        }
+
+        const resultBox = document.getElementById("quiz-result");
+        resultBox.classList.remove("hidden");
+
+        if (skor >= 70) {
+          resultBox.className = "p-6 rounded-2xl text-base leading-relaxed border mt-6 bg-brandGreen/10 border-brandGreen/30 text-white";
+          resultBox.innerHTML = `
+        <div class="flex items-center gap-3 mb-2">
+          <i class="fa-solid fa-trophy text-2xl text-brandGreen"></i>
+          <h4 class="text-xl font-bold">Skor Akhir: ${skor} / 100</h4>
+        </div>
+        <p class="text-gray-300">Sangat bagus! Kamu berhasil menjawab dengan baik. Pelajari pembahasan di atas untuk memperkuat pemahamanmu.</p>
+      `;
+        } else {
+          resultBox.className = "p-6 rounded-2xl text-base leading-relaxed border mt-6 bg-yellow-500/10 border-yellow-500/30 text-white";
+          resultBox.innerHTML = `
+        <div class="flex items-center gap-3 mb-2">
+          <i class="fa-solid fa-graduation-cap text-2xl text-yellow-400"></i>
+          <h4 class="text-xl font-bold">Skor Akhir: ${skor} / 100</h4>
+        </div>
+        <p class="text-gray-300">Tetap semangat! Pelajari kembali penjelasan di setiap nomor soal di atas serta ringkasan 5 kalimat kunci untuk memahami materi ini.</p>
+      `;
+        }
+
+        resultBox.scrollIntoView({ behavior: "smooth" });
+      }
+
+      // Toggle Mobile Menu
+      const hamburgerBtn = document.getElementById("hamburgerBtn");
+      const mobileMenu = document.getElementById("mobileMenu");
+
+      hamburgerBtn.addEventListener("click", function () {
+        mobileMenu.classList.toggle("hidden");
+        const icon = hamburgerBtn.querySelector("i");
+        icon.classList.toggle("fa-bars");
+        icon.classList.toggle("fa-xmark");
+      });
+
+      // Tutup menu saat salah satu link/button di dalamnya diklik
+      mobileMenu.querySelectorAll("a, button").forEach((item) => {
+        item.addEventListener("click", () => {
+          mobileMenu.classList.add("hidden");
+          const icon = hamburgerBtn.querySelector("i");
+          icon.classList.add("fa-bars");
+          icon.classList.remove("fa-xmark");
+        });
+      });
+    </script>
+  </body>
+</html>

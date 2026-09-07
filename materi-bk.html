@@ -1,0 +1,1069 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Berpikir Komputasional - RuangInformatika</title>
+    <link rel="shortcut icon" href="images/Logo Patbhe.png" type="image/x-icon" />
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <!-- FontAwesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <!-- Vanilla Tilt JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ["Inter", "sans-serif"],
+              mono: ["ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "monospace"],
+            },
+            colors: {
+              brandDark: "#0a0a0a",
+              brandGray: "#151515",
+              brandGreen: "#00e676",
+              textGray: "#d1d5db", // Diperbaiki agar lebih terang dan kontras
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      .bg-grid {
+        background-size: 40px 40px;
+        background-image: linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+      }
+      .tilt-card {
+        transform-style: preserve-3d;
+      }
+      .tilt-card-content {
+        transform: translateZ(30px);
+      }
+      /* Perbaikan tambahan untuk keterbacaan */
+      .text-shadow-sm {
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+      }
+    </style>
+  </head>
+  <body class="bg-brandDark text-white font-sans antialiased overflow-x-hidden flex flex-col min-h-screen text-lg">
+    <!-- Navigation Bar -->
+    <nav class="max-w-7xl mx-auto px-6 py-6 flex items-center justify-between border-b border-white/5 relative z-50 w-full">
+      <!-- Logo -->
+      <div class="flex items-center gap-3">
+        <i class="fa-solid fa-code text-brandGreen text-xl"></i>
+        <span class="text-xl font-bold tracking-tight text-brandGreen">RuangInformatika</span>
+      </div>
+
+      <!-- Menu Desktop (md ke atas) -->
+      <div class="hidden md:flex items-center gap-8 text-sm font-medium text-gray-300">
+        <a href="index.html" class="text-white">Dashboard</a>
+        <a href="index.html#materi" class="hover:text-white transition">Daftar Materi</a>
+        <a href="leaderboard.html" class="hover:text-white transition">Leaderboard</a>
+        <a href="forum.html" class="hover:text-white transition">Forum Diskusi</a>
+      </div>
+
+      <!-- Tombol Pak Ilyas (Desktop) -->
+      <button class="hidden md:flex items-center gap-2 border border-white/10 rounded-full px-5 py-2.5 text-sm font-medium hover:bg-white/5 transition"><i class="fa-solid fa-chalkboard-user text-brandGreen"></i> XE6</button>
+
+      <!-- Tombol Hamburger (Mobile) -->
+      <button id="hamburgerBtn" class="md:hidden text-white text-2xl focus:outline-none" aria-label="Menu">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+
+      <!-- Menu Mobile (Dropdown) -->
+      <div id="mobileMenu" class="hidden absolute top-full left-0 right-0 bg-brandDark border-b border-white/10 md:hidden z-[60] shadow-lg">
+        <div class="px-6 py-4 flex flex-col gap-4 text-sm font-medium text-gray-300">
+          <a href="index.html" class="text-white py-2">Dashboard</a>
+          <a href="index.html#materi" class="hover:text-white transition py-2">Daftar Materi</a>
+          <a href="leaderboard.html" class="hover:text-white transition py-2">Leaderboard</a>
+          <a href="forum.html" class="hover:text-white transition py-2">Forum Diskusi</a>
+          <button class="flex items-center gap-2 border border-white/10 rounded-full px-5 py-2.5 text-sm font-medium hover:bg-white/5 transition mt-2"><i class="fa-solid fa-chalkboard-user text-brandGreen"></i> XE6</button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content Wrapper -->
+    <div class="flex-grow relative bg-grid">
+      <!-- Glow Effect Desktop -->
+      <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-brandGreen/5 rounded-full blur-[120px] pointer-events-none"></div>
+
+      <main class="max-w-5xl mx-auto px-6 py-12 relative z-10">
+        <!-- Header Materi -->
+        <div class="mb-10 text-center md:text-left">
+          <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brandGreen/10 border border-brandGreen/20 text-sm font-bold text-brandGreen mb-4"><i class="fa-solid fa-brain"></i> Modul 01</div>
+          <h1 class="text-4xl md:text-5xl font-bold tracking-tight mb-4">Berpikir Komputasional</h1>
+          <p class="text-textGray text-xl md:text-2xl max-w-2xl">Metode pemecahan masalah dengan menerapkan teknik ilmu komputer untuk menghadapi berbagai tantangan kompleks.</p>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="flex border-b border-white/10 mb-8 space-x-2 overflow-x-auto">
+          <button onclick="openTab(event, 'bacaan')" class="tab-btn py-3 px-6 text-base font-semibold border-b-2 border-brandGreen text-brandGreen flex items-center gap-2 transition whitespace-nowrap">
+            <i class="fa-solid fa-book-open"></i> Materi Baca
+          </button>
+          <button onclick="openTab(event, 'video')" class="tab-btn py-3 px-6 text-base font-semibold border-b-2 border-transparent text-textGray hover:text-white flex items-center gap-2 transition whitespace-nowrap">
+            <i class="fa-solid fa-play"></i> Video Penjelasan
+          </button>
+          <button onclick="openTab(event, 'latihan')" class="tab-btn py-3 px-6 text-base font-semibold border-b-2 border-transparent text-textGray hover:text-white flex items-center gap-2 transition whitespace-nowrap">
+            <i class="fa-solid fa-pen-to-square"></i> Latihan Soal
+          </button>
+        </div>
+
+        <!-- TAB 1: MATERI BACAAN LENGKAP -->
+        <div id="bacaan" class="tab-content block space-y-10">
+          <!-- 1. MENGENAL BERPIKIR KOMPUTASIONAL -->
+          <div class="bg-brandGray border border-white/5 rounded-3xl p-6 md:p-8 space-y-6">
+            <div class="flex items-center gap-3 border-b border-white/10 pb-4">
+              <div class="w-12 h-12 rounded-xl bg-brandGreen/10 flex items-center justify-center text-brandGreen text-2xl font-bold border border-brandGreen/20">
+                <i class="fa-solid fa-brain"></i>
+              </div>
+              <div>
+                <h2 class="text-2xl md:text-3xl font-bold text-white">1. Mengenal Berpikir Komputasional</h2>
+                <p class="text-base text-textGray">Konsep Dasar & Pentingnya Computational Thinking</p>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="space-y-4">
+                <h3 class="text-xl font-semibold text-brandGreen flex items-center gap-2"><i class="fa-solid fa-circle-info"></i> Pengertian</h3>
+                <p class="text-textGray text-lg leading-relaxed">
+                  <strong>Berpikir Komputasional (Computational Thinking)</strong> adalah cara berpikir secara logis, sistematis, dan terstruktur untuk memahami masalah dan menemukan solusi yang dapat dilakukan secara efektif.
+                </p>
+                <div class="p-5 rounded-2xl bg-white/5 border border-white/10 text-base text-gray-200 space-y-2">
+                  <span class="font-bold text-brandGreen flex items-center gap-1"><i class="fa-solid fa-lightbulb"></i> Ingat!</span>
+                  <p>Berpikir komputasional bukan berarti harus menggunakan komputer. Yang utama adalah cara kita mengorganisasi pikiran untuk menyelesaikan masalah.</p>
+                </div>
+              </div>
+
+              <div class="space-y-4">
+                <h3 class="text-xl font-semibold text-brandGreen flex items-center gap-2"><i class="fa-solid fa-circle-question"></i> Mengapa Perlu Dipelajari?</h3>
+                <ul class="space-y-3 text-lg text-textGray">
+                  <li class="flex items-start gap-2">
+                    <i class="fa-solid fa-check text-brandGreen mt-1.5 text-base"></i>
+                    <span>Masalah sehari-hari sering kali kompleks dan terdiri dari banyak bagian.</span>
+                  </li>
+                  <li class="flex items-start gap-2">
+                    <i class="fa-solid fa-check text-brandGreen mt-1.5 text-base"></i>
+                    <span>Cara berpikir terstruktur membantu menghindari penyelesaian secara coba-coba.</span>
+                  </li>
+                  <li class="flex items-start gap-2">
+                    <i class="fa-solid fa-check text-brandGreen mt-1.5 text-base"></i>
+                    <span>Membantu menemukan solusi yang lebih jelas dan efisien.</span>
+                  </li>
+                  <li class="flex items-start gap-2">
+                    <i class="fa-solid fa-check text-brandGreen mt-1.5 text-base"></i>
+                    <span>Menjadi dasar penting dalam Informatika, termasuk pemrograman dan pengolahan data.</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. RINGKASAN 4 PILAR (3D TILT CARDS) -->
+          <div class="space-y-6">
+            <div class="flex items-center justify-between">
+              <h2 class="text-2xl md:text-3xl font-bold text-white flex items-center gap-3"><i class="fa-solid fa-shapes text-brandGreen"></i> 4 Pilar Utama Berpikir Komputasional</h2>
+              <span class="text-sm text-brandGreen bg-brandGreen/10 px-3 py-1 rounded-full border border-brandGreen/20">Ringkasan Ringkas</span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <!-- Pilar 1: Dekomposisi -->
+              <div class="tilt-card bg-brandGray border border-white/5 rounded-3xl p-8 hover:border-brandGreen/30 transition-colors" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
+                <div class="tilt-card-content space-y-4">
+                  <div class="flex items-center justify-between">
+                    <div class="w-14 h-14 rounded-2xl bg-brandGreen/10 flex items-center justify-center text-brandGreen text-2xl font-bold border border-brandGreen/20">1</div>
+                    <span class="text-sm font-mono text-brandGreen bg-brandGreen/10 px-3 py-1 rounded-lg">Inti: Memecah Masalah</span>
+                  </div>
+                  <h3 class="text-2xl font-bold flex items-center gap-2"><i class="fa-solid fa-puzzle-piece text-brandGreen"></i> Dekomposisi</h3>
+                  <p class="text-textGray text-lg leading-relaxed">Proses memecah masalah yang besar atau kompleks menjadi beberapa bagian yang lebih kecil dan lebih mudah ditangani.</p>
+                  <div class="pt-3 border-t border-white/5 text-base text-gray-300"><strong>Pertanyaan Kunci:</strong> <em>"Masalah ini bisa dibagi menjadi apa?"</em></div>
+                </div>
+              </div>
+
+              <!-- Pilar 2: Pengenalan Pola -->
+              <div class="tilt-card bg-brandGray border border-white/5 rounded-3xl p-8 hover:border-brandGreen/30 transition-colors" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
+                <div class="tilt-card-content space-y-4">
+                  <div class="flex items-center justify-between">
+                    <div class="w-14 h-14 rounded-2xl bg-brandGreen/10 flex items-center justify-center text-brandGreen text-2xl font-bold border border-brandGreen/20">2</div>
+                    <span class="text-sm font-mono text-brandGreen bg-brandGreen/10 px-3 py-1 rounded-lg">Inti: Mencari Pola</span>
+                  </div>
+                  <h3 class="text-2xl font-bold flex items-center gap-2"><i class="fa-solid fa-magnifying-glass text-brandGreen"></i> Pengenalan Pola</h3>
+                  <p class="text-textGray text-lg leading-relaxed">Proses mencari kesamaan, hubungan, keteraturan, atau sesuatu yang berulang pada data maupun masalah.</p>
+                  <div class="pt-3 border-t border-white/5 text-base text-gray-300"><strong>Pertanyaan Kunci:</strong> <em>"Apa yang sama atau berulang?"</em></div>
+                </div>
+              </div>
+
+              <!-- Pilar 3: Abstraksi -->
+              <div class="tilt-card bg-brandGray border border-white/5 rounded-3xl p-8 hover:border-brandGreen/30 transition-colors" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
+                <div class="tilt-card-content space-y-4">
+                  <div class="flex items-center justify-between">
+                    <div class="w-14 h-14 rounded-2xl bg-brandGreen/10 flex items-center justify-center text-brandGreen text-2xl font-bold border border-brandGreen/20">3</div>
+                    <span class="text-sm font-mono text-brandGreen bg-brandGreen/10 px-3 py-1 rounded-lg">Inti: Menyaring Informasi</span>
+                  </div>
+                  <h3 class="text-2xl font-bold flex items-center gap-2"><i class="fa-solid fa-filter text-brandGreen"></i> Abstraksi</h3>
+                  <p class="text-textGray text-lg leading-relaxed">Proses memilih informasi yang penting dan relevan untuk menyelesaikan masalah, sementara detail tak penting diabaikan.</p>
+                  <div class="pt-3 border-t border-white/5 text-base text-gray-300"><strong>Pertanyaan Kunci:</strong> <em>"Informasi mana yang penting?"</em></div>
+                </div>
+              </div>
+
+              <!-- Pilar 4: Algoritma -->
+              <div class="tilt-card bg-brandGray border border-white/5 rounded-3xl p-8 hover:border-brandGreen/30 transition-colors" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
+                <div class="tilt-card-content space-y-4">
+                  <div class="flex items-center justify-between">
+                    <div class="w-14 h-14 rounded-2xl bg-brandGreen/10 flex items-center justify-center text-brandGreen text-2xl font-bold border border-brandGreen/20">4</div>
+                    <span class="text-sm font-mono text-brandGreen bg-brandGreen/10 px-3 py-1 rounded-lg">Inti: Menyusun Langkah</span>
+                  </div>
+                  <h3 class="text-2xl font-bold flex items-center gap-2"><i class="fa-solid fa-list-check text-brandGreen"></i> Algoritma</h3>
+                  <p class="text-textGray text-lg leading-relaxed">Urutan langkah yang logis, sistematis, dan terstruktur untuk menyelesaikan masalah atau mencapai tujuan tertentu.</p>
+                  <div class="pt-3 border-t border-white/5 text-base text-gray-300"><strong>Pertanyaan Kunci:</strong> <em>"Langkah apa yang harus dilakukan?"</em></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. PEMBAHASAN MENDALAM TIAP PILAR -->
+          <div class="space-y-6">
+            <h2 class="text-2xl md:text-3xl font-bold text-white flex items-center gap-3"><i class="fa-solid fa-book-bookmark text-brandGreen"></i> Bedah Materi Per Pilar</h2>
+
+            <!-- BAB 2: DEKOMPOSISI -->
+            <div class="bg-brandGray border border-white/5 rounded-3xl p-6 md:p-8 space-y-6">
+              <div class="flex items-center gap-3 border-b border-white/10 pb-4">
+                <span class="px-4 py-1.5 bg-brandGreen/10 text-brandGreen font-bold rounded-lg text-base border border-brandGreen/20">2. Dekomposisi</span>
+                <h3 class="text-xl md:text-2xl font-bold">Memecah Masalah Kompleks</h3>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white/5 p-6 rounded-2xl border border-white/5 space-y-2">
+                  <h4 class="font-bold text-brandGreen text-lg flex items-center gap-2"><i class="fa-solid fa-bars-staggered"></i> Metode Dekomposisi</h4>
+                  <ol class="list-decimal list-inside space-y-1.5 text-textGray text-base">
+                    <li>Tentukan masalah utama.</li>
+                    <li>Identifikasi bagian-bagian pembentuknya.</li>
+                    <li>Pecah menjadi submasalah.</li>
+                    <li>Selesaikan bertahap.</li>
+                    <li>Gabungkan hasil jadi solusi utama.</li>
+                  </ol>
+                </div>
+                <div class="bg-white/5 p-6 rounded-2xl border border-white/5 space-y-2">
+                  <h4 class="font-bold text-brandGreen text-lg flex items-center gap-2"><i class="fa-solid fa-bullseye"></i> Tujuan & Manfaat</h4>
+                  <ul class="list-disc list-inside space-y-1.5 text-textGray text-base">
+                    <li>Menyederhanakan masalah besar.</li>
+                    <li>Memudahkan fokus satu bagian per waktu.</li>
+                    <li>Mempermudah pembagian pekerjaan.</li>
+                    <li>Mengurangi risiko kesalahan.</li>
+                    <li>Pekerjaan lebih terorganisasi.</li>
+                  </ul>
+                </div>
+                <div class="bg-white/5 p-6 rounded-2xl border border-white/5 space-y-2">
+                  <h4 class="font-bold text-brandGreen text-lg flex items-center gap-2"><i class="fa-solid fa-lightbulb"></i> Contoh Nyata</h4>
+                  <p class="text-base text-textGray leading-relaxed">
+                    <strong>Pentas Seni Sekolah:</strong> Dipecah menjadi penentuan tanggal, pembentukan panitia, susunan acara, dekorasi, konsumsi, anggaran, dan publikasi.<br /><br />
+                    <strong>Website Sekolah:</strong> Desain UI, Halaman Utama, Database, Login, Konten, dan Testing.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- BAB 3: PENGENALAN POLA -->
+            <div class="bg-brandGray border border-white/5 rounded-3xl p-6 md:p-8 space-y-6">
+              <div class="flex items-center gap-3 border-b border-white/10 pb-4">
+                <span class="px-4 py-1.5 bg-brandGreen/10 text-brandGreen font-bold rounded-lg text-base border border-brandGreen/20">3. Pengenalan Pola</span>
+                <h3 class="text-xl md:text-2xl font-bold">Mencari Kesamaan & Keteraturan</h3>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white/5 p-6 rounded-2xl border border-white/5 space-y-2">
+                  <h4 class="font-bold text-brandGreen text-lg flex items-center gap-2"><i class="fa-solid fa-magnifying-glass-chart"></i> Langkah Metode</h4>
+                  <ul class="space-y-1.5 text-textGray text-base">
+                    <li>• Amati data atau kejadian.</li>
+                    <li>• Bandingkan beberapa kondisi.</li>
+                    <li>• Cari kesamaan, perbedaan, & hal berulang.</li>
+                    <li>• Perhatikan hubungan antar-data.</li>
+                    <li>• Tarik kesimpulan berdasarkan pola.</li>
+                  </ul>
+                </div>
+                <div class="bg-white/5 p-6 rounded-2xl border border-white/5 space-y-2">
+                  <h4 class="font-bold text-brandGreen text-lg flex items-center gap-2"><i class="fa-solid fa-thumbs-up"></i> Manfaat Utama</h4>
+                  <ul class="space-y-1.5 text-textGray text-base">
+                    <li>• Mempermudah pemahaman masalah.</li>
+                    <li>• Mengurangi pekerjaan berulang.</li>
+                    <li>• Membantu memprediksi masa depan.</li>
+                    <li>• Memilih strategi penyelesaian tepat.</li>
+                  </ul>
+                </div>
+                <div class="bg-white/5 p-6 rounded-2xl border border-white/5 space-y-2">
+                  <h4 class="font-bold text-brandGreen text-lg flex items-center gap-2"><i class="fa-solid fa-arrow-trend-up"></i> Contoh Kasus</h4>
+                  <p class="text-base text-textGray leading-relaxed">
+                    <strong>Urutan Angka:</strong> 2, 4, 6, 8, 10, ... (Pola +2, maka angka berikutnya 12, 14, 16).<br /><br />
+                    <strong>Perpustakaan:</strong> Mengamati pola bahwa buku Informatika paling sering dipinjam kelas X, sehingga stok perlu ditambah.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- BAB 4: ABSTRAKSI -->
+            <div class="bg-brandGray border border-white/5 rounded-3xl p-6 md:p-8 space-y-6">
+              <div class="flex items-center gap-3 border-b border-white/10 pb-4">
+                <span class="px-4 py-1.5 bg-brandGreen/10 text-brandGreen font-bold rounded-lg text-base border border-brandGreen/20">4. Abstraksi</span>
+                <h3 class="text-xl md:text-2xl font-bold">Fokus Pada Hal Penting</h3>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white/5 p-6 rounded-2xl border border-white/5 space-y-2">
+                  <h4 class="font-bold text-brandGreen text-lg flex items-center gap-2"><i class="fa-solid fa-eye"></i> Mengapa Penting?</h4>
+                  <p class="text-base text-textGray leading-relaxed">Dunia nyata memiliki sangat banyak informasi. Jika semua dimasukkan, kita bisa bingung. Abstraksi membantu membuat gambaran sederhana tanpa kehilangan informasi utama.</p>
+                </div>
+                <div class="bg-white/5 p-6 rounded-2xl border border-white/5 space-y-2">
+                  <h4 class="font-bold text-brandGreen text-lg flex items-center gap-2"><i class="fa-solid fa-sliders"></i> Langkah Abstraksi</h4>
+                  <ol class="list-decimal list-inside space-y-1.5 text-textGray text-base">
+                    <li>Tentukan tujuan yang ingin dicapai.</li>
+                    <li>Pilih informasi yang benar-benar dibutuhkan.</li>
+                    <li>Hilangkan detail yang tidak relevan.</li>
+                    <li>Buat representasi sederhana (peta/tabel).</li>
+                  </ol>
+                </div>
+                <div class="bg-white/5 p-6 rounded-2xl border border-white/5 space-y-2">
+                  <h4 class="font-bold text-brandGreen text-lg flex items-center gap-2"><i class="fa-solid fa-map-location-dot"></i> Contoh Aplikasi Peta</h4>
+                  <p class="text-base text-textGray leading-relaxed">Saat navigasi sekolah di Google Maps, kita butuh lokasi, jalan, & jarak. Detail teknis seperti pemrosesan sinyal GPS atau merek meja di kelas tidak perlu ditampilkan.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- BAB 5: ALGORITMA -->
+            <div class="bg-brandGray border border-white/5 rounded-3xl p-6 md:p-8 space-y-6">
+              <div class="flex items-center gap-3 border-b border-white/10 pb-4">
+                <span class="px-4 py-1.5 bg-brandGreen/10 text-brandGreen font-bold rounded-lg text-base border border-brandGreen/20">5. Algoritma</span>
+                <h3 class="text-xl md:text-2xl font-bold">Menyusun Langkah Logis</h3>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white/5 p-6 rounded-2xl border border-white/5 space-y-2">
+                  <h4 class="font-bold text-brandGreen text-lg flex items-center gap-2"><i class="fa-solid fa-list-ol"></i> Ciri-Ciri Algoritma</h4>
+                  <ul class="space-y-1.5 text-textGray text-base">
+                    <li>• Setiap langkah jelas & tidak membingungkan.</li>
+                    <li>• Memiliki urutan logis & tujuan akhir.</li>
+                    <li>• Memiliki Input dan Output.</li>
+                    <li>• Memiliki jumlah langkah yang terbatas.</li>
+                  </ul>
+                </div>
+                <div class="bg-white/5 p-6 rounded-2xl border border-white/5 space-y-2">
+                  <h4 class="font-bold text-brandGreen text-lg flex items-center gap-2"><i class="fa-solid fa-pen-nib"></i> 3 Cara Penulisan</h4>
+                  <p class="text-base text-textGray leading-relaxed">
+                    1. <strong>Bahasa Natural:</strong> Teks sehari-hari.<br />
+                    2. <strong>Pseudocode:</strong> Menyerupai kode program.<br />
+                    3. <strong>Flowchart:</strong> Diagram alir visual.
+                  </p>
+                </div>
+                <div class="bg-white/5 p-6 rounded-2xl border border-white/5 space-y-2 font-mono text-base">
+                  <h4 class="font-bold text-brandGreen font-sans flex items-center gap-2"><i class="fa-solid fa-code"></i> Contoh Pseudocode</h4>
+                  <div class="bg-black/50 p-4 rounded-xl border border-white/10 text-gray-200">
+                    INPUT panjang<br />
+                    INPUT lebar<br />
+                    luas &larr; panjang &times; lebar<br />
+                    OUTPUT luas
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4. HUBUNGAN 4 PILAR DALAM STUDI KASUS -->
+          <div class="bg-brandGray border border-white/5 rounded-3xl p-6 md:p-8 space-y-6">
+            <div class="flex items-center gap-3 border-b border-white/10 pb-4">
+              <div class="w-12 h-12 rounded-xl bg-brandGreen/10 flex items-center justify-center text-brandGreen text-2xl font-bold border border-brandGreen/20">
+                <i class="fa-solid fa-diagram-project"></i>
+              </div>
+              <div>
+                <h2 class="text-2xl md:text-3xl font-bold text-white">6. Hubungan 4 Pilar</h2>
+                <p class="text-base text-textGray">Integrasi Pilar Dalam Pembuatan Sistem Peminjaman Ruang Sekolah</p>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div class="bg-white/5 p-5 rounded-2xl border border-white/5 relative">
+                <span class="text-base text-brandGreen font-bold block mb-1">Tahap 1</span>
+                <h4 class="font-bold text-lg mb-2"><i class="fa-solid fa-puzzle-piece text-brandGreen mr-1"></i> Dekomposisi</h4>
+                <p class="text-base text-textGray">Memecah sistem jadi: data siswa, data ruangan, jadwal, pengajuan, persetujuan admin, & notifikasi.</p>
+              </div>
+
+              <div class="bg-white/5 p-5 rounded-2xl border border-white/5 relative">
+                <span class="text-base text-brandGreen font-bold block mb-1">Tahap 2</span>
+                <h4 class="font-bold text-lg mb-2"><i class="fa-solid fa-magnifying-glass text-brandGreen mr-1"></i> Pengenalan Pola</h4>
+                <p class="text-base text-textGray">Mengenali waktu tersibuk peminjaman & ruangan yang paling favorit dipinjam siswa.</p>
+              </div>
+
+              <div class="bg-white/5 p-5 rounded-2xl border border-white/5 relative">
+                <span class="text-base text-brandGreen font-bold block mb-1">Tahap 3</span>
+                <h4 class="font-bold text-lg mb-2"><i class="fa-solid fa-filter text-brandGreen mr-1"></i> Abstraksi</h4>
+                <p class="text-base text-textGray">Mengambil data penting saja: nama, ruangan, tanggal, jam, keperluan, & status persetujuan.</p>
+              </div>
+
+              <div class="bg-white/5 p-5 rounded-2xl border border-white/5 relative">
+                <span class="text-base text-brandGreen font-bold block mb-1">Tahap 4</span>
+                <h4 class="font-bold text-lg mb-2"><i class="fa-solid fa-list-check text-brandGreen mr-1"></i> Algoritma</h4>
+                <p class="text-base text-textGray">Urutan alur: Form &rarr; Cek ketersediaan &rarr; Simpan &rarr; Verifikasi Admin &rarr; Setujui/Tolak.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- 5. PENERAPAN DALAM KEHIDUPAN SEHARI-HARI -->
+          <div class="bg-brandGray border border-white/5 rounded-3xl p-6 md:p-8 space-y-6">
+            <div class="flex items-center gap-3 border-b border-white/10 pb-4">
+              <div class="w-12 h-12 rounded-xl bg-brandGreen/10 flex items-center justify-center text-brandGreen text-2xl font-bold border border-brandGreen/20">
+                <i class="fa-solid fa-house-user"></i>
+              </div>
+              <div>
+                <h2 class="text-2xl md:text-3xl font-bold text-white">7. Penerapan Dalam Kehidupan</h2>
+                <p class="text-base text-textGray">Contoh Kasus Penyelesaian Masalah Sehari-hari</p>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="bg-white/5 p-6 rounded-2xl border border-white/5 space-y-3">
+                <h3 class="font-bold text-brandGreen text-xl flex items-center gap-2"><i class="fa-solid fa-clock"></i> Kasus: Agar Tidak Terlambat Sekolah</h3>
+                <ul class="space-y-2 text-base text-textGray">
+                  <li><strong>• Dekomposisi:</strong> Bangun, mandi, seragam, sarapan, siapkan tas, perjalanan.</li>
+                  <li><strong>• Pola:</strong> Waktu bersiap butuh 30 menit & perjalanan pagi sering macet.</li>
+                  <li><strong>• Abstraksi:</strong> Fokus jam bangun & durasi perjalanan (abaikan warna baju).</li>
+                  <li><strong>• Algoritma:</strong> Bangun tepat waktu &rarr; bersiap &rarr; sarapan &rarr; jalan lebih awal.</li>
+                </ul>
+              </div>
+
+              <div class="bg-white/5 p-6 rounded-2xl border border-white/5 space-y-3">
+                <h3 class="font-bold text-brandGreen text-xl flex items-center gap-2"><i class="fa-solid fa-magnifying-glass"></i> Kasus: Pencarian Nama Siswa (Linear Search)</h3>
+                <p class="text-base text-textGray leading-relaxed">Mencari nama "Budi" dalam daftar siswa yang panjang: Periksa nama dari awal satu per satu, bandingkan dengan "Budi". Berhenti jika ketemu, lanjut jika belum.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- 6. BK VS PEMROGRAMAN -->
+          <div class="bg-brandGray border border-white/5 rounded-3xl p-6 md:p-8 space-y-6">
+            <div class="flex items-center gap-3 border-b border-white/10 pb-4">
+              <div class="w-12 h-12 rounded-xl bg-brandGreen/10 flex items-center justify-center text-brandGreen text-2xl font-bold border border-brandGreen/20">
+                <i class="fa-solid fa-laptop-code"></i>
+              </div>
+              <div>
+                <h2 class="text-2xl md:text-3xl font-bold text-white">8. Berpikir Komputasional & Pemrograman</h2>
+                <p class="text-base text-textGray">Perbedaan Konsep dan Hubungan Keduanya</p>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="space-y-3">
+                <h3 class="font-bold text-brandGreen text-xl">Apakah Keduanya Sama?</h3>
+                <p class="text-base text-textGray leading-relaxed">
+                  <strong>Tidak.</strong> Berpikir Komputasional berfokus pada <em>cara memahami masalah dan merancang solusi</em>.<br />
+                  Sedangkan Pemrograman berfokus pada <em>menerjemahkan solusi tersebut menjadi kode instruksi komputer</em>.
+                </p>
+                <div class="pt-2">
+                  <h4 class="font-semibold text-white text-base mb-1">Bidang Penerapan BK:</h4>
+                  <div class="flex flex-wrap gap-2 text-sm text-gray-200">
+                    <span class="bg-white/10 px-3 py-1 rounded">Software Dev</span>
+                    <span class="bg-white/10 px-3 py-1 rounded">Web & App</span>
+                    <span class="bg-white/10 px-3 py-1 rounded">AI / Kecerdasan Buatan</span>
+                    <span class="bg-white/10 px-3 py-1 rounded">Data Analysis</span>
+                    <span class="bg-white/10 px-3 py-1 rounded">Robotika</span>
+                    <span class="bg-white/10 px-3 py-1 rounded">Game Dev</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="space-y-3">
+                <h3 class="font-bold text-brandGreen text-xl">Keterampilan yang Dikembangkan</h3>
+                <div class="grid grid-cols-2 gap-3 text-base text-textGray">
+                  <div class="bg-white/5 p-3 rounded-xl border border-white/5 flex items-center gap-2"><i class="fa-solid fa-check text-brandGreen"></i> Logika & Penalaran</div>
+                  <div class="bg-white/5 p-3 rounded-xl border border-white/5 flex items-center gap-2"><i class="fa-solid fa-check text-brandGreen"></i> Pemecahan Masalah</div>
+                  <div class="bg-white/5 p-3 rounded-xl border border-white/5 flex items-center gap-2"><i class="fa-solid fa-check text-brandGreen"></i> Berpikir Sistematis</div>
+                  <div class="bg-white/5 p-3 rounded-xl border border-white/5 flex items-center gap-2"><i class="fa-solid fa-check text-brandGreen"></i> Ketelitian & Strategi</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 7. RANGKUMAN & RUMUS CEPAT MENGINGAT -->
+          <div class="bg-gradient-to-r from-brandGreen/20 via-brandGray to-brandGreen/10 border border-brandGreen/30 rounded-3xl p-6 md:p-8 text-center space-y-4 shadow-xl">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brandGreen/20 text-brandGreen text-sm font-bold uppercase tracking-wider"><i class="fa-solid fa-key"></i> Rangkuman Modul</div>
+            <h3 class="text-2xl md:text-3xl font-bold text-white">Rumus Cepat Mengingat 4 Pilar</h3>
+
+            <div class="flex flex-wrap justify-center items-center gap-2 md:gap-4 text-base md:text-lg font-bold pt-2">
+              <span class="bg-brandDark px-5 py-2 rounded-xl border border-white/10 text-brandGreen">1. Pecah Masalah</span>
+              <i class="fa-solid fa-arrow-right text-textGray hidden sm:inline"></i>
+              <span class="bg-brandDark px-5 py-2 rounded-xl border border-white/10 text-brandGreen">2. Cari Pola</span>
+              <i class="fa-solid fa-arrow-right text-textGray hidden sm:inline"></i>
+              <span class="bg-brandDark px-5 py-2 rounded-xl border border-white/10 text-brandGreen">3. Ambil yang Penting</span>
+              <i class="fa-solid fa-arrow-right text-textGray hidden sm:inline"></i>
+              <span class="bg-brandDark px-5 py-2 rounded-xl border border-white/10 text-brandGreen">4. Susun Langkah</span>
+            </div>
+
+            <p class="text-textGray text-base max-w-xl mx-auto pt-2 leading-relaxed">
+              Semakin sering kita membiasakan diri memecah masalah, mencari pola, menyaring informasi, dan menyusun langkah, semakin terstruktur pula cara kita menyelesaikan masalah sehari-hari.
+            </p>
+          </div>
+        </div>
+
+        <!-- TAB 2: VIDEO PEMBELAJARAN -->
+        <div id="video" class="tab-content hidden space-y-6">
+          <div class="bg-brandGray border border-white/5 rounded-3xl p-6 md:p-8 space-y-6">
+            <!-- Sematan Player Video YouTube -->
+            <div class="aspect-video w-full rounded-2xl overflow-hidden bg-black flex items-center justify-center border border-white/10 shadow-2xl">
+              <iframe
+                class="w-full h-full"
+                src="https://www.youtube.com/embed/jCb9fpPrxLc"
+                title="Pengenalan Computational Thinking | Berpikir Komputasional"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen
+              >
+              </iframe>
+            </div>
+
+            <!-- Header Judul Video -->
+            <div>
+              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brandGreen/10 border border-brandGreen/20 text-sm font-bold text-brandGreen mb-3"><i class="fa-solid fa-circle-play"></i> Video Pembelajaran</div>
+              <h3 class="text-2xl md:text-3xl font-bold">Video: 4 Pilar Berpikir Komputasional</h3>
+              <p class="text-textGray text-lg mt-2 leading-relaxed">Simak animasi interaktif di atas untuk memperkuat pemahaman konsepmu. Berikut adalah poin-poin penjelasan penting beserta contoh penerapannya yang dibahas dalam video:</p>
+            </div>
+
+            <!-- Penjelasan Poin-Poin Video -->
+            <div class="border-t border-white/10 pt-6 space-y-4">
+              <p class="text-textGray text-lg font-medium">Empat pilar utama dalam konsep Berpikir Komputasional (Computational Thinking) adalah sebagai berikut:</p>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-5 pt-2">
+                <!-- 1. Dekomposisi -->
+                <div class="bg-white/5 border border-white/5 p-6 rounded-2xl hover:border-brandGreen/30 transition space-y-3">
+                  <div class="flex items-center gap-3">
+                    <div class="w-11 h-11 rounded-xl bg-brandGreen/10 flex items-center justify-center text-brandGreen font-bold border border-brandGreen/20">
+                      <i class="fa-solid fa-puzzle-piece"></i>
+                    </div>
+                    <h4 class="font-bold text-white text-xl">Dekomposisi</h4>
+                  </div>
+                  <p class="text-textGray text-base leading-relaxed">Dekomposisi adalah proses membagi masalah yang kompleks menjadi bagian-bagian yang lebih kecil agar lebih mudah diselesaikan.</p>
+                  <div class="p-4 bg-black/30 rounded-xl border border-white/5 text-base text-gray-200 leading-relaxed">
+                    <strong class="text-brandGreen block mb-1"><i class="fa-solid fa-lightbulb mr-1"></i> Contoh Penerapan:</strong>
+                    Saat Anda ditunjuk menjadi ketua panitia suatu acara, Anda dapat mempermudah pelaksanaannya dengan membagi tugas ke beberapa bagian panitia yang lebih kecil, seperti divisi acara, konsumsi, publikasi, dan keamanan.
+                  </div>
+                </div>
+
+                <!-- 2. Pengenalan Pola -->
+                <div class="bg-white/5 border border-white/5 p-6 rounded-2xl hover:border-brandGreen/30 transition space-y-3">
+                  <div class="flex items-center gap-3">
+                    <div class="w-11 h-11 rounded-xl bg-brandGreen/10 flex items-center justify-center text-brandGreen font-bold border border-brandGreen/20">
+                      <i class="fa-solid fa-magnifying-glass"></i>
+                    </div>
+                    <h4 class="font-bold text-white text-xl">Pengenalan Pola</h4>
+                  </div>
+                  <p class="text-textGray text-base leading-relaxed">Mencari kesamaan atau pola di antara bagian-bagian masalah yang telah dipecah sebelumnya.</p>
+                  <div class="p-4 bg-black/30 rounded-xl border border-white/5 text-base text-gray-200 leading-relaxed">
+                    <strong class="text-brandGreen block mb-1"><i class="fa-solid fa-lightbulb mr-1"></i> Contoh Penerapan:</strong>
+                    Ketika Anda melipat dan menyimpan jemuran, Anda perlu mengenali pola pakaian milik masing-masing anggota keluarga karena pakaian-pakaian tersebut harus disimpan di lemari atau tempat yang berbeda-beda.
+                  </div>
+                </div>
+
+                <!-- 3. Abstraksi -->
+                <div class="bg-white/5 border border-white/5 p-6 rounded-2xl hover:border-brandGreen/30 transition space-y-3">
+                  <div class="flex items-center gap-3">
+                    <div class="w-11 h-11 rounded-xl bg-brandGreen/10 flex items-center justify-center text-brandGreen font-bold border border-brandGreen/20">
+                      <i class="fa-solid fa-filter"></i>
+                    </div>
+                    <h4 class="font-bold text-white text-xl">Abstraksi</h4>
+                  </div>
+                  <p class="text-textGray text-base leading-relaxed">Kemampuan untuk fokus hanya pada informasi yang penting saja dan mengabaikan detail-detail yang tidak diperlukan.</p>
+                  <div class="p-4 bg-black/30 rounded-xl border border-white/5 text-base text-gray-200 leading-relaxed">
+                    <strong class="text-brandGreen block mb-1"><i class="fa-solid fa-lightbulb mr-1"></i> Contoh Penerapan:</strong>
+                    Saat Anda menceritakan pengalaman liburan kepada teman, Anda cukup menyaring dan menceritakan kejadian-kejadian yang menarik saja tanpa harus membagikan setiap detail terkecil yang bisa membuat mereka bosan.
+                  </div>
+                </div>
+
+                <!-- 4. Algoritma -->
+                <div class="bg-white/5 border border-white/5 p-6 rounded-2xl hover:border-brandGreen/30 transition space-y-3">
+                  <div class="flex items-center gap-3">
+                    <div class="w-11 h-11 rounded-xl bg-brandGreen/10 flex items-center justify-center text-brandGreen font-bold border border-brandGreen/20">
+                      <i class="fa-solid fa-list-check"></i>
+                    </div>
+                    <h4 class="font-bold text-white text-xl">Algoritma</h4>
+                  </div>
+                  <p class="text-textGray text-base leading-relaxed">Menyusun langkah-langkah penyelesaian atau membuat aturan yang harus diikuti untuk menyelesaikan suatu masalah secara berurutan.</p>
+                  <div class="p-4 bg-black/30 rounded-xl border border-white/5 text-base text-gray-200 leading-relaxed">
+                    <strong class="text-brandGreen block mb-1"><i class="fa-solid fa-lightbulb mr-1"></i> Contoh Penerapan:</strong>
+                    Saat Anda terburu-buru belanja di supermarket, cara yang efisien adalah dengan merencanakan rute mengambil barang mulai dari yang letaknya paling dekat dengan pintu masuk hingga yang terakhir di dekat kasir.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 3: LATIHAN SOAL -->
+        <div id="latihan" class="tab-content hidden">
+          <div class="bg-brandGray border border-white/5 rounded-3xl p-6 md:p-8">
+            <div class="flex flex-col md:flex-row items-start md:items-center justify-between mb-8 gap-4 border-b border-white/10 pb-6">
+              <div>
+                <h3 class="text-2xl md:text-3xl font-bold mb-1">Latihan Berpikir Komputasional Kelas X</h3>
+                <p class="text-lg text-textGray">Uji pemahamanmu tentang 4 pilar Berpikir Komputasional secara mandiri.</p>
+              </div>
+              <span class="text-base font-bold text-brandGreen bg-brandGreen/10 px-5 py-2 rounded-full border border-brandGreen/20"> <i class="fa-solid fa-list-check mr-1"></i> 10 Soal Pilihan Ganda </span>
+            </div>
+
+            <!-- Form Kuis 10 Soal -->
+            <div id="quiz-container" class="space-y-8">
+              <!-- Soal 1 -->
+              <div class="bg-white/5 border border-white/10 p-6 rounded-2xl space-y-4" id="q-block-1">
+                <p class="text-lg text-gray-100 font-medium leading-relaxed">
+                  <span class="text-brandGreen font-bold mr-2">1.</span>
+                  Seorang siswa mendapat tugas membuat aplikasi perpustakaan sekolah. Ia membagi pekerjaan menjadi pembuatan fitur login, data buku, data anggota, peminjaman, pengembalian, dan laporan. Pilar berpikir komputasional yang
+                  paling jelas digunakan adalah...
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q1" value="A" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">A. Pengenalan pola</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q1" value="B" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">B. Dekomposisi</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q1" value="C" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">C. Algoritma</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q1" value="D" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">D. Abstraksi</span>
+                  </label>
+                </div>
+                <div id="explain-1" class="hidden p-4 rounded-xl text-base bg-black/40 border border-white/10 mt-3 text-gray-200"></div>
+              </div>
+
+              <!-- Soal 2 -->
+              <div class="bg-white/5 border border-white/10 p-6 rounded-2xl space-y-4" id="q-block-2">
+                <p class="text-lg text-gray-100 font-medium leading-relaxed">
+                  <span class="text-brandGreen font-bold mr-2">2.</span>
+                  Perhatikan urutan berikut: 3, 6, 9, 12, 15, ... Pola yang ditemukan dari urutan tersebut adalah...
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q2" value="A" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">A. Setiap bilangan bertambah 2</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q2" value="B" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">B. Setiap bilangan bertambah 5</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q2" value="C" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">C. Setiap bilangan dikalikan 3</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q2" value="D" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">D. Setiap bilangan bertambah 3</span>
+                  </label>
+                </div>
+                <div id="explain-2" class="hidden p-4 rounded-xl text-base bg-black/40 border border-white/10 mt-3 text-gray-200"></div>
+              </div>
+
+              <!-- Soal 3 -->
+              <div class="bg-white/5 border border-white/10 p-6 rounded-2xl space-y-4" id="q-block-3">
+                <p class="text-lg text-gray-100 font-medium leading-relaxed">
+                  <span class="text-brandGreen font-bold mr-2">3.</span>
+                  Ketika menggunakan aplikasi peta untuk mencari rute tercepat ke sekolah, pengguna cukup melihat lokasi awal, tujuan, jalan, jarak, dan perkiraan waktu. Informasi seperti cara server menghitung koordinat tidak ditampilkan.
+                  Hal tersebut merupakan contoh...
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q3" value="A" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">A. Pengenalan pola</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q3" value="B" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">B. Dekomposisi</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q3" value="C" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">C. Abstraksi</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q3" value="D" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">D. Algoritma</span>
+                  </label>
+                </div>
+                <div id="explain-3" class="hidden p-4 rounded-xl text-base bg-black/40 border border-white/10 mt-3 text-gray-200"></div>
+              </div>
+
+              <!-- Soal 4 -->
+              <div class="bg-white/5 border border-white/10 p-6 rounded-2xl space-y-4" id="q-block-4">
+                <p class="text-lg text-gray-100 font-medium leading-relaxed">
+                  <span class="text-brandGreen font-bold mr-2">4.</span>
+                  Manakah yang merupakan contoh algoritma yang paling tepat?
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q4" value="A" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">A. Memasak dilakukan sampai makanan terasa enak</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q4" value="B" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">B. Menentukan bahwa memasak membutuhkan bahan dan alat</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q4" value="C" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">C. Menyiapkan bahan, memotong bahan, memasak, lalu menyajikan makanan</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q4" value="D" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">D. Makanan yang dimasak sebaiknya memiliki rasa yang sesuai</span>
+                  </label>
+                </div>
+                <div id="explain-4" class="hidden p-4 rounded-xl text-base bg-black/40 border border-white/10 mt-3 text-gray-200"></div>
+              </div>
+
+              <!-- Soal 5 -->
+              <div class="bg-white/5 border border-white/10 p-6 rounded-2xl space-y-4" id="q-block-5">
+                <p class="text-lg text-gray-100 font-medium leading-relaxed">
+                  <span class="text-brandGreen font-bold mr-2">5.</span>
+                  Sebuah sekolah ingin mengurangi masalah keterlambatan siswa. Tim sekolah membagi masalah menjadi waktu bangun, persiapan, sarapan, perjalanan, dan waktu masuk sekolah. Setelah itu mereka menganalisis setiap bagian. Tahap
+                  tersebut terutama menunjukkan...
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q5" value="A" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">A. Dekomposisi</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q5" value="B" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">B. Abstraksi</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q5" value="C" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">C. Pengenalan pola</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q5" value="D" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">D. Algoritma</span>
+                  </label>
+                </div>
+                <div id="explain-5" class="hidden p-4 rounded-xl text-base bg-black/40 border border-white/10 mt-3 text-gray-200"></div>
+              </div>
+
+              <!-- Soal 6 -->
+              <div class="bg-white/5 border border-white/10 p-6 rounded-2xl space-y-4" id="q-block-6">
+                <p class="text-lg text-gray-100 font-medium leading-relaxed">
+                  <span class="text-brandGreen font-bold mr-2">6.</span>
+                  Data menunjukkan bahwa kantin sekolah selalu paling ramai pada jam istirahat pertama selama beberapa hari. Jika informasi tersebut digunakan untuk memperkirakan bahwa besok kantin juga akan ramai pada waktu yang sama,
+                  siswa sedang menerapkan...
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q6" value="A" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">A. Pengenalan pola</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q6" value="B" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">B. Dekomposisi</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q6" value="C" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">C. Abstraksi</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q6" value="D" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">D. Algoritma</span>
+                  </label>
+                </div>
+                <div id="explain-6" class="hidden p-4 rounded-xl text-base bg-black/40 border border-white/10 mt-3 text-gray-200"></div>
+              </div>
+
+              <!-- Soal 7 -->
+              <div class="bg-white/5 border border-white/10 p-6 rounded-2xl space-y-4" id="q-block-7">
+                <p class="text-lg text-gray-100 font-medium leading-relaxed">
+                  <span class="text-brandGreen font-bold mr-2">7.</span>
+                  Seorang siswa ingin membuat sistem peminjaman ruang kelas. Ia hanya memasukkan nama peminjam, ruangan, tanggal, jam, keperluan, dan status peminjaman karena informasi tersebut diperlukan untuk proses peminjaman. Ia tidak
+                  memasukkan warna sepatu atau makanan favorit peminjam. Pilar yang digunakan adalah...
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q7" value="A" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">A. Pengenalan pola</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q7" value="B" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">B. Algoritma</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q7" value="C" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">C. Dekomposisi</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q7" value="D" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">D. Abstraksi</span>
+                  </label>
+                </div>
+                <div id="explain-7" class="hidden p-4 rounded-xl text-base bg-black/40 border border-white/10 mt-3 text-gray-200"></div>
+              </div>
+
+              <!-- Soal 8 -->
+              <div class="bg-white/5 border border-white/10 p-6 rounded-2xl space-y-4" id="q-block-8">
+                <p class="text-lg text-gray-100 font-medium leading-relaxed">
+                  <span class="text-brandGreen font-bold mr-2">8.</span>
+                  Urutan yang paling tepat ketika menerapkan empat pilar berpikir komputasional untuk menyelesaikan masalah kompleks adalah...
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q8" value="A" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">A. Dekomposisi → Pengenalan Pola → Abstraksi → Algoritma</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q8" value="B" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">B. Abstraksi → Algoritma → Dekomposisi → Pola</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q8" value="C" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">C. Pola → Algoritma → Abstraksi → Dekomposisi</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q8" value="D" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">D. Algoritma → Abstraksi → Pola → Dekomposisi</span>
+                  </label>
+                </div>
+                <div id="explain-8" class="hidden p-4 rounded-xl text-base bg-black/40 border border-white/10 mt-3 text-gray-200"></div>
+              </div>
+
+              <!-- Soal 9 -->
+              <div class="bg-white/5 border border-white/10 p-6 rounded-2xl space-y-4" id="q-block-9">
+                <p class="text-lg text-gray-100 font-medium leading-relaxed">
+                  <span class="text-brandGreen font-bold mr-2">9.</span>
+                  Seorang guru memiliki daftar 500 nama siswa dan ingin mencari nama tertentu. Ia memeriksa nama dari awal daftar satu per satu sampai nama yang dicari ditemukan. Strategi tersebut merupakan contoh penerapan...
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q9" value="A" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">A. Pengenalan pola</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q9" value="B" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">B. Algoritma</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q9" value="C" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">C. Abstraksi</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q9" value="D" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">D. Dekomposisi</span>
+                  </label>
+                </div>
+                <div id="explain-9" class="hidden p-4 rounded-xl text-base bg-black/40 border border-white/10 mt-3 text-gray-200"></div>
+              </div>
+
+              <!-- Soal 10 -->
+              <div class="bg-white/5 border border-white/10 p-6 rounded-2xl space-y-4" id="q-block-10">
+                <p class="text-lg text-gray-100 font-medium leading-relaxed">
+                  <span class="text-brandGreen font-bold mr-2">10.</span>
+                  Sebuah kelompok siswa mendapat tugas membuat aplikasi jadwal piket. Mereka membagi tugas menjadi desain tampilan, pengolahan data siswa, pengaturan jadwal, notifikasi, dan pengujian. Mereka kemudian melihat pola jadwal
+                  yang berulang, memilih data yang diperlukan, dan menyusun langkah kerja aplikasi. Kesimpulan yang paling tepat adalah...
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q10" value="A" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">A. Hanya dekomposisi yang digunakan</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q10" value="B" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">B. Hanya algoritma yang digunakan</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q10" value="C" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">C. Tidak ada pilar yang digunakan</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="q10" value="D" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">D. Keempat pilar digunakan secara bersama-sama</span>
+                  </label>
+                </div>
+                <div id="explain-10" class="hidden p-4 rounded-xl text-base bg-black/40 border border-white/10 mt-3 text-gray-200"></div>
+              </div>
+
+              <!-- Tombol Kirim -->
+              <div class="pt-4 flex flex-col md:flex-row items-center justify-between gap-4">
+                <button
+                  onclick="cekJawaban()"
+                  class="w-full md:w-auto bg-brandGreen text-black font-bold px-8 py-4 rounded-xl text-lg hover:bg-green-400 transition shadow-[0_0_15px_rgba(0,230,118,0.3)] flex items-center justify-center gap-2"
+                >
+                  <i class="fa-solid fa-paper-plane"></i> Cek Jawaban
+                </button>
+              </div>
+
+              <!-- Ringkasan Hasil/Nilai Kuis -->
+              <div id="quiz-result" class="hidden p-6 rounded-2xl text-lg leading-relaxed border mt-6"></div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- Footer Area (Identik dengan index.html) -->
+    <footer class="border-t border-white/5 bg-[#080808] pt-12 pb-8 relative z-10 w-full mt-auto">
+      <div class="max-w-7xl mx-auto px-6">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+          <div class="md:col-span-2">
+            <div class="flex items-center gap-3 mb-4">
+              <i class="fa-solid fa-code text-brandGreen text-2xl"></i>
+              <span class="text-2xl font-bold tracking-tight text-brandGreen">RuangInformatika</span>
+            </div>
+            <p class="text-textGray text-base leading-relaxed max-w-sm">
+              Platform e-learning interaktif modern yang dirancang khusus untuk memfasilitasi gaya belajar visual dan praktik, memastikan pemahaman mendalam untuk menaklukkan soal-soal PTS.
+            </p>
+          </div>
+          <div>
+            <h4 class="text-white font-semibold text-lg mb-4">Pintasan Modul</h4>
+            <ul class="space-y-3 text-base text-textGray">
+              <li><a href="kisi.html" class="hover:text-brandGreen transition">Bedah Kisi-Kisi</a></li>
+              <li><a href="materi-bk.html" class="hover:text-brandGreen transition">Berpikir Komputasional</a></li>
+              <li><a href="materi-stack-queue.html" class="hover:text-brandGreen transition">Stack & Queue</a></li>
+              <li><a href="materi-search-sort.html" class="hover:text-brandGreen transition">Searching & Sorting</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="text-white font-semibold text-lg mb-4">Dukungan</h4>
+            <ul class="space-y-3 text-base text-textGray">
+              <li>
+                <a href="#" class="hover:text-brandGreen transition"><i class="fa-solid fa-circle-question mr-2"></i> Cara Penggunaan</a>
+              </li>
+              <li>
+                <a href="#" class="hover:text-brandGreen transition"><i class="fa-solid fa-bug mr-2"></i> Lapor Masalah</a>
+              </li>
+              <li>
+                <a href="#" class="hover:text-brandGreen transition"><i class="fa-solid fa-paper-plane mr-2"></i> Hubungi Guru</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-base text-textGray">
+          <p>&copy; 2026 RuangInformatika. Dikembangkan oleh Pak Ilyas untuk kelas Informatika SMA Negeri 4 Yogyakarta.</p>
+          <div class="flex gap-4 text-2xl">
+            <a href="#" class="hover:text-brandGreen transition"><i class="fa-brands fa-github"></i></a>
+            <a href="#" class="hover:text-brandGreen transition"><i class="fa-brands fa-youtube"></i></a>
+            <a href="#" class="hover:text-brandGreen transition"><i class="fa-solid fa-envelope"></i></a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+      // Inisiasi efek 3D Tilt untuk kartu materi
+      VanillaTilt.init(document.querySelectorAll(".tilt-card"), {
+        max: 6,
+        speed: 400,
+        glare: true,
+        "max-glare": 0.15,
+      });
+
+      // Fungsi Navigasi Tab
+      function openTab(evt, tabName) {
+        const tabContents = document.getElementsByClassName("tab-content");
+        for (let i = 0; i < tabContents.length; i++) {
+          tabContents[i].classList.add("hidden");
+          tabContents[i].classList.remove("block");
+        }
+
+        const tabBtns = document.getElementsByClassName("tab-btn");
+        for (let i = 0; i < tabBtns.length; i++) {
+          tabBtns[i].classList.remove("border-brandGreen", "text-brandGreen");
+          tabBtns[i].classList.add("border-transparent", "text-textGray");
+        }
+
+        document.getElementById(tabName).classList.remove("hidden");
+        document.getElementById(tabName).classList.add("block");
+
+        evt.currentTarget.classList.remove("border-transparent", "text-textGray");
+        evt.currentTarget.classList.add("border-brandGreen", "text-brandGreen");
+      }
+
+      // Fungsi Cek Jawaban Kuis
+      function cekJawaban() {
+        const kunciJawaban = {
+          q1: { ans: "B", label: "B — Dekomposisi", exp: "Masalah besar berupa pembuatan aplikasi dipecah menjadi beberapa fitur kecil." },
+          q2: { ans: "D", label: "D — Setiap bilangan bertambah 3", exp: "Setiap angka bertambah 3: 3 → 6 → 9 → 12 → 15." },
+          q3: { ans: "C", label: "C — Abstraksi", exp: "Informasi yang dibutuhkan pengguna ditampilkan, sedangkan detail teknis yang tidak diperlukan disembunyikan." },
+          q4: { ans: "C", label: "C — Menyiapkan..., memotong..., memasak...", exp: "Terdapat urutan langkah yang jelas: menyiapkan → memotong → memasak → menyajikan." },
+          q5: { ans: "A", label: "A — Dekomposisi", exp: "Masalah keterlambatan yang kompleks dipecah menjadi beberapa bagian agar lebih mudah dianalisis." },
+          q6: { ans: "A", label: "A — Pengenalan pola", exp: "Siswa menemukan kejadian yang berulang pada beberapa hari dan menggunakannya untuk memperkirakan kondisi berikutnya." },
+          q7: { ans: "D", label: "D — Abstraksi", exp: "Hanya data yang relevan dengan peminjaman yang digunakan. Informasi yang tidak berhubungan diabaikan." },
+          q8: { ans: "A", label: "A — Dekomposisi → Pengenalan Pola → Abstraksi → Algoritma", exp: "Ini merupakan alur yang sangat mudah digunakan siswa: pecah masalah → cari pola → ambil informasi penting → susun langkah." },
+          q9: { ans: "B", label: "B — Algoritma", exp: "Pemeriksaan nama satu per satu mengikuti langkah yang sistematis sampai nama ditemukan atau data habis." },
+          q10: { ans: "D", label: "D — Keempat pilar digunakan secara bersama-sama", exp: "Ada pembagian tugas (dekomposisi), pencarian jadwal berulang (pola), pemilihan data (abstraksi), dan penyusunan langkah (algoritma)." },
+        };
+
+        let skor = 0;
+        let totalSoal = 10;
+
+        for (let i = 1; i <= totalSoal; i++) {
+          const qName = "q" + i;
+          const selectedOption = document.querySelector(`input[name="${qName}"]:checked`);
+          const blockEl = document.getElementById(`q-block-${i}`);
+          const explainEl = document.getElementById(`explain-${i}`);
+          const infoKey = kunciJawaban[qName];
+
+          explainEl.classList.remove("hidden");
+
+          if (selectedOption) {
+            if (selectedOption.value === infoKey.ans) {
+              skor += 10;
+              blockEl.className = "bg-green-500/10 border border-green-500/30 p-6 rounded-2xl space-y-4";
+              explainEl.innerHTML = `<strong class="text-green-400 block mb-1"><i class="fa-solid fa-circle-check mr-1"></i> Benar! (Jawaban: ${infoKey.label})</strong><span class="text-gray-200">${infoKey.exp}</span>`;
+            } else {
+              blockEl.className = "bg-red-500/10 border border-red-500/30 p-6 rounded-2xl space-y-4";
+              explainEl.innerHTML = `<strong class="text-red-400 block mb-1"><i class="fa-solid fa-circle-xmark mr-1"></i> Kurang Tepat (Jawaban Benar: ${infoKey.label})</strong><span class="text-gray-200">${infoKey.exp}</span>`;
+            }
+          } else {
+            blockEl.className = "bg-yellow-500/10 border border-yellow-500/30 p-6 rounded-2xl space-y-4";
+            explainEl.innerHTML = `<strong class="text-yellow-400 block mb-1"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Belum Dijawab (Jawaban Benar: ${infoKey.label})</strong><span class="text-gray-200">${infoKey.exp}</span>`;
+          }
+        }
+
+        const resultBox = document.getElementById("quiz-result");
+        resultBox.classList.remove("hidden");
+
+        if (skor >= 70) {
+          resultBox.className = "p-6 rounded-2xl text-lg leading-relaxed border mt-6 bg-brandGreen/10 border-brandGreen/30 text-white";
+          resultBox.innerHTML = `
+        <div class="flex items-center gap-3 mb-2">
+          <i class="fa-solid fa-trophy text-2xl text-brandGreen"></i>
+          <h4 class="text-2xl font-bold">Hasil Latihan: ${skor} / 100</h4>
+        </div>
+        <p class="text-textGray text-base">Luar biasa! Kamu sudah memahami konsep 4 Pilar Berpikir Komputasional dengan sangat baik.</p>
+      `;
+        } else {
+          resultBox.className = "p-6 rounded-2xl text-lg leading-relaxed border mt-6 bg-yellow-500/10 border-yellow-500/30 text-white";
+          resultBox.innerHTML = `
+        <div class="flex items-center gap-3 mb-2">
+          <i class="fa-solid fa-graduation-cap text-2xl text-yellow-400"></i>
+          <h4 class="text-2xl font-bold">Hasil Latihan: ${skor} / 100</h4>
+        </div>
+        <p class="text-textGray text-base">Tetap semangat! Pelajari kembali pembahasan di setiap nomor soal di atas untuk memperkuat pemahamanmu.</p>
+      `;
+        }
+
+        resultBox.scrollIntoView({ behavior: "smooth" });
+      }
+
+      // Toggle Mobile Menu
+      const hamburgerBtn = document.getElementById("hamburgerBtn");
+      const mobileMenu = document.getElementById("mobileMenu");
+
+      hamburgerBtn.addEventListener("click", function () {
+        mobileMenu.classList.toggle("hidden");
+        const icon = hamburgerBtn.querySelector("i");
+        icon.classList.toggle("fa-bars");
+        icon.classList.toggle("fa-xmark");
+      });
+
+      // Tutup menu saat salah satu link/button di dalamnya diklik
+      mobileMenu.querySelectorAll("a, button").forEach((item) => {
+        item.addEventListener("click", () => {
+          mobileMenu.classList.add("hidden");
+          const icon = hamburgerBtn.querySelector("i");
+          icon.classList.add("fa-bars");
+          icon.classList.remove("fa-xmark");
+        });
+      });
+    </script>
+  </body>
+</html>
