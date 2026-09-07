@@ -42,6 +42,62 @@
       .tilt-card-content {
         transform: translateZ(30px);
       }
+      /* Cegah overflow horizontal pada wrapper utama */
+      div.flex-grow.relative.bg-grid {
+        overflow: hidden;
+      }
+
+      /* Buat elemen blur responsif */
+      main .bg-brandGreen\/5 {
+        width: 90vw;
+        max-width: 600px;
+        height: 50vw;
+        max-height: 300px;
+      }
+
+      /* Penyesuaian ukuran font untuk layar kecil (mobile) */
+      @media (max-width: 640px) {
+        body {
+          font-size: 1rem; /* 16px */
+        }
+
+        h1 {
+          font-size: 1.875rem !important; /* 30px */
+          line-height: 1.2 !important;
+        }
+
+        h2 {
+          font-size: 1.5rem !important; /* 24px */
+        }
+
+        h3 {
+          font-size: 1.25rem !important; /* 20px */
+        }
+
+        .text-2xl {
+          font-size: 1.25rem !important; /* 20px */
+        }
+
+        .text-3xl {
+          font-size: 1.5rem !important; /* 24px */
+        }
+
+        .text-4xl {
+          font-size: 1.875rem !important; /* 30px */
+        }
+
+        .text-xl {
+          font-size: 1.125rem !important; /* 18px */
+        }
+
+        .text-lg {
+          font-size: 1rem !important; /* 16px */
+        }
+
+        .text-base {
+          font-size: 0.9375rem !important; /* 15px */
+        }
+      }
     </style>
   </head>
   <body class="bg-brandDark text-white font-sans antialiased overflow-x-hidden flex flex-col min-h-screen">
