@@ -1,0 +1,473 @@
+<!doctype html>
+<html lang="id" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Penilaian Murid - RuangInformatika</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              brand: {
+                dark: "#0a0a0a",
+                card: "#121212",
+                border: "#222222",
+                neon: "#00e676",
+                neonHover: "#00c853",
+              },
+            },
+          },
+        },
+      };
+    </script>
+    <!-- Bootstrap Icons & Fonts -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+      body {
+        font-family: "Plus Jakarta Sans", sans-serif;
+      }
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #0a0a0a;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #222222;
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #00e676;
+      }
+    </style>
+  </head>
+  <body class="bg-brand-dark text-slate-100 min-h-screen p-4 md:p-6 antialiased">
+    <div class="max-w-7xl mx-auto space-y-6">
+      <!-- Top Navigation & Controls Header -->
+      <header class="bg-brand-card border border-brand-border rounded-2xl p-4 md:p-6 flex flex-wrap items-center justify-between gap-4 shadow-2xl backdrop-blur-md">
+        <div class="flex items-center gap-4">
+          <div class="p-3 bg-brand-neon/10 text-brand-neon rounded-xl border border-brand-neon/20 flex items-center justify-center">
+            <i class="bi bi-journal-check text-2xl"></i>
+          </div>
+          <div>
+            <h1 class="text-xl font-bold text-white">Input Penilaian Murid</h1>
+            <span class="text-xs text-slate-400 flex items-center gap-1.5 mt-0.5" id="syncStatus"> <i class="bi bi-cloud-check text-brand-neon"></i> Terhubung ke Google Sheets </span>
+          </div>
+        </div>
+
+        <!-- Search Input -->
+        <div class="w-full md:w-64">
+          <div class="relative">
+            <i class="bi bi-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
+            <input
+              type="text"
+              id="searchInput"
+              placeholder="Cari nama siswa..."
+              onkeyup="renderTable()"
+              class="w-full bg-black/50 border border-white/10 rounded-xl pl-8 pr-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-brand-neon transition"
+            />
+          </div>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="flex items-center gap-2 flex-wrap">
+          <a href="index.html" class="px-3.5 py-2 text-xs font-semibold text-slate-300 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl transition flex items-center gap-1.5">
+            <i class="bi bi-trophy"></i> Leaderboard
+          </a>
+          <a href="absensi.html" class="px-3.5 py-2 text-xs font-semibold text-slate-300 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl transition flex items-center gap-1.5">
+            <i class="bi bi-calendar-check"></i> Absensi
+          </a>
+          <button onclick="openAddStudentModal()" class="px-3.5 py-2 text-xs font-semibold text-sky-400 bg-sky-500/10 hover:bg-sky-500/20 border border-sky-500/20 rounded-xl transition flex items-center gap-1.5">
+            <i class="bi bi-person-plus-fill"></i> Tambah Siswa
+          </button>
+          <button onclick="saveAllGrades()" class="px-4 py-2 text-xs font-bold bg-brand-neon text-black hover:bg-brand-neonHover rounded-xl transition shadow-lg shadow-brand-neon/20 flex items-center gap-1.5">
+            <i class="bi bi-floppy-fill"></i> Simpan Penilaian
+          </button>
+        </div>
+      </header>
+
+      <!-- Selection & Stat Cards -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- Dropdown Pilih Aktivitas -->
+        <div class="bg-brand-card border border-brand-border p-4 rounded-2xl shadow-xl flex flex-col justify-between">
+          <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">Pilih Aktivitas Penilaian</label>
+          <div class="flex items-center gap-2">
+            <select id="assessmentSelect" onchange="renderTable()" class="w-full bg-black/60 border border-white/10 text-white text-xs rounded-xl px-3 py-2.5 focus:outline-none focus:border-brand-neon cursor-pointer">
+              <!-- Rendered via JS -->
+            </select>
+            <button
+              onclick="openAddAssessmentModal()"
+              title="Tambah Jenis Penilaian Baru"
+              class="px-3 py-2.5 bg-brand-neon/10 border border-brand-neon/30 text-brand-neon hover:bg-brand-neon hover:text-black font-bold text-xs rounded-xl transition"
+            >
+              <i class="bi bi-plus-lg"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Stat Rata-Rata -->
+        <div class="bg-brand-card border border-brand-border p-4 rounded-2xl shadow-xl text-center flex flex-col justify-center">
+          <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Rata-Rata Sesi Ini</span>
+          <span class="text-2xl font-black text-sky-400 mt-1" id="sessionAvg">0</span>
+        </div>
+
+        <!-- Stat Tuntas -->
+        <div class="bg-brand-card border border-brand-border p-4 rounded-2xl shadow-xl text-center flex flex-col justify-center">
+          <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Tuntas (&ge;75)</span>
+          <span class="text-2xl font-black text-brand-neon mt-1" id="passedCount">0</span>
+        </div>
+
+        <!-- Stat Remedial -->
+        <div class="bg-brand-card border border-brand-border p-4 rounded-2xl shadow-xl text-center flex flex-col justify-center">
+          <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Remedial (&lt;75)</span>
+          <span class="text-2xl font-black text-rose-500 mt-1" id="remedialCount">0</span>
+        </div>
+      </div>
+
+      <!-- Tabel Input Nilai -->
+      <div class="bg-brand-card border border-brand-border rounded-2xl shadow-xl overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-black/40 border-b border-white/10 text-[11px] text-slate-400 uppercase tracking-wider">
+                <th class="py-3.5 px-4 w-16 text-center">No</th>
+                <th class="py-3.5 px-4">Nama Murid</th>
+                <th class="py-3.5 px-4 w-36 text-center">Nilai Utama</th>
+                <th class="py-3.5 px-4 w-36 text-center">Status</th>
+                <th class="py-3.5 px-4 w-36 text-center">Nilai Remidi</th>
+                <th class="py-3.5 px-4">Catatan Guru (Opsional)</th>
+              </tr>
+            </thead>
+            <tbody id="gradeTableBody">
+              <tr>
+                <td colspan="6" class="text-center text-brand-neon py-12 text-sm"><i class="bi bi-arrow-repeat animate-spin text-xl block mb-2"></i> Memuat data penilaian...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Tambah Penilaian Baru -->
+    <div id="addModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+      <div class="bg-brand-card border border-brand-border text-white w-full max-w-md rounded-2xl p-6 shadow-2xl">
+        <div class="flex items-center justify-between pb-4 border-b border-white/10 mb-4">
+          <h3 class="font-bold text-lg flex items-center gap-2 text-brand-neon"><i class="bi bi-journal-plus"></i> Buat Sesi Penilaian Baru</h3>
+          <button onclick="closeAddAssessmentModal()" class="text-slate-400 hover:text-white text-lg"><i class="bi bi-x-lg"></i></button>
+        </div>
+        <div class="space-y-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">Nama Aktivitas / Ulangan</label>
+            <input
+              type="text"
+              id="newAssessmentTitle"
+              placeholder="Contoh: Ulangan Harian Bab 1, Praktikum Web"
+              class="w-full bg-black/50 border border-white/10 rounded-xl px-3 py-2.5 text-sm text-white placeholder-slate-600 focus:outline-none focus:border-brand-neon transition"
+            />
+          </div>
+          <button onclick="createNewAssessment()" class="w-full py-3 bg-brand-neon text-black font-bold text-sm rounded-xl hover:bg-brand-neonHover transition shadow-lg shadow-brand-neon/20">Buat & Input Nilai</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Tambah Murid Baru -->
+    <div id="addStudentModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+      <div class="bg-brand-card border border-brand-border text-white w-full max-w-md rounded-2xl p-6 shadow-2xl">
+        <div class="flex items-center justify-between pb-4 border-b border-white/10 mb-4">
+          <h3 class="font-bold text-lg flex items-center gap-2 text-sky-400"><i class="bi bi-person-plus"></i> Tambah Murid Baru</h3>
+          <button onclick="closeAddStudentModal()" class="text-slate-400 hover:text-white text-lg"><i class="bi bi-x-lg"></i></button>
+        </div>
+        <div class="space-y-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">Nama Lengkap Murid</label>
+            <input
+              type="text"
+              id="newStudentName"
+              placeholder="Masukkan nama murid baru..."
+              class="w-full bg-black/50 border border-white/10 rounded-xl px-3 py-2.5 text-sm text-white placeholder-slate-600 focus:outline-none focus:border-sky-400 transition"
+            />
+          </div>
+          <button onclick="addNewStudent()" class="w-full py-3 bg-sky-500 text-black font-bold text-sm rounded-xl hover:bg-sky-400 transition shadow-lg shadow-sky-500/20">Tambahkan ke Daftar</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyUg6A4nBs6IBqSPFefnNDbrZNtudq0MIExzbC0_no817FmuxUwugEZ2rfazbDz52qJ/exec";
+      const KKM = 75;
+
+      const sampleNames = [
+        "Ainun Risky", "Alexander Modegliano Biwada", "Arindia Maharani", "Aufa Tazkia Rahmadani",
+        "Cornelia Dwi Arini Puspaningrum", "Dzaki Hammam Ibrahim", "Elena Putri Nareswari", "Fatima Ahzahra",
+        "Freya Gracia", "Gabriel Alvaro Anindito", "Gabriella Braveadonia Valga", "Hubertus Radhitya Melvin",
+        "Isabel Ada Lamont", "Julio Kevin Nugroho", "Justien Pratama Setiawan", "Kesya Hanifah Ufairah",
+        "Kristoforus Arsenio Reswara", "Kumala Devi Andini Setiawan", "Leonardus Evan Syandana Rama",
+        "Lintang Nareswara", "Maria Felicia Nindya Danastri", "Maria Kimiko Ruby Renggawan",
+        "Maria Lethicia Viona", "Muhammad Suttan Fahrezy", "Nadia Az-Zahra", "Narayan itendralay Isyunanto",
+        "Ozzie Mahardika Prabaswara", "Penta Kusuma", "Queen Callysta Eleana", "Queen Gabriella Ginoga",
+        "Rafi Ardan Saputra", "Raihanah Lembayung Indah", "Rayhan Evan Sachio", "Tiara Febriana",
+        "Tsabita Neysa Azalia", "Yunita Putri Prasetiya"
+      ];
+
+      let assessmentList = [];
+      let studentsData = sampleNames.map((name, index) => ({
+        id: index + 1,
+        name: name,
+        scores: {},
+      }));
+
+      function getInitials(name) {
+        if (!name) return "?";
+        const parts = name.trim().split(" ");
+        return parts.length > 1 ? (parts[0][0] + parts[1][0]).toUpperCase() : parts[0].substring(0, 2).toUpperCase();
+      }
+
+      function updateSelectOptions() {
+        const select = document.getElementById("assessmentSelect");
+        const currentVal = select.value;
+        select.innerHTML = "";
+
+        if (assessmentList.length === 0) {
+          select.innerHTML = `<option value="">-- Belum ada aktivitas --</option>`;
+        } else {
+          assessmentList.forEach((item) => {
+            select.innerHTML += `<option value="${item}">${item}</option>`;
+          });
+        }
+
+        if (currentVal && assessmentList.includes(currentVal)) {
+          select.value = currentVal;
+        } else if (assessmentList.length > 0) {
+          select.value = assessmentList[assessmentList.length - 1];
+        }
+      }
+
+      async function fetchGrades() {
+        const syncStatus = document.getElementById("syncStatus");
+        syncStatus.innerHTML = `<i class="bi bi-arrow-repeat text-amber-400 animate-spin"></i> Menyinkronkan...`;
+
+        try {
+          const res = await fetch(`${GOOGLE_SCRIPT_URL}?action=getGrades`);
+          const data = await res.json();
+          if (data && data.students && data.students.length > 0) {
+            studentsData = data.students;
+            if (data.assessments && data.assessments.length > 0) {
+              assessmentList = data.assessments;
+            }
+          }
+          syncStatus.innerHTML = `<i class="bi bi-cloud-check text-brand-neon"></i> Terhubung ke Google Sheets`;
+        } catch (err) {
+          console.warn("Gagal menyinkronkan data, memakai data lokal:", err);
+          syncStatus.innerHTML = `<i class="bi bi-exclamation-triangle text-amber-400"></i> Mode Lokal`;
+        } finally {
+          updateSelectOptions();
+          renderTable();
+        }
+      }
+
+      function renderTable() {
+        const tbody = document.getElementById("gradeTableBody");
+        const activeAssessment = document.getElementById("assessmentSelect").value;
+        const query = document.getElementById("searchInput").value.toLowerCase();
+
+        tbody.innerHTML = "";
+
+        if (!activeAssessment || assessmentList.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="6" class="text-center text-slate-500 py-8 text-sm">Belum ada penilaian. Klik tombol "+" di atas untuk menambahkan.</td></tr>`;
+          document.getElementById("sessionAvg").innerText = "0";
+          document.getElementById("passedCount").innerText = "0";
+          document.getElementById("remedialCount").innerText = "0";
+          return;
+        }
+
+        let totalSessionScore = 0;
+        let passed = 0;
+        let remedial = 0;
+        let count = 0;
+
+        const filtered = studentsData.filter((s) => s.name.toLowerCase().includes(query));
+
+        if (filtered.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="6" class="text-center text-slate-500 py-8 text-sm">Siswa tidak ditemukan.</td></tr>`;
+          return;
+        }
+
+        filtered.forEach((student) => {
+          if (!student.scores) student.scores = {};
+          if (!student.scores[activeAssessment]) {
+            student.scores[activeAssessment] = { score: 0, remedialScore: "", note: "", status: "Remedial" };
+          }
+
+          const current = student.scores[activeAssessment];
+          const scoreVal = Number(current.score) || 0;
+          const remedialVal = current.remedialScore !== undefined ? current.remedialScore : "";
+          const statusVal = current.status || (scoreVal >= KKM ? "Tuntas" : "Remedial");
+
+          totalSessionScore += scoreVal;
+          count++;
+
+          if (statusVal === "Tuntas") passed++;
+          else remedial++;
+
+          const remedialHtml =
+            statusVal === "Remedial"
+              ? `<input type="number" min="0" max="100" class="w-20 text-center font-bold bg-rose-950/30 border border-rose-500/40 text-rose-300 rounded-lg px-2 py-1 text-xs focus:outline-none focus:border-rose-500"
+                  value="${remedialVal}" placeholder="-" onchange="updateStudentData(${student.id}, '${activeAssessment}', 'remedialScore', this.value)" />`
+              : `<span class="text-slate-600 font-bold text-xs">-</span>`;
+
+          tbody.innerHTML += `
+            <tr class="border-b border-white/5 hover:bg-white/[0.02] transition">
+              <td class="text-center text-xs text-slate-500 font-mono py-3">#${String(student.id).padStart(2, "0")}</td>
+              <td class="py-3">
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-brand-neon to-cyan-500 text-black font-extrabold text-xs flex items-center justify-center shrink-0">
+                    ${getInitials(student.name)}
+                  </div>
+                  <div class="font-semibold text-sm text-white">${student.name}</div>
+                </div>
+              </td>
+              <td class="text-center py-3">
+                <input type="number" min="0" max="100" class="w-20 text-center font-bold bg-black/60 border border-white/20 text-white rounded-lg px-2 py-1 text-xs focus:outline-none focus:border-brand-neon"
+                  value="${scoreVal}" onchange="updateStudentData(${student.id}, '${activeAssessment}', 'score', this.value)" />
+              </td>
+              <td class="text-center py-3">
+                <select onchange="updateStudentData(${student.id}, '${activeAssessment}', 'status', this.value)"
+                        class="bg-black/60 border border-white/10 text-xs font-bold rounded-lg px-2 py-1 focus:outline-none cursor-pointer ${statusVal === 'Tuntas' ? 'text-brand-neon border-brand-neon/40' : 'text-rose-400 border-rose-500/40'}">
+                  <option value="Tuntas" class="bg-brand-card text-brand-neon" ${statusVal === "Tuntas" ? "selected" : ""}>Tuntas</option>
+                  <option value="Remedial" class="bg-brand-card text-rose-400" ${statusVal === "Remedial" ? "selected" : ""}>Remedial</option>
+                </select>
+              </td>
+              <td class="text-center py-3">
+                ${remedialHtml}
+              </td>
+              <td class="py-3 px-3">
+                <input type="text" placeholder="Catatan opsional..." class="w-full bg-black/40 border border-white/10 text-xs text-slate-300 rounded-lg px-2.5 py-1 focus:outline-none focus:border-brand-neon placeholder-slate-600"
+                  value="${current.note || ""}" onchange="updateStudentData(${student.id}, '${activeAssessment}', 'note', this.value)" />
+              </td>
+            </tr>
+          `;
+        });
+
+        document.getElementById("sessionAvg").innerText = count > 0 ? (totalSessionScore / count).toFixed(1) : 0;
+        document.getElementById("passedCount").innerText = passed;
+        document.getElementById("remedialCount").innerText = remedial;
+      }
+
+      function updateStudentData(studentId, assessment, field, value) {
+        const student = studentsData.find((s) => s.id === studentId);
+        if (student) {
+          if (!student.scores[assessment]) student.scores[assessment] = { score: 0, remedialScore: "", note: "", status: "Remedial" };
+
+          if (field === "score") {
+            const scoreVal = Number(value);
+            student.scores[assessment].score = scoreVal;
+            student.scores[assessment].status = scoreVal >= KKM ? "Tuntas" : "Remedial";
+          } else if (field === "remedialScore") {
+            student.scores[assessment].remedialScore = value !== "" ? Number(value) : "";
+          } else {
+            student.scores[assessment][field] = value;
+          }
+
+          renderTable();
+        }
+      }
+
+      function openAddAssessmentModal() {
+        document.getElementById("addModal").classList.remove("hidden");
+      }
+
+      function closeAddAssessmentModal() {
+        document.getElementById("addModal").classList.add("hidden");
+      }
+
+      function openAddStudentModal() {
+        document.getElementById("addStudentModal").classList.remove("hidden");
+      }
+
+      function closeAddStudentModal() {
+        document.getElementById("addStudentModal").classList.add("hidden");
+      }
+
+      function createNewAssessment() {
+        const input = document.getElementById("newAssessmentTitle");
+        const title = input.value.trim();
+
+        if (title) {
+          if (!assessmentList.includes(title)) {
+            assessmentList.push(title);
+            studentsData.forEach((s) => {
+              if (!s.scores) s.scores = {};
+              s.scores[title] = { score: 0, remedialScore: "", note: "", status: "Remedial" };
+            });
+          }
+
+          input.value = "";
+          closeAddAssessmentModal();
+          updateSelectOptions();
+          document.getElementById("assessmentSelect").value = title;
+          renderTable();
+        }
+      }
+
+      function addNewStudent() {
+        const input = document.getElementById("newStudentName");
+        const name = input.value.trim();
+
+        if (name) {
+          const newId = studentsData.length > 0 ? Math.max(...studentsData.map((s) => s.id)) + 1 : 1;
+
+          const newStudent = {
+            id: newId,
+            name: name,
+            scores: {},
+          };
+
+          assessmentList.forEach((title) => {
+            newStudent.scores[title] = { score: 0, remedialScore: "", note: "", status: "Remedial" };
+          });
+
+          studentsData.push(newStudent);
+
+          input.value = "";
+          closeAddStudentModal();
+          renderTable();
+          saveAllGrades();
+        }
+      }
+
+      async function saveAllGrades() {
+        const syncStatus = document.getElementById("syncStatus");
+        syncStatus.innerHTML = `<i class="bi bi-arrow-repeat text-amber-400 animate-spin"></i> Menyimpan...`;
+
+        try {
+          await fetch(GOOGLE_SCRIPT_URL, {
+            method: "POST",
+            mode: "no-cors",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              action: "saveGrades",
+              assessments: assessmentList,
+              students: studentsData,
+            }),
+          });
+
+          syncStatus.innerHTML = `<i class="bi bi-cloud-check text-brand-neon"></i> Tersimpan ke Google Sheets!`;
+          setTimeout(() => {
+            syncStatus.innerHTML = `<i class="bi bi-cloud-check text-brand-neon"></i> Terhubung ke Google Sheets`;
+          }, 3000);
+        } catch (err) {
+          console.error("Gagal menyimpan:", err);
+          syncStatus.innerHTML = `<i class="bi bi-exclamation-triangle text-rose-500"></i> Gagal Menyimpan`;
+        }
+      }
+
+      fetchGrades();
+    </script>
+  </body>
+</html>
