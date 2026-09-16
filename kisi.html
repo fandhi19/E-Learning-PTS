@@ -364,7 +364,7 @@
         <p class="text-textGray text-sm md:text-base max-w-2xl mx-auto">Kerjakan soal di bawah ini dengan cara penyelesaiannya! Klik tombol pembahasan untuk mencocokkan jawabanmu.</p>
       </div>
 
-      <!-- Soal 1 -->
+      <!-- ================== SOAL 1 : Simulator Stack & Queue ================== -->
       <div class="w-full bg-brandGray border border-white/5 rounded-3xl p-6 md:p-8 mb-10 box-border">
         <div class="flex items-start gap-4 mb-6 w-full">
           <div class="flex-1 min-w-0">
@@ -538,7 +538,319 @@
         </div>
       </div>
 
-      <!-- Soal 2 -->
+      <!-- ================== SOAL TAMBAHAN 1 : Simulasi Stack ================== -->
+      <div class="w-full bg-brandGray border border-white/5 rounded-3xl p-6 md:p-8 mb-10 box-border">
+        <div class="flex items-start gap-4 mb-6 w-full">
+          <div class="flex-1 min-w-0">
+            <h3 class="text-xl md:text-2xl font-bold text-white">Simulasi Stack</h3>
+            <p class="text-textGray text-sm mt-2 leading-relaxed">Perhatikan aturan simulator stack berikut!</p>
+
+            <!-- Tabel Perintah Stack -->
+            <div class="overflow-x-auto my-4 bg-white/5 border border-white/10 rounded-2xl p-3 w-full">
+              <table class="w-full text-center border-collapse text-xs md:text-sm font-sans">
+                <thead>
+                  <tr class="bg-brandGreen/20 text-brandGreen font-bold">
+                    <th class="p-2 border border-white/10 text-white">Perintah</th>
+                    <th class="p-2 border border-white/10 text-white">Hal yang dilakukan Simulator</th>
+                  </tr>
+                </thead>
+                <tbody class="text-gray-200">
+                  <tr class="hover:bg-white/5 transition">
+                    <td class="p-2 border border-white/10 font-semibold text-white">Push</td>
+                    <td class="p-2 border border-white/10">Memasukan angka pada simulator stack</td>
+                  </tr>
+                  <tr class="hover:bg-white/5 transition">
+                    <td class="p-2 border border-white/10 font-semibold text-white">Pop</td>
+                    <td class="p-2 border border-white/10">Menghapus angka akhir pada barisan angka</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <p class="text-sm text-gray-300 mt-4">Edo memberikan tantangan pada Adi agar simulator menampilkan urutan angka sebagai berikut ini!</p>
+            <div class="text-center text-2xl md:text-3xl font-bold text-brandGreen my-4">0, 4, 3, 2</div>
+            <p class="text-sm text-gray-300">Bantu Adi mengisi tabel dengan memasukkan angka inputan agar menghasilkan urutan angka seperti di atas!</p>
+          </div>
+        </div>
+
+        <!-- Tabel Input Jawaban Simulasi Stack -->
+        <div class="overflow-x-auto bg-white/5 border border-white/10 rounded-2xl p-4 mb-6 w-full">
+          <table class="w-full text-center border-collapse text-xs md:text-sm font-sans">
+            <thead>
+              <tr class="bg-brandGreen/20 text-brandGreen font-bold">
+                <th class="p-2 border border-white/10 text-white">Langkah</th>
+                <th class="p-2 border border-white/10 text-white">Perintah</th>
+                <th class="p-2 border border-white/10 text-white">Angka Inputan</th>
+                <th class="p-2 border border-white/10 text-white">Langkah</th>
+                <th class="p-2 border border-white/10 text-white">Perintah</th>
+                <th class="p-2 border border-white/10 text-white">Angka Inputan</th>
+              </tr>
+            </thead>
+            <tbody class="text-gray-200">
+              <tr>
+                <td class="p-2 border border-white/10">1</td>
+                <td class="p-2 border border-white/10 font-semibold text-white">Push</td>
+                <td class="p-2 border border-white/10"><span class="bg-brandGreen/20 text-white font-bold px-3 py-1 rounded">0</span></td>
+                <td class="p-2 border border-white/10">6</td>
+                <td class="p-2 border border-white/10 font-semibold text-white">Push</td>
+                <td class="p-2 border border-white/10">
+                  <input type="text" id="stack_step6" placeholder="..." class="w-16 md:w-20 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-center text-white focus:outline-none focus:border-brandGreen" />
+                </td>
+              </tr>
+              <tr>
+                <td class="p-2 border border-white/10">2</td>
+                <td class="p-2 border border-white/10 font-semibold text-white">Push</td>
+                <td class="p-2 border border-white/10">
+                  <input type="text" id="stack_step2" placeholder="..." class="w-16 md:w-20 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-center text-white focus:outline-none focus:border-brandGreen" />
+                </td>
+                <td class="p-2 border border-white/10">7</td>
+                <td class="p-2 border border-white/10 font-semibold text-white">Push</td>
+                <td class="p-2 border border-white/10">
+                  <input type="text" id="stack_step7" placeholder="..." class="w-16 md:w-20 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-center text-white focus:outline-none focus:border-brandGreen" />
+                </td>
+              </tr>
+              <tr>
+                <td class="p-2 border border-white/10">3</td>
+                <td class="p-2 border border-white/10 font-semibold text-white">Pop</td>
+                <td class="p-2 border border-white/10"><span class="text-gray-500">-</span></td>
+                <td class="p-2 border border-white/10">8</td>
+                <td class="p-2 border border-white/10 font-semibold text-white">Pop</td>
+                <td class="p-2 border border-white/10"><span class="text-gray-500">-</span></td>
+              </tr>
+              <tr>
+                <td class="p-2 border border-white/10">4</td>
+                <td class="p-2 border border-white/10 font-semibold text-white">Pop</td>
+                <td class="p-2 border border-white/10"><span class="text-gray-500">-</span></td>
+                <td class="p-2 border border-white/10">9</td>
+                <td class="p-2 border border-white/10 font-semibold text-white">Push</td>
+                <td class="p-2 border border-white/10"><span class="bg-brandGreen/20 text-white font-bold px-3 py-1 rounded">3</span></td>
+              </tr>
+              <tr>
+                <td class="p-2 border border-white/10">5</td>
+                <td class="p-2 border border-white/10 font-semibold text-white">Push</td>
+                <td class="p-2 border border-white/10">
+                  <input type="text" id="stack_step5" placeholder="..." class="w-16 md:w-20 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-center text-white focus:outline-none focus:border-brandGreen" />
+                </td>
+                <td class="p-2 border border-white/10">10</td>
+                <td class="p-2 border border-white/10 font-semibold text-white">Push</td>
+                <td class="p-2 border border-white/10">
+                  <input type="text" id="stack_step10" placeholder="..." class="w-16 md:w-20 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-center text-white focus:outline-none focus:border-brandGreen" />
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Tombol Toggle Pembahasan Simulasi Stack -->
+        <button onclick="togglePembahasan('pembahasanStack')" class="bg-brandGreen/10 border border-brandGreen/30 hover:bg-brandGreen/20 text-brandGreen font-bold py-3 px-6 rounded-2xl text-xs md:text-sm transition flex items-center gap-2">
+          <i class="fa-solid fa-lightbulb"></i> Lihat Kunci Jawaban & Pembahasan Simulasi Stack
+        </button>
+
+        <!-- KUNCI JAWABAN & PEMBAHASAN SIMULASI STACK -->
+        <div id="pembahasanStack" class="hidden mt-6 w-full bg-brandCard border border-brandGreen/30 rounded-3xl p-6 md:p-8 space-y-4 box-border">
+          <div class="flex items-center gap-2 text-brandGreen font-bold text-lg border-b border-white/10 pb-3"><i class="fa-solid fa-circle-check"></i> Kunci Jawaban & Penjelasan Step-by-Step (Simulasi Stack)</div>
+
+          <div class="space-y-3 text-sm text-gray-200 leading-relaxed">
+            <p><strong class="text-white">Target Output (Isi Stack Akhir, dibaca dari bawah ke atas):</strong> <span class="text-brandGreen font-bold">0, 4, 3, 2</span></p>
+            <p><strong>Aturan Simulator:</strong></p>
+            <ul class="list-disc list-inside space-y-1 text-textGray pl-2">
+              <li><strong class="text-white">Push X:</strong> Menambahkan angka X ke posisi paling belakang (top) stack.</li>
+              <li><strong class="text-white">Pop (LIFO):</strong> Menghapus angka pada posisi paling akhir (top) stack.</li>
+            </ul>
+
+            <div class="bg-black/50 border border-white/10 rounded-2xl p-4 mt-4 w-full">
+              <h4 class="font-bold text-brandGreen mb-3">🔑 Kunci Angka Inputan:</h4>
+              <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 text-center w-full">
+                <div class="bg-white/5 p-2 rounded-xl border border-white/10">
+                  <span class="text-xs text-textGray block">Langkah 2</span><strong class="text-brandGreen text-base">9</strong><span class="text-[10px] text-textGray block">(bebas)</span>
+                </div>
+                <div class="bg-white/5 p-2 rounded-xl border border-white/10"><span class="text-xs text-textGray block">Langkah 5</span><strong class="text-brandGreen text-base">0</strong></div>
+                <div class="bg-white/5 p-2 rounded-xl border border-white/10"><span class="text-xs text-textGray block">Langkah 6</span><strong class="text-brandGreen text-base">4</strong></div>
+                <div class="bg-white/5 p-2 rounded-xl border border-white/10">
+                  <span class="text-xs text-textGray block">Langkah 7</span><strong class="text-brandGreen text-base">8</strong><span class="text-[10px] text-textGray block">(bebas)</span>
+                </div>
+                <div class="bg-white/5 p-2 rounded-xl border border-white/10"><span class="text-xs text-textGray block">Langkah 10</span><strong class="text-brandGreen text-base">2</strong></div>
+              </div>
+              <p class="text-[11px] text-textGray mt-3 italic">*Catatan: Langkah 2 dan Langkah 7 adalah angka "umpan" yang akan langsung dihapus oleh Pop pada langkah berikutnya, sehingga nilainya bisa berapa saja.</p>
+            </div>
+
+            <h4 class="font-bold text-white pt-2">Simulasi Penelusuran Langkah demi Langkah:</h4>
+            <ol class="list-decimal list-inside space-y-2 text-xs md:text-sm text-gray-300">
+              <li><strong>Push 0:</strong> Isinya <code class="text-brandGreen">[0]</code></li>
+              <li><strong>Push 9 (bebas):</strong> Isinya <code class="text-brandGreen">[0, 9]</code></li>
+              <li><strong>Pop:</strong> Menghapus angka terakhir (<code class="text-yellow-400">9</code>). Sisa: <code class="text-brandGreen">[0]</code></li>
+              <li><strong>Pop:</strong> Menghapus angka terakhir (<code class="text-yellow-400">0</code>). Sisa: <code class="text-brandGreen">[]</code></li>
+              <li><strong>Push 0:</strong> Isinya <code class="text-brandGreen">[0]</code></li>
+              <li><strong>Push 4:</strong> Isinya <code class="text-brandGreen">[0, 4]</code></li>
+              <li><strong>Push 8 (bebas):</strong> Isinya <code class="text-brandGreen">[0, 4, 8]</code></li>
+              <li><strong>Pop:</strong> Menghapus angka terakhir (<code class="text-yellow-400">8</code>). Sisa: <code class="text-brandGreen">[0, 4]</code></li>
+              <li><strong>Push 3:</strong> Isinya <code class="text-brandGreen">[0, 4, 3]</code></li>
+              <li><strong>Push 2:</strong> Isinya <code class="text-brandGreen">[0, 4, 3, 2]</code></li>
+            </ol>
+            <p class="text-xs text-textGray bg-white/5 p-3 rounded-xl border border-white/10 mt-2">
+              💡 <strong>Hasil Akhir:</strong> Isi stack dari bawah ke atas adalah <strong class="text-brandGreen">0, 4, 3, 2</strong> sesuai dengan urutan angka yang diminta.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================== SOAL TAMBAHAN 2 : Simulasi Queue ================== -->
+      <div class="w-full bg-brandGray border border-white/5 rounded-3xl p-6 md:p-8 mb-10 box-border">
+        <div class="flex items-start gap-4 mb-6 w-full">
+          <div class="flex-1 min-w-0">
+            <h3 class="text-xl md:text-2xl font-bold text-white">Simulasi Queue</h3>
+            <p class="text-textGray text-sm mt-2 leading-relaxed">Perhatikan aturan simulator queue berikut!</p>
+
+            <!-- Tabel Perintah Queue -->
+            <div class="overflow-x-auto my-4 bg-white/5 border border-white/10 rounded-2xl p-3 w-full">
+              <table class="w-full text-center border-collapse text-xs md:text-sm font-sans">
+                <thead>
+                  <tr class="bg-brandGreen/20 text-brandGreen font-bold">
+                    <th class="p-2 border border-white/10 text-white">Perintah</th>
+                    <th class="p-2 border border-white/10 text-white">Hal yang dilakukan Simulator</th>
+                  </tr>
+                </thead>
+                <tbody class="text-gray-200">
+                  <tr class="hover:bg-white/5 transition">
+                    <td class="p-2 border border-white/10 font-semibold text-white">Enqueue</td>
+                    <td class="p-2 border border-white/10">Memasukan angka pada simulator queue</td>
+                  </tr>
+                  <tr class="hover:bg-white/5 transition">
+                    <td class="p-2 border border-white/10 font-semibold text-white">Dequeue</td>
+                    <td class="p-2 border border-white/10">Menghapus angka pada antrean pertama</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <p class="text-sm text-gray-300 mt-4">Edo memberikan tantangan pada Adi agar simulator menampilkan urutan angka sebagai berikut ini!</p>
+            <div class="text-center text-2xl md:text-3xl font-bold text-brandGreen my-4">2, 6, 1, 3</div>
+            <p class="text-sm text-gray-300">Bantu Adi mengisi tabel dengan memasukkan angka inputan agar menghasilkan urutan angka seperti di atas!</p>
+          </div>
+        </div>
+
+        <!-- Tabel Input Jawaban Simulasi Queue -->
+        <div class="overflow-x-auto bg-white/5 border border-white/10 rounded-2xl p-4 mb-6 w-full">
+          <table class="w-full text-center border-collapse text-xs md:text-sm font-sans">
+            <thead>
+              <tr class="bg-brandGreen/20 text-brandGreen font-bold">
+                <th class="p-2 border border-white/10 text-white">Langkah</th>
+                <th class="p-2 border border-white/10 text-white">Perintah</th>
+                <th class="p-2 border border-white/10 text-white">Angka Inputan</th>
+                <th class="p-2 border border-white/10 text-white">Langkah</th>
+                <th class="p-2 border border-white/10 text-white">Perintah</th>
+                <th class="p-2 border border-white/10 text-white">Angka Inputan</th>
+              </tr>
+            </thead>
+            <tbody class="text-gray-200">
+              <tr>
+                <td class="p-2 border border-white/10">1</td>
+                <td class="p-2 border border-white/10 font-semibold text-white">Enqueue</td>
+                <td class="p-2 border border-white/10"><span class="bg-brandGreen/20 text-white font-bold px-3 py-1 rounded">4</span></td>
+                <td class="p-2 border border-white/10">6</td>
+                <td class="p-2 border border-white/10 font-semibold text-white">Enqueue</td>
+                <td class="p-2 border border-white/10">
+                  <input type="text" id="queue_step6" placeholder="..." class="w-16 md:w-20 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-center text-white focus:outline-none focus:border-brandGreen" />
+                </td>
+              </tr>
+              <tr>
+                <td class="p-2 border border-white/10">2</td>
+                <td class="p-2 border border-white/10 font-semibold text-white">Enqueue</td>
+                <td class="p-2 border border-white/10">
+                  <input type="text" id="queue_step2" placeholder="..." class="w-16 md:w-20 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-center text-white focus:outline-none focus:border-brandGreen" />
+                </td>
+                <td class="p-2 border border-white/10">7</td>
+                <td class="p-2 border border-white/10 font-semibold text-white">Enqueue</td>
+                <td class="p-2 border border-white/10">
+                  <input type="text" id="queue_step7" placeholder="..." class="w-16 md:w-20 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-center text-white focus:outline-none focus:border-brandGreen" />
+                </td>
+              </tr>
+              <tr>
+                <td class="p-2 border border-white/10">3</td>
+                <td class="p-2 border border-white/10 font-semibold text-white">Dequeue</td>
+                <td class="p-2 border border-white/10"><span class="text-gray-500">-</span></td>
+                <td class="p-2 border border-white/10">8</td>
+                <td class="p-2 border border-white/10 font-semibold text-white">Dequeue</td>
+                <td class="p-2 border border-white/10"><span class="text-gray-500">-</span></td>
+              </tr>
+              <tr>
+                <td class="p-2 border border-white/10">4</td>
+                <td class="p-2 border border-white/10 font-semibold text-white">Dequeue</td>
+                <td class="p-2 border border-white/10"><span class="text-gray-500">-</span></td>
+                <td class="p-2 border border-white/10">9</td>
+                <td class="p-2 border border-white/10 font-semibold text-white">Enqueue</td>
+                <td class="p-2 border border-white/10"><span class="bg-brandGreen/20 text-white font-bold px-3 py-1 rounded">1</span></td>
+              </tr>
+              <tr>
+                <td class="p-2 border border-white/10">5</td>
+                <td class="p-2 border border-white/10 font-semibold text-white">Enqueue</td>
+                <td class="p-2 border border-white/10">
+                  <input type="text" id="queue_step5" placeholder="..." class="w-16 md:w-20 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-center text-white focus:outline-none focus:border-brandGreen" />
+                </td>
+                <td class="p-2 border border-white/10">10</td>
+                <td class="p-2 border border-white/10 font-semibold text-white">Enqueue</td>
+                <td class="p-2 border border-white/10">
+                  <input type="text" id="queue_step10" placeholder="..." class="w-16 md:w-20 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-center text-white focus:outline-none focus:border-brandGreen" />
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Tombol Toggle Pembahasan Simulasi Queue -->
+        <button onclick="togglePembahasan('pembahasanQueue')" class="bg-brandGreen/10 border border-brandGreen/30 hover:bg-brandGreen/20 text-brandGreen font-bold py-3 px-6 rounded-2xl text-xs md:text-sm transition flex items-center gap-2">
+          <i class="fa-solid fa-lightbulb"></i> Lihat Kunci Jawaban & Pembahasan Simulasi Queue
+        </button>
+
+        <!-- KUNCI JAWABAN & PEMBAHASAN SIMULASI QUEUE -->
+        <div id="pembahasanQueue" class="hidden mt-6 w-full bg-brandCard border border-brandGreen/30 rounded-3xl p-6 md:p-8 space-y-4 box-border">
+          <div class="flex items-center gap-2 text-brandGreen font-bold text-lg border-b border-white/10 pb-3"><i class="fa-solid fa-circle-check"></i> Kunci Jawaban & Penjelasan Step-by-Step (Simulasi Queue)</div>
+
+          <div class="space-y-3 text-sm text-gray-200 leading-relaxed">
+            <p><strong class="text-white">Target Output (Isi Queue Akhir, dibaca dari depan ke belakang):</strong> <span class="text-brandGreen font-bold">2, 6, 1, 3</span></p>
+            <p><strong>Aturan Simulator:</strong></p>
+            <ul class="list-disc list-inside space-y-1 text-textGray pl-2">
+              <li><strong class="text-white">Enqueue X:</strong> Menambahkan angka X ke posisi paling belakang antrean.</li>
+              <li><strong class="text-white">Dequeue (FIFO):</strong> Menghapus angka pada posisi paling depan antrean.</li>
+            </ul>
+
+            <div class="bg-black/50 border border-white/10 rounded-2xl p-4 mt-4 w-full">
+              <h4 class="font-bold text-brandGreen mb-3">🔑 Kunci Angka Inputan:</h4>
+              <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 text-center w-full">
+                <div class="bg-white/5 p-2 rounded-xl border border-white/10">
+                  <span class="text-xs text-textGray block">Langkah 2</span><strong class="text-brandGreen text-base">7</strong><span class="text-[10px] text-textGray block">(bebas)</span>
+                </div>
+                <div class="bg-white/5 p-2 rounded-xl border border-white/10">
+                  <span class="text-xs text-textGray block">Langkah 5</span><strong class="text-brandGreen text-base">8</strong><span class="text-[10px] text-textGray block">(bebas)</span>
+                </div>
+                <div class="bg-white/5 p-2 rounded-xl border border-white/10"><span class="text-xs text-textGray block">Langkah 6</span><strong class="text-brandGreen text-base">2</strong></div>
+                <div class="bg-white/5 p-2 rounded-xl border border-white/10"><span class="text-xs text-textGray block">Langkah 7</span><strong class="text-brandGreen text-base">6</strong></div>
+                <div class="bg-white/5 p-2 rounded-xl border border-white/10"><span class="text-xs text-textGray block">Langkah 10</span><strong class="text-brandGreen text-base">3</strong></div>
+              </div>
+              <p class="text-[11px] text-textGray mt-3 italic">*Catatan: Langkah 2 dan Langkah 5 adalah angka "umpan" yang akan langsung dihapus oleh Dequeue pada langkah berikutnya, sehingga nilainya bisa berapa saja.</p>
+            </div>
+
+            <h4 class="font-bold text-white pt-2">Simulasi Penelusuran Langkah demi Langkah:</h4>
+            <ol class="list-decimal list-inside space-y-2 text-xs md:text-sm text-gray-300">
+              <li><strong>Enqueue 4:</strong> Isinya <code class="text-brandGreen">[4]</code></li>
+              <li><strong>Enqueue 7 (bebas):</strong> Isinya <code class="text-brandGreen">[4, 7]</code></li>
+              <li><strong>Dequeue:</strong> Menghapus angka pertama (<code class="text-yellow-400">4</code>). Sisa: <code class="text-brandGreen">[7]</code></li>
+              <li><strong>Dequeue:</strong> Menghapus angka pertama (<code class="text-yellow-400">7</code>). Sisa: <code class="text-brandGreen">[]</code></li>
+              <li><strong>Enqueue 8 (bebas):</strong> Isinya <code class="text-brandGreen">[8]</code></li>
+              <li><strong>Enqueue 2:</strong> Isinya <code class="text-brandGreen">[8, 2]</code></li>
+              <li><strong>Enqueue 6:</strong> Isinya <code class="text-brandGreen">[8, 2, 6]</code></li>
+              <li><strong>Dequeue:</strong> Menghapus angka pertama (<code class="text-yellow-400">8</code>). Sisa: <code class="text-brandGreen">[2, 6]</code></li>
+              <li><strong>Enqueue 1:</strong> Isinya <code class="text-brandGreen">[2, 6, 1]</code></li>
+              <li><strong>Enqueue 3:</strong> Isinya <code class="text-brandGreen">[2, 6, 1, 3]</code></li>
+            </ol>
+            <p class="text-xs text-textGray bg-white/5 p-3 rounded-xl border border-white/10 mt-2">
+              💡 <strong>Hasil Akhir:</strong> Isi queue dari depan ke belakang adalah <strong class="text-brandGreen">2, 6, 1, 3</strong> sesuai dengan urutan angka yang diminta.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================== SOAL 2 : Tiga Algoritma Sorting ================== -->
       <div class="w-full bg-brandGray border border-white/5 rounded-3xl p-6 md:p-8 box-border">
         <div class="flex items-start gap-4 mb-6 w-full">
           <div class="flex-1 min-w-0">
