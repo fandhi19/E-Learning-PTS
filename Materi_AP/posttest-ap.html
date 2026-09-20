@@ -1,0 +1,797 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Post-Test: Algoritma & Pemrograman - RuangInformatika</title>
+    <link rel="shortcut icon" href="images/Logo Patbhe.png" type="image/x-icon" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ["Inter", "sans-serif"],
+              mono: ["Fira Code", "ui-monospace", "Consolas", "monospace"],
+            },
+            colors: {
+              brandDark: "#0a0a0a",
+              brandGray: "#151515",
+              brandGreen: "#00e676",
+              textGray: "#d1d5db",
+            },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      .bg-grid {
+        background-size: 40px 40px;
+        background-image: linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+      }
+
+      /* ==================== POST-TEST STYLES ==================== */
+      .question-card {
+        transition: all 0.3s ease;
+      }
+      .question-card.correct {
+        border-color: rgba(0, 230, 118, 0.6) !important;
+        background: rgba(0, 230, 118, 0.05) !important;
+      }
+      .question-card.wrong {
+        border-color: rgba(244, 63, 94, 0.6) !important;
+        background: rgba(244, 63, 94, 0.05) !important;
+      }
+
+      .option-label {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 14px 16px;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: rgba(255, 255, 255, 0.02);
+        cursor: pointer;
+        transition: all 0.2s ease;
+        user-select: none;
+      }
+      .option-label:hover {
+        background: rgba(56, 189, 248, 0.05);
+        border-color: rgba(56, 189, 248, 0.3);
+      }
+      .option-label input[type="radio"] {
+        display: none;
+      }
+      .option-label .option-marker {
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        border: 2px solid rgba(255, 255, 255, 0.25);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        margin-top: 1px;
+        font-size: 11px;
+        font-weight: 700;
+        color: transparent;
+        transition: all 0.2s ease;
+      }
+      .option-label input[type="radio"]:checked ~ .option-marker {
+        border-color: #38bdf8;
+        background: #38bdf8;
+        color: #0a0a0a;
+      }
+      .option-label.selected {
+        background: rgba(56, 189, 248, 0.08);
+        border-color: rgba(56, 189, 248, 0.5);
+      }
+      .option-label.disabled {
+        cursor: not-allowed;
+        pointer-events: none;
+      }
+      .option-label.review-correct {
+        background: rgba(0, 230, 118, 0.1) !important;
+        border-color: rgba(0, 230, 118, 0.5) !important;
+      }
+      .option-label.review-correct .option-marker {
+        background: #00e676;
+        border-color: #00e676;
+        color: #0a0a0a;
+      }
+      .option-label.review-wrong {
+        background: rgba(244, 63, 94, 0.1) !important;
+        border-color: rgba(244, 63, 94, 0.5) !important;
+      }
+      .option-label.review-wrong .option-marker {
+        background: #f43f5e;
+        border-color: #f43f5e;
+        color: white;
+      }
+      .progress-bar-fill {
+        transition: width 0.4s ease;
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(15px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .fade-in-up {
+        animation: fadeInUp 0.5s ease forwards;
+      }
+
+      @keyframes scorePulse {
+        0% {
+          transform: scale(0.8);
+          opacity: 0;
+        }
+        50% {
+          transform: scale(1.05);
+        }
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+      .score-pulse {
+        animation: scorePulse 0.6s ease forwards;
+      }
+
+      @media (max-width: 640px) {
+        body {
+          font-size: 1rem;
+        }
+        h1 {
+          font-size: 1.75rem !important;
+          line-height: 1.2 !important;
+        }
+        h2 {
+          font-size: 1.35rem !important;
+        }
+      }
+    </style>
+  </head>
+  <body class="bg-brandDark text-white font-sans antialiased overflow-x-hidden flex flex-col min-h-screen text-lg">
+    <!-- Navbar -->
+    <nav class="max-w-7xl mx-auto px-6 py-6 flex items-center justify-between border-b border-white/5 relative z-50 w-full">
+      <div class="flex items-center gap-3">
+        <i class="fa-solid fa-code text-brandGreen text-xl"></i>
+        <span class="text-xl font-bold tracking-tight text-brandGreen">RuangInformatika</span>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <!-- Tombol Kembali (Desktop) -->
+        <a href="materi-algoritma.html" class="hidden md:flex items-center gap-2 border border-white/10 rounded-full px-5 py-2.5 text-sm font-medium hover:bg-white/5 transition">
+          <i class="fa-solid fa-arrow-left text-brandGreen"></i> Kembali
+        </a>
+
+        <!-- Tombol Pak Ilyas (Desktop) -->
+        <button class="hidden md:flex items-center gap-2 border border-white/10 rounded-full px-5 py-2.5 text-sm font-medium hover:bg-white/5 transition"><i class="fa-solid fa-chalkboard-user text-brandGreen"></i> Pak Ilyas</button>
+
+        <!-- Tombol Kembali (Mobile) -->
+        <a href="materi-algoritma.html" class="md:hidden flex items-center justify-center w-10 h-10 border border-white/10 rounded-full hover:bg-white/5 transition" aria-label="Kembali">
+          <i class="fa-solid fa-arrow-left text-brandGreen"></i>
+        </a>
+
+        <!-- Hamburger Button (Mobile) -->
+        <button id="hamburgerBtn" class="md:hidden text-white text-2xl focus:outline-none" aria-label="Menu">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="flex-grow relative bg-grid">
+      <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-sky-500/5 rounded-full blur-[120px] pointer-events-none"></div>
+
+      <main class="max-w-4xl mx-auto px-6 py-12 relative z-10">
+        <!-- HEADER POST-TEST -->
+        <div class="mb-8 text-center md:text-left fade-in-up">
+          <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-sky-500/10 border border-sky-500/30 text-sm font-bold text-sky-400 mb-4"><i class="fa-solid fa-clipboard-check"></i> Tahap 2 • Post-Test</div>
+          <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight mb-3 leading-tight">
+            Post-Test<br />
+            <span class="text-sky-400">Algoritma &amp; Pemrograman</span>
+          </h1>
+          <p class="text-textGray text-base md:text-lg max-w-2xl leading-relaxed">
+            Ukur kembali pemahamanmu setelah membaca materi, mengerjakan simulasi, dan menyelesaikan LKPD. Kerjakan dengan jujur — hasil ini untuk melihat perkembanganmu!
+          </p>
+        </div>
+
+        <!-- ============ SECTION 1: FORM IDENTITAS ============ -->
+        <div id="posttest-form-section" class="space-y-6">
+          <div class="bg-gradient-to-br from-sky-500/10 via-brandGray to-brandGray border border-sky-500/30 rounded-3xl p-6 md:p-8 text-center md:text-left">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-sky-500/15 border border-sky-500/30 text-sm font-bold text-sky-400 mb-4"><i class="fa-solid fa-clipboard-check"></i> Tahap 2 • Post-Test</div>
+            <h2 class="text-2xl md:text-4xl font-extrabold tracking-tight mb-3">Uji Pemahaman Akhirmu</h2>
+            <p class="text-textGray text-base md:text-lg max-w-2xl leading-relaxed">
+              Jawab 10 soal berikut. Nilai Post-Test ini akan <strong class="text-white">dibandingkan dengan nilai Pre-Test</strong> untuk melihat seberapa jauh pemahamanmu berkembang. 💪
+            </p>
+          </div>
+
+          <!-- Info Card -->
+          <div class="bg-brandGray border border-white/10 rounded-2xl p-5 md:p-6">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-xl bg-sky-500/10 border border-sky-500/25 flex items-center justify-center text-sky-400 text-lg shrink-0">
+                  <i class="fa-solid fa-list-ol"></i>
+                </div>
+                <div>
+                  <p class="text-xs text-textGray uppercase tracking-wider font-bold">Jumlah Soal</p>
+                  <p class="text-white font-bold">10 Pilihan Ganda</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-xl bg-purple-500/10 border border-purple-500/25 flex items-center justify-center text-purple-400 text-lg shrink-0">
+                  <i class="fa-solid fa-clock"></i>
+                </div>
+                <div>
+                  <p class="text-xs text-textGray uppercase tracking-wider font-bold">Estimasi Waktu</p>
+                  <p class="text-white font-bold">±10 Menit</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-xl bg-brandGreen/10 border border-brandGreen/25 flex items-center justify-center text-brandGreen text-lg shrink-0">
+                  <i class="fa-solid fa-star-half-stroke"></i>
+                </div>
+                <div>
+                  <p class="text-xs text-textGray uppercase tracking-wider font-bold">Penilaian</p>
+                  <p class="text-white font-bold">10 Poin / Soal</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Form Input -->
+          <div class="bg-brandGray border border-sky-500/30 rounded-2xl p-6 md:p-8 space-y-5">
+            <div class="flex items-center gap-3 border-b border-white/10 pb-4">
+              <div class="w-11 h-11 rounded-xl bg-sky-500/10 border border-sky-500/25 flex items-center justify-center text-sky-400 text-lg shrink-0">
+                <i class="fa-solid fa-user-pen"></i>
+              </div>
+              <div>
+                <h3 class="text-lg md:text-xl font-bold text-white">Isi Data Dirimu Dulu</h3>
+                <p class="text-xs md:text-sm text-textGray">Data ini digunakan untuk menyimpan hasil Post-Test kamu.</p>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-bold text-textGray uppercase mb-2">Nama Lengkap <span class="text-rose-400">*</span></label>
+                <input
+                  type="text"
+                  id="posttest-nama"
+                  placeholder="Contoh: Budi Santoso"
+                  class="w-full bg-brandDark border border-white/20 rounded-xl px-4 py-3 text-white font-semibold text-base focus:outline-none focus:border-sky-400 transition"
+                />
+              </div>
+              <div>
+                <label class="block text-sm font-bold text-textGray uppercase mb-2">Nomor Absen <span class="text-rose-400">*</span></label>
+                <input
+                  type="number"
+                  id="posttest-absen"
+                  placeholder="Contoh: 15"
+                  min="1"
+                  max="50"
+                  class="w-full bg-brandDark border border-white/20 rounded-xl px-4 py-3 text-white font-semibold text-base focus:outline-none focus:border-sky-400 transition"
+                />
+              </div>
+            </div>
+
+            <div id="posttest-form-warning" class="hidden text-rose-400 text-sm font-semibold bg-rose-500/10 border border-rose-500/30 rounded-lg px-4 py-3">
+              <i class="fa-solid fa-triangle-exclamation mr-2"></i><span id="posttest-form-warning-text"></span>
+            </div>
+
+            <button onclick="startPostTest()" class="w-full py-4 bg-sky-500 text-white font-bold rounded-xl hover:bg-sky-400 transition shadow-lg shadow-sky-500/20 flex items-center justify-center gap-2 text-base">
+              <i class="fa-solid fa-play"></i> Mulai Post-Test
+            </button>
+          </div>
+        </div>
+
+        <!-- ============ SECTION 2: SOAL POST-TEST ============ -->
+        <div id="posttest-quiz-section" class="hidden space-y-6">
+          <!-- Info Siswa -->
+          <div class="bg-brandGray border border-white/10 rounded-2xl p-4 md:p-5 flex items-center justify-between flex-wrap gap-3">
+            <div class="flex items-center gap-3">
+              <div class="w-11 h-11 rounded-xl bg-sky-500/15 border border-sky-500/30 flex items-center justify-center text-sky-400 text-lg font-bold shrink-0">
+                <i class="fa-solid fa-user-check"></i>
+              </div>
+              <div>
+                <p class="text-xs text-textGray uppercase tracking-wider font-bold">Peserta</p>
+                <p class="text-white font-bold text-base"><span id="display-nama">-</span> • Absen <span id="display-absen">-</span></p>
+              </div>
+            </div>
+            <button onclick="cancelPostTest()" class="text-xs text-textGray hover:text-rose-400 transition flex items-center gap-1.5 font-semibold"><i class="fa-solid fa-rotate-left"></i> Ganti Identitas</button>
+          </div>
+
+          <!-- Progress Bar Sticky -->
+          <div id="progress-container" class="bg-brandGray/90 backdrop-blur-md border border-white/10 rounded-2xl p-4 sticky top-2 z-40">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-sm font-bold text-white flex items-center gap-2"> <i class="fa-solid fa-chart-simple text-sky-400"></i> Progress Pengerjaan </span>
+              <span class="text-sm font-bold">
+                <span id="answered-count" class="text-sky-400">0</span>
+                <span class="text-textGray">/ 10</span>
+              </span>
+            </div>
+            <div class="w-full h-2 bg-black/50 rounded-full overflow-hidden">
+              <div id="progress-fill" class="progress-bar-fill h-full bg-gradient-to-r from-sky-500 to-sky-400" style="width: 0%"></div>
+            </div>
+          </div>
+
+          <!-- Soal Container -->
+          <div id="questions-container" class="space-y-6"></div>
+
+          <!-- Submit -->
+          <div id="submit-section" class="bg-brandGray border border-sky-500/30 rounded-2xl p-6 text-center space-y-4">
+            <p class="text-textGray text-sm">Sudah yakin dengan semua jawabanmu? Pastikan tidak ada soal yang terlewat sebelum mengumpulkan.</p>
+            <button
+              id="btn-submit"
+              onclick="submitPostTest()"
+              class="inline-flex items-center gap-3 px-8 py-3.5 bg-sky-500 text-white font-bold rounded-xl hover:bg-sky-400 transition shadow-lg shadow-sky-500/20 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <i class="fa-solid fa-paper-plane"></i> Kumpulkan Jawaban
+            </button>
+            <div id="submit-warning" class="hidden text-rose-400 text-sm font-semibold">
+              <i class="fa-solid fa-triangle-exclamation mr-1"></i>
+              <span id="submit-warning-text"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ SECTION 3: HASIL ============ -->
+        <div id="posttest-result-section" class="hidden space-y-6">
+          <!-- Score Card -->
+          <div class="bg-gradient-to-br from-sky-500/15 via-brandGray to-brandGray border-2 border-sky-500/40 rounded-3xl p-8 text-center">
+            <div class="score-pulse inline-flex items-center justify-center w-32 h-32 rounded-full bg-sky-500/10 border-4 border-sky-500 mb-4 relative">
+              <div>
+                <div id="final-score" class="text-4xl md:text-5xl font-extrabold text-sky-400 leading-none">0</div>
+                <div class="text-xs text-sky-400/70 font-bold tracking-wider uppercase mt-1">/ 100</div>
+              </div>
+            </div>
+            <h2 id="score-title" class="text-2xl md:text-3xl font-bold text-white mb-2">-</h2>
+            <p id="score-message" class="text-textGray max-w-md mx-auto leading-relaxed">-</p>
+
+            <div class="grid grid-cols-2 gap-4 max-w-md mx-auto mt-6">
+              <div class="bg-white/5 border border-white/10 rounded-xl p-4">
+                <div class="text-brandGreen text-2xl font-bold" id="correct-count">0</div>
+                <div class="text-xs text-textGray uppercase tracking-wider font-bold mt-1">Benar</div>
+              </div>
+              <div class="bg-white/5 border border-white/10 rounded-xl p-4">
+                <div class="text-rose-400 text-2xl font-bold" id="wrong-count">0</div>
+                <div class="text-xs text-textGray uppercase tracking-wider font-bold mt-1">Salah</div>
+              </div>
+            </div>
+
+            <!-- Save Status -->
+            <div id="save-status" class="hidden mt-5 inline-flex items-center gap-2 text-sm font-semibold px-4 py-2 rounded-full">
+              <span id="save-status-text"><i class="fa-solid fa-spinner fa-spin mr-1"></i> Menyimpan hasil...</span>
+            </div>
+          </div>
+
+          <!-- Next Step -->
+          <div class="bg-brandGray border border-purple-500/30 rounded-2xl p-6 flex flex-col md:flex-row items-center gap-5">
+            <div class="w-14 h-14 rounded-2xl bg-purple-500/15 border border-purple-500/30 flex items-center justify-center text-purple-400 text-2xl shrink-0">
+              <i class="fa-solid fa-arrow-right"></i>
+            </div>
+            <div class="flex-1 text-center md:text-left">
+              <h3 class="font-bold text-white text-lg mb-1">Langkah Terakhir: Refleksi</h3>
+              <p class="text-sm text-textGray">Ceritakan pengalaman belajarmu dan isi refleksi sebagai penutup modul.</p>
+            </div>
+            <a href="refleksi-algoritma.html" class="inline-flex items-center gap-2 px-6 py-3 bg-purple-500 text-white font-bold rounded-xl hover:bg-purple-400 transition shadow-lg shadow-purple-500/20 whitespace-nowrap">
+              <i class="fa-solid fa-lightbulb"></i> Isi Refleksi
+            </a>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="flex flex-wrap gap-3 justify-center">
+            <button onclick="retryPostTest()" class="inline-flex items-center gap-2 px-6 py-3 bg-white/5 border border-white/15 text-white font-bold rounded-xl hover:bg-white/10 transition">
+              <i class="fa-solid fa-rotate-left"></i> Coba Lagi
+            </button>
+            <a href="materi-algoritma.html" class="inline-flex items-center gap-2 px-6 py-3 bg-white/5 border border-white/15 text-white font-bold rounded-xl hover:bg-white/10 transition">
+              <i class="fa-solid fa-book-open"></i> Kembali ke Materi
+            </a>
+            <a href="index.html" class="inline-flex items-center gap-2 px-6 py-3 bg-white/5 border border-white/15 text-white font-bold rounded-xl hover:bg-white/10 transition"> <i class="fa-solid fa-house"></i> Dashboard </a>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t border-white/5 bg-[#080808] pt-8 pb-6 relative z-10 w-full mt-auto">
+      <div class="max-w-7xl mx-auto px-6 text-center md:text-left">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-textGray">
+          <p>&copy; 2026 RuangInformatika. Dikembangkan oleh Pak Ilyas untuk kelas Informatika SMA Negeri 4 Yogyakarta.</p>
+          <div class="flex gap-4 text-xl">
+            <a href="https://github.com/fandhi19" class="hover:text-brandGreen transition"><i class="fa-brands fa-github"></i></a>
+            <a href="https://e-portofolio-fandhi.vercel.app/" class="hover:text-brandGreen transition"><i class="fa-solid fa-globe"></i></a>
+            <a href="https://www.instagram.com/fandhidk17/" class="hover:text-brandGreen transition"><i class="fa-brands fa-instagram"></i></a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Main Script -->
+    <script>
+      /* ============ MOBILE MENU ============ */
+      const hamburgerBtn = document.getElementById("hamburgerBtn");
+      const mobileMenu = document.getElementById("mobileMenu");
+      hamburgerBtn.addEventListener("click", () => {
+        mobileMenu.classList.toggle("hidden");
+        const icon = hamburgerBtn.querySelector("i");
+        icon.classList.toggle("fa-bars");
+        icon.classList.toggle("fa-xmark");
+      });
+      mobileMenu.querySelectorAll("a").forEach((item) => {
+        item.addEventListener("click", () => {
+          mobileMenu.classList.add("hidden");
+          const icon = hamburgerBtn.querySelector("i");
+          icon.classList.add("fa-bars");
+          icon.classList.remove("fa-xmark");
+        });
+      });
+
+      /* ============================================================
+         POST-TEST QUIZ
+         Soal & kunci SAMA PERSIS dengan Pre-Test
+         ============================================================ */
+
+      // 👇 GANTI URL INI DENGAN URL APPS SCRIPT KAMU
+      const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyLlfvMPJDEfj2dazOrTUxyfjpN7Ys7kbxs4lC1bwN1eR8KniAGTEPEyeYHGM7nozA5/exec";
+
+      // Data soal & kunci jawaban (SAMA PERSIS dengan Pre-Test)
+      const QUESTIONS = [
+        {
+          q: "Apa pengertian dari algoritma?",
+          options: ["Bahasa pemrograman untuk membuat game", "Urutan langkah-langkah logis dan terstruktur untuk menyelesaikan masalah", "Gambar diagram untuk menampilkan data", "Perangkat keras yang ada di dalam komputer"],
+          answer: 1,
+          explanation: "Algoritma adalah urutan langkah-langkah logis dan terstruktur untuk menyelesaikan suatu masalah.",
+        },
+        {
+          q: "Menurut Donald E. Knuth, yang termasuk lima ciri algoritma yang baik adalah…",
+          options: ["Input, Output, Finiteness, Definiteness, Effectiveness", "Sequence, Branching, Looping, Function, Class", "Start, Process, Decision, Output, End", "C++, Python, Java, HTML, CSS"],
+          answer: 0,
+          explanation: "Menurut Donald E. Knuth, 5 ciri algoritma yang baik adalah: Input, Output, Finiteness (keterbatasan), Definiteness (kepastian), dan Effectiveness (efektivitas).",
+        },
+        {
+          q: "Apa pengertian dari diagram alir (flowchart)?",
+          options: ["Kode program yang siap dijalankan di komputer", "Gambar visual berupa bentuk geometris yang menggambarkan alur program", "Teks naratif berisi cara memasak makanan", "Kumpulan rumus matematika sederhana"],
+          answer: 1,
+          explanation: "Flowchart adalah gambar visual berupa bentuk geometris (simbol) yang menggambarkan alur program.",
+        },
+        {
+          q: "Apa nama dari simbol berbentuk oval pada flowchart?",
+          options: ["Process", "Decision", "Terminator", "Flowline"],
+          answer: 2,
+          explanation: "Simbol oval (lonjong) disebut Terminator, untuk menandai titik awal (Start) atau akhir (End) program.",
+        },
+        {
+          q: "Apa fungsi dari simbol jajar genjang pada flowchart?",
+          options: ["Menandakan titik awal atau akhir program", "Menandakan titik percabangan pilihan", "Melakukan perhitungan aritmatika", "Menerima masukan (input) atau menampilkan hasil (output)"],
+          answer: 3,
+          explanation: "Simbol jajar genjang berfungsi untuk menerima input atau menampilkan output.",
+        },
+        {
+          q: "Saat membuat flowchart, proses input dan output data digambarkan menggunakan simbol…",
+          options: ["Oval", "Persegi panjang", "Jajar genjang", "Belah ketupat"],
+          answer: 2,
+          explanation: "Input/Output data digambarkan dengan simbol jajar genjang (parallelogram).",
+        },
+        {
+          q: "Simbol belah ketupat pada flowchart berfungsi untuk…",
+          options: ["Menandakan awal program", "Menandakan keputusan atau percabangan kondisi", "Menghubungkan garis alur", "Menampilkan teks ke layar"],
+          answer: 1,
+          explanation: "Simbol belah ketupat (diamond) menunjukkan keputusan atau percabangan kondisi (Ya/Tidak).",
+        },
+        {
+          q: "Simbol persegi panjang pada flowchart digunakan untuk melambangkan…",
+          options: ["Proses komputasi atau perhitungan data", "Menerima input dari pengguna", "Titik Selesai/End", "Garis penunjuk alur"],
+          answer: 0,
+          explanation: "Simbol persegi panjang melambangkan proses komputasi atau perhitungan data.",
+        },
+        {
+          q: "Alur algoritma yang dikerjakan secara lurus dan berurutan dari atas ke bawah dinamakan…",
+          options: ["Sequence", "Branching", "Looping", "Debugging"],
+          answer: 0,
+          explanation: "Sequence adalah alur algoritma yang dikerjakan secara lurus dan berurutan dari atas ke bawah.",
+        },
+        {
+          q: "Alur algoritma yang memiliki pemilihan berdasarkan kondisi tertentu (seperti kondisi Ya / Tidak) dinamakan…",
+          options: ["Sequence", "Branching", "Looping", "Input"],
+          answer: 1,
+          explanation: "Branching adalah alur algoritma yang memiliki pemilihan/percabangan berdasarkan kondisi tertentu.",
+        },
+      ];
+
+      const LETTERS = ["A", "B", "C", "D"];
+
+      let answers = new Array(QUESTIONS.length).fill(null);
+      let isSubmitted = false;
+      let studentData = { nama: "", absen: "" };
+
+      const questionsContainer = document.getElementById("questions-container");
+      const answeredCountEl = document.getElementById("answered-count");
+      const progressFill = document.getElementById("progress-fill");
+
+      /* ============ AUTO-FILL DARI PRE-TEST ============ */
+      window.addEventListener("DOMContentLoaded", () => {
+        const savedNama = localStorage.getItem("siswa_nama");
+        const savedAbsen = localStorage.getItem("siswa_absen");
+        if (savedNama) document.getElementById("posttest-nama").value = savedNama;
+        if (savedAbsen) document.getElementById("posttest-absen").value = savedAbsen;
+      });
+
+      /* ============ FORM IDENTITAS ============ */
+      function startPostTest() {
+        const namaInput = document.getElementById("posttest-nama");
+        const absenInput = document.getElementById("posttest-absen");
+        const warning = document.getElementById("posttest-form-warning");
+        const warningText = document.getElementById("posttest-form-warning-text");
+
+        const nama = namaInput.value.trim();
+        const absen = absenInput.value.trim();
+
+        if (!nama) {
+          warningText.textContent = "Nama tidak boleh kosong. Isi nama lengkap kamu ya!";
+          warning.classList.remove("hidden");
+          namaInput.focus();
+          return;
+        }
+        if (nama.length < 3) {
+          warningText.textContent = "Nama terlalu pendek. Isi nama lengkap kamu.";
+          warning.classList.remove("hidden");
+          namaInput.focus();
+          return;
+        }
+        if (!absen) {
+          warningText.textContent = "Nomor absen tidak boleh kosong.";
+          warning.classList.remove("hidden");
+          absenInput.focus();
+          return;
+        }
+        const absenNum = parseInt(absen);
+        if (isNaN(absenNum) || absenNum < 1 || absenNum > 50) {
+          warningText.textContent = "Nomor absen harus berupa angka 1-50.";
+          warning.classList.remove("hidden");
+          absenInput.focus();
+          return;
+        }
+
+        warning.classList.add("hidden");
+
+        studentData.nama = nama;
+        studentData.absen = absen;
+
+        document.getElementById("display-nama").textContent = nama;
+        document.getElementById("display-absen").textContent = absen;
+
+        document.getElementById("posttest-form-section").classList.add("hidden");
+        document.getElementById("posttest-quiz-section").classList.remove("hidden");
+        document.getElementById("posttest-result-section").classList.add("hidden");
+
+        answers = new Array(QUESTIONS.length).fill(null);
+        isSubmitted = false;
+        renderQuestions();
+        updateProgress();
+
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function cancelPostTest() {
+        if (!confirm("Yakin ingin ganti identitas? Jawabanmu akan hilang.")) return;
+
+        document.getElementById("posttest-form-section").classList.remove("hidden");
+        document.getElementById("posttest-quiz-section").classList.add("hidden");
+        document.getElementById("posttest-result-section").classList.add("hidden");
+
+        answers = new Array(QUESTIONS.length).fill(null);
+        isSubmitted = false;
+      }
+
+      /* ============ RENDER SOAL ============ */
+      function renderQuestions() {
+        questionsContainer.innerHTML = "";
+        QUESTIONS.forEach((item, idx) => {
+          const card = document.createElement("div");
+          card.className = "question-card bg-brandGray border border-white/10 rounded-2xl p-5 md:p-6 space-y-4";
+          card.id = "q-card-" + idx;
+
+          const header = document.createElement("div");
+          header.className = "flex items-start gap-3";
+          header.innerHTML = `
+            <div class="w-9 h-9 rounded-xl bg-sky-500/10 border border-sky-500/25 flex items-center justify-center text-sky-400 font-bold text-sm shrink-0">
+              ${idx + 1}
+            </div>
+            <div class="flex-1">
+              <p class="font-semibold text-white text-base md:text-lg leading-relaxed">${item.q}</p>
+            </div>
+          `;
+          card.appendChild(header);
+
+          const optionsWrap = document.createElement("div");
+          optionsWrap.className = "space-y-2.5 pl-0 md:pl-12";
+
+          item.options.forEach((opt, optIdx) => {
+            const label = document.createElement("label");
+            label.className = "option-label";
+            label.dataset.qidx = idx;
+            label.dataset.optidx = optIdx;
+            label.innerHTML = `
+              <input type="radio" name="q-${idx}" value="${optIdx}" />
+              <span class="option-marker">${LETTERS[optIdx]}</span>
+              <span class="flex-1 text-sm md:text-base text-gray-200 leading-snug">${opt}</span>
+            `;
+
+            const input = label.querySelector("input");
+            input.addEventListener("change", () => {
+              if (isSubmitted) return;
+              answers[idx] = optIdx;
+              updateSelection(idx, optIdx);
+              updateProgress();
+            });
+
+            optionsWrap.appendChild(label);
+          });
+
+          card.appendChild(optionsWrap);
+          questionsContainer.appendChild(card);
+        });
+      }
+
+      function updateSelection(qIdx, optIdx) {
+        const card = document.getElementById("q-card-" + qIdx);
+        card.querySelectorAll(".option-label").forEach((lbl, i) => {
+          lbl.classList.toggle("selected", i === optIdx);
+        });
+      }
+
+      function updateProgress() {
+        const answered = answers.filter((a) => a !== null).length;
+        answeredCountEl.textContent = answered;
+        const pct = (answered / QUESTIONS.length) * 100;
+        progressFill.style.width = pct + "%";
+      }
+
+      /* ============ SUBMIT ============ */
+      function submitPostTest() {
+        const unanswered = answers.filter((a) => a === null).length;
+        if (unanswered > 0) {
+          const warning = document.getElementById("submit-warning");
+          const warningText = document.getElementById("submit-warning-text");
+          warningText.textContent = `Masih ada ${unanswered} soal yang belum dijawab. Harap lengkapi semua soal terlebih dahulu.`;
+          warning.classList.remove("hidden");
+          setTimeout(() => warning.classList.add("hidden"), 4000);
+          const firstEmpty = answers.findIndex((a) => a === null);
+          if (firstEmpty !== -1) {
+            document.getElementById("q-card-" + firstEmpty).scrollIntoView({ behavior: "smooth", block: "center" });
+          }
+          return;
+        }
+
+        isSubmitted = true;
+        let correct = 0;
+        answers.forEach((ans, idx) => {
+          if (ans === QUESTIONS[idx].answer) correct++;
+        });
+
+        const score = correct * 10;
+
+        document.getElementById("final-score").textContent = score;
+        document.getElementById("correct-count").textContent = correct;
+        document.getElementById("wrong-count").textContent = QUESTIONS.length - correct;
+
+        let title = "";
+        let message = "";
+        if (score >= 80) {
+          title = "🌟 Luar Biasa!";
+          message = "Pemahaman akhirmu sudah sangat kuat! Kamu benar-benar menguasai materi algoritma & pemrograman dasar.";
+        } else if (score >= 60) {
+          title = "👍 Bagus!";
+          message = "Pemahaman akhirmu sudah baik. Pertahankan dan terus asah kemampuanmu!";
+        } else if (score >= 40) {
+          title = "💪 Semangat!";
+          message = "Masih ada ruang untuk bertumbuh. Coba baca ulang materi dan lihat pembahasan tiap soal ya!";
+        } else {
+          title = "📚 Ayo Belajar Lagi!";
+          message = "Jangan berkecil hati! Pelajari kembali materi & video, lalu coba Post-Test lagi.";
+        }
+
+        document.getElementById("score-title").textContent = title;
+        document.getElementById("score-message").textContent = message;
+
+        document.querySelectorAll(".option-label").forEach((lbl) => lbl.classList.add("disabled"));
+
+        QUESTIONS.forEach((item, idx) => {
+          const card = document.getElementById("q-card-" + idx);
+          const labels = card.querySelectorAll(".option-label");
+          const userAns = answers[idx];
+          const correctAns = item.answer;
+
+          labels[correctAns].classList.add("review-correct");
+          if (userAns !== correctAns) {
+            labels[userAns].classList.add("review-wrong");
+            card.classList.add("wrong");
+          } else {
+            card.classList.add("correct");
+          }
+        });
+
+        document.getElementById("posttest-quiz-section").classList.add("hidden");
+        document.getElementById("posttest-result-section").classList.remove("hidden");
+
+        sendToGoogleSheets(correct, QUESTIONS.length - correct, score);
+
+        setTimeout(() => {
+          document.getElementById("posttest-result-section").scrollIntoView({ behavior: "smooth", block: "start" });
+        }, 200);
+      }
+
+      /* ============ KIRIM KE GOOGLE SHEETS ============ */
+      async function sendToGoogleSheets(benar, salah, skor) {
+        const statusEl = document.getElementById("save-status");
+        const statusText = document.getElementById("save-status-text");
+
+        statusEl.classList.remove("hidden");
+        statusEl.className = "mt-5 inline-flex items-center gap-2 text-sm font-semibold px-4 py-2 rounded-full bg-sky-500/15 border border-sky-500/30 text-sky-400";
+        statusText.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Menyimpan hasil ke Google Sheets...';
+
+        try {
+          const formData = new URLSearchParams();
+          formData.append("jenis", "POSTTEST");
+          formData.append("nama", studentData.nama);
+          formData.append("absen", studentData.absen);
+          formData.append("skor", skor);
+          formData.append("benar", benar);
+          formData.append("salah", salah);
+          formData.append("jawaban", answers.map((a) => LETTERS[a] || "?").join(","));
+          formData.append("kunci", QUESTIONS.map((q) => LETTERS[q.answer]).join(","));
+
+          console.log("📤 Mengirim data Post-Test ke Apps Script...");
+          console.log("URL:", APPS_SCRIPT_URL);
+          console.log("Payload:", Object.fromEntries(formData));
+
+          await fetch(APPS_SCRIPT_URL, {
+            method: "POST",
+            mode: "no-cors",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: formData.toString(),
+          });
+
+          statusEl.className = "mt-5 inline-flex items-center gap-2 text-sm font-semibold px-4 py-2 rounded-full bg-brandGreen/15 border border-brandGreen/30 text-brandGreen";
+          statusText.innerHTML = '<i class="fa-solid fa-circle-check mr-1"></i> Hasil berhasil dikirim!';
+          console.log("✅ Data Post-Test terkirim. Cek Spreadsheet untuk verifikasi.");
+        } catch (err) {
+          statusEl.className = "mt-5 inline-flex items-center gap-2 text-sm font-semibold px-4 py-2 rounded-full bg-rose-500/15 border border-rose-500/30 text-rose-400";
+          statusText.innerHTML = '<i class="fa-solid fa-circle-xmark mr-1"></i> Gagal menyimpan (cek koneksi internet)';
+          console.error("Save error:", err);
+        }
+      }
+
+      /* ============ RETRY ============ */
+      function retryPostTest() {
+        if (!confirm("Yakin ingin mengulang Post-Test? Jawaban sebelumnya akan direset.")) return;
+
+        isSubmitted = false;
+        answers = new Array(QUESTIONS.length).fill(null);
+        renderQuestions();
+        updateProgress();
+
+        document.getElementById("posttest-result-section").classList.add("hidden");
+        document.getElementById("posttest-quiz-section").classList.remove("hidden");
+        document.getElementById("progress-container").classList.remove("hidden");
+        document.getElementById("submit-section").classList.remove("hidden");
+
+        document.getElementById("btn-submit").disabled = false;
+        document.getElementById("save-status").classList.add("hidden");
+
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    </script>
+  </body>
+</html>

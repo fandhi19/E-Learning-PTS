@@ -1,0 +1,589 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Refleksi Pembelajaran - RuangInformatika</title>
+    <link rel="shortcut icon" href="images/Logo Patbhe.png" type="image/x-icon" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ["Inter", "sans-serif"],
+              mono: ["Fira Code", "ui-monospace", "Consolas", "monospace"],
+            },
+            colors: {
+              brandDark: "#0a0a0a",
+              brandGray: "#151515",
+              brandGreen: "#00e676",
+              textGray: "#d1d5db",
+            },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      .bg-grid {
+        background-size: 40px 40px;
+        background-image: linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+      }
+
+      .form-input,
+      .form-textarea {
+        width: 100%;
+        background: rgba(0, 0, 0, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 12px;
+        padding: 12px 16px;
+        color: white;
+        font-size: 15px;
+        font-family: inherit;
+        transition: all 0.2s;
+      }
+      .form-textarea {
+        resize: vertical;
+        min-height: 80px;
+        line-height: 1.6;
+      }
+      .form-input:focus,
+      .form-textarea:focus {
+        outline: none;
+        border-color: #a855f7;
+        box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.15);
+      }
+      .form-textarea::placeholder,
+      .form-input::placeholder {
+        color: rgba(209, 213, 219, 0.4);
+      }
+
+      .progress-bar-fill {
+        transition: width 0.4s ease;
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(15px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .fade-in-up {
+        animation: fadeInUp 0.5s ease forwards;
+      }
+
+      @keyframes scorePulse {
+        0% {
+          transform: scale(0.8);
+          opacity: 0;
+        }
+        50% {
+          transform: scale(1.05);
+        }
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+      .score-pulse {
+        animation: scorePulse 0.6s ease forwards;
+      }
+
+      @media (max-width: 640px) {
+        body {
+          font-size: 1rem;
+        }
+        h1 {
+          font-size: 1.75rem !important;
+          line-height: 1.2 !important;
+        }
+        h2 {
+          font-size: 1.35rem !important;
+        }
+      }
+    </style>
+  </head>
+  <body class="bg-brandDark text-white font-sans antialiased overflow-x-hidden flex flex-col min-h-screen text-lg">
+    <!-- Navbar -->
+    <nav class="max-w-7xl mx-auto px-6 py-6 flex items-center justify-between border-b border-white/5 relative z-50 w-full">
+      <div class="flex items-center gap-3">
+        <i class="fa-solid fa-code text-brandGreen text-xl"></i>
+        <span class="text-xl font-bold tracking-tight text-brandGreen">RuangInformatika</span>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <!-- Tombol Kembali (Desktop) -->
+        <a href="materi-algoritma.html" class="hidden md:flex items-center gap-2 border border-white/10 rounded-full px-5 py-2.5 text-sm font-medium hover:bg-white/5 transition">
+          <i class="fa-solid fa-arrow-left text-brandGreen"></i> Kembali
+        </a>
+
+        <!-- Tombol Pak Ilyas (Desktop) -->
+        <button class="hidden md:flex items-center gap-2 border border-white/10 rounded-full px-5 py-2.5 text-sm font-medium hover:bg-white/5 transition"><i class="fa-solid fa-chalkboard-user text-brandGreen"></i> Pak Ilyas</button>
+
+        <!-- Tombol Kembali (Mobile) -->
+        <a href="materi-algoritma.html" class="md:hidden flex items-center justify-center w-10 h-10 border border-white/10 rounded-full hover:bg-white/5 transition" aria-label="Kembali">
+          <i class="fa-solid fa-arrow-left text-brandGreen"></i>
+        </a>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="flex-grow relative bg-grid">
+      <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-purple-500/5 rounded-full blur-[120px] pointer-events-none"></div>
+
+      <main class="max-w-4xl mx-auto px-6 py-12 relative z-10">
+        <!-- HEADER REFLEKSI -->
+        <div class="mb-8 text-center md:text-left fade-in-up">
+          <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/30 text-sm font-bold text-purple-400 mb-4"><i class="fa-solid fa-lightbulb"></i> Tahap 3 • Refleksi Pembelajaran</div>
+          <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight mb-3 leading-tight">
+            Refleksi Akhir<br />
+            <span class="text-purple-400">3 - 2 - 1 Reflection</span>
+          </h1>
+          <p class="text-textGray text-base md:text-lg max-w-2xl leading-relaxed">Saatnya merefleksikan apa yang sudah kamu pelajari hari ini. Jawab dengan jujur — ini ruang untukmu melihat kembali perjalanan belajarmu. 🌱</p>
+        </div>
+
+        <!-- FORM IDENTITAS -->
+        <div id="refleksi-form-section" class="space-y-6">
+          <div class="bg-gradient-to-br from-purple-500/10 via-brandGray to-brandGray border border-purple-500/30 rounded-3xl p-6 md:p-8 text-center md:text-left">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-purple-500/15 border border-purple-500/30 text-sm font-bold text-purple-400 mb-4"><i class="fa-solid fa-lightbulb"></i> Tahap 3 • Refleksi</div>
+            <h2 class="text-2xl md:text-4xl font-extrabold tracking-tight mb-3">Apa yang Kamu Dapat Hari Ini?</h2>
+            <p class="text-textGray text-base md:text-lg max-w-2xl leading-relaxed">
+              Format refleksi <strong class="text-white">3-2-1</strong>: tuliskan <strong class="text-purple-300">3 hal yang kamu pelajari</strong>, <strong class="text-purple-300">2 hal menarik</strong>, dan
+              <strong class="text-purple-300">1 hal yang masih membingungkan</strong>.
+            </p>
+          </div>
+
+          <!-- Form Input Identitas -->
+          <div class="bg-brandGray border border-purple-500/30 rounded-2xl p-6 md:p-8 space-y-5">
+            <div class="flex items-center gap-3 border-b border-white/10 pb-4">
+              <div class="w-11 h-11 rounded-xl bg-purple-500/10 border border-purple-500/25 flex items-center justify-center text-purple-400 text-lg shrink-0">
+                <i class="fa-solid fa-user-pen"></i>
+              </div>
+              <div>
+                <h3 class="text-lg md:text-xl font-bold text-white">Isi Data Dirimu Dulu</h3>
+                <p class="text-xs md:text-sm text-textGray">Data ini digunakan untuk menyimpan refleksimu.</p>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-bold text-textGray uppercase mb-2">Nama Lengkap <span class="text-rose-400">*</span></label>
+                <input type="text" id="refleksi-nama" placeholder="Contoh: Budi Santoso" class="form-input" />
+              </div>
+              <div>
+                <label class="block text-sm font-bold text-textGray uppercase mb-2">Nomor Absen <span class="text-rose-400">*</span></label>
+                <input type="number" id="refleksi-absen" placeholder="Contoh: 15" min="1" max="50" class="form-input" />
+              </div>
+            </div>
+
+            <div id="refleksi-form-warning" class="hidden text-rose-400 text-sm font-semibold bg-rose-500/10 border border-rose-500/30 rounded-lg px-4 py-3">
+              <i class="fa-solid fa-triangle-exclamation mr-2"></i><span id="refleksi-form-warning-text"></span>
+            </div>
+
+            <button onclick="startRefleksi()" class="w-full py-4 bg-purple-500 text-white font-bold rounded-xl hover:bg-purple-400 transition shadow-lg shadow-purple-500/20 flex items-center justify-center gap-2 text-base">
+              <i class="fa-solid fa-play"></i> Mulai Refleksi
+            </button>
+          </div>
+        </div>
+
+        <!-- SECTION REFLEKSI 3-2-1 -->
+        <div id="refleksi-content-section" class="hidden space-y-6">
+          <!-- Info Siswa -->
+          <div class="bg-brandGray border border-white/10 rounded-2xl p-4 md:p-5 flex items-center justify-between flex-wrap gap-3">
+            <div class="flex items-center gap-3">
+              <div class="w-11 h-11 rounded-xl bg-purple-500/15 border border-purple-500/30 flex items-center justify-center text-purple-400 text-lg font-bold shrink-0">
+                <i class="fa-solid fa-user-check"></i>
+              </div>
+              <div>
+                <p class="text-xs text-textGray uppercase tracking-wider font-bold">Peserta</p>
+                <p class="text-white font-bold text-base"><span id="display-nama">-</span> • Absen <span id="display-absen">-</span></p>
+              </div>
+            </div>
+            <button onclick="cancelRefleksi()" class="text-xs text-textGray hover:text-rose-400 transition flex items-center gap-1.5 font-semibold"><i class="fa-solid fa-rotate-left"></i> Ganti Identitas</button>
+          </div>
+
+          <!-- Progress Bar Sticky -->
+          <div id="progress-container" class="bg-brandGray/90 backdrop-blur-md border border-white/10 rounded-2xl p-4 sticky top-2 z-40">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-sm font-bold text-white flex items-center gap-2"> <i class="fa-solid fa-chart-simple text-purple-400"></i> Progress Refleksi </span>
+              <span class="text-sm font-bold">
+                <span id="answered-count" class="text-purple-400">0</span>
+                <span class="text-textGray">/ 6 bagian</span>
+              </span>
+            </div>
+            <div class="w-full h-2 bg-black/50 rounded-full overflow-hidden">
+              <div id="progress-fill" class="progress-bar-fill h-full bg-gradient-to-r from-purple-500 to-purple-400" style="width: 0%"></div>
+            </div>
+          </div>
+
+          <!-- BAGIAN 3: HAL YANG DIPELAJARI -->
+          <div class="bg-brandGray border border-brandGreen/30 rounded-2xl p-6 md:p-8 space-y-5">
+            <div class="flex items-start gap-4 border-b border-white/10 pb-4">
+              <div class="w-14 h-14 rounded-2xl bg-brandGreen/15 border-2 border-brandGreen/40 flex items-center justify-center text-brandGreen font-extrabold text-2xl shrink-0">3</div>
+              <div class="flex-1">
+                <h3 class="text-lg md:text-xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-book-open text-brandGreen"></i> Hal yang Kamu Pelajari Hari Ini</h3>
+                <p class="text-sm text-textGray mt-1">Tuliskan <strong class="text-brandGreen">3 hal baru</strong> yang kamu pelajari dalam modul ini.</p>
+              </div>
+            </div>
+
+            <div class="space-y-3">
+              <div class="flex items-start gap-3">
+                <div class="w-8 h-8 rounded-lg bg-brandGreen/15 border border-brandGreen/30 flex items-center justify-center text-brandGreen text-sm font-bold shrink-0 mt-2">1</div>
+                <textarea id="refleksi-3-1" class="form-textarea" placeholder="Contoh: Saya belajar bahwa algoritma adalah urutan langkah logis untuk menyelesaikan masalah..."></textarea>
+              </div>
+
+              <div class="flex items-start gap-3">
+                <div class="w-8 h-8 rounded-lg bg-brandGreen/15 border border-brandGreen/30 flex items-center justify-center text-brandGreen text-sm font-bold shrink-0 mt-2">2</div>
+                <textarea id="refleksi-3-2" class="form-textarea" placeholder="Contoh: Saya belajar bahwa flowchart menggunakan simbol-simbol standar..."></textarea>
+              </div>
+
+              <div class="flex items-start gap-3">
+                <div class="w-8 h-8 rounded-lg bg-brandGreen/15 border border-brandGreen/30 flex items-center justify-center text-brandGreen text-sm font-bold shrink-0 mt-2">3</div>
+                <textarea id="refleksi-3-3" class="form-textarea" placeholder="Contoh: Saya belajar bahwa percabangan (branching) memungkinkan program mengambil keputusan..."></textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- BAGIAN 2: HAL MENARIK -->
+          <div class="bg-brandGray border border-amber-500/30 rounded-2xl p-6 md:p-8 space-y-5">
+            <div class="flex items-start gap-4 border-b border-white/10 pb-4">
+              <div class="w-14 h-14 rounded-2xl bg-amber-500/15 border-2 border-amber-500/40 flex items-center justify-center text-amber-400 font-extrabold text-2xl shrink-0">2</div>
+              <div class="flex-1">
+                <h3 class="text-lg md:text-xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-star text-amber-400"></i> Hal Menarik / Paling Kamu Sukai</h3>
+                <p class="text-sm text-textGray mt-1">Tuliskan <strong class="text-amber-400">2 hal menarik</strong> atau yang paling kamu sukai dari pembelajaran hari ini.</p>
+              </div>
+            </div>
+
+            <div class="space-y-3">
+              <div class="flex items-start gap-3">
+                <div class="w-8 h-8 rounded-lg bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 text-sm font-bold shrink-0 mt-2">1</div>
+                <textarea id="refleksi-2-1" class="form-textarea" placeholder="Contoh: Saya paling suka saat mencoba Flowchart Playground karena bisa langsung drag & drop..."></textarea>
+              </div>
+
+              <div class="flex items-start gap-3">
+                <div class="w-8 h-8 rounded-lg bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 text-sm font-bold shrink-0 mt-2">2</div>
+                <textarea id="refleksi-2-2" class="form-textarea" placeholder="Contoh: Saya tertarik dengan cara compiler menerjemahkan kode C++ ke bahasa mesin..."></textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- BAGIAN 1: PERTANYAAN -->
+          <div class="bg-brandGray border border-rose-500/30 rounded-2xl p-6 md:p-8 space-y-5">
+            <div class="flex items-start gap-4 border-b border-white/10 pb-4">
+              <div class="w-14 h-14 rounded-2xl bg-rose-500/15 border-2 border-rose-500/40 flex items-center justify-center text-rose-400 font-extrabold text-2xl shrink-0">1</div>
+              <div class="flex-1">
+                <h3 class="text-lg md:text-xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-circle-question text-rose-400"></i> Pertanyaan yang Masih Membingungkan</h3>
+                <p class="text-sm text-textGray mt-1">Tuliskan <strong class="text-rose-400">1 hal</strong> yang masih membuatmu bingung atau belum kamu pahami.</p>
+              </div>
+            </div>
+
+            <div>
+              <textarea id="refleksi-1-1" class="form-textarea" style="min-height: 120px" placeholder="Contoh: Saya masih bingung bagaimana cara menentukan simbol yang tepat saat kondisi bercabang lebih dari 2 pilihan..."></textarea>
+              <p class="text-xs text-textGray italic mt-2">
+                <i class="fa-solid fa-info-circle text-rose-400 mr-1"></i>
+                Tidak apa-apa bingung! Justru pertanyaan ini akan membantu Pak Ilyas tahu bagian mana yang perlu dijelaskan ulang. 😊
+              </p>
+            </div>
+          </div>
+
+          <!-- SUBMIT -->
+          <div id="submit-section" class="bg-brandGray border border-purple-500/30 rounded-2xl p-6 text-center space-y-4">
+            <p class="text-textGray text-sm">Pastikan semua bagian sudah terisi sebelum mengumpulkan refleksi.</p>
+            <button
+              id="btn-submit"
+              onclick="submitRefleksi()"
+              class="inline-flex items-center gap-3 px-8 py-3.5 bg-purple-500 text-white font-bold rounded-xl hover:bg-purple-400 transition shadow-lg shadow-purple-500/20 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <i class="fa-solid fa-paper-plane"></i> Kumpulkan Refleksi
+            </button>
+            <div id="submit-warning" class="hidden text-rose-400 text-sm font-semibold">
+              <i class="fa-solid fa-triangle-exclamation mr-1"></i>
+              <span id="submit-warning-text"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION HASIL -->
+        <div id="refleksi-result-section" class="hidden space-y-6">
+          <div class="bg-gradient-to-br from-purple-500/15 via-brandGray to-brandGray border-2 border-purple-500/40 rounded-3xl p-8 text-center">
+            <div class="score-pulse inline-flex items-center justify-center w-24 h-24 rounded-full bg-purple-500/10 border-4 border-purple-500 mb-4">
+              <i class="fa-solid fa-check text-purple-400 text-5xl"></i>
+            </div>
+            <h2 class="text-2xl md:text-3xl font-bold text-white mb-2">Refleksi Berhasil Dikumpulkan! 🎉</h2>
+            <p class="text-textGray max-w-md mx-auto leading-relaxed text-sm">
+              Terima kasih sudah merefleksikan pembelajaranmu. Refleksi ini akan membantu Pak Ilyas memahami pengalaman belajarmu dan memperbaiki pembelajaran ke depannya. 🌱
+            </p>
+
+            <div id="save-status" class="hidden mt-5 inline-flex items-center gap-2 text-sm font-semibold px-4 py-2 rounded-full">
+              <span id="save-status-text"></span>
+            </div>
+          </div>
+
+          <!-- Modul Selesai -->
+          <div class="bg-gradient-to-r from-brandGreen/10 via-purple-500/10 to-transparent border border-brandGreen/30 rounded-2xl p-6 md:p-8 text-center">
+            <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-brandGreen/15 border-2 border-brandGreen/40 mb-4">
+              <i class="fa-solid fa-trophy text-brandGreen text-3xl"></i>
+            </div>
+            <h3 class="text-xl md:text-2xl font-bold text-white mb-2">Selamat! Modul 02 Selesai 🎓</h3>
+            <p class="text-textGray text-sm max-w-lg mx-auto leading-relaxed">
+              Kamu telah menuntaskan seluruh rangkaian pembelajaran <strong class="text-white">Algoritma &amp; Pemrograman Dasar</strong>: Pre-Test → Materi → Simulasi → Video → LKPD → Post-Test → Refleksi.
+            </p>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="flex flex-wrap gap-3 justify-center">
+            <a href="materi-algoritma.html" class="inline-flex items-center gap-2 px-6 py-3 bg-white/5 border border-white/15 text-white font-bold rounded-xl hover:bg-white/10 transition">
+              <i class="fa-solid fa-book-open"></i> Ulang Materi
+            </a>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t border-white/5 bg-[#080808] pt-8 pb-6 relative z-10 w-full mt-auto">
+      <div class="max-w-7xl mx-auto px-6 text-center md:text-left">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-textGray">
+          <p>&copy; 2026 RuangInformatika. Dikembangkan oleh Pak Ilyas untuk kelas Informatika SMA Negeri 4 Yogyakarta.</p>
+          <div class="flex gap-4 text-xl">
+            <a href="https://github.com/fandhi19" class="hover:text-brandGreen transition"><i class="fa-brands fa-github"></i></a>
+            <a href="https://e-portofolio-fandhi.vercel.app/" class="hover:text-brandGreen transition"><i class="fa-solid fa-globe"></i></a>
+            <a href="https://www.instagram.com/fandhidk17/" class="hover:text-brandGreen transition"><i class="fa-brands fa-instagram"></i></a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Main Script -->
+    <script>
+      /* ============ CONFIG ============ */
+      // 👇 GANTI URL INI DENGAN URL APPS SCRIPT KAMU
+      const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyLlfvMPJDEfj2dazOrTUxyfjpN7Ys7kbxs4lC1bwN1eR8KniAGTEPEyeYHGM7nozA5/exec";
+
+      let studentData = { nama: "", absen: "" };
+      let isSubmitted = false;
+
+      const answeredCountEl = document.getElementById("answered-count");
+      const progressFill = document.getElementById("progress-fill");
+
+      /* ============ AUTO-FILL IDENTITAS ============ */
+      window.addEventListener("DOMContentLoaded", () => {
+        const savedNama = localStorage.getItem("siswa_nama");
+        const savedAbsen = localStorage.getItem("siswa_absen");
+        if (savedNama) document.getElementById("refleksi-nama").value = savedNama;
+        if (savedAbsen) document.getElementById("refleksi-absen").value = savedAbsen;
+        loadDraft();
+        setupProgressListeners();
+      });
+
+      /* ============ PROGRESS TRACKING ============ */
+      function setupProgressListeners() {
+        const fields = ["refleksi-3-1", "refleksi-3-2", "refleksi-3-3", "refleksi-2-1", "refleksi-2-2", "refleksi-1-1"];
+        fields.forEach((id) => {
+          const el = document.getElementById(id);
+          if (el) el.addEventListener("input", updateProgress);
+        });
+      }
+
+      function updateProgress() {
+        const fields = ["refleksi-3-1", "refleksi-3-2", "refleksi-3-3", "refleksi-2-1", "refleksi-2-2", "refleksi-1-1"];
+        const filled = fields.filter((id) => document.getElementById(id).value.trim() !== "").length;
+        answeredCountEl.textContent = filled;
+        progressFill.style.width = (filled / 6) * 100 + "%";
+      }
+
+      /* ============ START REFLEKSI ============ */
+      function startRefleksi() {
+        const namaInput = document.getElementById("refleksi-nama");
+        const absenInput = document.getElementById("refleksi-absen");
+        const warning = document.getElementById("refleksi-form-warning");
+        const warningText = document.getElementById("refleksi-form-warning-text");
+
+        const nama = namaInput.value.trim();
+        const absen = absenInput.value.trim();
+
+        if (!nama) {
+          warningText.textContent = "Nama tidak boleh kosong. Isi nama lengkap kamu ya!";
+          warning.classList.remove("hidden");
+          namaInput.focus();
+          return;
+        }
+        if (nama.length < 3) {
+          warningText.textContent = "Nama terlalu pendek. Isi nama lengkap kamu.";
+          warning.classList.remove("hidden");
+          namaInput.focus();
+          return;
+        }
+        if (!absen) {
+          warningText.textContent = "Nomor absen tidak boleh kosong.";
+          warning.classList.remove("hidden");
+          absenInput.focus();
+          return;
+        }
+        const absenNum = parseInt(absen);
+        if (isNaN(absenNum) || absenNum < 1 || absenNum > 50) {
+          warningText.textContent = "Nomor absen harus berupa angka 1-50.";
+          warning.classList.remove("hidden");
+          absenInput.focus();
+          return;
+        }
+
+        warning.classList.add("hidden");
+
+        studentData.nama = nama;
+        studentData.absen = absen;
+
+        document.getElementById("display-nama").textContent = nama;
+        document.getElementById("display-absen").textContent = absen;
+
+        document.getElementById("refleksi-form-section").classList.add("hidden");
+        document.getElementById("refleksi-content-section").classList.remove("hidden");
+        document.getElementById("refleksi-result-section").classList.add("hidden");
+
+        updateProgress();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function cancelRefleksi() {
+        if (!confirm("Yakin ingin ganti identitas? Jawabanmu akan hilang.")) return;
+
+        document.getElementById("refleksi-form-section").classList.remove("hidden");
+        document.getElementById("refleksi-content-section").classList.add("hidden");
+        document.getElementById("refleksi-result-section").classList.add("hidden");
+      }
+
+      /* ============ SUBMIT ============ */
+      function submitRefleksi() {
+        const warning = document.getElementById("submit-warning");
+        const warningText = document.getElementById("submit-warning-text");
+
+        const fields = {
+          three1: document.getElementById("refleksi-3-1").value.trim(),
+          three2: document.getElementById("refleksi-3-2").value.trim(),
+          three3: document.getElementById("refleksi-3-3").value.trim(),
+          two1: document.getElementById("refleksi-2-1").value.trim(),
+          two2: document.getElementById("refleksi-2-2").value.trim(),
+          one1: document.getElementById("refleksi-1-1").value.trim(),
+        };
+
+        const errors = [];
+        if (!fields.three1) errors.push("Hal ke-1 yang dipelajari belum diisi");
+        if (!fields.three2) errors.push("Hal ke-2 yang dipelajari belum diisi");
+        if (!fields.three3) errors.push("Hal ke-3 yang dipelajari belum diisi");
+        if (!fields.two1) errors.push("Hal menarik ke-1 belum diisi");
+        if (!fields.two2) errors.push("Hal menarik ke-2 belum diisi");
+        if (!fields.one1) errors.push("Pertanyaan yang membingungkan belum diisi");
+
+        if (errors.length > 0) {
+          warningText.innerHTML = "Harap lengkapi:<br>• " + errors.join("<br>• ");
+          warning.classList.remove("hidden");
+          setTimeout(() => warning.classList.add("hidden"), 6000);
+          window.scrollTo({ top: 400, behavior: "smooth" });
+          return;
+        }
+
+        warning.classList.add("hidden");
+        isSubmitted = true;
+
+        // Simpan identitas
+        localStorage.setItem("siswa_nama", studentData.nama);
+        localStorage.setItem("siswa_absen", studentData.absen);
+        localStorage.removeItem("refleksi_draft");
+
+        // Kirim ke Google Sheets
+        sendToGoogleSheets(fields);
+
+        // Tampilkan hasil
+        document.getElementById("refleksi-content-section").classList.add("hidden");
+        document.getElementById("refleksi-result-section").classList.remove("hidden");
+
+        setTimeout(() => {
+          document.getElementById("refleksi-result-section").scrollIntoView({ behavior: "smooth", block: "start" });
+        }, 200);
+      }
+
+      /* ============ KIRIM KE GOOGLE SHEETS ============ */
+      async function sendToGoogleSheets(fields) {
+        const statusEl = document.getElementById("save-status");
+        const statusText = document.getElementById("save-status-text");
+
+        statusEl.classList.remove("hidden");
+        statusEl.className = "mt-5 inline-flex items-center gap-2 text-sm font-semibold px-4 py-2 rounded-full bg-purple-500/15 border border-purple-500/30 text-purple-400";
+        statusText.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Menyimpan refleksi ke Google Sheets...';
+
+        try {
+          const formData = new URLSearchParams();
+          formData.append("jenis", "REFLEKSI");
+          formData.append("nama", studentData.nama);
+          formData.append("absen", studentData.absen);
+          formData.append("pelajari1", fields.three1);
+          formData.append("pelajari2", fields.three2);
+          formData.append("pelajari3", fields.three3);
+          formData.append("menarik1", fields.two1);
+          formData.append("menarik2", fields.two2);
+          formData.append("bingung", fields.one1);
+
+          console.log("📤 Mengirim Refleksi ke Apps Script...");
+          console.log("Payload:", Object.fromEntries(formData));
+
+          await fetch(APPS_SCRIPT_URL, {
+            method: "POST",
+            mode: "no-cors",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: formData.toString(),
+          });
+
+          statusEl.className = "mt-5 inline-flex items-center gap-2 text-sm font-semibold px-4 py-2 rounded-full bg-brandGreen/15 border border-brandGreen/30 text-brandGreen";
+          statusText.innerHTML = '<i class="fa-solid fa-circle-check mr-1"></i> Refleksi berhasil dikirim!';
+          console.log("✅ Refleksi terkirim.");
+        } catch (err) {
+          statusEl.className = "mt-5 inline-flex items-center gap-2 text-sm font-semibold px-4 py-2 rounded-full bg-rose-500/15 border border-rose-500/30 text-rose-400";
+          statusText.innerHTML = '<i class="fa-solid fa-circle-xmark mr-1"></i> Gagal menyimpan (cek koneksi internet)';
+          console.error("Save error:", err);
+        }
+      }
+
+      /* ============ LOAD DRAFT ============ */
+      function loadDraft() {
+        const raw = localStorage.getItem("refleksi_draft");
+        if (!raw) return;
+        try {
+          const draft = JSON.parse(raw);
+          const ada = Object.values(draft).some((v) => v);
+          if (!ada) return;
+          if (confirm("📂 Ditemukan draft refleksi yang tersimpan.\n\nLanjutkan mengisi dari draft terakhir?")) {
+            Object.keys(draft).forEach((key) => {
+              const el = document.getElementById(key);
+              if (el) el.value = draft[key];
+            });
+            updateProgress();
+          }
+        } catch (e) {
+          console.error("Load draft error:", e);
+        }
+      }
+
+      /* ============ AUTO-SAVE DRAFT ============ */
+      document.addEventListener("input", () => {
+        if (isSubmitted) return;
+        const draft = {
+          "refleksi-3-1": document.getElementById("refleksi-3-1")?.value || "",
+          "refleksi-3-2": document.getElementById("refleksi-3-2")?.value || "",
+          "refleksi-3-3": document.getElementById("refleksi-3-3")?.value || "",
+          "refleksi-2-1": document.getElementById("refleksi-2-1")?.value || "",
+          "refleksi-2-2": document.getElementById("refleksi-2-2")?.value || "",
+          "refleksi-1-1": document.getElementById("refleksi-1-1")?.value || "",
+        };
+        localStorage.setItem("refleksi_draft", JSON.stringify(draft));
+      });
+    </script>
+  </body>
+</html>

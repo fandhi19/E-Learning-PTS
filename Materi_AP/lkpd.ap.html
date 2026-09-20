@@ -1,0 +1,1944 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LKPD: Sistem Diskon Patbhe Mart - RuangInformatika</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ["Inter", "sans-serif"],
+              mono: ["Fira Code", "ui-monospace", "Consolas", "monospace"],
+            },
+            colors: {
+              brandDark: "#0a0a0a",
+              brandGray: "#151515",
+              brandGreen: "#00e676",
+              textGray: "#d1d5db",
+            },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      .bg-grid {
+        background-size: 40px 40px;
+        background-image: linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+      }
+
+      .form-input,
+      .form-textarea {
+        width: 100%;
+        background: rgba(0, 0, 0, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 12px;
+        padding: 12px 16px;
+        color: white;
+        font-size: 15px;
+        font-family: inherit;
+        transition: all 0.2s;
+      }
+      .form-textarea {
+        resize: vertical;
+        min-height: 80px;
+        line-height: 1.6;
+      }
+      .form-input:focus,
+      .form-textarea:focus {
+        outline: none;
+        border-color: #00e676;
+        box-shadow: 0 0 0 3px rgba(0, 230, 118, 0.15);
+      }
+      .form-textarea.mono {
+        font-family: "Fira Code", monospace;
+        font-size: 14px;
+      }
+      .form-textarea::placeholder,
+      .form-input::placeholder {
+        color: rgba(209, 213, 219, 0.4);
+      }
+
+      .task-card {
+        transition: all 0.3s ease;
+      }
+      .task-card.filled {
+        border-color: rgba(0, 230, 118, 0.4);
+      }
+
+      .progress-bar-fill {
+        transition: width 0.4s ease;
+      }
+
+      #playground-canvas {
+        background-image: radial-gradient(circle, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+        background-size: 24px 24px;
+        background-position: 0 0;
+        touch-action: none;
+      }
+
+      .flowchart-symbol {
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: grab;
+        user-select: none;
+        background: rgba(10, 10, 10, 0.85);
+        padding: 8px 18px;
+        font-weight: 600;
+        font-size: 13px;
+        min-width: 90px;
+        min-height: 42px;
+        transition:
+          box-shadow 0.15s,
+          border-color 0.15s;
+        touch-action: none;
+        z-index: 10;
+        text-align: center;
+        line-height: 1.3;
+      }
+      .flowchart-symbol:active {
+        cursor: grabbing;
+      }
+      .flowchart-symbol.selected {
+        box-shadow:
+          0 0 0 3px rgba(0, 230, 118, 0.45),
+          0 0 24px rgba(0, 230, 118, 0.35);
+      }
+      .flowchart-symbol .symbol-label {
+        outline: none;
+        white-space: pre-wrap;
+        pointer-events: auto;
+      }
+      .flowchart-symbol .symbol-label[contenteditable="true"] {
+        cursor: text;
+        background: rgba(0, 230, 118, 0.15);
+        border-radius: 4px;
+        padding: 1px 4px;
+      }
+
+      .symbol-terminal {
+        border: 2px solid #00e676;
+        color: #00e676;
+        border-radius: 999px;
+      }
+      .symbol-process {
+        border: 2px solid #fbbf24;
+        color: #fbbf24;
+        border-radius: 4px;
+      }
+      .symbol-io {
+        border: 2px solid #38bdf8;
+        color: #38bdf8;
+        transform: skewX(-15deg);
+      }
+      .symbol-io .symbol-label {
+        transform: skewX(15deg);
+      }
+      .symbol-decision {
+        border: 2px solid #fb7185;
+        color: #fb7185;
+        width: 90px;
+        height: 90px;
+        min-width: 90px;
+        min-height: 90px;
+        transform: rotate(45deg);
+        padding: 4px;
+        font-size: 12px;
+      }
+      .symbol-decision .symbol-label {
+        transform: rotate(-45deg);
+      }
+      .symbol-connector {
+        border: 2px solid #facc15;
+        color: #facc15;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        min-width: 50px;
+        min-height: 50px;
+        padding: 0;
+      }
+
+      .palette-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 14px;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.03);
+        cursor: pointer;
+        transition: all 0.2s;
+        user-select: none;
+      }
+      .palette-item:hover {
+        background: rgba(0, 230, 118, 0.08);
+        border-color: rgba(0, 230, 118, 0.4);
+        transform: translateX(4px);
+      }
+      .palette-item:active {
+        transform: scale(0.97) translateX(4px);
+      }
+      .palette-item .palette-icon {
+        width: 40px;
+        height: 30px;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 10px;
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(15px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .fade-in-up {
+        animation: fadeInUp 0.5s ease forwards;
+      }
+
+      @keyframes scorePulse {
+        0% {
+          transform: scale(0.8);
+          opacity: 0;
+        }
+        50% {
+          transform: scale(1.05);
+        }
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+      .score-pulse {
+        animation: scorePulse 0.6s ease forwards;
+      }
+
+      @keyframes modalPop {
+        0% {
+          opacity: 0;
+          transform: scale(0.9);
+        }
+        100% {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+      .modal-pop {
+        animation: modalPop 0.25s ease forwards;
+      }
+
+      #pdf-loading {
+        backdrop-filter: blur(8px);
+      }
+
+      @media (max-width: 640px) {
+        body {
+          font-size: 1rem;
+        }
+        h1 {
+          font-size: 1.75rem !important;
+          line-height: 1.2 !important;
+        }
+        h2 {
+          font-size: 1.35rem !important;
+        }
+        .flowchart-symbol {
+          font-size: 11px;
+          padding: 6px 12px;
+        }
+      }
+    </style>
+  </head>
+  <body class="bg-brandDark text-white font-sans antialiased overflow-x-hidden flex flex-col min-h-screen text-lg">
+    <!-- Navbar -->
+    <nav class="max-w-7xl mx-auto px-6 py-6 flex items-center justify-between border-b border-white/5 relative z-50 w-full">
+      <div class="flex items-center gap-3">
+        <i class="fa-solid fa-code text-brandGreen text-xl"></i>
+        <span class="text-xl font-bold tracking-tight text-brandGreen">RuangInformatika</span>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <!-- Tombol Kembali (Desktop) -->
+        <a href="materi-algoritma.html" class="hidden md:flex items-center gap-2 border border-white/10 rounded-full px-5 py-2.5 text-sm font-medium hover:bg-white/5 transition">
+          <i class="fa-solid fa-arrow-left text-brandGreen"></i> Kembali
+        </a>
+
+        <!-- Tombol Pak Ilyas (Desktop) -->
+        <button class="hidden md:flex items-center gap-2 border border-white/10 rounded-full px-5 py-2.5 text-sm font-medium hover:bg-white/5 transition"><i class="fa-solid fa-chalkboard-user text-brandGreen"></i> Pak Ilyas</button>
+
+        <!-- Tombol Kembali (Mobile) -->
+        <a href="materi-algoritma.html" class="md:hidden flex items-center justify-center w-10 h-10 border border-white/10 rounded-full hover:bg-white/5 transition" aria-label="Kembali">
+          <i class="fa-solid fa-arrow-left text-brandGreen"></i>
+        </a>
+
+        <!-- Hamburger Button (Mobile) -->
+        <button id="hamburgerBtn" class="md:hidden text-white text-2xl focus:outline-none" aria-label="Menu">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="flex-grow relative bg-grid">
+      <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-brandGreen/5 rounded-full blur-[120px] pointer-events-none"></div>
+
+      <main class="max-w-4xl mx-auto px-6 py-12 relative z-10">
+        <!-- HEADER LKPD -->
+        <div class="mb-8 text-center md:text-left fade-in-up">
+          <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-sm font-bold text-amber-400 mb-4"><i class="fa-solid fa-clipboard-list"></i> LKPD Digital • Fase E / Kelas X</div>
+          <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight mb-3 leading-tight">
+            Lembar Kerja Peserta Didik<br />
+            <span class="text-brandGreen">Algoritma &amp; Flowchart Percabangan</span>
+          </h1>
+          <p class="text-textGray text-base md:text-lg max-w-2xl leading-relaxed">Studi Kasus: <strong class="text-white">Sistem Diskon Belanja "Patbhe Mart"</strong></p>
+        </div>
+
+        <!-- INFO CARD -->
+        <div class="bg-brandGray border border-white/10 rounded-2xl p-5 md:p-6 mb-6 fade-in-up">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div class="flex items-center gap-3">
+              <div class="w-11 h-11 rounded-xl bg-brandGreen/10 border border-brandGreen/25 flex items-center justify-center text-brandGreen text-lg shrink-0">
+                <i class="fa-solid fa-bullseye"></i>
+              </div>
+              <div>
+                <p class="text-xs text-textGray uppercase tracking-wider font-bold">Target Pembelajaran</p>
+                <p class="text-white font-bold text-sm">TP 1 &amp; TP 2</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="w-11 h-11 rounded-xl bg-sky-500/10 border border-sky-500/25 flex items-center justify-center text-sky-400 text-lg shrink-0">
+                <i class="fa-solid fa-clock"></i>
+              </div>
+              <div>
+                <p class="text-xs text-textGray uppercase tracking-wider font-bold">Alokasi Waktu</p>
+                <p class="text-white font-bold text-sm">30 Menit</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="w-11 h-11 rounded-xl bg-purple-500/10 border border-purple-500/25 flex items-center justify-center text-purple-400 text-lg shrink-0">
+                <i class="fa-solid fa-users"></i>
+              </div>
+              <div>
+                <p class="text-xs text-textGray uppercase tracking-wider font-bold">Formasi</p>
+                <p class="text-white font-bold text-sm">Berpasangan (2 Orang)</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PETUNJUK & K3 -->
+        <div class="bg-brandGray border border-amber-500/30 rounded-2xl p-5 md:p-6 mb-8 fade-in-up">
+          <div class="flex items-center gap-3 border-b border-white/10 pb-4 mb-4">
+            <div class="w-11 h-11 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 text-lg shrink-0">
+              <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <div>
+              <h3 class="text-lg font-bold text-white">Petunjuk Penggunaan &amp; Keselamatan Kerja (K3)</h3>
+              <p class="text-xs text-textGray">Wajib dibaca sebelum mengerjakan</p>
+            </div>
+          </div>
+          <ul class="space-y-2.5 text-sm text-textGray">
+            <li class="flex items-start gap-2.5">
+              <i class="fa-solid fa-circle-check text-amber-400 mt-1 shrink-0"></i>
+              <span>Atur posisi duduk <strong class="text-white">tegak dan ergonomis</strong> saat berada di depan komputer.</span>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <i class="fa-solid fa-circle-check text-amber-400 mt-1 shrink-0"></i>
+              <span>Jaga jarak pandang mata ke layar monitor <strong class="text-white">±50 cm</strong>.</span>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <i class="fa-solid fa-circle-check text-amber-400 mt-1 shrink-0"></i>
+              <span>Pastikan area meja kerja <strong class="text-white">bersih</strong> dari makanan dan minuman.</span>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <i class="fa-solid fa-circle-check text-amber-400 mt-1 shrink-0"></i>
+              <span>Kerjakan LKPD secara <strong class="text-white">berpasangan (2 orang)</strong> melalui Website Pembelajaran Informatika.</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- STUDI KASUS -->
+        <div class="bg-gradient-to-br from-brandGreen/10 via-brandGray to-brandGray border border-brandGreen/30 rounded-2xl p-5 md:p-6 mb-8 fade-in-up">
+          <div class="flex items-center gap-3 border-b border-white/10 pb-4 mb-5">
+            <div class="w-11 h-11 rounded-xl bg-brandGreen/15 border border-brandGreen/30 flex items-center justify-center text-brandGreen text-lg shrink-0">
+              <i class="fa-solid fa-store"></i>
+            </div>
+            <div>
+              <h3 class="text-lg md:text-xl font-bold text-white">Studi Kasus: Sistem Diskon Belanja "Patbhe Mart"</h3>
+              <p class="text-xs text-textGray">Kasus percabangan if-else sederhana</p>
+            </div>
+          </div>
+
+          <p class="text-sm text-textGray mb-4">Kasir toko <strong class="text-white">Patbhe Mart</strong> membutuhkan program otomatis untuk menghitung diskon belanja pelanggan. Berikut ketentuannya:</p>
+
+          <div class="space-y-3">
+            <div class="bg-white/5 border-l-4 border-sky-400 rounded-r-lg p-4">
+              <p class="text-sm text-gray-300">
+                <i class="fa-solid fa-keyboard text-sky-400 mr-2"></i>
+                Kasir menginputkan total belanjaan pelanggan <code class="text-amber-300 font-mono text-xs bg-black/40 px-2 py-0.5 rounded">(Total_Belanja)</code>.
+              </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div class="bg-brandGreen/5 border border-brandGreen/25 rounded-xl p-4 space-y-2">
+                <div class="flex items-center gap-2 text-brandGreen font-bold text-sm"><i class="fa-solid fa-check-circle"></i> Jika Total_Belanja ≥ Rp100.000</div>
+                <ul class="text-xs text-textGray space-y-1 pl-4 list-disc">
+                  <li>Pelanggan mendapat diskon <strong class="text-white">10%</strong></li>
+                  <li>Tampilkan: <em class="text-brandGreen">"Selamat, Anda Mendapat Diskon 10%!"</em></li>
+                  <li>Total_Bayar = Total_Belanja − Diskon</li>
+                </ul>
+              </div>
+
+              <div class="bg-rose-500/5 border border-rose-500/25 rounded-xl p-4 space-y-2">
+                <div class="flex items-center gap-2 text-rose-400 font-bold text-sm"><i class="fa-solid fa-xmark-circle"></i> Jika Total_Belanja &lt; Rp100.000</div>
+                <ul class="text-xs text-textGray space-y-1 pl-4 list-disc">
+                  <li>Pelanggan <strong class="text-white">tidak mendapat</strong> diskon</li>
+                  <li>Tampilkan: <em class="text-rose-400">"Terima Kasih Telah Berbelanja!"</em></li>
+                  <li>Total_Bayar = Total_Belanja</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- FORM IDENTITAS -->
+        <div id="form-identitas-section" class="bg-brandGray border border-brandGreen/30 rounded-2xl p-6 md:p-8 mb-8 space-y-5 fade-in-up">
+          <div class="flex items-center gap-3 border-b border-white/10 pb-4">
+            <div class="w-11 h-11 rounded-xl bg-brandGreen/10 border border-brandGreen/25 flex items-center justify-center text-brandGreen text-lg shrink-0">
+              <i class="fa-solid fa-user-pen"></i>
+            </div>
+            <div>
+              <h3 class="text-lg md:text-xl font-bold text-white">Identitas Kelompok</h3>
+              <p class="text-xs md:text-sm text-textGray">Kelompok terdiri dari 2 anggota. Isi nama &amp; absen masing-masing.</p>
+            </div>
+          </div>
+
+          <div class="bg-white/5 border border-white/10 rounded-xl p-4 md:p-5 space-y-3">
+            <div class="flex items-center gap-2 mb-1">
+              <div class="w-7 h-7 rounded-lg bg-brandGreen/15 border border-brandGreen/30 flex items-center justify-center text-brandGreen text-xs font-bold">1</div>
+              <span class="text-sm font-bold text-brandGreen uppercase tracking-wider">Anggota 1</span>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <div class="md:col-span-2">
+                <label class="block text-xs font-bold text-textGray uppercase mb-1.5">Nama Lengkap <span class="text-rose-400">*</span></label>
+                <input type="text" id="lkpd-anggota1-nama" placeholder="Contoh: Budi Santoso" class="form-input" />
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-textGray uppercase mb-1.5">No Absen <span class="text-rose-400">*</span></label>
+                <input type="number" id="lkpd-anggota1-absen" placeholder="15" min="1" max="50" class="form-input" />
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white/5 border border-white/10 rounded-xl p-4 md:p-5 space-y-3">
+            <div class="flex items-center gap-2 mb-1">
+              <div class="w-7 h-7 rounded-lg bg-sky-500/15 border border-sky-500/30 flex items-center justify-center text-sky-400 text-xs font-bold">2</div>
+              <span class="text-sm font-bold text-sky-400 uppercase tracking-wider">Anggota 2</span>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <div class="md:col-span-2">
+                <label class="block text-xs font-bold text-textGray uppercase mb-1.5">Nama Lengkap <span class="text-rose-400">*</span></label>
+                <input type="text" id="lkpd-anggota2-nama" placeholder="Contoh: Ani Wijaya" class="form-input" />
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-textGray uppercase mb-1.5">No Absen <span class="text-rose-400">*</span></label>
+                <input type="number" id="lkpd-anggota2-absen" placeholder="22" min="1" max="50" class="form-input" />
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-sm font-bold text-textGray uppercase mb-2">Kelas <span class="text-rose-400">*</span></label>
+            <input type="text" id="lkpd-kelas" placeholder="Contoh: XE6" class="form-input" />
+          </div>
+        </div>
+
+        <!-- TUGAS SECTION -->
+        <div id="tugas-section" class="space-y-6 mb-8">
+          <!-- TUGAS 1 -->
+          <div class="task-card bg-brandGray border border-white/10 rounded-2xl p-5 md:p-6 space-y-4" id="task-1-card">
+            <div class="flex items-start gap-3 border-b border-white/10 pb-4">
+              <div class="w-11 h-11 rounded-xl bg-brandGreen/15 border border-brandGreen/30 flex items-center justify-center text-brandGreen font-bold text-lg shrink-0">1</div>
+              <div class="flex-1">
+                <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-brandGreen/10 border border-brandGreen/25 text-[10px] font-bold text-brandGreen uppercase tracking-wider mb-1">TP 1</div>
+                <h3 class="text-lg md:text-xl font-bold text-white">Analisis Input - Proses - Output</h3>
+                <p class="text-sm text-textGray mt-1">Tentukan komponen variabel dan kondisi logika berdasarkan studi kasus di atas!</p>
+              </div>
+            </div>
+
+            <div class="space-y-4">
+              <div>
+                <label class="flex items-center gap-2 text-sm font-bold text-sky-400 uppercase mb-2"> <i class="fa-solid fa-right-to-bracket"></i> Input (Masukan) </label>
+                <textarea id="task1-input" class="form-textarea" placeholder="Sebutkan variabel/data apa saja yang perlu di-input oleh kasir..."></textarea>
+              </div>
+              <div>
+                <label class="flex items-center gap-2 text-sm font-bold text-amber-400 uppercase mb-2"> <i class="fa-solid fa-gears"></i> Proses (Kondisi Percabangan) </label>
+                <textarea id="task1-proses" class="form-textarea" placeholder="Jelaskan proses/kondisi logika percabangan yang terjadi..."></textarea>
+              </div>
+              <div>
+                <label class="flex items-center gap-2 text-sm font-bold text-purple-400 uppercase mb-2"> <i class="fa-solid fa-right-from-bracket"></i> Output (Keluaran) </label>
+                <textarea id="task1-output" class="form-textarea" placeholder="Sebutkan hasil/output yang ditampilkan ke layar..."></textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- TUGAS 2 -->
+          <div class="task-card bg-brandGray border border-white/10 rounded-2xl p-5 md:p-6 space-y-4" id="task-2-card">
+            <div class="flex items-start gap-3 border-b border-white/10 pb-4">
+              <div class="w-11 h-11 rounded-xl bg-sky-500/15 border border-sky-500/30 flex items-center justify-center text-sky-400 font-bold text-lg shrink-0">2</div>
+              <div class="flex-1">
+                <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-sky-500/10 border border-sky-500/25 text-[10px] font-bold text-sky-400 uppercase tracking-wider mb-1">TP 1</div>
+                <h3 class="text-lg md:text-xl font-bold text-white">Penyusunan Algoritma Naratif</h3>
+                <p class="text-sm text-textGray mt-1">Lanjutkan langkah-langkah algoritma berikut agar menjadi alur pemecahan masalah yang runtut!</p>
+              </div>
+            </div>
+
+            <div class="bg-sky-500/5 border border-sky-500/25 rounded-xl p-4 md:p-5 space-y-3">
+              <div class="flex items-center gap-2">
+                <i class="fa-solid fa-lightbulb text-sky-400"></i>
+                <span class="text-sm font-bold text-sky-400 uppercase tracking-wider">Contoh 2 Langkah Pertama</span>
+              </div>
+              <div class="bg-[#0d1117] border border-white/10 rounded-lg p-4 font-mono text-sm leading-relaxed">
+                <div class="text-xs text-textGray uppercase font-bold tracking-wider mb-3 font-sans">// Contoh Alur Algoritma</div>
+                <ol class="space-y-1.5 text-gray-300">
+                  <li><span class="text-gray-500 mr-2">1.</span> <span class="text-brandGreen font-bold">Mulai (Start)</span></li>
+                  <li><span class="text-gray-500 mr-2">2.</span> <span class="text-amber-400">Inputkan</span> nilai <code class="text-white bg-black/40 px-1.5 py-0.5 rounded">Total_Belanja</code></li>
+                </ol>
+              </div>
+              <p class="text-xs text-textGray italic">
+                <i class="fa-solid fa-info-circle text-sky-400 mr-1"></i>
+                Dari langkah 2 di atas, lanjutkan sampai langkah terakhir (Selesai). Perhatikan aturan diskon pada studi kasus Patbhe Mart!
+              </p>
+            </div>
+
+            <div>
+              <label class="flex items-center gap-2 text-sm font-bold text-sky-400 uppercase mb-2"> <i class="fa-solid fa-pen-to-square"></i> Lanjutkan Algoritma dari Langkah 3 <span class="text-rose-400">*</span> </label>
+              <p class="text-xs text-textGray mb-2">Tuliskan langkah 3 dan seterusnya sampai "Selesai (End)". Perhatikan percabangan kondisi (Jika Ya / Jika Tidak).</p>
+              <textarea
+                id="task2-lanjutan"
+                class="form-textarea mono"
+                style="min-height: 220px"
+                placeholder="3. Cek kondisi: Apakah ... ?
+4. Jika Ya (True), maka:
+   a. ...
+   b. ...
+5. Jika Tidak (False), maka:
+   a. ...
+   b. ...
+6. ...
+7. Selesai (End)"
+              ></textarea>
+            </div>
+          </div>
+
+          <!-- TUGAS 3 -->
+          <div class="task-card bg-brandGray border border-white/10 rounded-2xl p-5 md:p-6 space-y-4" id="task-3-card">
+            <div class="flex items-start gap-3 border-b border-white/10 pb-4">
+              <div class="w-11 h-11 rounded-xl bg-purple-500/15 border border-purple-500/30 flex items-center justify-center text-purple-400 font-bold text-lg shrink-0">3</div>
+              <div class="flex-1">
+                <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-purple-500/10 border border-purple-500/25 text-[10px] font-bold text-purple-400 uppercase tracking-wider mb-1">TP 2</div>
+                <h3 class="text-lg md:text-xl font-bold text-white">Perancangan Diagram Alir (Flowchart)</h3>
+                <p class="text-sm text-textGray mt-1">Rangkai diagram alir langsung di bawah ini dengan <strong class="text-purple-300">drag &amp; drop</strong> simbol yang sesuai!</p>
+              </div>
+            </div>
+
+            <div class="bg-purple-500/5 border border-purple-500/25 rounded-xl p-4 space-y-3">
+              <p class="text-sm font-bold text-purple-300 flex items-center gap-2"><i class="fa-solid fa-circle-info"></i> Panduan Simbol Flowchart:</p>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5 text-xs md:text-sm">
+                <div class="flex items-center gap-3 bg-white/5 border border-white/10 rounded-lg p-3">
+                  <div class="w-10 h-5 rounded-full border-2 border-brandGreen shrink-0"></div>
+                  <div>
+                    <p class="font-bold text-brandGreen">Terminator (Oval)</p>
+                    <p class="text-textGray">Untuk <strong class="text-white">Start</strong> dan <strong class="text-white">End</strong></p>
+                  </div>
+                </div>
+                <div class="flex items-center gap-3 bg-white/5 border border-white/10 rounded-lg p-3">
+                  <div class="w-10 h-5 border-2 border-sky-400 shrink-0" style="transform: skewX(-15deg)"></div>
+                  <div>
+                    <p class="font-bold text-sky-400">Input/Output (Jajar Genjang)</p>
+                    <p class="text-textGray">Untuk <strong class="text-white">baca</strong> &amp; <strong class="text-white">cetak</strong></p>
+                  </div>
+                </div>
+                <div class="flex items-center gap-3 bg-white/5 border border-white/10 rounded-lg p-3">
+                  <div class="w-6 h-6 border-2 border-rose-400 shrink-0" style="transform: rotate(45deg)"></div>
+                  <div>
+                    <p class="font-bold text-rose-400">Decision (Belah Ketupat)</p>
+                    <p class="text-textGray">Untuk <strong class="text-white">uji kondisi</strong></p>
+                  </div>
+                </div>
+                <div class="flex items-center gap-3 bg-white/5 border border-white/10 rounded-lg p-3">
+                  <div class="w-10 h-5 border-2 border-amber-400 shrink-0"></div>
+                  <div>
+                    <p class="font-bold text-amber-400">Process (Persegi Panjang)</p>
+                    <p class="text-textGray">Untuk <strong class="text-white">perhitungan</strong></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-purple-500/10 border border-purple-500/30 rounded-xl p-4 space-y-1.5">
+              <p class="text-sm font-bold text-purple-300 flex items-center gap-2"><i class="fa-solid fa-hand-pointer"></i> Cara Pakai Playground:</p>
+              <ul class="text-xs text-textGray space-y-1 pl-6 list-disc">
+                <li><strong class="text-white">Klik simbol</strong> di palet kiri → muncul di canvas.</li>
+                <li><strong class="text-white">Drag</strong> simbol untuk mengatur posisi.</li>
+                <li><strong class="text-white">Double-click</strong> pada teks untuk edit label (misal "Mulai", "Input Total_Belanja").</li>
+                <li>Aktifkan <strong class="text-purple-300">Connect Mode</strong> → klik 2 simbol untuk panah penghubung.</li>
+                <li><strong class="text-brandGreen">Dari simbol Keputusan</strong> → akan muncul pilihan label <strong class="text-brandGreen">Ya</strong> / <strong class="text-rose-400">Tidak</strong> di panah.</li>
+                <li>Tekan <strong class="text-rose-300">Delete</strong> untuk hapus simbol terpilih.</li>
+              </ul>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-3 bg-white/5 border border-white/10 rounded-2xl p-3">
+              <button
+                id="btn-connect-mode"
+                onclick="toggleConnectMode()"
+                class="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-sm font-semibold hover:bg-purple-500/20 hover:border-purple-500/50 hover:text-purple-300 transition"
+              >
+                <i class="fa-solid fa-link"></i> <span id="connect-mode-label">Connect Mode: OFF</span>
+              </button>
+              <button onclick="deleteSelected()" class="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-sm font-semibold hover:bg-rose-500/20 hover:border-rose-500/50 hover:text-rose-300 transition">
+                <i class="fa-solid fa-trash"></i> Hapus Terpilih
+              </button>
+              <button onclick="clearPlayground()" class="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-sm font-semibold hover:bg-amber-500/20 hover:border-amber-500/50 hover:text-amber-300 transition">
+                <i class="fa-solid fa-broom"></i> Bersihkan Semua
+              </button>
+              <div id="connect-hint" class="hidden text-xs text-purple-300 font-semibold ml-auto items-center gap-1.5"><i class="fa-solid fa-hand-pointer animate-pulse"></i> Klik simbol pertama sebagai titik awal panah...</div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-4">
+              <div class="lg:col-span-1 space-y-3">
+                <div class="text-xs font-bold text-textGray uppercase tracking-wider px-1">Palet Simbol</div>
+
+                <div class="space-y-2">
+                  <div class="palette-item" data-type="terminal">
+                    <div class="palette-icon"><div class="w-9 h-5 rounded-full border-2 border-brandGreen"></div></div>
+                    <div class="text-sm">
+                      <div class="font-bold text-brandGreen">Terminal</div>
+                      <div class="text-[10px] text-textGray">Start / End</div>
+                    </div>
+                  </div>
+
+                  <div class="palette-item" data-type="io">
+                    <div class="palette-icon"><div class="w-9 h-5 border-2 border-sky-400" style="transform: skewX(-15deg)"></div></div>
+                    <div class="text-sm">
+                      <div class="font-bold text-sky-400">Input / Output</div>
+                      <div class="text-[10px] text-textGray">Terima / tampilkan</div>
+                    </div>
+                  </div>
+
+                  <div class="palette-item" data-type="process">
+                    <div class="palette-icon"><div class="w-9 h-5 border-2 border-amber-400"></div></div>
+                    <div class="text-sm">
+                      <div class="font-bold text-amber-400">Proses</div>
+                      <div class="text-[10px] text-textGray">Hitung / olah data</div>
+                    </div>
+                  </div>
+
+                  <div class="palette-item" data-type="decision">
+                    <div class="palette-icon"><div class="w-5 h-5 border-2 border-rose-400" style="transform: rotate(45deg)"></div></div>
+                    <div class="text-sm">
+                      <div class="font-bold text-rose-400">Keputusan</div>
+                      <div class="text-[10px] text-textGray">Ya / Tidak</div>
+                    </div>
+                  </div>
+
+                  <div class="palette-item" data-type="connector">
+                    <div class="palette-icon"><div class="w-6 h-6 border-2 border-yellow-400 rounded-full"></div></div>
+                    <div class="text-sm">
+                      <div class="font-bold text-yellow-400">Connector</div>
+                      <div class="text-[10px] text-textGray">Penghubung</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="lg:col-span-3">
+                <div id="playground-canvas" class="relative w-full min-h-[560px] bg-black/40 rounded-2xl border-2 border-dashed border-white/15 overflow-hidden select-none">
+                  <svg id="arrow-layer" class="absolute inset-0 w-full h-full pointer-events-none z-[5]" xmlns="http://www.w3.org/2000/svg" style="overflow: visible">
+                    <g id="arrows-group"></g>
+                  </svg>
+
+                  <div id="canvas-placeholder" class="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none text-textGray">
+                    <i class="fa-solid fa-arrow-pointer text-4xl md:text-5xl mb-3 text-white/20"></i>
+                    <p class="text-base font-semibold text-white/40">Canvas Kosong</p>
+                    <p class="text-xs text-white/30 max-w-xs">Klik salah satu simbol di palet kiri untuk mulai merangkai flowchart!</p>
+                  </div>
+                </div>
+                <div class="text-xs text-textGray mt-2 flex items-center gap-2 px-1">
+                  <i class="fa-solid fa-lightbulb text-amber-400"></i>
+                  <span>Tips: Susun simbol dari atas ke bawah, contoh: Mulai → Input Total_Belanja → Kondisi → dst.</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="pt-4 border-t border-white/10">
+              <label class="flex items-center gap-2 text-sm font-bold text-purple-400 uppercase mb-2"> <i class="fa-solid fa-list-check"></i> Deskripsikan Flowchart yang Kamu Buat <span class="text-rose-400">*</span> </label>
+              <p class="text-xs text-textGray mb-2">Ceritakan alur flowchart yang sudah kamu rangkai (simbol apa saja, arah panahnya, kondisi jika Ya/Tidak).</p>
+              <textarea id="task3-deskripsi" class="form-textarea" placeholder="Contoh:&#10;1. Mulai (Terminator)&#10;2. Input Total_Belanja (Jajar Genjang)&#10;3. ..." style="min-height: 120px"></textarea>
+            </div>
+
+            <label class="flex items-start gap-3 bg-white/5 border border-white/10 rounded-xl p-4 cursor-pointer hover:bg-white/[0.07] transition">
+              <input type="checkbox" id="task3-checkbox" class="mt-1 w-5 h-5 accent-brandGreen cursor-pointer shrink-0" />
+              <span class="text-sm text-textGray"> <strong class="text-white">Konfirmasi:</strong> Saya sudah merangkai flowchart di atas sesuai studi kasus "Patbhe Mart" dan mencentang ini sebagai bukti penyelesaian. </span>
+            </label>
+          </div>
+        </div>
+
+        <!-- PROGRESS & SUBMIT -->
+        <div id="progress-section" class="bg-brandGray border border-brandGreen/30 rounded-2xl p-5 md:p-6 mb-6 space-y-4">
+          <div class="flex items-center justify-between">
+            <span class="text-sm font-bold text-white flex items-center gap-2"> <i class="fa-solid fa-chart-simple text-brandGreen"></i> Progress Pengisian LKPD </span>
+            <span class="text-sm font-bold">
+              <span id="progress-text" class="text-brandGreen">0</span>
+              <span class="text-textGray">/ 4 bagian</span>
+            </span>
+          </div>
+          <div class="w-full h-2 bg-black/50 rounded-full overflow-hidden">
+            <div id="progress-bar" class="progress-bar-fill h-full bg-gradient-to-r from-brandGreen to-emerald-400" style="width: 0%"></div>
+          </div>
+
+          <div class="flex flex-wrap gap-2 justify-center pt-2">
+            <button onclick="saveDraft()" class="inline-flex items-center gap-2 px-5 py-2.5 bg-white/5 border border-white/15 text-white font-semibold rounded-xl hover:bg-white/10 transition text-sm">
+              <i class="fa-solid fa-floppy-disk"></i> Simpan Draft
+            </button>
+            <button onclick="downloadPDF()" class="inline-flex items-center gap-2 px-5 py-2.5 bg-red-500/10 border border-red-500/40 text-red-400 font-semibold rounded-xl hover:bg-red-500/20 transition text-sm">
+              <i class="fa-solid fa-file-pdf"></i> Unduh PDF
+            </button>
+            <button id="btn-submit" onclick="submitLKPD()" class="inline-flex items-center gap-2 px-6 py-3 bg-brandGreen text-black font-bold rounded-xl hover:bg-green-400 transition shadow-lg shadow-brandGreen/20 text-sm">
+              <i class="fa-solid fa-paper-plane"></i> Kumpulkan LKPD
+            </button>
+          </div>
+
+          <div id="submit-warning" class="hidden text-rose-400 text-sm font-semibold bg-rose-500/10 border border-rose-500/30 rounded-lg px-4 py-3">
+            <i class="fa-solid fa-triangle-exclamation mr-2"></i><span id="submit-warning-text"></span>
+          </div>
+        </div>
+
+        <!-- RESULT SECTION -->
+        <div id="result-section" class="hidden space-y-6">
+          <div class="bg-gradient-to-br from-brandGreen/15 via-brandGray to-brandGray border-2 border-brandGreen/40 rounded-3xl p-8 text-center">
+            <div class="score-pulse inline-flex items-center justify-center w-24 h-24 rounded-full bg-brandGreen/10 border-4 border-brandGreen mb-4">
+              <i class="fa-solid fa-check text-brandGreen text-5xl"></i>
+            </div>
+            <h2 class="text-2xl md:text-3xl font-bold text-white mb-2">LKPD Berhasil Dikumpulkan! 🎉</h2>
+            <p class="text-textGray max-w-md mx-auto leading-relaxed text-sm">Terima kasih! Jawabanmu <strong class="text-brandGreen">sudah otomatis terkirim ke Google Drive Pak Ilyas</strong>. Kamu tidak perlu mengirim ulang.</p>
+
+            <div class="mt-5 inline-flex items-center gap-2 text-sm font-semibold px-4 py-2 rounded-full bg-brandGreen/15 border border-brandGreen/30 text-brandGreen"><i class="fa-solid fa-cloud-arrow-up"></i> Terkirim ke Google Drive</div>
+          </div>
+
+          <div class="flex flex-wrap gap-3 justify-center">
+            <button onclick="downloadPDF()" class="inline-flex items-center gap-2 px-6 py-3 bg-red-500/10 border border-red-500/40 text-red-400 font-bold rounded-xl hover:bg-red-500/20 transition">
+              <i class="fa-solid fa-file-pdf"></i> Unduh PDF (Salinan Siswa)
+            </button>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t border-white/5 bg-[#080808] pt-8 pb-6 relative z-10 w-full mt-auto">
+      <div class="max-w-7xl mx-auto px-6 text-center md:text-left">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-textGray">
+          <p>&copy; 2026 RuangInformatika. Dikembangkan oleh Pak Ilyas untuk kelas Informatika SMA Negeri 4 Yogyakarta.</p>
+          <div class="flex gap-4 text-xl">
+            <a href="https://github.com/fandhi19" class="hover:text-brandGreen transition"><i class="fa-brands fa-github"></i></a>
+            <a href="https://e-portofolio-fandhi.vercel.app/" class="hover:text-brandGreen transition"><i class="fa-solid fa-globe"></i></a>
+            <a href="https://www.instagram.com/fandhidk17/" class="hover:text-brandGreen transition"><i class="fa-brands fa-instagram"></i></a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- MODAL PILIH LABEL CABANG -->
+    <div id="branch-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
+      <div class="modal-pop bg-brandGray border-2 border-brandGreen/40 rounded-2xl p-6 max-w-md w-full shadow-2xl shadow-brandGreen/20">
+        <div class="text-center space-y-2 mb-5">
+          <div class="inline-flex items-center justify-center w-14 h-14 rounded-full bg-brandGreen/15 border-2 border-brandGreen/40 mx-auto">
+            <i class="fa-solid fa-code-branch text-brandGreen text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-bold text-white">Label Cabang</h3>
+          <p class="text-sm text-textGray">Panah dari simbol <strong class="text-rose-400">Keputusan</strong> harus diberi label. Pilih cabang:</p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 mb-4">
+          <button onclick="applyBranchLabel('Ya')" class="py-4 bg-brandGreen text-black font-bold rounded-xl hover:bg-green-400 transition shadow-lg shadow-brandGreen/30 flex flex-col items-center gap-1">
+            <i class="fa-solid fa-check-circle text-xl"></i>
+            <span>Ya (True)</span>
+          </button>
+          <button onclick="applyBranchLabel('Tidak')" class="py-4 bg-rose-500 text-white font-bold rounded-xl hover:bg-rose-400 transition shadow-lg shadow-rose-500/30 flex flex-col items-center gap-1">
+            <i class="fa-solid fa-xmark-circle text-xl"></i>
+            <span>Tidak (False)</span>
+          </button>
+        </div>
+
+        <button onclick="cancelBranchLabel()" class="w-full py-2.5 text-textGray text-sm font-semibold hover:text-white hover:bg-white/5 rounded-lg transition"><i class="fa-solid fa-xmark mr-1"></i> Batalkan Panah</button>
+      </div>
+    </div>
+
+    <!-- LOADING OVERLAY UNTUK PDF -->
+    <div id="pdf-loading" class="hidden fixed inset-0 bg-black/85 z-[200] flex items-center justify-center">
+      <div class="text-center space-y-4">
+        <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-brandGreen/15 border-2 border-brandGreen/40">
+          <i class="fa-solid fa-file-pdf text-brandGreen text-3xl animate-pulse"></i>
+        </div>
+        <p class="text-white font-bold text-lg">Menyiapkan PDF...</p>
+        <p class="text-textGray text-sm">Mengambil gambar flowchart &amp; menyusun dokumen</p>
+      </div>
+    </div>
+
+    <script>
+      /* ============ KONFIGURASI UPLOAD ============ */
+      const UPLOAD_URL = "https://script.google.com/macros/s/AKfycbx7j8rMvVWwxCAL3MHj596uQC61yxeDwNF5jhzWA4Oub8YDEwMaHrLsA5I4Z_BaqIa5jQ/exec";
+
+      /* ============ MOBILE MENU ============ */
+      const hamburgerBtn = document.getElementById("hamburgerBtn");
+      const mobileMenu = document.getElementById("mobileMenu");
+      hamburgerBtn.addEventListener("click", () => {
+        mobileMenu.classList.toggle("hidden");
+        const icon = hamburgerBtn.querySelector("i");
+        icon.classList.toggle("fa-bars");
+        icon.classList.toggle("fa-xmark");
+      });
+      mobileMenu.querySelectorAll("a").forEach((item) => {
+        item.addEventListener("click", () => {
+          mobileMenu.classList.add("hidden");
+          const icon = hamburgerBtn.querySelector("i");
+          icon.classList.add("fa-bars");
+          icon.classList.remove("fa-xmark");
+        });
+      });
+
+      /* ============ FLOWCHART PLAYGROUND ============ */
+      const canvas = document.getElementById("playground-canvas");
+      const arrowsGroup = document.getElementById("arrows-group");
+      const placeholder = document.getElementById("canvas-placeholder");
+      const connectHint = document.getElementById("connect-hint");
+      const connectModeLabel = document.getElementById("connect-mode-label");
+      const btnConnectMode = document.getElementById("btn-connect-mode");
+
+      let symbolCounter = 0;
+      let zIndexCounter = 100;
+      let selectedSymbol = null;
+      let connectMode = false;
+      let connectSource = null;
+      let arrows = [];
+      let pendingArrow = null;
+
+      const SYMBOL_CONFIG = {
+        terminal: { label: "Start", width: 110, height: 44 },
+        process: { label: "Proses", width: 130, height: 48 },
+        io: { label: "Input / Output", width: 140, height: 48 },
+        decision: { label: "Kondisi?", width: 90, height: 90 },
+        connector: { label: "A", width: 50, height: 50 },
+      };
+
+      document.querySelectorAll(".palette-item").forEach((item) => {
+        item.addEventListener("click", () => {
+          const type = item.dataset.type;
+          const canvasRect = canvas.getBoundingClientRect();
+          const cfg = SYMBOL_CONFIG[type];
+          const x = Math.max(20, canvasRect.width / 2 - cfg.width / 2 + (Math.random() * 80 - 40));
+          const y = Math.max(20, canvasRect.height / 2 - cfg.height / 2 + (Math.random() * 80 - 40));
+          addSymbolToCanvas(type, x, y);
+        });
+      });
+
+      function addSymbolToCanvas(type, x, y) {
+        const cfg = SYMBOL_CONFIG[type];
+        const id = "psym-" + ++symbolCounter;
+        const el = document.createElement("div");
+        el.id = id;
+        el.className = "flowchart-symbol symbol-" + type;
+        el.dataset.type = type;
+        el.style.left = x + "px";
+        el.style.top = y + "px";
+        el.style.zIndex = ++zIndexCounter;
+        const label = document.createElement("span");
+        label.className = "symbol-label";
+        label.textContent = cfg.label;
+        el.appendChild(label);
+        canvas.appendChild(el);
+        placeholder.style.display = "none";
+        attachSymbolEvents(el);
+        selectSymbol(el);
+        return el;
+      }
+
+      function attachSymbolEvents(el) {
+        el.addEventListener("dblclick", (e) => {
+          e.stopPropagation();
+          const label = el.querySelector(".symbol-label");
+          label.contentEditable = "true";
+          label.focus();
+          const range = document.createRange();
+          range.selectNodeContents(label);
+          const sel = window.getSelection();
+          sel.removeAllRanges();
+          sel.addRange(range);
+        });
+        el.querySelector(".symbol-label").addEventListener("blur", (e) => {
+          e.target.contentEditable = "false";
+        });
+        el.querySelector(".symbol-label").addEventListener("keydown", (e) => {
+          if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            e.target.blur();
+          }
+        });
+
+        let dragging = false;
+        let offsetX = 0,
+          offsetY = 0;
+
+        el.addEventListener("pointerdown", (e) => {
+          if (e.target.classList.contains("symbol-label") && e.target.isContentEditable) return;
+          if (connectMode) {
+            handleConnectClick(el);
+            return;
+          }
+          dragging = true;
+          el.setPointerCapture(e.pointerId);
+          const rect = el.getBoundingClientRect();
+          offsetX = e.clientX - rect.left;
+          offsetY = e.clientY - rect.top;
+          el.style.zIndex = ++zIndexCounter;
+          selectSymbol(el);
+        });
+
+        el.addEventListener("pointermove", (e) => {
+          if (!dragging) return;
+          const canvasRect = canvas.getBoundingClientRect();
+          let newX = e.clientX - canvasRect.left - offsetX;
+          let newY = e.clientY - canvasRect.top - offsetY;
+          newX = Math.max(0, Math.min(canvasRect.width - el.offsetWidth, newX));
+          newY = Math.max(0, Math.min(canvasRect.height - el.offsetHeight, newY));
+          el.style.left = newX + "px";
+          el.style.top = newY + "px";
+          redrawArrows();
+        });
+
+        el.addEventListener("pointerup", (e) => {
+          dragging = false;
+          try {
+            el.releasePointerCapture(e.pointerId);
+          } catch (_) {}
+        });
+        el.addEventListener("pointercancel", () => {
+          dragging = false;
+        });
+      }
+
+      function selectSymbol(el) {
+        if (selectedSymbol) selectedSymbol.classList.remove("selected");
+        selectedSymbol = el;
+        if (el) el.classList.add("selected");
+      }
+
+      canvas.addEventListener("click", (e) => {
+        if (e.target === canvas || e.target.id === "arrow-layer" || e.target.id === "arrows-group") {
+          if (!connectMode) selectSymbol(null);
+        }
+      });
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Delete" || e.key === "Backspace") {
+          if (document.activeElement && document.activeElement.isContentEditable) return;
+          if (selectedSymbol) {
+            e.preventDefault();
+            deleteSelected();
+          }
+        }
+      });
+
+      function deleteSelected() {
+        if (!selectedSymbol) return;
+        removeSymbol(selectedSymbol);
+        selectedSymbol = null;
+      }
+
+      function removeSymbol(el) {
+        const id = el.id;
+        arrows = arrows.filter((a) => {
+          if (a.from === id || a.to === id) {
+            a.el.remove();
+            if (a.arrowhead) a.arrowhead.remove();
+            if (a.textEl) a.textEl.remove();
+            return false;
+          }
+          return true;
+        });
+        el.remove();
+        if (connectSource === el) connectSource = null;
+        if (canvas.querySelectorAll(".flowchart-symbol").length === 0) placeholder.style.display = "flex";
+      }
+
+      function clearPlayground() {
+        if (canvas.querySelectorAll(".flowchart-symbol").length === 0) return;
+        if (!confirm("Hapus semua simbol dan panah di canvas?")) return;
+        canvas.querySelectorAll(".flowchart-symbol").forEach((s) => s.remove());
+        arrowsGroup.innerHTML = "";
+        arrows = [];
+        selectedSymbol = null;
+        connectSource = null;
+        placeholder.style.display = "flex";
+      }
+
+      function toggleConnectMode() {
+        connectMode = !connectMode;
+        connectSource = null;
+        if (connectMode) {
+          btnConnectMode.classList.add("bg-purple-500/30", "border-purple-500/60", "text-purple-200");
+          connectModeLabel.textContent = "Connect Mode: ON";
+          connectHint.classList.remove("hidden");
+          connectHint.classList.add("flex");
+          canvas.style.cursor = "crosshair";
+        } else {
+          btnConnectMode.classList.remove("bg-purple-500/30", "border-purple-500/60", "text-purple-200");
+          connectModeLabel.textContent = "Connect Mode: OFF";
+          connectHint.classList.add("hidden");
+          connectHint.classList.remove("flex");
+          canvas.style.cursor = "default";
+        }
+      }
+
+      function handleConnectClick(el) {
+        if (!connectSource) {
+          connectSource = el;
+          selectSymbol(el);
+          connectHint.innerHTML = `<i class="fa-solid fa-hand-pointer animate-pulse"></i> Sekarang klik simbol tujuan panah...`;
+        } else {
+          if (connectSource === el) {
+            connectSource = null;
+            selectSymbol(null);
+            connectHint.innerHTML = `<i class="fa-solid fa-hand-pointer animate-pulse"></i> Klik simbol pertama sebagai titik awal panah...`;
+            return;
+          }
+
+          if (connectSource.dataset.type === "decision") {
+            pendingArrow = { fromId: connectSource.id, toId: el.id };
+            document.getElementById("branch-modal").classList.remove("hidden");
+            connectSource = null;
+            selectSymbol(null);
+            return;
+          }
+
+          createArrow(connectSource.id, el.id, "");
+          connectSource = null;
+          selectSymbol(null);
+          connectHint.innerHTML = `<i class="fa-solid fa-check text-brandGreen"></i> Panah dibuat! Klik simbol lain untuk menambah panah baru.`;
+        }
+      }
+
+      function applyBranchLabel(label) {
+        document.getElementById("branch-modal").classList.add("hidden");
+        if (!pendingArrow) return;
+        createArrow(pendingArrow.fromId, pendingArrow.toId, label);
+        pendingArrow = null;
+        const color = label === "Ya" ? "text-brandGreen" : "text-rose-400";
+        connectHint.innerHTML = `<i class="fa-solid fa-check ${color}"></i> Panah dengan label "<strong>${label}</strong>" berhasil dibuat!`;
+      }
+
+      function cancelBranchLabel() {
+        document.getElementById("branch-modal").classList.add("hidden");
+        pendingArrow = null;
+        connectHint.innerHTML = `<i class="fa-solid fa-hand-pointer animate-pulse"></i> Klik simbol pertama sebagai titik awal panah...`;
+      }
+
+      function createArrow(fromId, toId, label = "") {
+        const exists = arrows.some((a) => a.from === fromId && a.to === toId);
+        if (exists) return;
+
+        const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        line.setAttribute("stroke", "#00e676");
+        line.setAttribute("stroke-width", "2");
+        arrowsGroup.appendChild(line);
+
+        const arrowhead = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+        arrowhead.setAttribute("fill", "#00e676");
+        arrowsGroup.appendChild(arrowhead);
+
+        let textEl = null;
+        if (label) {
+          textEl = document.createElementNS("http://www.w3.org/2000/svg", "text");
+          textEl.setAttribute("fill", label === "Ya" ? "#00e676" : "#fb7185");
+          textEl.setAttribute("stroke", "#0a0a0a");
+          textEl.setAttribute("stroke-width", "5");
+          textEl.setAttribute("paint-order", "stroke");
+          textEl.setAttribute("font-family", "Inter, sans-serif");
+          textEl.setAttribute("font-size", "15");
+          textEl.setAttribute("font-weight", "800");
+          textEl.setAttribute("text-anchor", "middle");
+          textEl.setAttribute("dominant-baseline", "middle");
+          textEl.textContent = label;
+          arrowsGroup.appendChild(textEl);
+        }
+
+        arrows.push({ from: fromId, to: toId, el: line, arrowhead, label, textEl });
+        redrawArrows();
+      }
+
+      function getSymbolById(id) {
+        return document.getElementById(id);
+      }
+
+      function getEdgePoint(el, targetX, targetY) {
+        const cx = el.offsetLeft + el.offsetWidth / 2;
+        const cy = el.offsetTop + el.offsetHeight / 2;
+        const dx = targetX - cx;
+        const dy = targetY - cy;
+        const rx = el.offsetWidth / 2;
+        const ry = el.offsetHeight / 2;
+        const angle = Math.atan2(dy, dx);
+        const r = 1 / Math.sqrt(Math.cos(angle) ** 2 / (rx * rx) + Math.sin(angle) ** 2 / (ry * ry));
+        return { x: cx + Math.cos(angle) * r, y: cy + Math.sin(angle) * r };
+      }
+
+      function redrawArrows() {
+        arrows.forEach((arrow) => {
+          const fromEl = getSymbolById(arrow.from);
+          const toEl = getSymbolById(arrow.to);
+          if (!fromEl || !toEl) return;
+
+          const fromCx = fromEl.offsetLeft + fromEl.offsetWidth / 2;
+          const fromCy = fromEl.offsetTop + fromEl.offsetHeight / 2;
+          const toCx = toEl.offsetLeft + toEl.offsetWidth / 2;
+          const toCy = toEl.offsetTop + toEl.offsetHeight / 2;
+
+          const start = getEdgePoint(fromEl, toCx, toCy);
+          const end = getEdgePoint(toEl, fromCx, fromCy);
+
+          arrow.el.setAttribute("x1", start.x);
+          arrow.el.setAttribute("y1", start.y);
+          arrow.el.setAttribute("x2", end.x);
+          arrow.el.setAttribute("y2", end.y);
+
+          const angle = Math.atan2(end.y - start.y, end.x - start.x);
+          const size = 9;
+          const tipX = end.x;
+          const tipY = end.y;
+          const p2x = end.x - size * Math.cos(angle - Math.PI / 6);
+          const p2y = end.y - size * Math.sin(angle - Math.PI / 6);
+          const p3x = end.x - size * Math.cos(angle + Math.PI / 6);
+          const p3y = end.y - size * Math.sin(angle + Math.PI / 6);
+          arrow.arrowhead.setAttribute("points", `${tipX},${tipY} ${p2x},${p2y} ${p3x},${p3y}`);
+
+          if (arrow.textEl) {
+            const midX = (start.x + end.x) / 2;
+            const midY = (start.y + end.y) / 2;
+            arrow.textEl.setAttribute("x", midX);
+            arrow.textEl.setAttribute("y", midY);
+          }
+        });
+      }
+
+      window.addEventListener("resize", redrawArrows);
+
+      /* ============ AUTO-FILL ============ */
+      window.addEventListener("DOMContentLoaded", () => {
+        const savedNama = localStorage.getItem("siswa_nama");
+        const savedAbsen = localStorage.getItem("siswa_absen");
+        if (savedNama) document.getElementById("lkpd-anggota1-nama").value = savedNama;
+        if (savedAbsen) document.getElementById("lkpd-anggota1-absen").value = savedAbsen;
+
+        loadDraft();
+        setupProgressListeners();
+      });
+
+      /* ============ PROGRESS TRACKING ============ */
+      function setupProgressListeners() {
+        const fields = ["lkpd-anggota1-nama", "lkpd-anggota1-absen", "lkpd-anggota2-nama", "lkpd-anggota2-absen", "lkpd-kelas", "task1-input", "task1-proses", "task1-output", "task2-lanjutan", "task3-deskripsi"];
+        fields.forEach((id) => {
+          const el = document.getElementById(id);
+          if (el) el.addEventListener("input", updateProgress);
+        });
+        document.getElementById("task3-checkbox").addEventListener("change", updateProgress);
+      }
+
+      function updateProgress() {
+        let completed = 0;
+
+        const identitasOk = ["lkpd-anggota1-nama", "lkpd-anggota1-absen", "lkpd-anggota2-nama", "lkpd-anggota2-absen", "lkpd-kelas"].every((id) => document.getElementById(id).value.trim() !== "");
+        if (identitasOk) completed++;
+
+        const tugas1Ok = ["task1-input", "task1-proses", "task1-output"].every((id) => document.getElementById(id).value.trim() !== "");
+        if (tugas1Ok) completed++;
+
+        const tugas2Ok = document.getElementById("task2-lanjutan").value.trim() !== "";
+        if (tugas2Ok) completed++;
+
+        const tugas3DeskripsiOk = document.getElementById("task3-deskripsi").value.trim() !== "";
+        const tugas3Cb = document.getElementById("task3-checkbox").checked;
+        if (tugas3DeskripsiOk && tugas3Cb) completed++;
+
+        document.getElementById("progress-text").textContent = completed;
+        document.getElementById("progress-bar").style.width = (completed / 4) * 100 + "%";
+
+        document.getElementById("task-1-card").classList.toggle("filled", tugas1Ok);
+        document.getElementById("task-2-card").classList.toggle("filled", tugas2Ok);
+        document.getElementById("task-3-card").classList.toggle("filled", tugas3DeskripsiOk && tugas3Cb);
+      }
+
+      /* ============ VALIDASI ============ */
+      function validateForm() {
+        const errors = [];
+        const a1n = document.getElementById("lkpd-anggota1-nama").value.trim();
+        const a1a = document.getElementById("lkpd-anggota1-absen").value.trim();
+        const a2n = document.getElementById("lkpd-anggota2-nama").value.trim();
+        const a2a = document.getElementById("lkpd-anggota2-absen").value.trim();
+        const kelas = document.getElementById("lkpd-kelas").value.trim();
+        const t1in = document.getElementById("task1-input").value.trim();
+        const t1pr = document.getElementById("task1-proses").value.trim();
+        const t1out = document.getElementById("task1-output").value.trim();
+        const t2 = document.getElementById("task2-lanjutan").value.trim();
+        const t3 = document.getElementById("task3-deskripsi").value.trim();
+        const t3cb = document.getElementById("task3-checkbox").checked;
+
+        if (!a1n) errors.push("Anggota 1 — Nama belum diisi");
+        else if (a1n.length < 3) errors.push("Anggota 1 — Nama terlalu pendek");
+        if (!a1a) errors.push("Anggota 1 — No absen belum diisi");
+        else if (parseInt(a1a) < 1 || parseInt(a1a) > 50) errors.push("Anggota 1 — No absen harus 1-50");
+        if (!a2n) errors.push("Anggota 2 — Nama belum diisi");
+        else if (a2n.length < 3) errors.push("Anggota 2 — Nama terlalu pendek");
+        if (!a2a) errors.push("Anggota 2 — No absen belum diisi");
+        else if (parseInt(a2a) < 1 || parseInt(a2a) > 50) errors.push("Anggota 2 — No absen harus 1-50");
+        if (!kelas) errors.push("Kelas belum diisi");
+        if (!t1in) errors.push("Tugas 1 — bagian Input belum diisi");
+        if (!t1pr) errors.push("Tugas 1 — bagian Proses belum diisi");
+        if (!t1out) errors.push("Tugas 1 — bagian Output belum diisi");
+        if (!t2) errors.push("Tugas 2 — Lanjutan algoritma belum diisi");
+        if (!t3) errors.push("Tugas 3 — Deskripsi Flowchart belum diisi");
+        if (!t3cb) errors.push("Checkbox konfirmasi Tugas 3 belum dicentang");
+
+        return errors;
+      }
+
+      /* ============ SUBMIT — UPLOAD KE GOOGLE DRIVE ============ */
+      async function submitLKPD() {
+        const warning = document.getElementById("submit-warning");
+        const warningText = document.getElementById("submit-warning-text");
+        const btn = document.getElementById("btn-submit");
+
+        // 1) Validasi
+        const errors = validateForm();
+        if (errors.length > 0) {
+          warningText.innerHTML = "Harap lengkapi:<br>• " + errors.join("<br>• ");
+          warning.classList.remove("hidden");
+          setTimeout(() => warning.classList.add("hidden"), 6000);
+          window.scrollTo({ top: 300, behavior: "smooth" });
+          return;
+        }
+        warning.classList.add("hidden");
+
+        // 2) Loading state
+        const originalHTML = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Mengirim ke Google Drive...';
+        btn.classList.add("opacity-70", "cursor-not-allowed");
+
+        const loadingEl = document.getElementById("pdf-loading");
+        loadingEl.classList.remove("hidden");
+
+        try {
+          // 3) Generate PDF
+          const { pdf, data, filename } = await buildPDFBlob();
+
+          // 4) Convert PDF → base64
+          const pdfBase64 = pdf.output("datauristring").split(",")[1];
+
+          // 5) Siapkan payload
+          const payload = {
+            pdfBase64,
+            fileName: filename,
+            kelas: data.kelas,
+            anggota1: data.a1n,
+            absen1: data.a1a,
+            anggota2: data.a2n,
+            absen2: data.a2a,
+            timestamp: new Date().toLocaleString("id-ID"),
+          };
+
+          // 6) Kirim ke Apps Script (text/plain menghindari CORS preflight)
+          const res = await fetch(UPLOAD_URL, {
+            method: "POST",
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
+            body: JSON.stringify(payload),
+          });
+          const result = await res.json();
+          if (!result.success) throw new Error(result.message || "Upload gagal");
+
+          // 7) Sukses
+          loadingEl.classList.add("hidden");
+
+          localStorage.setItem("siswa_nama", data.a1n);
+          localStorage.setItem("siswa_absen", data.a1a);
+          localStorage.removeItem("lkpd_draft");
+
+          document.getElementById("form-identitas-section").classList.add("hidden");
+          document.getElementById("tugas-section").classList.add("hidden");
+          document.getElementById("progress-section").classList.add("hidden");
+          document.getElementById("result-section").classList.remove("hidden");
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        } catch (err) {
+          console.error("Upload error:", err);
+          loadingEl.classList.add("hidden");
+          warningText.innerHTML = "❌ Gagal mengirim ke Google Drive: " + err.message + "<br><br>Tips: Pastikan koneksi internet stabil. Kamu masih bisa pakai tombol <strong>Unduh PDF</strong> lalu kirim manual ke guru.";
+          warning.classList.remove("hidden");
+          btn.disabled = false;
+          btn.innerHTML = originalHTML;
+          btn.classList.remove("opacity-70", "cursor-not-allowed");
+        }
+      }
+
+      /* ============ SAVE DRAFT ============ */
+      function saveDraft() {
+        const draft = {
+          a1n: document.getElementById("lkpd-anggota1-nama").value,
+          a1a: document.getElementById("lkpd-anggota1-absen").value,
+          a2n: document.getElementById("lkpd-anggota2-nama").value,
+          a2a: document.getElementById("lkpd-anggota2-absen").value,
+          kelas: document.getElementById("lkpd-kelas").value,
+          task1Input: document.getElementById("task1-input").value,
+          task1Proses: document.getElementById("task1-proses").value,
+          task1Output: document.getElementById("task1-output").value,
+          task2: document.getElementById("task2-lanjutan").value,
+          task3: document.getElementById("task3-deskripsi").value,
+          task3Cb: document.getElementById("task3-checkbox").checked,
+        };
+        localStorage.setItem("lkpd_draft", JSON.stringify(draft));
+        alert("✅ Draft berhasil disimpan!\n\nKamu bisa lanjut mengerjakan kapan saja — draft akan otomatis ditawarkan saat halaman dibuka kembali.");
+      }
+
+      /* ============ LOAD DRAFT ============ */
+      function loadDraft() {
+        const raw = localStorage.getItem("lkpd_draft");
+        if (!raw) return;
+        try {
+          const draft = JSON.parse(raw);
+          const ada = Object.values(draft).some((v) => v && v !== false);
+          if (!ada) return;
+          if (confirm("📂 Ditemukan draft LKPD yang tersimpan.\n\nLanjutkan mengerjakan dari draft terakhir?")) {
+            document.getElementById("lkpd-anggota1-nama").value = draft.a1n || "";
+            document.getElementById("lkpd-anggota1-absen").value = draft.a1a || "";
+            document.getElementById("lkpd-anggota2-nama").value = draft.a2n || "";
+            document.getElementById("lkpd-anggota2-absen").value = draft.a2a || "";
+            document.getElementById("lkpd-kelas").value = draft.kelas || "";
+            document.getElementById("task1-input").value = draft.task1Input || "";
+            document.getElementById("task1-proses").value = draft.task1Proses || "";
+            document.getElementById("task1-output").value = draft.task1Output || "";
+            document.getElementById("task2-lanjutan").value = draft.task2 || "";
+            document.getElementById("task3-deskripsi").value = draft.task3 || "";
+            document.getElementById("task3-checkbox").checked = draft.task3Cb || false;
+            updateProgress();
+          }
+        } catch (e) {
+          console.error("Load draft error:", e);
+        }
+      }
+
+      /* =========================================================
+         GENERATOR PDF — dipakai bareng oleh Unduh PDF & Kumpulkan
+      ========================================================= */
+      async function buildPDFBlob() {
+        if (!window.jspdf || !window.jspdf.jsPDF) {
+          throw new Error("Library PDF belum termuat. Refresh halaman & coba lagi.");
+        }
+        if (!window.html2canvas) {
+          throw new Error("Library gambar belum termuat. Refresh halaman & coba lagi.");
+        }
+
+        if (selectedSymbol) selectedSymbol.classList.remove("selected");
+
+        /* --- Capture flowchart --- */
+        let flowchartImg = null,
+          flowW = 0,
+          flowH = 0;
+        if (canvas.querySelectorAll(".flowchart-symbol").length > 0) {
+          try {
+            await new Promise((r) => setTimeout(r, 120));
+            const captured = await html2canvas(canvas, {
+              backgroundColor: "#0a0a0a",
+              scale: 2,
+              logging: false,
+              useCORS: true,
+              allowTaint: true,
+            });
+            flowchartImg = captured.toDataURL("image/png");
+            flowW = captured.width;
+            flowH = captured.height;
+          } catch (err) {
+            console.warn("Gagal capture flowchart:", err);
+          }
+        }
+
+        /* --- Init PDF --- */
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+
+        const pageW = doc.internal.pageSize.getWidth();
+        const pageH = doc.internal.pageSize.getHeight();
+        const margin = 12;
+        const contentW = pageW - margin * 2;
+        let y = margin;
+
+        const C = {
+          bg: [10, 10, 10],
+          card: [22, 22, 22],
+          border: [55, 55, 55],
+          green: [0, 230, 118],
+          sky: [56, 189, 248],
+          amber: [251, 191, 36],
+          purple: [192, 132, 252],
+          rose: [251, 113, 133],
+          white: [255, 255, 255],
+          text: [215, 218, 224],
+          dim: [150, 155, 165],
+          codeBg: [13, 17, 23],
+          codeBorder: [60, 80, 100],
+          codeText: [180, 210, 230],
+          inputBg: [15, 30, 45],
+          inputBorder: [40, 100, 130],
+          processBg: [40, 30, 8],
+          processBorder: [140, 100, 30],
+          outputBg: [30, 20, 45],
+          outputBorder: [90, 60, 140],
+          greenBoxBg: [10, 30, 20],
+          greenBoxBrd: [30, 100, 60],
+          roseBoxBg: [35, 15, 20],
+          roseBoxBrd: [120, 45, 55],
+          infoCardBrd: [70, 70, 70],
+        };
+
+        const setFill = (c) => doc.setFillColor(c[0], c[1], c[2]);
+        const setDraw = (c) => doc.setDrawColor(c[0], c[1], c[2]);
+        const setText = (c) => doc.setTextColor(c[0], c[1], c[2]);
+
+        function paintBg() {
+          setFill(C.bg);
+          doc.rect(0, 0, pageW, pageH, "F");
+        }
+        function newPage() {
+          doc.addPage();
+          paintBg();
+          y = margin;
+        }
+        function ensureSpace(h) {
+          if (y + h > pageH - margin - 10) newPage();
+        }
+        function drawCard(x, yy, w, h, opts = {}) {
+          setFill(opts.fill || C.card);
+          doc.roundedRect(x, yy, w, h, 2.5, 2.5, "F");
+          if (opts.borderColor) {
+            setDraw(opts.borderColor);
+            doc.setLineWidth(0.3);
+            doc.roundedRect(x, yy, w, h, 2.5, 2.5, "S");
+          }
+          if (opts.accent) {
+            setFill(opts.accent);
+            doc.rect(x + 0.4, yy + 2, 1.2, h - 4, "F");
+          }
+        }
+        function measure(text, size, style, w, font = "helvetica") {
+          doc.setFont(font, style);
+          doc.setFontSize(size);
+          const s = String(text ?? "")
+            .replace(/\u2212/g, "-")
+            .replace(/\u2265/g, ">=")
+            .replace(/\u2264/g, "<=");
+          return doc.splitTextToSize(s.trim() || "-", w);
+        }
+        function lh(size) {
+          return size * 0.45;
+        }
+
+        /* ============ HEADER BANNER ============ */
+        paintBg();
+        y = margin;
+
+        const bannerH = 26;
+        setFill(C.green);
+        doc.roundedRect(margin, y, contentW, bannerH, 3, 3, "F");
+        setFill([180, 255, 215]);
+        doc.roundedRect(margin + 1, y + 4, 1.5, bannerH - 8, 0.8, 0.8, "F");
+
+        setText([10, 10, 10]);
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(15);
+        doc.text("LKPD DIGITAL • INFORMATIKA", pageW / 2, y + 9.5, { align: "center" });
+        doc.setFontSize(11);
+        doc.text('Sistem Diskon Belanja "Patbhe Mart"', pageW / 2, y + 16.5, { align: "center" });
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(8.5);
+        doc.text("Algoritma & Flowchart Percabangan  •  Fase E / Kelas X", pageW / 2, y + 22.5, { align: "center" });
+
+        y += bannerH + 5;
+
+        /* ============ INFO CARDS ============ */
+        {
+          const items = [
+            { label: "TARGET PEMBELAJARAN", value: "TP 1 & TP 2", color: C.green },
+            { label: "ALOKASI WAKTU", value: "30 Menit", color: C.sky },
+            { label: "FORMASI", value: "Berpasangan (2 Org)", color: C.purple },
+          ];
+          const gap = 3;
+          const cw = (contentW - gap * 2) / 3;
+          const valueSize = 10;
+          const valueLh = lh(valueSize);
+          const measured = items.map((it) => ({
+            ...it,
+            lines: measure(it.value, valueSize, "bold", cw - 10),
+          }));
+          const maxLines = Math.max(...measured.map((m) => m.lines.length));
+          const cardH = 8 + maxLines * valueLh + 3;
+
+          ensureSpace(cardH + 5);
+          measured.forEach((it, i) => {
+            const cx = margin + i * (cw + gap);
+            drawCard(cx, y, cw, cardH, { accent: it.color, borderColor: C.infoCardBrd });
+
+            setText(C.dim);
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(7);
+            doc.text(it.label, cx + 5, y + 5.5);
+
+            setText(it.color);
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(valueSize);
+            let vy = y + 12;
+            it.lines.forEach((line) => {
+              doc.text(line, cx + 5, vy);
+              vy += valueLh;
+            });
+          });
+          y += cardH + 5;
+        }
+
+        /* ============ PETUNJUK & K3 ============ */
+        {
+          const padX = 6;
+          const bodySize = 9.5;
+          const bodyLh = lh(bodySize);
+          const innerW = contentW - padX * 2 - 4;
+
+          const items = [
+            "Atur posisi duduk tegak dan ergonomis saat berada di depan komputer.",
+            "Jaga jarak pandang mata ke layar monitor +-50 cm.",
+            "Pastikan area meja kerja bersih dari makanan dan minuman.",
+            "Kerjakan LKPD secara berpasangan (2 orang) melalui Website Pembelajaran Informatika.",
+          ];
+          const measured = items.map((t) => measure(t, bodySize, "normal", innerW - 5));
+
+          const titleH = 8;
+          let innerH = 0;
+          measured.forEach((lines) => {
+            innerH += lines.length * bodyLh + 1.5;
+          });
+          const cardH = titleH + innerH + 4;
+
+          ensureSpace(cardH + 5);
+          drawCard(margin, y, contentW, cardH, { accent: C.amber, borderColor: [120, 90, 20] });
+
+          setText(C.amber);
+          doc.setFont("helvetica", "bold");
+          doc.setFontSize(10.5);
+          doc.text("PETUNJUK PENGGUNAAN & KESELAMATAN KERJA (K3)", margin + padX + 2, y + 6);
+
+          let cy = y + titleH + 3.5;
+          measured.forEach((lines) => {
+            setFill(C.amber);
+            doc.circle(margin + padX + 3.5, cy - 1.2, 0.7, "F");
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(bodySize);
+            setText(C.text);
+            lines.forEach((line) => {
+              doc.text(line, margin + padX + 7, cy);
+              cy += bodyLh;
+            });
+            cy += 1.5;
+          });
+
+          y += cardH + 5;
+        }
+
+        /* ============ STUDI KASUS ============ */
+        {
+          const padX = 6;
+          const bodySize = 9.5;
+          const bodyLh = lh(bodySize);
+          const innerW = contentW - padX * 2 - 4;
+
+          const desc = "Kasir toko Patbhe Mart membutuhkan program otomatis untuk menghitung diskon belanja pelanggan. Berikut ketentuannya:";
+          const descLines = measure(desc, bodySize, "normal", innerW);
+
+          const boxGap = 3;
+          const boxW = (innerW - boxGap) / 2;
+          const boxTitleH = 7;
+          const boxBodySize = 8.5;
+          const boxLh = lh(boxBodySize);
+
+          const box1Items = ["* Mendapat diskon 10%", '* "Selamat, Anda Mendapat Diskon 10%!"', "* Total_Bayar = Total_Belanja - Diskon"];
+          const box2Items = ["* Tidak mendapat diskon", '* "Terima Kasih Telah Berbelanja!"', "* Total_Bayar = Total_Belanja"];
+          const box1Lines = box1Items.flatMap((t) => measure(t, boxBodySize, "normal", boxW - 10));
+          const box2Lines = box2Items.flatMap((t) => measure(t, boxBodySize, "normal", boxW - 10));
+          const boxMaxLines = Math.max(box1Lines.length, box2Lines.length);
+          const boxH = boxTitleH + boxMaxLines * boxLh + 4;
+
+          const titleH = 8;
+          const cardH = titleH + descLines.length * bodyLh + 4 + boxH + 4;
+
+          ensureSpace(cardH + 5);
+          drawCard(margin, y, contentW, cardH, { accent: C.green, borderColor: [30, 100, 60] });
+
+          setText(C.green);
+          doc.setFont("helvetica", "bold");
+          doc.setFontSize(10.5);
+          doc.text('STUDI KASUS: SISTEM DISKON "PATBHE MART"', margin + padX + 2, y + 6);
+
+          let cy = y + titleH + 3.5;
+          doc.setFont("helvetica", "normal");
+          doc.setFontSize(bodySize);
+          setText(C.text);
+          descLines.forEach((line) => {
+            doc.text(line, margin + padX + 2, cy);
+            cy += bodyLh;
+          });
+          cy += 2;
+
+          const box1X = margin + padX + 2;
+          const box2X = box1X + boxW + boxGap;
+
+          drawCard(box1X, cy, boxW, boxH, { fill: C.greenBoxBg, borderColor: C.greenBoxBrd });
+          setText(C.green);
+          doc.setFont("helvetica", "bold");
+          doc.setFontSize(8.5);
+          doc.text("JIKA Total_Belanja >= Rp100.000", box1X + 4, cy + 5);
+          doc.setFont("helvetica", "normal");
+          setText(C.text);
+          let b1y = cy + boxTitleH + 2.5;
+          box1Lines.forEach((line) => {
+            doc.text(line, box1X + 4, b1y);
+            b1y += boxLh;
+          });
+
+          drawCard(box2X, cy, boxW, boxH, { fill: C.roseBoxBg, borderColor: C.roseBoxBrd });
+          setText(C.rose);
+          doc.setFont("helvetica", "bold");
+          doc.setFontSize(8.5);
+          doc.text("JIKA Total_Belanja < Rp100.000", box2X + 4, cy + 5);
+          doc.setFont("helvetica", "normal");
+          setText(C.text);
+          let b2y = cy + boxTitleH + 2.5;
+          box2Lines.forEach((line) => {
+            doc.text(line, box2X + 4, b2y);
+            b2y += boxLh;
+          });
+
+          y += cardH + 5;
+        }
+
+        /* ============ Collect Data ============ */
+        const data = {
+          a1n: document.getElementById("lkpd-anggota1-nama").value.trim() || "-",
+          a1a: document.getElementById("lkpd-anggota1-absen").value.trim() || "-",
+          a2n: document.getElementById("lkpd-anggota2-nama").value.trim() || "-",
+          a2a: document.getElementById("lkpd-anggota2-absen").value.trim() || "-",
+          kelas: document.getElementById("lkpd-kelas").value.trim() || "-",
+          task1Input: document.getElementById("task1-input").value.trim() || "-",
+          task1Proses: document.getElementById("task1-proses").value.trim() || "-",
+          task1Output: document.getElementById("task1-output").value.trim() || "-",
+          task2: document.getElementById("task2-lanjutan").value.trim() || "-",
+          task3: document.getElementById("task3-deskripsi").value.trim() || "-",
+        };
+
+        /* ============ IDENTITAS ============ */
+        {
+          const padX = 6;
+          const rows = [
+            { label: "ANGGOTA 1", name: data.a1n, absen: data.a1a, color: C.green },
+            { label: "ANGGOTA 2", name: data.a2n, absen: data.a2a, color: C.sky },
+            { label: "KELAS", name: data.kelas, absen: null, color: C.purple },
+          ];
+          const rowH = 10;
+          const titleH = 8;
+          const cardH = titleH + rowH * rows.length + 4;
+
+          ensureSpace(cardH + 5);
+          drawCard(margin, y, contentW, cardH, { accent: C.green, borderColor: [30, 100, 60] });
+
+          setText(C.green);
+          doc.setFont("helvetica", "bold");
+          doc.setFontSize(10.5);
+          doc.text("IDENTITAS KELOMPOK", margin + padX + 2, y + 6);
+
+          let cy = y + titleH + 3;
+          rows.forEach((r) => {
+            setText(r.color);
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(7);
+            doc.text(r.label, margin + padX + 2, cy);
+
+            setText(C.white);
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(10);
+            doc.text(r.name, margin + padX + 2, cy + 5);
+
+            if (r.absen) {
+              setText(C.dim);
+              doc.setFont("helvetica", "normal");
+              doc.setFontSize(8.5);
+              doc.text("No. Absen: " + r.absen, margin + contentW - padX - 2, cy + 5, { align: "right" });
+            }
+            cy += rowH;
+          });
+
+          y += cardH + 5;
+        }
+
+        /* ============ TUGAS 1 ============ */
+        {
+          const padX = 6;
+          const bodySize = 9.5;
+          const bodyLh = lh(bodySize);
+          const innerW = contentW - padX * 2 - 4;
+
+          const blocks = [
+            { label: "INPUT (MASUKAN)", value: data.task1Input, color: C.sky, bg: C.inputBg, border: C.inputBorder },
+            { label: "PROSES (KONDISI PERCABANGAN)", value: data.task1Proses, color: C.amber, bg: C.processBg, border: C.processBorder },
+            { label: "OUTPUT (KELUARAN)", value: data.task1Output, color: C.purple, bg: C.outputBg, border: C.outputBorder },
+          ];
+          const blockTitleH = 7;
+          const blockGap = 3;
+
+          const blocksMeasured = blocks.map((b) => ({
+            ...b,
+            lines: measure(b.value, bodySize, "normal", innerW - 8),
+          }));
+          const blockHeights = blocksMeasured.map((b) => blockTitleH + b.lines.length * bodyLh + 4);
+          const innerH = blockHeights.reduce((a, h) => a + h, 0) + blockGap * (blocks.length - 1);
+          const titleH = 8;
+          const cardH = titleH + 2 + innerH + 4;
+
+          ensureSpace(cardH + 5);
+          drawCard(margin, y, contentW, cardH, { accent: C.green, borderColor: [30, 100, 60] });
+
+          setText(C.green);
+          doc.setFont("helvetica", "bold");
+          doc.setFontSize(10.5);
+          doc.text("TUGAS 1: ANALISIS INPUT - PROSES - OUTPUT", margin + padX + 2, y + 6);
+
+          let cy = y + titleH + 2;
+          blocksMeasured.forEach((b, i) => {
+            const bh = blockHeights[i];
+            const bx = margin + padX + 2;
+            drawCard(bx, cy, innerW, bh, { fill: b.bg, borderColor: b.border });
+
+            setText(b.color);
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(8);
+            doc.text(b.label, bx + 4, cy + 5);
+
+            let by = cy + blockTitleH + 2.5;
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(bodySize);
+            setText(C.text);
+            b.lines.forEach((line) => {
+              doc.text(line, bx + 4, by);
+              by += bodyLh;
+            });
+
+            cy += bh + blockGap;
+          });
+
+          y += cardH + 5;
+        }
+
+        /* ============ TUGAS 2 ============ */
+        {
+          const padX = 6;
+          const innerW = contentW - padX * 2 - 4;
+
+          const instr = "Lanjutkan langkah-langkah algoritma dari langkah 3 sampai selesai. Perhatikan percabangan kondisi (Jika Ya / Jika Tidak).";
+          const instrSize = 9;
+          const instrLh = lh(instrSize);
+          const instrLines = measure(instr, instrSize, "italic", innerW);
+
+          const codeSize = 8.8;
+          const codeLh = lh(codeSize);
+          const codeLines = measure(data.task2, codeSize, "normal", innerW - 8, "courier");
+          const codeBlockH = codeLines.length * codeLh + 5;
+
+          const titleH = 8;
+          const cardH = titleH + instrLines.length * instrLh + 4 + codeBlockH + 4;
+
+          ensureSpace(cardH + 5);
+          drawCard(margin, y, contentW, cardH, { accent: C.sky, borderColor: [40, 100, 130] });
+
+          setText(C.sky);
+          doc.setFont("helvetica", "bold");
+          doc.setFontSize(10.5);
+          doc.text("TUGAS 2: LANJUTAN ALGORITMA NARATIF", margin + padX + 2, y + 6);
+
+          let cy = y + titleH + 3;
+          doc.setFont("helvetica", "italic");
+          doc.setFontSize(instrSize);
+          setText(C.dim);
+          instrLines.forEach((line) => {
+            doc.text(line, margin + padX + 2, cy);
+            cy += instrLh;
+          });
+          cy += 2;
+
+          const cbX = margin + padX + 2;
+          drawCard(cbX, cy, innerW, codeBlockH, { fill: C.codeBg, borderColor: C.codeBorder });
+
+          doc.setFont("courier", "normal");
+          doc.setFontSize(codeSize);
+          setText(C.codeText);
+          let cby = cy + codeLh + 1.5;
+          codeLines.forEach((line) => {
+            doc.text(line, cbX + 4, cby);
+            cby += codeLh;
+          });
+
+          y += cardH + 5;
+        }
+
+        /* ============ FLOWCHART (di ATAS TUGAS 3) ============ */
+        if (flowchartImg && flowW > 0 && flowH > 0) {
+          const aspect = flowW / flowH;
+          let imgW = contentW - 12;
+          let imgH = imgW / aspect;
+          const maxImgH = 155;
+          if (imgH > maxImgH) {
+            imgH = maxImgH;
+            imgW = imgH * aspect;
+          }
+
+          const padX = 6;
+          const titleH = 8;
+          const cardH = titleH + imgH + 8;
+
+          if (y + cardH > pageH - margin - 10) newPage();
+
+          drawCard(margin, y, contentW, cardH, { accent: C.amber, borderColor: [120, 90, 20] });
+
+          setText(C.amber);
+          doc.setFont("helvetica", "bold");
+          doc.setFontSize(10.5);
+          doc.text("DIAGRAM ALIR (FLOWCHART) YANG DIRANCANG", margin + padX + 2, y + 6);
+
+          const imgX = margin + (contentW - imgW) / 2;
+          const imgY = y + titleH + 2;
+          doc.addImage(flowchartImg, "PNG", imgX, imgY, imgW, imgH);
+
+          y += cardH + 5;
+        } else {
+          const padX = 6;
+          const titleH = 8;
+          const cardH = titleH + 14;
+
+          ensureSpace(cardH + 5);
+          drawCard(margin, y, contentW, cardH, { accent: C.amber, borderColor: [120, 90, 20] });
+
+          setText(C.amber);
+          doc.setFont("helvetica", "bold");
+          doc.setFontSize(10.5);
+          doc.text("DIAGRAM ALIR (FLOWCHART) YANG DIRANCANG", margin + padX + 2, y + 6);
+
+          doc.setFont("helvetica", "italic");
+          doc.setFontSize(9);
+          setText(C.dim);
+          doc.text("(Belum ada simbol flowchart yang dirangkai di playground)", margin + padX + 2, y + 14);
+
+          y += cardH + 5;
+        }
+
+        /* ============ TUGAS 3: DESKRIPSI ============ */
+        {
+          const padX = 6;
+          const bodySize = 9.5;
+          const bodyLh = lh(bodySize);
+          const innerW = contentW - padX * 2 - 4;
+
+          const descLines = measure(data.task3, bodySize, "normal", innerW);
+          const titleH = 8;
+          const cardH = titleH + descLines.length * bodyLh + 4;
+
+          ensureSpace(cardH + 5);
+          drawCard(margin, y, contentW, cardH, { accent: C.purple, borderColor: [90, 60, 140] });
+
+          setText(C.purple);
+          doc.setFont("helvetica", "bold");
+          doc.setFontSize(10.5);
+          doc.text("TUGAS 3: DESKRIPSI FLOWCHART", margin + padX + 2, y + 6);
+
+          let cy = y + titleH + 3;
+          doc.setFont("helvetica", "normal");
+          doc.setFontSize(bodySize);
+          setText(C.text);
+          descLines.forEach((line) => {
+            doc.text(line, margin + padX + 2, cy);
+            cy += bodyLh;
+          });
+
+          y += cardH + 5;
+        }
+
+        /* ============ FOOTER ============ */
+        const totalPages = doc.getNumberOfPages();
+        const createdAt = new Date().toLocaleString("id-ID");
+        for (let i = 1; i <= totalPages; i++) {
+          doc.setPage(i);
+          const fY = pageH - 8;
+
+          setDraw([45, 45, 45]);
+          doc.setLineWidth(0.2);
+          doc.line(margin, fY - 4, pageW - margin, fY - 4);
+
+          setText(C.dim);
+          doc.setFont("helvetica", "italic");
+          doc.setFontSize(7.5);
+          doc.text("Platform: RuangInformatika  •  SMA Negeri 4 Yogyakarta  •  Dikembangkan oleh Pak Ilyas", margin, fY);
+          doc.text("Halaman " + i + " / " + totalPages, pageW - margin, fY, { align: "right" });
+          doc.text("Dibuat: " + createdAt, margin, fY + 3.5);
+        }
+
+        const safeName = (s) => (s || "-").replace(/[^\w\d]+/g, "_").replace(/^_+|_+$/g, "");
+        const filename = "LKPD_" + safeName(data.a1n) + "_" + safeName(data.kelas) + ".pdf";
+
+        return { pdf: doc, data, filename };
+      }
+
+      /* ============ DOWNLOAD PDF (Unduh lokal) ============ */
+      async function downloadPDF() {
+        const loadingEl = document.getElementById("pdf-loading");
+        loadingEl.classList.remove("hidden");
+        try {
+          const { pdf, filename } = await buildPDFBlob();
+          pdf.save(filename);
+        } catch (err) {
+          console.error("PDF error:", err);
+          alert("❌ Gagal membuat PDF: " + err.message);
+        } finally {
+          loadingEl.classList.add("hidden");
+        }
+      }
+    </script>
+  </body>
+</html>
