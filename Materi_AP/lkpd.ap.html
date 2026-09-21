@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>LKPD: Sistem Diskon Patbhe Mart - RuangInformatika</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="shortcut icon" href="../images/Logo Patbhe.png" type="image/x-icon" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -287,11 +288,6 @@
         <a href="materi-algoritma.html" class="md:hidden flex items-center justify-center w-10 h-10 border border-white/10 rounded-full hover:bg-white/5 transition" aria-label="Kembali">
           <i class="fa-solid fa-arrow-left text-brandGreen"></i>
         </a>
-
-        <!-- Hamburger Button (Mobile) -->
-        <button id="hamburgerBtn" class="md:hidden text-white text-2xl focus:outline-none" aria-label="Menu">
-          <i class="fa-solid fa-bars"></i>
-        </button>
       </div>
     </nav>
 
@@ -807,24 +803,6 @@
       /* ============ KONFIGURASI UPLOAD ============ */
       const UPLOAD_URL = "https://script.google.com/macros/s/AKfycbx7j8rMvVWwxCAL3MHj596uQC61yxeDwNF5jhzWA4Oub8YDEwMaHrLsA5I4Z_BaqIa5jQ/exec";
 
-      /* ============ MOBILE MENU ============ */
-      const hamburgerBtn = document.getElementById("hamburgerBtn");
-      const mobileMenu = document.getElementById("mobileMenu");
-      hamburgerBtn.addEventListener("click", () => {
-        mobileMenu.classList.toggle("hidden");
-        const icon = hamburgerBtn.querySelector("i");
-        icon.classList.toggle("fa-bars");
-        icon.classList.toggle("fa-xmark");
-      });
-      mobileMenu.querySelectorAll("a").forEach((item) => {
-        item.addEventListener("click", () => {
-          mobileMenu.classList.add("hidden");
-          const icon = hamburgerBtn.querySelector("i");
-          icon.classList.add("fa-bars");
-          icon.classList.remove("fa-xmark");
-        });
-      });
-
       /* ============ FLOWCHART PLAYGROUND ============ */
       const canvas = document.getElementById("playground-canvas");
       const arrowsGroup = document.getElementById("arrows-group");
@@ -1235,7 +1213,6 @@
         const warningText = document.getElementById("submit-warning-text");
         const btn = document.getElementById("btn-submit");
 
-        // 1) Validasi
         const errors = validateForm();
         if (errors.length > 0) {
           warningText.innerHTML = "Harap lengkapi:<br>• " + errors.join("<br>• ");
@@ -1246,7 +1223,6 @@
         }
         warning.classList.add("hidden");
 
-        // 2) Loading state
         const originalHTML = btn.innerHTML;
         btn.disabled = true;
         btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Mengirim ke Google Drive...';
@@ -1256,13 +1232,9 @@
         loadingEl.classList.remove("hidden");
 
         try {
-          // 3) Generate PDF
           const { pdf, data, filename } = await buildPDFBlob();
-
-          // 4) Convert PDF → base64
           const pdfBase64 = pdf.output("datauristring").split(",")[1];
 
-          // 5) Siapkan payload
           const payload = {
             pdfBase64,
             fileName: filename,
@@ -1274,7 +1246,6 @@
             timestamp: new Date().toLocaleString("id-ID"),
           };
 
-          // 6) Kirim ke Apps Script (text/plain menghindari CORS preflight)
           const res = await fetch(UPLOAD_URL, {
             method: "POST",
             headers: { "Content-Type": "text/plain;charset=utf-8" },
@@ -1283,7 +1254,6 @@
           const result = await res.json();
           if (!result.success) throw new Error(result.message || "Upload gagal");
 
-          // 7) Sukses
           loadingEl.classList.add("hidden");
 
           localStorage.setItem("siswa_nama", data.a1n);
@@ -1365,7 +1335,6 @@
 
         if (selectedSymbol) selectedSymbol.classList.remove("selected");
 
-        /* --- Capture flowchart --- */
         let flowchartImg = null,
           flowW = 0,
           flowH = 0;
@@ -1387,7 +1356,6 @@
           }
         }
 
-        /* --- Init PDF --- */
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
 
@@ -1467,7 +1435,6 @@
           return size * 0.45;
         }
 
-        /* ============ HEADER BANNER ============ */
         paintBg();
         y = margin;
 
@@ -1489,7 +1456,6 @@
 
         y += bannerH + 5;
 
-        /* ============ INFO CARDS ============ */
         {
           const items = [
             { label: "TARGET PEMBELAJARAN", value: "TP 1 & TP 2", color: C.green },
@@ -1529,7 +1495,6 @@
           y += cardH + 5;
         }
 
-        /* ============ PETUNJUK & K3 ============ */
         {
           const padX = 6;
           const bodySize = 9.5;
@@ -1576,7 +1541,6 @@
           y += cardH + 5;
         }
 
-        /* ============ STUDI KASUS ============ */
         {
           const padX = 6;
           const bodySize = 9.5;
@@ -1652,7 +1616,6 @@
           y += cardH + 5;
         }
 
-        /* ============ Collect Data ============ */
         const data = {
           a1n: document.getElementById("lkpd-anggota1-nama").value.trim() || "-",
           a1a: document.getElementById("lkpd-anggota1-absen").value.trim() || "-",
@@ -1666,7 +1629,6 @@
           task3: document.getElementById("task3-deskripsi").value.trim() || "-",
         };
 
-        /* ============ IDENTITAS ============ */
         {
           const padX = 6;
           const rows = [
@@ -1710,7 +1672,6 @@
           y += cardH + 5;
         }
 
-        /* ============ TUGAS 1 ============ */
         {
           const padX = 6;
           const bodySize = 9.5;
@@ -1768,7 +1729,6 @@
           y += cardH + 5;
         }
 
-        /* ============ TUGAS 2 ============ */
         {
           const padX = 6;
           const innerW = contentW - padX * 2 - 4;
@@ -1819,7 +1779,6 @@
           y += cardH + 5;
         }
 
-        /* ============ FLOWCHART (di ATAS TUGAS 3) ============ */
         if (flowchartImg && flowW > 0 && flowH > 0) {
           const aspect = flowW / flowH;
           let imgW = contentW - 12;
@@ -1869,7 +1828,6 @@
           y += cardH + 5;
         }
 
-        /* ============ TUGAS 3: DESKRIPSI ============ */
         {
           const padX = 6;
           const bodySize = 9.5;
@@ -1900,7 +1858,6 @@
           y += cardH + 5;
         }
 
-        /* ============ FOOTER ============ */
         const totalPages = doc.getNumberOfPages();
         const createdAt = new Date().toLocaleString("id-ID");
         for (let i = 1; i <= totalPages; i++) {

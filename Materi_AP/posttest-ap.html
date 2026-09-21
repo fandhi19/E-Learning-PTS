@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Post-Test: Algoritma & Pemrograman - RuangInformatika</title>
-    <link rel="shortcut icon" href="images/Logo Patbhe.png" type="image/x-icon" />
+    <link rel="shortcut icon" href="../images/Logo Patbhe.png" type="image/x-icon" />
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
@@ -34,7 +34,6 @@
         background-image: linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
       }
 
-      /* ==================== POST-TEST STYLES ==================== */
       .question-card {
         transition: all 0.3s ease;
       }
@@ -182,11 +181,6 @@
         <a href="materi-algoritma.html" class="md:hidden flex items-center justify-center w-10 h-10 border border-white/10 rounded-full hover:bg-white/5 transition" aria-label="Kembali">
           <i class="fa-solid fa-arrow-left text-brandGreen"></i>
         </a>
-
-        <!-- Hamburger Button (Mobile) -->
-        <button id="hamburgerBtn" class="md:hidden text-white text-2xl focus:outline-none" aria-label="Menu">
-          <i class="fa-solid fa-bars"></i>
-        </button>
       </div>
     </nav>
 
@@ -419,24 +413,6 @@
 
     <!-- Main Script -->
     <script>
-      /* ============ MOBILE MENU ============ */
-      const hamburgerBtn = document.getElementById("hamburgerBtn");
-      const mobileMenu = document.getElementById("mobileMenu");
-      hamburgerBtn.addEventListener("click", () => {
-        mobileMenu.classList.toggle("hidden");
-        const icon = hamburgerBtn.querySelector("i");
-        icon.classList.toggle("fa-bars");
-        icon.classList.toggle("fa-xmark");
-      });
-      mobileMenu.querySelectorAll("a").forEach((item) => {
-        item.addEventListener("click", () => {
-          mobileMenu.classList.add("hidden");
-          const icon = hamburgerBtn.querySelector("i");
-          icon.classList.add("fa-bars");
-          icon.classList.remove("fa-xmark");
-        });
-      });
-
       /* ============================================================
          POST-TEST QUIZ
          Soal & kunci SAMA PERSIS dengan Pre-Test
