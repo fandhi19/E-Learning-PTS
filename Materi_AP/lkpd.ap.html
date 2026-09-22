@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>LKPD: Sistem Diskon Patbhe Mart - RuangInformatika</title>
+    <title>LKPD: Sistem Percabangan Patbhe - RuangInformatika</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="shortcut icon" href="../images/Logo Patbhe.png" type="image/x-icon" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet" />
@@ -137,6 +137,7 @@
         color: #fbbf24;
         border-radius: 4px;
       }
+
       .symbol-io {
         border: 2px solid #38bdf8;
         color: #38bdf8;
@@ -159,6 +160,7 @@
       .symbol-decision .symbol-label {
         transform: rotate(-45deg);
       }
+
       .symbol-connector {
         border: 2px solid #facc15;
         color: #facc15;
@@ -198,6 +200,50 @@
         align-items: center;
         justify-content: center;
         font-size: 10px;
+      }
+
+      /* Kartu pilihan studi kasus */
+      .case-option {
+        position: relative;
+        text-align: left;
+        padding: 16px;
+        border-radius: 16px;
+        border: 2px solid rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.03);
+        cursor: pointer;
+        transition: all 0.25s ease;
+        overflow: hidden;
+      }
+      .case-option:hover {
+        border-color: rgba(0, 230, 118, 0.4);
+        background: rgba(0, 230, 118, 0.05);
+        transform: translateY(-2px);
+      }
+      .case-option.active {
+        border-color: #00e676;
+        background: rgba(0, 230, 118, 0.08);
+        box-shadow: 0 0 0 3px rgba(0, 230, 118, 0.15);
+      }
+      .case-option .case-check {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 10px;
+        color: transparent;
+        transition: all 0.2s;
+      }
+      .case-option.active .case-check {
+        background: #00e676;
+        border-color: #00e676;
+        color: #0a0a0a;
       }
 
       @keyframes fadeInUp {
@@ -265,6 +311,49 @@
           padding: 6px 12px;
         }
       }
+      /* ==================== ANTI COPY-PASTE ==================== */
+      body {
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        -webkit-touch-callout: none;
+      }
+      input,
+      textarea {
+        -webkit-user-select: text !important;
+        -moz-user-select: text !important;
+        -ms-user-select: text !important;
+        user-select: text !important;
+        -webkit-touch-callout: none;
+      }
+
+      #anti-copy-toast {
+        position: fixed;
+        bottom: 24px;
+        left: 50%;
+        transform: translateX(-50%) translateY(100px);
+        background: rgba(244, 63, 94, 0.95);
+        color: white;
+        padding: 12px 20px;
+        border-radius: 12px;
+        font-size: 14px;
+        font-weight: 600;
+        box-shadow: 0 10px 30px rgba(244, 63, 94, 0.4);
+        z-index: 9999;
+        opacity: 0;
+        transition: all 0.3s ease;
+        pointer-events: none;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        max-width: 90vw;
+        text-align: center;
+      }
+      #anti-copy-toast.show {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
     </style>
   </head>
   <body class="bg-brandDark text-white font-sans antialiased overflow-x-hidden flex flex-col min-h-screen text-lg">
@@ -276,61 +365,49 @@
       </div>
 
       <div class="flex items-center gap-3">
-        <!-- Tombol Kembali (Desktop) -->
         <a href="materi-algoritma.html" class="hidden md:flex items-center gap-2 border border-white/10 rounded-full px-5 py-2.5 text-sm font-medium hover:bg-white/5 transition">
           <i class="fa-solid fa-arrow-left text-brandGreen"></i> Kembali
         </a>
-
-        <!-- Tombol Pak Ilyas (Desktop) -->
-        <button class="hidden md:flex items-center gap-2 border border-white/10 rounded-full px-5 py-2.5 text-sm font-medium hover:bg-white/5 transition"><i class="fa-solid fa-chalkboard-user text-brandGreen"></i> Pak Ilyas</button>
-
-        <!-- Tombol Kembali (Mobile) -->
+        <button class="hidden md:flex items-center gap-2 border border-white/10 rounded-full px-5 py-2.5 text-sm font-medium hover:bg-white/5 transition"><i class="fa-solid fa-chalkboard-user text-brandGreen"></i> XE6</button>
         <a href="materi-algoritma.html" class="md:hidden flex items-center justify-center w-10 h-10 border border-white/10 rounded-full hover:bg-white/5 transition" aria-label="Kembali">
           <i class="fa-solid fa-arrow-left text-brandGreen"></i>
         </a>
       </div>
     </nav>
 
-    <!-- Main Content -->
     <div class="flex-grow relative bg-grid">
       <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-brandGreen/5 rounded-full blur-[120px] pointer-events-none"></div>
 
       <main class="max-w-4xl mx-auto px-6 py-12 relative z-10">
-        <!-- HEADER LKPD -->
+        <!-- HEADER -->
         <div class="mb-8 text-center md:text-left fade-in-up">
           <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-sm font-bold text-amber-400 mb-4"><i class="fa-solid fa-clipboard-list"></i> LKPD Digital • Fase E / Kelas X</div>
           <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight mb-3 leading-tight">
             Lembar Kerja Peserta Didik<br />
             <span class="text-brandGreen">Algoritma &amp; Flowchart Percabangan</span>
           </h1>
-          <p class="text-textGray text-base md:text-lg max-w-2xl leading-relaxed">Studi Kasus: <strong class="text-white">Sistem Diskon Belanja "Patbhe Mart"</strong></p>
+          <p class="text-textGray text-base md:text-lg max-w-2xl leading-relaxed">5 Pilihan Studi Kasus "Patbhe" — Pilih <strong class="text-white">satu</strong> yang paling kamu sukai!</p>
         </div>
 
         <!-- INFO CARD -->
         <div class="bg-brandGray border border-white/10 rounded-2xl p-5 md:p-6 mb-6 fade-in-up">
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div class="flex items-center gap-3">
-              <div class="w-11 h-11 rounded-xl bg-brandGreen/10 border border-brandGreen/25 flex items-center justify-center text-brandGreen text-lg shrink-0">
-                <i class="fa-solid fa-bullseye"></i>
-              </div>
+              <div class="w-11 h-11 rounded-xl bg-brandGreen/10 border border-brandGreen/25 flex items-center justify-center text-brandGreen text-lg shrink-0"><i class="fa-solid fa-bullseye"></i></div>
               <div>
                 <p class="text-xs text-textGray uppercase tracking-wider font-bold">Target Pembelajaran</p>
                 <p class="text-white font-bold text-sm">TP 1 &amp; TP 2</p>
               </div>
             </div>
             <div class="flex items-center gap-3">
-              <div class="w-11 h-11 rounded-xl bg-sky-500/10 border border-sky-500/25 flex items-center justify-center text-sky-400 text-lg shrink-0">
-                <i class="fa-solid fa-clock"></i>
-              </div>
+              <div class="w-11 h-11 rounded-xl bg-sky-500/10 border border-sky-500/25 flex items-center justify-center text-sky-400 text-lg shrink-0"><i class="fa-solid fa-clock"></i></div>
               <div>
                 <p class="text-xs text-textGray uppercase tracking-wider font-bold">Alokasi Waktu</p>
                 <p class="text-white font-bold text-sm">30 Menit</p>
               </div>
             </div>
             <div class="flex items-center gap-3">
-              <div class="w-11 h-11 rounded-xl bg-purple-500/10 border border-purple-500/25 flex items-center justify-center text-purple-400 text-lg shrink-0">
-                <i class="fa-solid fa-users"></i>
-              </div>
+              <div class="w-11 h-11 rounded-xl bg-purple-500/10 border border-purple-500/25 flex items-center justify-center text-purple-400 text-lg shrink-0"><i class="fa-solid fa-users"></i></div>
               <div>
                 <p class="text-xs text-textGray uppercase tracking-wider font-bold">Formasi</p>
                 <p class="text-white font-bold text-sm">Berpasangan (2 Orang)</p>
@@ -342,9 +419,7 @@
         <!-- PETUNJUK & K3 -->
         <div class="bg-brandGray border border-amber-500/30 rounded-2xl p-5 md:p-6 mb-8 fade-in-up">
           <div class="flex items-center gap-3 border-b border-white/10 pb-4 mb-4">
-            <div class="w-11 h-11 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 text-lg shrink-0">
-              <i class="fa-solid fa-triangle-exclamation"></i>
-            </div>
+            <div class="w-11 h-11 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 text-lg shrink-0"><i class="fa-solid fa-triangle-exclamation"></i></div>
             <div>
               <h3 class="text-lg font-bold text-white">Petunjuk Penggunaan &amp; Keselamatan Kerja (K3)</h3>
               <p class="text-xs text-textGray">Wajib dibaca sebelum mengerjakan</p>
@@ -352,74 +427,52 @@
           </div>
           <ul class="space-y-2.5 text-sm text-textGray">
             <li class="flex items-start gap-2.5">
-              <i class="fa-solid fa-circle-check text-amber-400 mt-1 shrink-0"></i>
-              <span>Atur posisi duduk <strong class="text-white">tegak dan ergonomis</strong> saat berada di depan komputer.</span>
+              <i class="fa-solid fa-circle-check text-amber-400 mt-1 shrink-0"></i><span>Atur posisi duduk <strong class="text-white">tegak dan ergonomis</strong> saat berada di depan komputer.</span>
             </li>
             <li class="flex items-start gap-2.5">
-              <i class="fa-solid fa-circle-check text-amber-400 mt-1 shrink-0"></i>
-              <span>Jaga jarak pandang mata ke layar monitor <strong class="text-white">±50 cm</strong>.</span>
+              <i class="fa-solid fa-circle-check text-amber-400 mt-1 shrink-0"></i><span>Jaga jarak pandang mata ke layar monitor <strong class="text-white">±50 cm</strong>.</span>
             </li>
             <li class="flex items-start gap-2.5">
-              <i class="fa-solid fa-circle-check text-amber-400 mt-1 shrink-0"></i>
-              <span>Pastikan area meja kerja <strong class="text-white">bersih</strong> dari makanan dan minuman.</span>
+              <i class="fa-solid fa-circle-check text-amber-400 mt-1 shrink-0"></i><span>Pastikan area meja kerja <strong class="text-white">bersih</strong> dari makanan dan minuman.</span>
             </li>
             <li class="flex items-start gap-2.5">
-              <i class="fa-solid fa-circle-check text-amber-400 mt-1 shrink-0"></i>
-              <span>Kerjakan LKPD secara <strong class="text-white">berpasangan (2 orang)</strong> melalui Website Pembelajaran Informatika.</span>
+              <i class="fa-solid fa-circle-check text-amber-400 mt-1 shrink-0"></i><span>Kerjakan LKPD secara <strong class="text-white">berpasangan (2 orang)</strong> melalui Website Pembelajaran Informatika.</span>
             </li>
           </ul>
         </div>
 
-        <!-- STUDI KASUS -->
-        <div class="bg-gradient-to-br from-brandGreen/10 via-brandGray to-brandGray border border-brandGreen/30 rounded-2xl p-5 md:p-6 mb-8 fade-in-up">
+        <!-- ============================================ -->
+        <!-- PILIH STUDI KASUS -->
+        <!-- ============================================ -->
+        <div id="pilih-kasus-section" class="bg-brandGray border border-brandGreen/30 rounded-2xl p-5 md:p-6 mb-8 fade-in-up">
           <div class="flex items-center gap-3 border-b border-white/10 pb-4 mb-5">
-            <div class="w-11 h-11 rounded-xl bg-brandGreen/15 border border-brandGreen/30 flex items-center justify-center text-brandGreen text-lg shrink-0">
-              <i class="fa-solid fa-store"></i>
-            </div>
+            <div class="w-11 h-11 rounded-xl bg-brandGreen/15 border border-brandGreen/30 flex items-center justify-center text-brandGreen text-lg shrink-0"><i class="fa-solid fa-list-check"></i></div>
             <div>
-              <h3 class="text-lg md:text-xl font-bold text-white">Studi Kasus: Sistem Diskon Belanja "Patbhe Mart"</h3>
-              <p class="text-xs text-textGray">Kasus percabangan if-else sederhana</p>
+              <h3 class="text-lg md:text-xl font-bold text-white">Pilih Studi Kasus <span class="text-rose-400">*</span></h3>
+              <p class="text-xs text-textGray">Pilih <strong class="text-white">satu</strong> dari 5 studi kasus "Patbhe" yang paling kamu sukai untuk dikerjakan.</p>
             </div>
           </div>
 
-          <p class="text-sm text-textGray mb-4">Kasir toko <strong class="text-white">Patbhe Mart</strong> membutuhkan program otomatis untuk menghitung diskon belanja pelanggan. Berikut ketentuannya:</p>
+          <div id="case-options" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            <!-- Diisi via JS -->
+          </div>
+        </div>
 
-          <div class="space-y-3">
-            <div class="bg-white/5 border-l-4 border-sky-400 rounded-r-lg p-4">
-              <p class="text-sm text-gray-300">
-                <i class="fa-solid fa-keyboard text-sky-400 mr-2"></i>
-                Kasir menginputkan total belanjaan pelanggan <code class="text-amber-300 font-mono text-xs bg-black/40 px-2 py-0.5 rounded">(Total_Belanja)</code>.
-              </p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-              <div class="bg-brandGreen/5 border border-brandGreen/25 rounded-xl p-4 space-y-2">
-                <div class="flex items-center gap-2 text-brandGreen font-bold text-sm"><i class="fa-solid fa-check-circle"></i> Jika Total_Belanja ≥ Rp100.000</div>
-                <ul class="text-xs text-textGray space-y-1 pl-4 list-disc">
-                  <li>Pelanggan mendapat diskon <strong class="text-white">10%</strong></li>
-                  <li>Tampilkan: <em class="text-brandGreen">"Selamat, Anda Mendapat Diskon 10%!"</em></li>
-                  <li>Total_Bayar = Total_Belanja − Diskon</li>
-                </ul>
-              </div>
-
-              <div class="bg-rose-500/5 border border-rose-500/25 rounded-xl p-4 space-y-2">
-                <div class="flex items-center gap-2 text-rose-400 font-bold text-sm"><i class="fa-solid fa-xmark-circle"></i> Jika Total_Belanja &lt; Rp100.000</div>
-                <ul class="text-xs text-textGray space-y-1 pl-4 list-disc">
-                  <li>Pelanggan <strong class="text-white">tidak mendapat</strong> diskon</li>
-                  <li>Tampilkan: <em class="text-rose-400">"Terima Kasih Telah Berbelanja!"</em></li>
-                  <li>Total_Bayar = Total_Belanja</li>
-                </ul>
-              </div>
-            </div>
+        <!-- ============================================ -->
+        <!-- DISPLAY STUDI KASUS (dinamis) -->
+        <!-- ============================================ -->
+        <div id="studi-kasus-display" class="bg-brandGray border border-white/10 rounded-2xl p-5 md:p-6 mb-8 fade-in-up">
+          <div class="text-center py-10 text-textGray">
+            <i class="fa-solid fa-hand-pointer text-3xl mb-3 text-white/20"></i>
+            <p class="text-sm font-semibold text-white/40">Belum Ada Studi Kasus Terpilih</p>
+            <p class="text-xs text-white/30 mt-1">Klik salah satu kartu studi kasus di atas untuk melihat detail ketentuannya.</p>
           </div>
         </div>
 
         <!-- FORM IDENTITAS -->
         <div id="form-identitas-section" class="bg-brandGray border border-brandGreen/30 rounded-2xl p-6 md:p-8 mb-8 space-y-5 fade-in-up">
           <div class="flex items-center gap-3 border-b border-white/10 pb-4">
-            <div class="w-11 h-11 rounded-xl bg-brandGreen/10 border border-brandGreen/25 flex items-center justify-center text-brandGreen text-lg shrink-0">
-              <i class="fa-solid fa-user-pen"></i>
-            </div>
+            <div class="w-11 h-11 rounded-xl bg-brandGreen/10 border border-brandGreen/25 flex items-center justify-center text-brandGreen text-lg shrink-0"><i class="fa-solid fa-user-pen"></i></div>
             <div>
               <h3 class="text-lg md:text-xl font-bold text-white">Identitas Kelompok</h3>
               <p class="text-xs md:text-sm text-textGray">Kelompok terdiri dari 2 anggota. Isi nama &amp; absen masing-masing.</p>
@@ -475,14 +528,14 @@
               <div class="flex-1">
                 <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-brandGreen/10 border border-brandGreen/25 text-[10px] font-bold text-brandGreen uppercase tracking-wider mb-1">TP 1</div>
                 <h3 class="text-lg md:text-xl font-bold text-white">Analisis Input - Proses - Output</h3>
-                <p class="text-sm text-textGray mt-1">Tentukan komponen variabel dan kondisi logika berdasarkan studi kasus di atas!</p>
+                <p class="text-sm text-textGray mt-1">Tentukan komponen variabel dan kondisi logika berdasarkan studi kasus yang kamu pilih!</p>
               </div>
             </div>
 
             <div class="space-y-4">
               <div>
                 <label class="flex items-center gap-2 text-sm font-bold text-sky-400 uppercase mb-2"> <i class="fa-solid fa-right-to-bracket"></i> Input (Masukan) </label>
-                <textarea id="task1-input" class="form-textarea" placeholder="Sebutkan variabel/data apa saja yang perlu di-input oleh kasir..."></textarea>
+                <textarea id="task1-input" class="form-textarea" placeholder="Sebutkan variabel/data apa saja yang perlu di-input..."></textarea>
               </div>
               <div>
                 <label class="flex items-center gap-2 text-sm font-bold text-amber-400 uppercase mb-2"> <i class="fa-solid fa-gears"></i> Proses (Kondisi Percabangan) </label>
@@ -515,12 +568,12 @@
                 <div class="text-xs text-textGray uppercase font-bold tracking-wider mb-3 font-sans">// Contoh Alur Algoritma</div>
                 <ol class="space-y-1.5 text-gray-300">
                   <li><span class="text-gray-500 mr-2">1.</span> <span class="text-brandGreen font-bold">Mulai (Start)</span></li>
-                  <li><span class="text-gray-500 mr-2">2.</span> <span class="text-amber-400">Inputkan</span> nilai <code class="text-white bg-black/40 px-1.5 py-0.5 rounded">Total_Belanja</code></li>
+                  <li><span class="text-gray-500 mr-2">2.</span> <span class="text-amber-400">Inputkan</span> nilai <code id="contoh-variabel" class="text-white bg-black/40 px-1.5 py-0.5 rounded">variabel</code></li>
                 </ol>
               </div>
               <p class="text-xs text-textGray italic">
                 <i class="fa-solid fa-info-circle text-sky-400 mr-1"></i>
-                Dari langkah 2 di atas, lanjutkan sampai langkah terakhir (Selesai). Perhatikan aturan diskon pada studi kasus Patbhe Mart!
+                Dari langkah 2 di atas, lanjutkan sampai langkah terakhir (Selesai). Perhatikan aturan pada studi kasus yang kamu pilih!
               </p>
             </div>
 
@@ -594,7 +647,7 @@
               <ul class="text-xs text-textGray space-y-1 pl-6 list-disc">
                 <li><strong class="text-white">Klik simbol</strong> di palet kiri → muncul di canvas.</li>
                 <li><strong class="text-white">Drag</strong> simbol untuk mengatur posisi.</li>
-                <li><strong class="text-white">Double-click</strong> pada teks untuk edit label (misal "Mulai", "Input Total_Belanja").</li>
+                <li><strong class="text-white">Double-click</strong> pada teks untuk edit label.</li>
                 <li>Aktifkan <strong class="text-purple-300">Connect Mode</strong> → klik 2 simbol untuk panah penghubung.</li>
                 <li><strong class="text-brandGreen">Dari simbol Keputusan</strong> → akan muncul pilihan label <strong class="text-brandGreen">Ya</strong> / <strong class="text-rose-400">Tidak</strong> di panah.</li>
                 <li>Tekan <strong class="text-rose-300">Delete</strong> untuk hapus simbol terpilih.</li>
@@ -621,7 +674,6 @@
             <div class="grid grid-cols-1 lg:grid-cols-4 gap-4">
               <div class="lg:col-span-1 space-y-3">
                 <div class="text-xs font-bold text-textGray uppercase tracking-wider px-1">Palet Simbol</div>
-
                 <div class="space-y-2">
                   <div class="palette-item" data-type="terminal">
                     <div class="palette-icon"><div class="w-9 h-5 rounded-full border-2 border-brandGreen"></div></div>
@@ -630,7 +682,6 @@
                       <div class="text-[10px] text-textGray">Start / End</div>
                     </div>
                   </div>
-
                   <div class="palette-item" data-type="io">
                     <div class="palette-icon"><div class="w-9 h-5 border-2 border-sky-400" style="transform: skewX(-15deg)"></div></div>
                     <div class="text-sm">
@@ -638,7 +689,6 @@
                       <div class="text-[10px] text-textGray">Terima / tampilkan</div>
                     </div>
                   </div>
-
                   <div class="palette-item" data-type="process">
                     <div class="palette-icon"><div class="w-9 h-5 border-2 border-amber-400"></div></div>
                     <div class="text-sm">
@@ -646,7 +696,6 @@
                       <div class="text-[10px] text-textGray">Hitung / olah data</div>
                     </div>
                   </div>
-
                   <div class="palette-item" data-type="decision">
                     <div class="palette-icon"><div class="w-5 h-5 border-2 border-rose-400" style="transform: rotate(45deg)"></div></div>
                     <div class="text-sm">
@@ -654,7 +703,6 @@
                       <div class="text-[10px] text-textGray">Ya / Tidak</div>
                     </div>
                   </div>
-
                   <div class="palette-item" data-type="connector">
                     <div class="palette-icon"><div class="w-6 h-6 border-2 border-yellow-400 rounded-full"></div></div>
                     <div class="text-sm">
@@ -670,7 +718,6 @@
                   <svg id="arrow-layer" class="absolute inset-0 w-full h-full pointer-events-none z-[5]" xmlns="http://www.w3.org/2000/svg" style="overflow: visible">
                     <g id="arrows-group"></g>
                   </svg>
-
                   <div id="canvas-placeholder" class="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none text-textGray">
                     <i class="fa-solid fa-arrow-pointer text-4xl md:text-5xl mb-3 text-white/20"></i>
                     <p class="text-base font-semibold text-white/40">Canvas Kosong</p>
@@ -679,7 +726,7 @@
                 </div>
                 <div class="text-xs text-textGray mt-2 flex items-center gap-2 px-1">
                   <i class="fa-solid fa-lightbulb text-amber-400"></i>
-                  <span>Tips: Susun simbol dari atas ke bawah, contoh: Mulai → Input Total_Belanja → Kondisi → dst.</span>
+                  <span id="playground-tips">Tips: Susun simbol dari atas ke bawah sesuai alur studi kasus yang kamu pilih.</span>
                 </div>
               </div>
             </div>
@@ -687,12 +734,12 @@
             <div class="pt-4 border-t border-white/10">
               <label class="flex items-center gap-2 text-sm font-bold text-purple-400 uppercase mb-2"> <i class="fa-solid fa-list-check"></i> Deskripsikan Flowchart yang Kamu Buat <span class="text-rose-400">*</span> </label>
               <p class="text-xs text-textGray mb-2">Ceritakan alur flowchart yang sudah kamu rangkai (simbol apa saja, arah panahnya, kondisi jika Ya/Tidak).</p>
-              <textarea id="task3-deskripsi" class="form-textarea" placeholder="Contoh:&#10;1. Mulai (Terminator)&#10;2. Input Total_Belanja (Jajar Genjang)&#10;3. ..." style="min-height: 120px"></textarea>
+              <textarea id="task3-deskripsi" class="form-textarea" placeholder="Contoh:&#10;1. Mulai (Terminator)&#10;2. Input variabel (Jajar Genjang)&#10;3. ..." style="min-height: 120px"></textarea>
             </div>
 
             <label class="flex items-start gap-3 bg-white/5 border border-white/10 rounded-xl p-4 cursor-pointer hover:bg-white/[0.07] transition">
               <input type="checkbox" id="task3-checkbox" class="mt-1 w-5 h-5 accent-brandGreen cursor-pointer shrink-0" />
-              <span class="text-sm text-textGray"> <strong class="text-white">Konfirmasi:</strong> Saya sudah merangkai flowchart di atas sesuai studi kasus "Patbhe Mart" dan mencentang ini sebagai bukti penyelesaian. </span>
+              <span class="text-sm text-textGray"> <strong class="text-white">Konfirmasi:</strong> Saya sudah merangkai flowchart di atas sesuai studi kasus yang dipilih dan mencentang ini sebagai bukti penyelesaian. </span>
             </label>
           </div>
         </div>
@@ -703,7 +750,7 @@
             <span class="text-sm font-bold text-white flex items-center gap-2"> <i class="fa-solid fa-chart-simple text-brandGreen"></i> Progress Pengisian LKPD </span>
             <span class="text-sm font-bold">
               <span id="progress-text" class="text-brandGreen">0</span>
-              <span class="text-textGray">/ 4 bagian</span>
+              <span class="text-textGray">/ 5 bagian</span>
             </span>
           </div>
           <div class="w-full h-2 bg-black/50 rounded-full overflow-hidden">
@@ -735,10 +782,8 @@
             </div>
             <h2 class="text-2xl md:text-3xl font-bold text-white mb-2">LKPD Berhasil Dikumpulkan! 🎉</h2>
             <p class="text-textGray max-w-md mx-auto leading-relaxed text-sm">Terima kasih! Jawabanmu <strong class="text-brandGreen">sudah otomatis terkirim ke Google Drive Pak Ilyas</strong>. Kamu tidak perlu mengirim ulang.</p>
-
             <div class="mt-5 inline-flex items-center gap-2 text-sm font-semibold px-4 py-2 rounded-full bg-brandGreen/15 border border-brandGreen/30 text-brandGreen"><i class="fa-solid fa-cloud-arrow-up"></i> Terkirim ke Google Drive</div>
           </div>
-
           <div class="flex flex-wrap gap-3 justify-center">
             <button onclick="downloadPDF()" class="inline-flex items-center gap-2 px-6 py-3 bg-red-500/10 border border-red-500/40 text-red-400 font-bold rounded-xl hover:bg-red-500/20 transition">
               <i class="fa-solid fa-file-pdf"></i> Unduh PDF (Salinan Siswa)
@@ -772,18 +817,16 @@
           <h3 class="text-xl font-bold text-white">Label Cabang</h3>
           <p class="text-sm text-textGray">Panah dari simbol <strong class="text-rose-400">Keputusan</strong> harus diberi label. Pilih cabang:</p>
         </div>
-
         <div class="grid grid-cols-2 gap-3 mb-4">
           <button onclick="applyBranchLabel('Ya')" class="py-4 bg-brandGreen text-black font-bold rounded-xl hover:bg-green-400 transition shadow-lg shadow-brandGreen/30 flex flex-col items-center gap-1">
-            <i class="fa-solid fa-check-circle text-xl"></i>
+            <i class="fa-solid fa-circle-check text-xl"></i>
             <span>Ya (True)</span>
           </button>
           <button onclick="applyBranchLabel('Tidak')" class="py-4 bg-rose-500 text-white font-bold rounded-xl hover:bg-rose-400 transition shadow-lg shadow-rose-500/30 flex flex-col items-center gap-1">
-            <i class="fa-solid fa-xmark-circle text-xl"></i>
+            <i class="fa-solid fa-circle-xmark text-xl"></i>
             <span>Tidak (False)</span>
           </button>
         </div>
-
         <button onclick="cancelBranchLabel()" class="w-full py-2.5 text-textGray text-sm font-semibold hover:text-white hover:bg-white/5 rounded-lg transition"><i class="fa-solid fa-xmark mr-1"></i> Batalkan Panah</button>
       </div>
     </div>
@@ -799,9 +842,319 @@
       </div>
     </div>
 
+    <div id="anti-copy-toast">
+      <i class="fa-solid fa-ban"></i>
+      <span>Copy-paste tidak diizinkan!</span>
+    </div>
+
     <script>
       /* ============ KONFIGURASI UPLOAD ============ */
       const UPLOAD_URL = "https://script.google.com/macros/s/AKfycbx7j8rMvVWwxCAL3MHj596uQC61yxeDwNF5jhzWA4Oub8YDEwMaHrLsA5I4Z_BaqIa5jQ/exec";
+
+      /* ============================================================
+         DATA 5 STUDI KASUS "PATBHE"
+      ============================================================ */
+      const STUDI_KASUS = {
+        1: {
+          id: 1,
+          nama: "Patbhe Mart",
+          judul: 'Sistem Diskon Belanja "Patbhe Mart"',
+          sub: "Kasus percabangan if-else sederhana",
+          icon: "fa-store",
+          warna: "brandGreen",
+          deskripsi: "Kasir toko Patbhe Mart membutuhkan program otomatis untuk menghitung diskon belanja pelanggan. Berikut ketentuannya:",
+          input: {
+            nama: "Total_Belanja",
+            deskripsi: "Kasir menginputkan total belanjaan pelanggan",
+          },
+          cabang: [
+            {
+              kondisi: "Jika Total_Belanja ≥ Rp100.000",
+              warna: "green",
+              items: ["Pelanggan mendapat diskon 10%", 'Tampilkan: "Selamat, Anda Mendapat Diskon 10%!"', "Total_Bayar = Total_Belanja − Diskon"],
+            },
+            {
+              kondisi: "Jika Total_Belanja < Rp100.000",
+              warna: "rose",
+              items: ["Pelanggan tidak mendapat diskon", 'Tampilkan: "Terima Kasih Telah Berbelanja!"', "Total_Bayar = Total_Belanja"],
+            },
+          ],
+          tipsPlayground: "Tips: Susun simbol dari atas ke bawah, contoh: Mulai → Input Total_Belanja → Kondisi Total_Belanja ≥ 100000 → dst.",
+        },
+        2: {
+          id: 2,
+          nama: "Patbhe Parking",
+          judul: 'Sistem Biaya Parkir "Patbhe Parking"',
+          sub: "Kasus percabangan dengan perhitungan tambahan",
+          icon: "fa-square-parking",
+          warna: "sky",
+          deskripsi: "Petugas parkir membutuhkan program untuk menentukan biaya parkir kendaraan berdasarkan durasi jam. Berikut ketentuannya:",
+          input: {
+            nama: "Lama_Parkir",
+            deskripsi: "Petugas menginputkan lama parkir kendaraan (dalam jam)",
+          },
+          cabang: [
+            {
+              kondisi: "Jika Lama_Parkir ≤ 2 jam",
+              warna: "green",
+              items: ["Biaya parkir flat = Rp2.000", 'Tampilkan: "Biaya Parkir Standar: Rp2.000"', "Total_Bayar = Rp2.000"],
+            },
+            {
+              kondisi: "Jika Lama_Parkir > 2 jam",
+              warna: "rose",
+              items: ["Biaya parkir = Rp2.000 + (Lama_Parkir − 2) × Rp1.000", 'Tampilkan: "Anda Dikenakan Biaya Parkir Tambahan!"', "Total_Bayar = Biaya parkir yang sudah dihitung"],
+            },
+          ],
+          tipsPlayground: "Tips: Susun simbol dari atas ke bawah, contoh: Mulai → Input Lama_Parkir → Kondisi Lama_Parkir ≤ 2 → dst.",
+        },
+        3: {
+          id: 3,
+          nama: "Patbhe Test",
+          judul: 'Kriteria Kelulusan Ujian "Patbhe Test"',
+          sub: "Kasus percabangan status kelulusan",
+          icon: "fa-graduation-cap",
+          warna: "purple",
+          deskripsi: "Sistem penilaian sekolah membutuhkan program otomatis untuk menentukan status kelulusan siswa pada mata pelajaran Informatika. Berikut ketentuannya:",
+          input: {
+            nama: "Nilai_Ujian",
+            deskripsi: "Sistem menerima input nilai ujian siswa",
+          },
+          cabang: [
+            {
+              kondisi: "Jika Nilai_Ujian ≥ 75",
+              warna: "green",
+              items: ['Tampilkan: "Selamat, Anda Dinyatakan LULUS!"', 'Status = "Lulus"'],
+            },
+            {
+              kondisi: "Jika Nilai_Ujian < 75",
+              warna: "rose",
+              items: ['Tampilkan: "Maaf, Anda Harus Mengikuti Remedial!"', 'Status = "Remedial"'],
+            },
+          ],
+          tipsPlayground: "Tips: Susun simbol dari atas ke bawah, contoh: Mulai → Input Nilai_Ujian → Kondisi Nilai_Ujian ≥ 75 → dst.",
+        },
+        4: {
+          id: 4,
+          nama: "Patbhe Cinema",
+          judul: 'Tiket Bioskop "Patbhe Cinema"',
+          sub: "Kasus percabangan kategori harga tiket",
+          icon: "fa-film",
+          warna: "amber",
+          deskripsi: "Kasir bioskop memerlukan program untuk menentukan harga tiket masuk berdasarkan kategori usia pengunjung. Berikut ketentuannya:",
+          input: {
+            nama: "Usia",
+            deskripsi: "Kasir menginputkan usia pengunjung",
+          },
+          cabang: [
+            {
+              kondisi: "Jika Usia < 12 tahun",
+              warna: "green",
+              items: ["Pengunjung mendapat potongan harga (harga tiket anak = Rp25.000)", 'Tampilkan: "Kategori Anak-Anak: Tarif Rp25.000"', "Total_Bayar = 25000"],
+            },
+            {
+              kondisi: "Jika Usia ≥ 12 tahun",
+              warna: "rose",
+              items: ["Pengunjung membayar tarif normal (harga tiket dewasa = Rp40.000)", 'Tampilkan: "Kategori Dewasa: Tarif Rp40.000"', "Total_Bayar = 40000"],
+            },
+          ],
+          tipsPlayground: "Tips: Susun simbol dari atas ke bawah, contoh: Mulai → Input Usia → Kondisi Usia < 12 → dst.",
+        },
+        5: {
+          id: 5,
+          nama: "Patbhe Cell",
+          judul: 'Pengisian Kuota Internet "Patbhe Cell"',
+          sub: "Kasus percabangan bonus pelanggan",
+          icon: "fa-mobile-screen-button",
+          warna: "sky",
+          deskripsi: "Sistem konter pulsa butuh program otomatis untuk memberikan bonus kuota pada pembelian paket data. Berikut ketentuannya:",
+          input: {
+            nama: "Nominal_Isi",
+            deskripsi: "Operator menginputkan nominal pengisian pulsa",
+          },
+          cabang: [
+            {
+              kondisi: "Jika Nominal_Isi ≥ Rp50.000",
+              warna: "green",
+              items: ["Pelanggan mendapat bonus kuota sebesar 5 GB", 'Tampilkan: "Selamat! Anda Mendapat Bonus Kuota 5 GB"', "Total_Kuota = Kuota_Utama + 5"],
+            },
+            {
+              kondisi: "Jika Nominal_Isi < Rp50.000",
+              warna: "rose",
+              items: ["Pelanggan tidak mendapat bonus kuota", 'Tampilkan: "Transaksi Berhasil, Terima Kasih!"', "Total_Kuota = Kuota_Utama"],
+            },
+          ],
+          tipsPlayground: "Tips: Susun simbol dari atas ke bawah, contoh: Mulai → Input Nominal_Isi → Kondisi Nominal_Isi ≥ 50000 → dst.",
+        },
+      };
+
+      // Mapping warna tema ke class Tailwind
+      const COLOR_MAP = {
+        brandGreen: {
+          text: "text-brandGreen",
+          border: "border-brandGreen/30",
+          bg: "bg-brandGreen/10",
+          iconBg: "bg-brandGreen/15",
+          iconBorder: "border-brandGreen/40",
+          rgb: [0, 230, 118],
+        },
+        sky: {
+          text: "text-sky-400",
+          border: "border-sky-500/30",
+          bg: "bg-sky-500/10",
+          iconBg: "bg-sky-500/15",
+          iconBorder: "border-sky-500/40",
+          rgb: [56, 189, 248],
+        },
+        purple: {
+          text: "text-purple-400",
+          border: "border-purple-500/30",
+          bg: "bg-purple-500/10",
+          iconBg: "bg-purple-500/15",
+          iconBorder: "border-purple-500/40",
+          rgb: [192, 132, 252],
+        },
+        amber: {
+          text: "text-amber-400",
+          border: "border-amber-500/30",
+          bg: "bg-amber-500/10",
+          iconBg: "bg-amber-500/15",
+          iconBorder: "border-amber-500/40",
+          rgb: [251, 191, 36],
+        },
+      };
+
+      /* ============ STATE ============ */
+      let selectedCaseId = null;
+
+      /* ============ RENDER KARTU PILIHAN ============ */
+      function renderCaseOptions() {
+        const wrap = document.getElementById("case-options");
+        wrap.innerHTML = "";
+        Object.values(STUDI_KASUS).forEach((c) => {
+          const color = COLOR_MAP[c.warna];
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "case-option";
+          btn.dataset.case = c.id;
+          btn.innerHTML = `
+            <div class="case-check"><i class="fa-solid fa-check"></i></div>
+            <div class="flex items-start gap-3">
+              <div class="w-10 h-10 rounded-xl ${color.iconBg} border ${color.iconBorder} flex items-center justify-center ${color.text} text-base shrink-0">
+                <i class="fa-solid ${c.icon}"></i>
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="text-[10px] font-bold ${color.text} uppercase tracking-wider">Kasus ${c.id}</p>
+                <p class="text-sm font-bold text-white leading-tight mt-0.5">${c.nama}</p>
+                <p class="text-[11px] text-textGray mt-1 line-clamp-2">${c.sub}</p>
+              </div>
+            </div>
+          `;
+          btn.addEventListener("click", () => selectCase(c.id));
+          wrap.appendChild(btn);
+        });
+      }
+
+      /* ============ PILIH STUDI KASUS ============ */
+      function selectCase(id) {
+        if (selectedCaseId && selectedCaseId !== id) {
+          const hasData = ["task1-input", "task1-proses", "task1-output", "task2-lanjutan", "task3-deskripsi"].some((fid) => document.getElementById(fid).value.trim() !== "");
+          if (hasData) {
+            if (!confirm("Mengganti studi kasus akan tetap menyimpan jawaban Tugas 1-3 kamu, tetapi pastikan jawaban kamu sudah sesuai dengan kasus baru. Lanjutkan?")) return;
+          }
+        }
+        selectedCaseId = id;
+        // Update kartu aktif
+        document.querySelectorAll(".case-option").forEach((el) => {
+          el.classList.toggle("active", parseInt(el.dataset.case) === id);
+        });
+        renderCaseDisplay();
+        applyPlaceholders();
+        updateProgress();
+      }
+
+      /* ============ RENDER DISPLAY DETAIL STUDI KASUS ============ */
+      function renderCaseDisplay() {
+        const box = document.getElementById("studi-kasus-display");
+        if (!selectedCaseId) {
+          box.className = "bg-brandGray border border-white/10 rounded-2xl p-5 md:p-6 mb-8 fade-in-up";
+          box.innerHTML = `
+            <div class="text-center py-10 text-textGray">
+              <i class="fa-solid fa-hand-pointer text-3xl mb-3 text-white/20"></i>
+              <p class="text-sm font-semibold text-white/40">Belum Ada Studi Kasus Terpilih</p>
+              <p class="text-xs text-white/30 mt-1">Klik salah satu kartu studi kasus di atas untuk melihat detail ketentuannya.</p>
+            </div>`;
+          return;
+        }
+        const c = STUDI_KASUS[selectedCaseId];
+        const color = COLOR_MAP[c.warna];
+        box.className = `bg-gradient-to-br ${color.bg} via-brandGray to-brandGray border ${color.border} rounded-2xl p-5 md:p-6 mb-8 fade-in-up`;
+
+        const cabang1 = c.cabang[0];
+        const cabang2 = c.cabang[1];
+
+        box.innerHTML = `
+          <div class="flex items-center gap-3 border-b border-white/10 pb-4 mb-5">
+            <div class="w-11 h-11 rounded-xl ${color.iconBg} border ${color.iconBorder} flex items-center justify-center ${color.text} text-lg shrink-0">
+              <i class="fa-solid ${c.icon}"></i>
+            </div>
+            <div>
+              <h3 class="text-lg md:text-xl font-bold text-white">Studi Kasus: ${c.judul}</h3>
+              <p class="text-xs text-textGray">${c.sub}</p>
+            </div>
+          </div>
+
+          <p class="text-sm text-textGray mb-4">${c.deskripsi}</p>
+
+          <div class="space-y-3">
+            <div class="bg-white/5 border-l-4 border-sky-400 rounded-r-lg p-4">
+              <p class="text-sm text-gray-300">
+                <i class="fa-solid fa-keyboard text-sky-400 mr-2"></i>
+                ${c.input.deskripsi} <code class="text-amber-300 font-mono text-xs bg-black/40 px-2 py-0.5 rounded">(${c.input.nama})</code>.
+              </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div class="bg-brandGreen/5 border border-brandGreen/25 rounded-xl p-4 space-y-2">
+                <div class="flex items-center gap-2 text-brandGreen font-bold text-sm"><i class="fa-solid fa-circle-check"></i> ${cabang1.kondisi}</div>
+                <ul class="text-xs text-textGray space-y-1 pl-4 list-disc">
+                  ${cabang1.items.map((it) => `<li>${it}</li>`).join("")}
+                </ul>
+              </div>
+              <div class="bg-rose-500/5 border border-rose-500/25 rounded-xl p-4 space-y-2">
+                <div class="flex items-center gap-2 text-rose-400 font-bold text-sm"><i class="fa-solid fa-circle-xmark"></i> ${cabang2.kondisi}</div>
+                <ul class="text-xs text-textGray space-y-1 pl-4 list-disc">
+                  ${cabang2.items.map((it) => `<li>${it}</li>`).join("")}
+                </ul>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      /* ============ PLACEHOLDER DINAMIS ============ */
+      function applyPlaceholders() {
+        if (!selectedCaseId) return;
+        const c = STUDI_KASUS[selectedCaseId];
+        const v = c.input.nama;
+
+        // Tugas 1
+        document.getElementById("task1-input").placeholder = `Sebutkan variabel/data apa saja yang perlu di-input (contoh: ${v})...`;
+        document.getElementById("task1-proses").placeholder = `Jelaskan proses/kondisi logika percabangan (misal cek apakah ${v} memenuhi syarat)...`;
+        document.getElementById("task1-output").placeholder = `Sebutkan hasil/output yang ditampilkan ke layar...`;
+
+        // Tugas 2 — update kode contoh
+        const codeEl = document.getElementById("contoh-variabel");
+        if (codeEl) codeEl.textContent = v;
+
+        // Tugas 2 placeholder
+        document.getElementById("task2-lanjutan").placeholder = `3. Cek kondisi: Apakah ${v} ... ?\n4. Jika Ya (True), maka:\n   a. ...\n   b. ...\n5. Jika Tidak (False), maka:\n   a. ...\n   b. ...\n6. ...\n7. Selesai (End)`;
+
+        // Tugas 3
+        document.getElementById("task3-deskripsi").placeholder = `Contoh:\n1. Mulai (Terminator)\n2. Input ${v} (Jajar Genjang)\n3. Kondisi percabangan (Belah Ketupat)\n4. ...`;
+
+        // Tips playground
+        document.getElementById("playground-tips").textContent = c.tipsPlayground;
+      }
 
       /* ============ FLOWCHART PLAYGROUND ============ */
       const canvas = document.getElementById("playground-canvas");
@@ -1128,8 +1481,10 @@
 
       window.addEventListener("resize", redrawArrows);
 
-      /* ============ AUTO-FILL ============ */
+      /* ============ INIT ============ */
       window.addEventListener("DOMContentLoaded", () => {
+        renderCaseOptions();
+
         const savedNama = localStorage.getItem("siswa_nama");
         const savedAbsen = localStorage.getItem("siswa_absen");
         if (savedNama) document.getElementById("lkpd-anggota1-nama").value = savedNama;
@@ -1152,21 +1507,28 @@
       function updateProgress() {
         let completed = 0;
 
+        // 1. Pilih studi kasus
+        if (selectedCaseId) completed++;
+
+        // 2. Identitas
         const identitasOk = ["lkpd-anggota1-nama", "lkpd-anggota1-absen", "lkpd-anggota2-nama", "lkpd-anggota2-absen", "lkpd-kelas"].every((id) => document.getElementById(id).value.trim() !== "");
         if (identitasOk) completed++;
 
+        // 3. Tugas 1
         const tugas1Ok = ["task1-input", "task1-proses", "task1-output"].every((id) => document.getElementById(id).value.trim() !== "");
         if (tugas1Ok) completed++;
 
+        // 4. Tugas 2
         const tugas2Ok = document.getElementById("task2-lanjutan").value.trim() !== "";
         if (tugas2Ok) completed++;
 
+        // 5. Tugas 3
         const tugas3DeskripsiOk = document.getElementById("task3-deskripsi").value.trim() !== "";
         const tugas3Cb = document.getElementById("task3-checkbox").checked;
         if (tugas3DeskripsiOk && tugas3Cb) completed++;
 
         document.getElementById("progress-text").textContent = completed;
-        document.getElementById("progress-bar").style.width = (completed / 4) * 100 + "%";
+        document.getElementById("progress-bar").style.width = (completed / 5) * 100 + "%";
 
         document.getElementById("task-1-card").classList.toggle("filled", tugas1Ok);
         document.getElementById("task-2-card").classList.toggle("filled", tugas2Ok);
@@ -1176,6 +1538,8 @@
       /* ============ VALIDASI ============ */
       function validateForm() {
         const errors = [];
+        if (!selectedCaseId) errors.push("Studi Kasus — Belum dipilih (wajib pilih 1 dari 5)");
+
         const a1n = document.getElementById("lkpd-anggota1-nama").value.trim();
         const a1a = document.getElementById("lkpd-anggota1-absen").value.trim();
         const a2n = document.getElementById("lkpd-anggota2-nama").value.trim();
@@ -1207,7 +1571,7 @@
         return errors;
       }
 
-      /* ============ SUBMIT — UPLOAD KE GOOGLE DRIVE ============ */
+      /* ============ SUBMIT ============ */
       async function submitLKPD() {
         const warning = document.getElementById("submit-warning");
         const warningText = document.getElementById("submit-warning-text");
@@ -1243,6 +1607,7 @@
             absen1: data.a1a,
             anggota2: data.a2n,
             absen2: data.a2a,
+            studiKasus: data.studiKasus,
             timestamp: new Date().toLocaleString("id-ID"),
           };
 
@@ -1260,6 +1625,8 @@
           localStorage.setItem("siswa_absen", data.a1a);
           localStorage.removeItem("lkpd_draft");
 
+          document.getElementById("pilih-kasus-section").classList.add("hidden");
+          document.getElementById("studi-kasus-display").classList.add("hidden");
           document.getElementById("form-identitas-section").classList.add("hidden");
           document.getElementById("tugas-section").classList.add("hidden");
           document.getElementById("progress-section").classList.add("hidden");
@@ -1279,6 +1646,7 @@
       /* ============ SAVE DRAFT ============ */
       function saveDraft() {
         const draft = {
+          caseId: selectedCaseId,
           a1n: document.getElementById("lkpd-anggota1-nama").value,
           a1a: document.getElementById("lkpd-anggota1-absen").value,
           a2n: document.getElementById("lkpd-anggota2-nama").value,
@@ -1304,6 +1672,14 @@
           const ada = Object.values(draft).some((v) => v && v !== false);
           if (!ada) return;
           if (confirm("📂 Ditemukan draft LKPD yang tersimpan.\n\nLanjutkan mengerjakan dari draft terakhir?")) {
+            if (draft.caseId && STUDI_KASUS[draft.caseId]) {
+              selectedCaseId = draft.caseId;
+              document.querySelectorAll(".case-option").forEach((el) => {
+                el.classList.toggle("active", parseInt(el.dataset.case) === draft.caseId);
+              });
+              renderCaseDisplay();
+              applyPlaceholders();
+            }
             document.getElementById("lkpd-anggota1-nama").value = draft.a1n || "";
             document.getElementById("lkpd-anggota1-absen").value = draft.a1a || "";
             document.getElementById("lkpd-anggota2-nama").value = draft.a2n || "";
@@ -1323,7 +1699,7 @@
       }
 
       /* =========================================================
-         GENERATOR PDF — dipakai bareng oleh Unduh PDF & Kumpulkan
+         GENERATOR PDF
       ========================================================= */
       async function buildPDFBlob() {
         if (!window.jspdf || !window.jspdf.jsPDF) {
@@ -1449,13 +1825,16 @@
         doc.setFontSize(15);
         doc.text("LKPD DIGITAL • INFORMATIKA", pageW / 2, y + 9.5, { align: "center" });
         doc.setFontSize(11);
-        doc.text('Sistem Diskon Belanja "Patbhe Mart"', pageW / 2, y + 16.5, { align: "center" });
+        const selKasus = selectedCaseId ? STUDI_KASUS[selectedCaseId] : null;
+        const bannerTitle = selKasus ? selKasus.judul : 'Sistem Percabangan "Patbhe"';
+        doc.text(bannerTitle, pageW / 2, y + 16.5, { align: "center" });
         doc.setFont("helvetica", "normal");
         doc.setFontSize(8.5);
         doc.text("Algoritma & Flowchart Percabangan  •  Fase E / Kelas X", pageW / 2, y + 22.5, { align: "center" });
 
         y += bannerH + 5;
 
+        // Info card
         {
           const items = [
             { label: "TARGET PEMBELAJARAN", value: "TP 1 & TP 2", color: C.green },
@@ -1466,10 +1845,7 @@
           const cw = (contentW - gap * 2) / 3;
           const valueSize = 10;
           const valueLh = lh(valueSize);
-          const measured = items.map((it) => ({
-            ...it,
-            lines: measure(it.value, valueSize, "bold", cw - 10),
-          }));
+          const measured = items.map((it) => ({ ...it, lines: measure(it.value, valueSize, "bold", cw - 10) }));
           const maxLines = Math.max(...measured.map((m) => m.lines.length));
           const cardH = 8 + maxLines * valueLh + 3;
 
@@ -1477,12 +1853,10 @@
           measured.forEach((it, i) => {
             const cx = margin + i * (cw + gap);
             drawCard(cx, y, cw, cardH, { accent: it.color, borderColor: C.infoCardBrd });
-
             setText(C.dim);
             doc.setFont("helvetica", "bold");
             doc.setFontSize(7);
             doc.text(it.label, cx + 5, y + 5.5);
-
             setText(it.color);
             doc.setFont("helvetica", "bold");
             doc.setFontSize(valueSize);
@@ -1495,12 +1869,12 @@
           y += cardH + 5;
         }
 
+        // Petunjuk & K3
         {
           const padX = 6;
           const bodySize = 9.5;
           const bodyLh = lh(bodySize);
           const innerW = contentW - padX * 2 - 4;
-
           const items = [
             "Atur posisi duduk tegak dan ergonomis saat berada di depan komputer.",
             "Jaga jarak pandang mata ke layar monitor +-50 cm.",
@@ -1508,17 +1882,13 @@
             "Kerjakan LKPD secara berpasangan (2 orang) melalui Website Pembelajaran Informatika.",
           ];
           const measured = items.map((t) => measure(t, bodySize, "normal", innerW - 5));
-
           const titleH = 8;
           let innerH = 0;
-          measured.forEach((lines) => {
-            innerH += lines.length * bodyLh + 1.5;
-          });
+          measured.forEach((lines) => (innerH += lines.length * bodyLh + 1.5));
           const cardH = titleH + innerH + 4;
 
           ensureSpace(cardH + 5);
           drawCard(margin, y, contentW, cardH, { accent: C.amber, borderColor: [120, 90, 20] });
-
           setText(C.amber);
           doc.setFont("helvetica", "bold");
           doc.setFontSize(10.5);
@@ -1537,18 +1907,18 @@
             });
             cy += 1.5;
           });
-
           y += cardH + 5;
         }
 
-        {
+        // Studi kasus card (dinamis)
+        if (selKasus) {
           const padX = 6;
           const bodySize = 9.5;
           const bodyLh = lh(bodySize);
           const innerW = contentW - padX * 2 - 4;
 
-          const desc = "Kasir toko Patbhe Mart membutuhkan program otomatis untuk menghitung diskon belanja pelanggan. Berikut ketentuannya:";
-          const descLines = measure(desc, bodySize, "normal", innerW);
+          const descLines = measure(selKasus.deskripsi, bodySize, "normal", innerW);
+          const inputLine = measure(`${selKasus.input.deskripsi} (${selKasus.input.nama}).`, bodySize, "normal", innerW - 4);
 
           const boxGap = 3;
           const boxW = (innerW - boxGap) / 2;
@@ -1556,15 +1926,15 @@
           const boxBodySize = 8.5;
           const boxLh = lh(boxBodySize);
 
-          const box1Items = ["* Mendapat diskon 10%", '* "Selamat, Anda Mendapat Diskon 10%!"', "* Total_Bayar = Total_Belanja - Diskon"];
-          const box2Items = ["* Tidak mendapat diskon", '* "Terima Kasih Telah Berbelanja!"', "* Total_Bayar = Total_Belanja"];
-          const box1Lines = box1Items.flatMap((t) => measure(t, boxBodySize, "normal", boxW - 10));
-          const box2Lines = box2Items.flatMap((t) => measure(t, boxBodySize, "normal", boxW - 10));
+          const box1Items = selKasus.cabang[0].items;
+          const box2Items = selKasus.cabang[1].items;
+          const box1Lines = box1Items.flatMap((t) => measure("* " + t, boxBodySize, "normal", boxW - 10));
+          const box2Lines = box2Items.flatMap((t) => measure("* " + t, boxBodySize, "normal", boxW - 10));
           const boxMaxLines = Math.max(box1Lines.length, box2Lines.length);
           const boxH = boxTitleH + boxMaxLines * boxLh + 4;
 
           const titleH = 8;
-          const cardH = titleH + descLines.length * bodyLh + 4 + boxH + 4;
+          const cardH = titleH + descLines.length * bodyLh + inputLine.length * bodyLh + 6 + boxH + 4;
 
           ensureSpace(cardH + 5);
           drawCard(margin, y, contentW, cardH, { accent: C.green, borderColor: [30, 100, 60] });
@@ -1572,13 +1942,18 @@
           setText(C.green);
           doc.setFont("helvetica", "bold");
           doc.setFontSize(10.5);
-          doc.text('STUDI KASUS: SISTEM DISKON "PATBHE MART"', margin + padX + 2, y + 6);
+          doc.text("STUDI KASUS YANG DIPILIH: " + selKasus.judul.toUpperCase(), margin + padX + 2, y + 6);
 
           let cy = y + titleH + 3.5;
           doc.setFont("helvetica", "normal");
           doc.setFontSize(bodySize);
           setText(C.text);
           descLines.forEach((line) => {
+            doc.text(line, margin + padX + 2, cy);
+            cy += bodyLh;
+          });
+          doc.setFont("helvetica", "bold");
+          inputLine.forEach((line) => {
             doc.text(line, margin + padX + 2, cy);
             cy += bodyLh;
           });
@@ -1591,7 +1966,7 @@
           setText(C.green);
           doc.setFont("helvetica", "bold");
           doc.setFontSize(8.5);
-          doc.text("JIKA Total_Belanja >= Rp100.000", box1X + 4, cy + 5);
+          doc.text(selKasus.cabang[0].kondisi, box1X + 4, cy + 5);
           doc.setFont("helvetica", "normal");
           setText(C.text);
           let b1y = cy + boxTitleH + 2.5;
@@ -1604,7 +1979,7 @@
           setText(C.rose);
           doc.setFont("helvetica", "bold");
           doc.setFontSize(8.5);
-          doc.text("JIKA Total_Belanja < Rp100.000", box2X + 4, cy + 5);
+          doc.text(selKasus.cabang[1].kondisi, box2X + 4, cy + 5);
           doc.setFont("helvetica", "normal");
           setText(C.text);
           let b2y = cy + boxTitleH + 2.5;
@@ -1627,8 +2002,10 @@
           task1Output: document.getElementById("task1-output").value.trim() || "-",
           task2: document.getElementById("task2-lanjutan").value.trim() || "-",
           task3: document.getElementById("task3-deskripsi").value.trim() || "-",
+          studiKasus: selKasus ? selKasus.judul : "-",
         };
 
+        // Identitas
         {
           const padX = 6;
           const rows = [
@@ -1672,6 +2049,7 @@
           y += cardH + 5;
         }
 
+        // Tugas 1
         {
           const padX = 6;
           const bodySize = 9.5;
@@ -1686,10 +2064,7 @@
           const blockTitleH = 7;
           const blockGap = 3;
 
-          const blocksMeasured = blocks.map((b) => ({
-            ...b,
-            lines: measure(b.value, bodySize, "normal", innerW - 8),
-          }));
+          const blocksMeasured = blocks.map((b) => ({ ...b, lines: measure(b.value, bodySize, "normal", innerW - 8) }));
           const blockHeights = blocksMeasured.map((b) => blockTitleH + b.lines.length * bodyLh + 4);
           const innerH = blockHeights.reduce((a, h) => a + h, 0) + blockGap * (blocks.length - 1);
           const titleH = 8;
@@ -1729,6 +2104,7 @@
           y += cardH + 5;
         }
 
+        // Tugas 2
         {
           const padX = 6;
           const innerW = contentW - padX * 2 - 4;
@@ -1779,6 +2155,7 @@
           y += cardH + 5;
         }
 
+        // Flowchart image
         if (flowchartImg && flowW > 0 && flowH > 0) {
           const aspect = flowW / flowH;
           let imgW = contentW - 12;
@@ -1828,6 +2205,7 @@
           y += cardH + 5;
         }
 
+        // Tugas 3
         {
           const padX = 6;
           const bodySize = 9.5;
@@ -1877,12 +2255,13 @@
         }
 
         const safeName = (s) => (s || "-").replace(/[^\w\d]+/g, "_").replace(/^_+|_+$/g, "");
-        const filename = "LKPD_" + safeName(data.a1n) + "_" + safeName(data.kelas) + ".pdf";
+        const caseSlug = selKasus ? "Kasus" + selKasus.id + "_" + safeName(selKasus.nama) : "TanpaKasus";
+        const filename = "LKPD_" + safeName(data.a1n) + "_" + safeName(data.kelas) + "_" + caseSlug + ".pdf";
 
         return { pdf: doc, data, filename };
       }
 
-      /* ============ DOWNLOAD PDF (Unduh lokal) ============ */
+      /* ============ DOWNLOAD PDF ============ */
       async function downloadPDF() {
         const loadingEl = document.getElementById("pdf-loading");
         loadingEl.classList.remove("hidden");
@@ -1896,6 +2275,55 @@
           loadingEl.classList.add("hidden");
         }
       }
+
+      /* ============ ANTI COPY-PASTE ============ */
+      (function () {
+        const toast = document.getElementById("anti-copy-toast");
+        let toastTimeout;
+
+        function showToast() {
+          if (!toast) return;
+          toast.classList.add("show");
+          clearTimeout(toastTimeout);
+          toastTimeout = setTimeout(() => toast.classList.remove("show"), 2000);
+        }
+
+        document.addEventListener("copy", (e) => {
+          e.preventDefault();
+          showToast();
+        });
+        document.addEventListener("cut", (e) => {
+          e.preventDefault();
+          showToast();
+        });
+        document.addEventListener("paste", (e) => {
+          e.preventDefault();
+          showToast();
+        });
+
+        document.addEventListener("contextmenu", (e) => {
+          e.preventDefault();
+          showToast();
+        });
+
+        document.addEventListener("selectstart", (e) => {
+          const tag = (e.target.tagName || "").toUpperCase();
+          if (tag !== "INPUT" && tag !== "TEXTAREA") {
+            e.preventDefault();
+          }
+        });
+
+        document.addEventListener("keydown", (e) => {
+          if (e.ctrlKey || e.metaKey) {
+            const k = (e.key || "").toLowerCase();
+            if (["c", "v", "x", "a"].includes(k)) {
+              e.preventDefault();
+              showToast();
+              return false;
+            }
+          }
+        });
+      })();
     </script>
   </body>
 </html>

@@ -109,6 +109,51 @@
           font-size: 1.35rem !important;
         }
       }
+
+      /* ==================== ANTI COPY-PASTE ==================== */
+      body {
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        -webkit-touch-callout: none;
+      }
+      input,
+      textarea {
+        -webkit-user-select: text !important;
+        -moz-user-select: text !important;
+        -ms-user-select: text !important;
+        user-select: text !important;
+        -webkit-touch-callout: none;
+      }
+
+      /* Toast notifikasi anti copy-paste */
+      #anti-copy-toast {
+        position: fixed;
+        bottom: 24px;
+        left: 50%;
+        transform: translateX(-50%) translateY(100px);
+        background: rgba(244, 63, 94, 0.95);
+        color: white;
+        padding: 12px 20px;
+        border-radius: 12px;
+        font-size: 14px;
+        font-weight: 600;
+        box-shadow: 0 10px 30px rgba(244, 63, 94, 0.4);
+        z-index: 9999;
+        opacity: 0;
+        transition: all 0.3s ease;
+        pointer-events: none;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        max-width: 90vw;
+        text-align: center;
+      }
+      #anti-copy-toast.show {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
     </style>
   </head>
   <body class="bg-brandDark text-white font-sans antialiased overflow-x-hidden flex flex-col min-h-screen text-lg">
@@ -126,7 +171,7 @@
         </a>
 
         <!-- Tombol Pak Ilyas (Desktop) -->
-        <button class="hidden md:flex items-center gap-2 border border-white/10 rounded-full px-5 py-2.5 text-sm font-medium hover:bg-white/5 transition"><i class="fa-solid fa-chalkboard-user text-brandGreen"></i> Pak Ilyas</button>
+        <button class="hidden md:flex items-center gap-2 border border-white/10 rounded-full px-5 py-2.5 text-sm font-medium hover:bg-white/5 transition"><i class="fa-solid fa-chalkboard-user text-brandGreen"></i> XE6</button>
 
         <!-- Tombol Kembali (Mobile) -->
         <a href="materi-algoritma.html" class="md:hidden flex items-center justify-center w-10 h-10 border border-white/10 rounded-full hover:bg-white/5 transition" aria-label="Kembali">
@@ -362,6 +407,12 @@
       </div>
     </footer>
 
+    <!-- Toast Notifikasi Anti Copy-Paste -->
+    <div id="anti-copy-toast">
+      <i class="fa-solid fa-ban"></i>
+      <span>Copy-paste tidak diizinkan!</span>
+    </div>
+
     <!-- Main Script -->
     <script>
       /* ============ CONFIG ============ */
@@ -584,6 +635,59 @@
         };
         localStorage.setItem("refleksi_draft", JSON.stringify(draft));
       });
+
+      /* ============ ANTI COPY-PASTE ============ */
+      (function () {
+        const toast = document.getElementById("anti-copy-toast");
+        let toastTimeout;
+
+        function showToast() {
+          if (!toast) return;
+          toast.classList.add("show");
+          clearTimeout(toastTimeout);
+          toastTimeout = setTimeout(() => toast.classList.remove("show"), 2000);
+        }
+
+        // Block clipboard events (copy, cut, paste)
+        document.addEventListener("copy", (e) => {
+          e.preventDefault();
+          showToast();
+        });
+        document.addEventListener("cut", (e) => {
+          e.preventDefault();
+          showToast();
+        });
+        document.addEventListener("paste", (e) => {
+          e.preventDefault();
+          showToast();
+        });
+
+        // Block right-click (context menu)
+        document.addEventListener("contextmenu", (e) => {
+          e.preventDefault();
+          showToast();
+        });
+
+        // Block text selection di luar input & textarea
+        document.addEventListener("selectstart", (e) => {
+          const tag = (e.target.tagName || "").toUpperCase();
+          if (tag !== "INPUT" && tag !== "TEXTAREA") {
+            e.preventDefault();
+          }
+        });
+
+        // Block keyboard shortcuts: Ctrl+C, Ctrl+V, Ctrl+X, Ctrl+A
+        document.addEventListener("keydown", (e) => {
+          if (e.ctrlKey || e.metaKey) {
+            const k = (e.key || "").toLowerCase();
+            if (["c", "v", "x", "a"].includes(k)) {
+              e.preventDefault();
+              showToast();
+              return false;
+            }
+          }
+        });
+      })();
     </script>
   </body>
 </html>

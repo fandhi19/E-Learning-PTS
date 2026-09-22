@@ -844,60 +844,58 @@
                 </div>
               </div>
 
+              <!-- ============ 3. STUDI KASUS FLOWCHART (REVISI) ============ -->
               <div class="space-y-4">
-                <h3 class="text-xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-circle-dot text-sky-400 text-sm"></i> 3. Studi Kasus Flowchart: Cek Kelulusan Nilai Ujian</h3>
-                <p class="text-textGray"><strong>Aturan Soal:</strong> Membaca masukan nilai siswa. Jika nilai &ge; 75, maka cetak "LULUS". Jika kurang dari 75, cetak "TIDAK LULUS".</p>
+                <h3 class="text-xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-circle-dot text-sky-400 text-sm"></i> 3. Studi Kasus Flowchart: Membuat Mie Instan</h3>
+                <p class="text-textGray"><strong>Aturan Soal:</strong> Bayangkan kamu ingin membuat mie instan. Susunlah diagram alir berdasarkan langkah-langkah berikut agar flowchart mudah dipahami oleh orang lain.</p>
 
+                <!-- Langkah Algoritma -->
+                <div class="bg-black/40 border border-brandGreen/20 rounded-2xl p-5 space-y-3">
+                  <h4 class="font-bold text-brandGreen flex items-center gap-2"><i class="fa-solid fa-list-ol"></i> Langkah Algoritma Membuat Mie Instan</h4>
+                  <ol class="list-decimal list-inside text-gray-300 space-y-1.5 text-sm">
+                    <li>Rebus 400 ml air hingga mendidih.</li>
+                    <li>Masukkan mie ke dalam air mendidih selama 3 menit.</li>
+                    <li>Tuang bumbu ke dalam piring.</li>
+                    <li>Tiriskan mie dan campur dengan bumbu di piring.</li>
+                    <li>Mie siap disajikan (Output).</li>
+                  </ol>
+                </div>
+
+                <!-- Legend -->
                 <div class="flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-textGray bg-white/5 border border-white/10 rounded-xl px-4 py-3">
                   <span class="flex items-center gap-2"> <span class="inline-block w-6 h-3 rounded-full border-2 border-brandGreen"></span> Terminator </span>
                   <span class="flex items-center gap-2"> <span class="inline-block w-6 h-3 border-2 border-sky-400" style="transform: skewX(-15deg)"></span> Input / Output </span>
-                  <span class="flex items-center gap-2"> <span class="inline-block w-3 h-3 border-2 border-rose-400" style="transform: rotate(45deg)"></span> Keputusan </span>
+                  <span class="flex items-center gap-2"> <span class="inline-block w-6 h-3 border-2 border-amber-400"></span> Proses </span>
                 </div>
 
+                <!-- Canvas Kosong untuk Praktik Siswa -->
                 <div class="bg-[#0d1117] border border-white/10 rounded-2xl p-6 md:p-10 overflow-x-auto">
-                  <div class="text-gray-500 mb-2 font-mono text-xs text-center">// Diagram Alir Visual (Flowchart)</div>
+                  <div class="text-gray-500 mb-3 font-mono text-xs text-center">// Canvas Kosong — Rangkai Flowchart-mu di Sini</div>
 
-                  <svg viewBox="0 0 650 700" class="w-full max-w-[600px] mx-auto block" xmlns="http://www.w3.org/2000/svg" font-family="Inter, sans-serif">
-                    <ellipse cx="325" cy="40" rx="80" ry="25" fill="rgba(0,230,118,0.08)" stroke="#00e676" stroke-width="2" />
-                    <text x="325" y="46" text-anchor="middle" fill="#00e676" font-weight="700" font-size="14">Start</text>
-                    <line x1="325" y1="65" x2="325" y2="110" stroke="#6b7280" stroke-width="2" />
-                    <polygon points="319,105 331,105 325,118" fill="#6b7280" />
+                  <!-- Petunjuk singkat -->
+                  <div class="bg-brandGreen/5 border border-brandGreen/20 rounded-xl p-4 mb-6 max-w-2xl mx-auto">
+                    <p class="text-xs md:text-sm text-textGray text-center leading-relaxed">
+                      <i class="fa-solid fa-lightbulb text-brandGreen mr-1"></i>
+                      <strong class="text-white">Tugasmu:</strong> Rangkai flowchart membuat mie instan menggunakan <strong class="text-brandGreen">Flowchart Playground</strong> di tab
+                      <strong class="text-white">"Simulasi Flowchart"</strong>.
+                    </p>
+                  </div>
 
-                    <polygon points="205,120 465,120 445,175 185,175" fill="rgba(56,189,248,0.08)" stroke="#38bdf8" stroke-width="2" />
-                    <text x="325" y="152" text-anchor="middle" fill="#7dd3fc" font-weight="600" font-size="14">/ Input Nilai /</text>
-                    <line x1="325" y1="175" x2="325" y2="240" stroke="#6b7280" stroke-width="2" />
-                    <polygon points="319,235 331,235 325,248" fill="#6b7280" />
-
-                    <polygon points="325,250 425,330 325,410 225,330" fill="rgba(251,113,133,0.08)" stroke="#fb7185" stroke-width="2" />
-                    <text x="325" y="325" text-anchor="middle" fill="#fda4af" font-weight="700" font-size="13">Nilai &gt;= 75?</text>
-                    <text x="325" y="343" text-anchor="middle" fill="#fda4af" font-weight="500" font-size="10" opacity="0.8">(Kondisi)</text>
-
-                    <line x1="425" y1="330" x2="525" y2="330" stroke="#6b7280" stroke-width="2" />
-                    <line x1="525" y1="330" x2="525" y2="432" stroke="#6b7280" stroke-width="2" />
-                    <polygon points="519,428 531,428 525,442" fill="#6b7280" />
-                    <rect x="483" y="315" width="38" height="22" rx="11" fill="rgba(52,211,153,0.15)" stroke="rgba(52,211,153,0.5)" />
-                    <text x="502" y="330" text-anchor="middle" fill="#34d399" font-weight="700" font-size="11">YA</text>
-                    <polygon points="435,445 615,445 600,495 420,495" fill="rgba(52,211,153,0.08)" stroke="#34d399" stroke-width="2" />
-                    <text x="520" y="476" text-anchor="middle" fill="#6ee7b7" font-weight="600" font-size="13">/ Print "LULUS" /</text>
-
-                    <line x1="225" y1="330" x2="125" y2="330" stroke="#6b7280" stroke-width="2" />
-                    <line x1="125" y1="330" x2="125" y2="432" stroke="#6b7280" stroke-width="2" />
-                    <polygon points="119,428 131,428 125,442" fill="#6b7280" />
-                    <rect x="87" y="315" width="46" height="22" rx="11" fill="rgba(251,113,133,0.15)" stroke="rgba(251,113,133,0.5)" />
-                    <text x="110" y="330" text-anchor="middle" fill="#fb7185" font-weight="700" font-size="11">TIDAK</text>
-                    <polygon points="35,445 215,445 200,495 20,495" fill="rgba(251,113,133,0.08)" stroke="#fb7185" stroke-width="2" />
-                    <text x="118" y="476" text-anchor="middle" fill="#fda4af" font-weight="600" font-size="13">/ Print "TIDAK LULUS" /</text>
-
-                    <line x1="125" y1="495" x2="125" y2="550" stroke="#6b7280" stroke-width="2" />
-                    <line x1="525" y1="495" x2="525" y2="550" stroke="#6b7280" stroke-width="2" />
-                    <line x1="125" y1="550" x2="525" y2="550" stroke="#6b7280" stroke-width="2" />
-                    <circle cx="325" cy="550" r="4" fill="#6b7280" />
-                    <line x1="325" y1="550" x2="325" y2="603" stroke="#6b7280" stroke-width="2" />
-                    <polygon points="319,600 331,600 325,613" fill="#6b7280" />
-
-                    <ellipse cx="325" cy="640" rx="80" ry="25" fill="rgba(0,230,118,0.08)" stroke="#00e676" stroke-width="2" />
-                    <text x="325" y="646" text-anchor="middle" fill="#00e676" font-weight="700" font-size="14">End</text>
-                  </svg>
+                  <!-- Placeholder Canvas Kosong -->
+                  <div
+                    class="bg-black/30 border-2 border-dashed border-white/15 rounded-2xl min-h-[400px] flex flex-col items-center justify-center text-center px-6 py-12"
+                    style="background-image: radial-gradient(circle, rgba(255, 255, 255, 0.08) 1px, transparent 1px); background-size: 24px 24px"
+                  >
+                    <i class="fa-solid fa-diagram-project text-6xl text-white/10 mb-4"></i>
+                    <p class="text-lg font-semibold text-white/40 mb-2">Canvas Kosong</p>
+                    <p class="text-sm text-white/30 max-w-md leading-relaxed">
+                      Di sinilah flowchart hasil rangkaianmu akan ditampilkan.<br />
+                      Klik tombol di bawah untuk mulai merangkai.
+                    </p>
+                    <button onclick="switchToTab('simulasi')" class="mt-6 inline-flex items-center gap-2 px-6 py-3 bg-brandGreen text-black font-bold rounded-xl hover:bg-green-400 transition shadow-lg shadow-brandGreen/20">
+                      <i class="fa-solid fa-wand-magic-sparkles"></i> Buka Flowchart Playground
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
