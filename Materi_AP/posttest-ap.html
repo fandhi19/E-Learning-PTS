@@ -421,7 +421,6 @@
       // 👇 GANTI URL INI DENGAN URL APPS SCRIPT KAMU
       const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyLlfvMPJDEfj2dazOrTUxyfjpN7Ys7kbxs4lC1bwN1eR8KniAGTEPEyeYHGM7nozA5/exec";
 
-      // Data soal & kunci jawaban (SAMA PERSIS dengan Pre-Test)
       const QUESTIONS = [
         {
           q: "Apa pengertian dari algoritma?",
@@ -430,7 +429,7 @@
           explanation: "Algoritma adalah urutan langkah-langkah logis dan terstruktur untuk menyelesaikan suatu masalah.",
         },
         {
-          q: "Menurut Donald E. Knuth, yang termasuk lima ciri algoritma yang baik adalah…",
+          q: "Yang termasuk lima ciri algoritma yang baik adalah…",
           options: ["Input, Output, Finiteness, Definiteness, Effectiveness", "Sequence, Branching, Looping, Function, Class", "Start, Process, Decision, Output, End", "C++, Python, Java, HTML, CSS"],
           answer: 0,
           explanation: "Menurut Donald E. Knuth, 5 ciri algoritma yang baik adalah: Input, Output, Finiteness (keterbatasan), Definiteness (kepastian), dan Effectiveness (efektivitas).",
@@ -441,47 +440,112 @@
           answer: 1,
           explanation: "Flowchart adalah gambar visual berupa bentuk geometris (simbol) yang menggambarkan alur program.",
         },
+
+        /* ============ SOAL 4 — GAMBAR OVAL ============ */
         {
-          q: "Apa nama dari simbol berbentuk oval pada flowchart?",
+          q: `Perhatikan gambar simbol flowchart berikut. Apa nama dari simbol tersebut?
+        <div class="mt-4 flex justify-center">
+          <div class="bg-black/40 border border-white/10 rounded-2xl px-8 py-5 inline-flex">
+            <svg width="130" height="60" viewBox="0 0 130 60" xmlns="http://www.w3.org/2000/svg">
+              <ellipse cx="65" cy="30" rx="58" ry="25" fill="none" stroke="#00e676" stroke-width="3"/>
+            </svg>
+          </div>
+        </div>`,
           options: ["Process", "Decision", "Terminator", "Flowline"],
           answer: 2,
           explanation: "Simbol oval (lonjong) disebut Terminator, untuk menandai titik awal (Start) atau akhir (End) program.",
         },
+
+        /* ============ SOAL 5 — GAMBAR JAJAR GENJANG ============ */
         {
-          q: "Apa fungsi dari simbol jajar genjang pada flowchart?",
+          q: `Perhatikan gambar simbol flowchart berikut. Apa fungsi dari simbol tersebut?
+        <div class="mt-4 flex justify-center">
+          <div class="bg-black/40 border border-white/10 rounded-2xl px-8 py-5 inline-flex">
+            <svg width="150" height="60" viewBox="0 0 150 60" xmlns="http://www.w3.org/2000/svg">
+              <polygon points="30,8 146,8 120,52 4,52" fill="none" stroke="#38bdf8" stroke-width="3"/>
+            </svg>
+          </div>
+        </div>`,
           options: ["Menandakan titik awal atau akhir program", "Menandakan titik percabangan pilihan", "Melakukan perhitungan aritmatika", "Menerima masukan (input) atau menampilkan hasil (output)"],
           answer: 3,
           explanation: "Simbol jajar genjang berfungsi untuk menerima input atau menampilkan output.",
         },
+
+        /* ============ SOAL 6 — PILIH GAMBAR (INPUT/OUTPUT) ============ */
         {
-          q: "Saat membuat flowchart, proses input dan output data digambarkan menggunakan simbol…",
-          options: ["Oval", "Persegi panjang", "Jajar genjang", "Belah ketupat"],
+          q: 'Manakah simbol flowchart yang digunakan untuk menggambarkan proses <strong class="text-brandGreen">input dan output data</strong>?',
+          options: [
+            `<div class="flex items-center gap-3">
+        <svg width="110" height="50" viewBox="0 0 110 50" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="55" cy="25" rx="50" ry="20" fill="none" stroke="#00e676" stroke-width="2.5"/>
+        </svg>
+      </div>`,
+            `<div class="flex items-center gap-3">
+        <svg width="110" height="50" viewBox="0 0 110 50" xmlns="http://www.w3.org/2000/svg">
+          <rect x="6" y="8" width="98" height="34" fill="none" stroke="#fbbf24" stroke-width="2.5"/>
+        </svg>
+      </div>`,
+            `<div class="flex items-center gap-3">
+        <svg width="110" height="50" viewBox="0 0 110 50" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="24,8 108,8 86,42 2,42" fill="none" stroke="#38bdf8" stroke-width="2.5"/>
+        </svg>
+      </div>`,
+            `<div class="flex items-center gap-3">
+        <svg width="80" height="50" viewBox="0 0 80 50" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="40,4 76,25 40,46 4,25" fill="none" stroke="#fb7185" stroke-width="2.5"/>
+        </svg>
+      </div>`,
+          ],
           answer: 2,
           explanation: "Input/Output data digambarkan dengan simbol jajar genjang (parallelogram).",
         },
+
+        /* ============ SOAL 7 — GAMBAR BELAH KETUPAT ============ */
         {
-          q: "Simbol belah ketupat pada flowchart berfungsi untuk…",
+          q: `Perhatikan gambar simbol flowchart berikut. Simbol ini berfungsi untuk…
+        <div class="mt-4 flex justify-center">
+          <div class="bg-black/40 border border-white/10 rounded-2xl px-8 py-5 inline-flex">
+            <svg width="90" height="80" viewBox="0 0 90 80" xmlns="http://www.w3.org/2000/svg">
+              <polygon points="45,5 85,40 45,75 5,40" fill="none" stroke="#fb7185" stroke-width="3"/>
+            </svg>
+          </div>
+        </div>`,
           options: ["Menandakan awal program", "Menandakan keputusan atau percabangan kondisi", "Menghubungkan garis alur", "Menampilkan teks ke layar"],
           answer: 1,
           explanation: "Simbol belah ketupat (diamond) menunjukkan keputusan atau percabangan kondisi (Ya/Tidak).",
         },
+
+        /* ============ SOAL 8 — GAMBAR PERSEGI PANJANG ============ */
         {
-          q: "Simbol persegi panjang pada flowchart digunakan untuk melambangkan…",
+          q: `Perhatikan gambar simbol flowchart berikut. Simbol ini digunakan untuk melambangkan…
+        <div class="mt-4 flex justify-center">
+          <div class="bg-black/40 border border-white/10 rounded-2xl px-8 py-5 inline-flex">
+            <svg width="150" height="60" viewBox="0 0 150 60" xmlns="http://www.w3.org/2000/svg">
+              <rect x="6" y="8" width="138" height="44" fill="none" stroke="#fbbf24" stroke-width="3"/>
+            </svg>
+          </div>
+        </div>`,
           options: ["Proses komputasi atau perhitungan data", "Menerima input dari pengguna", "Titik Selesai/End", "Garis penunjuk alur"],
           answer: 0,
           explanation: "Simbol persegi panjang melambangkan proses komputasi atau perhitungan data.",
         },
+
         {
-          q: "Alur algoritma yang dikerjakan secara lurus dan berurutan dari atas ke bawah dinamakan…",
-          options: ["Sequence", "Branching", "Looping", "Debugging"],
-          answer: 0,
-          explanation: "Sequence adalah alur algoritma yang dikerjakan secara lurus dan berurutan dari atas ke bawah.",
+          q: "Dalam ciri algoritma yang baik, algoritma harus berhenti setelah melakukan sejumlah langkah tertentu dan tidak boleh mengalami <em>infinite loop</em>. Ciri algoritma ini disebut…",
+          options: ["Input", "Output", "Finiteness (Keterbatasan)", "Definiteness (Kepastian)"],
+          answer: 2,
+          explanation: "Finiteness (Keterbatasan) berarti algoritma harus berhenti setelah sejumlah langkah tertentu — tidak boleh berjalan tanpa henti (infinite loop).",
         },
         {
-          q: "Alur algoritma yang memiliki pemilihan berdasarkan kondisi tertentu (seperti kondisi Ya / Tidak) dinamakan…",
-          options: ["Sequence", "Branching", "Looping", "Input"],
+          q: "Flowchart (Diagram Alir) adalah…",
+          options: [
+            "Kumpulan kode program yang siap dieksekusi komputer",
+            "Representasi visual/grafis dari alur langkah-langkah algoritma menggunakan simbol-simbol geometris standar",
+            "Bahasa pemrograman tingkat tinggi untuk membuat aplikasi",
+            "Daftar rumus matematika untuk menghitung data",
+          ],
           answer: 1,
-          explanation: "Branching adalah alur algoritma yang memiliki pemilihan/percabangan berdasarkan kondisi tertentu.",
+          explanation: "Flowchart adalah representasi visual/grafis dari alur langkah-langkah algoritma menggunakan simbol-simbol geometris standar.",
         },
       ];
 
