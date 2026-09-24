@@ -84,14 +84,11 @@
         background-size: 24px 24px;
         background-position: 0 0;
         touch-action: none;
+        /* min-height di-set via JS supaya bisa auto-grow */
       }
 
       /* ============================================================
-         FLOWCHART SYMBOL — VERSI FIX
-         - Label in-flow supaya parent auto-grow mengikuti panjang teks
-         - Parent pakai inline-flex untuk centering otomatis
-         - max-width membatasi ukuran maksimal symbol
-         - overflow-wrap agar teks panjang tanpa spasi tetap wrap
+         FLOWCHART SYMBOL
          ============================================================ */
       .flowchart-symbol {
         position: absolute;
@@ -140,32 +137,25 @@
         padding: 1px 4px;
       }
 
-      /* ---------- Terminal (Oval) ---------- */
       .symbol-terminal {
         border: 2px solid #00e676;
         color: #00e676;
         border-radius: 999px;
       }
-
-      /* ---------- Process (Persegi Panjang) ---------- */
       .symbol-process {
         border: 2px solid #fbbf24;
         color: #fbbf24;
         border-radius: 4px;
       }
-
-      /* ---------- Input / Output (Jajar Genjang) ---------- */
       .symbol-io {
         border: 2px solid #38bdf8;
         color: #38bdf8;
         transform: skewX(-15deg);
-        padding: 10px 28px; /* padding horizontal lebih besar kompensasi skew */
+        padding: 10px 28px;
       }
       .symbol-io .symbol-label {
-        transform: skewX(15deg); /* counter-skew supaya teks tegak */
+        transform: skewX(15deg);
       }
-
-      /* ---------- Decision (Belah Ketupat) ---------- */
       .symbol-decision {
         border: 2px solid #fb7185;
         color: #fb7185;
@@ -183,10 +173,8 @@
         white-space: normal;
         overflow-wrap: anywhere;
         word-break: break-word;
-        transform: rotate(-45deg); /* counter-rotate supaya teks tegak */
+        transform: rotate(-45deg);
       }
-
-      /* ---------- Connector (Lingkaran) ---------- */
       .symbol-connector {
         border: 2px solid #facc15;
         color: #facc15;
@@ -206,7 +194,6 @@
         word-break: break-word;
       }
 
-      /* ---------- Palette ---------- */
       .palette-item {
         display: flex;
         align-items: center;
@@ -237,7 +224,6 @@
         font-size: 10px;
       }
 
-      /* ---------- Case options ---------- */
       .case-option {
         position: relative;
         text-align: left;
@@ -281,7 +267,6 @@
         color: #0a0a0a;
       }
 
-      /* ---------- Animations ---------- */
       @keyframes fadeInUp {
         from {
           opacity: 0;
@@ -327,12 +312,10 @@
         animation: modalPop 0.25s ease forwards;
       }
 
-      /* ---------- PDF loading overlay ---------- */
       #pdf-loading {
         backdrop-filter: blur(8px);
       }
 
-      /* ---------- Responsive ---------- */
       @media (max-width: 640px) {
         body {
           font-size: 1rem;
@@ -418,7 +401,6 @@
         transform: translateX(-50%) translateY(0);
       }
 
-      /* ---------- Symbol Quiz Card (Tugas 3) ---------- */
       .symbol-quiz-card {
         background: rgba(255, 255, 255, 0.03);
         border: 1px solid rgba(255, 255, 255, 0.1);
@@ -536,9 +518,7 @@
             </div>
           </div>
 
-          <div id="case-options" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            <!-- Diisi via JS -->
-          </div>
+          <div id="case-options" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"></div>
         </div>
 
         <div id="studi-kasus-display" class="bg-brandGray border border-white/10 rounded-2xl p-5 md:p-6 mb-8 fade-in-up">
@@ -599,29 +579,65 @@
         </div>
 
         <div id="tugas-section" class="space-y-6 mb-8">
-          <!-- TUGAS 1 -->
+          <!-- =========================================================
+               TUGAS 1 — KONSEP DASAR ALGORITMA & FLOWCHART
+               ========================================================= -->
           <div class="task-card bg-brandGray border border-white/10 rounded-2xl p-5 md:p-6 space-y-4" id="task-1-card">
             <div class="flex items-start gap-3 border-b border-white/10 pb-4">
               <div class="w-11 h-11 rounded-xl bg-brandGreen/15 border border-brandGreen/30 flex items-center justify-center text-brandGreen font-bold text-lg shrink-0">1</div>
               <div class="flex-1">
                 <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-brandGreen/10 border border-brandGreen/25 text-[10px] font-bold text-brandGreen uppercase tracking-wider mb-1">TP 1</div>
-                <h3 class="text-lg md:text-xl font-bold text-white">Analisis Input - Proses - Output</h3>
-                <p class="text-sm text-textGray mt-1">Tentukan komponen variabel dan kondisi logika berdasarkan studi kasus yang kamu pilih!</p>
+                <h3 class="text-lg md:text-xl font-bold text-white">Konsep Dasar Algoritma &amp; Flowchart</h3>
+                <p class="text-sm text-textGray mt-1">Tuliskan pemahamanmu tentang konsep dasar algoritma dan flowchart sebelum mulai merancang diagram alir!</p>
               </div>
             </div>
 
             <div class="space-y-4">
-              <div>
-                <label class="flex items-center gap-2 text-sm font-bold text-sky-400 uppercase mb-2"> <i class="fa-solid fa-right-to-bracket"></i> Input (Masukan) </label>
-                <textarea id="task1-input" class="form-textarea" placeholder="Sebutkan variabel/data apa saja yang perlu di-input..."></textarea>
+              <!-- 1. Pengertian Algoritma -->
+              <div class="bg-sky-500/5 border border-sky-500/25 rounded-xl p-4 space-y-3">
+                <div class="flex items-center gap-3">
+                  <div class="w-9 h-9 rounded-lg bg-sky-500/15 border border-sky-500/30 flex items-center justify-center text-sky-400 text-sm shrink-0">
+                    <i class="fa-solid fa-brain"></i>
+                  </div>
+                  <div>
+                    <p class="text-sm font-bold text-sky-400 uppercase tracking-wider">1. Pengertian Algoritma</p>
+                    <p class="text-xs text-textGray">Jelaskan dengan bahasamu sendiri</p>
+                  </div>
+                </div>
+                <textarea id="task1-pengertian-algoritma" class="form-textarea" style="min-height: 100px" placeholder="Algoritma adalah urutan langkah-langkah logis dan sistematis untuk menyelesaikan suatu masalah..."></textarea>
               </div>
-              <div>
-                <label class="flex items-center gap-2 text-sm font-bold text-amber-400 uppercase mb-2"> <i class="fa-solid fa-gears"></i> Proses (Kondisi Percabangan) </label>
-                <textarea id="task1-proses" class="form-textarea" placeholder="Jelaskan proses/kondisi logika percabangan yang terjadi..."></textarea>
+
+              <!-- 2. Ciri-ciri Algoritma yang Baik -->
+              <div class="bg-amber-500/5 border border-amber-500/25 rounded-xl p-4 space-y-3">
+                <div class="flex items-center gap-3">
+                  <div class="w-9 h-9 rounded-lg bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 text-sm shrink-0">
+                    <i class="fa-solid fa-list-check"></i>
+                  </div>
+                  <div>
+                    <p class="text-sm font-bold text-amber-400 uppercase tracking-wider">2. Ciri-ciri Algoritma yang Baik</p>
+                    <p class="text-xs text-textGray">Sebutkan minimal 3 ciri dan jelaskan singkat</p>
+                  </div>
+                </div>
+                <textarea
+                  id="task1-ciri-algoritma"
+                  class="form-textarea"
+                  style="min-height: 130px"
+                  placeholder="1. Jelas dan tidak ambigu — setiap langkah harus didefinisikan secara tepat sehingga tidak menimbulkan salah tafsir.&#10;2. ...&#10;3. ..."
+                ></textarea>
               </div>
-              <div>
-                <label class="flex items-center gap-2 text-sm font-bold text-purple-400 uppercase mb-2"> <i class="fa-solid fa-right-from-bracket"></i> Output (Keluaran) </label>
-                <textarea id="task1-output" class="form-textarea" placeholder="Sebutkan hasil/output yang ditampilkan ke layar..."></textarea>
+
+              <!-- 3. Pengertian Flowchart -->
+              <div class="bg-purple-500/5 border border-purple-500/25 rounded-xl p-4 space-y-3">
+                <div class="flex items-center gap-3">
+                  <div class="w-9 h-9 rounded-lg bg-purple-500/15 border border-purple-500/30 flex items-center justify-center text-purple-400 text-sm shrink-0">
+                    <i class="fa-solid fa-diagram-project"></i>
+                  </div>
+                  <div>
+                    <p class="text-sm font-bold text-purple-400 uppercase tracking-wider">3. Pengertian Flowchart</p>
+                    <p class="text-xs text-textGray">Jelaskan apa itu flowchart dan mengapa penting dalam pemrograman</p>
+                  </div>
+                </div>
+                <textarea id="task1-pengertian-flowchart" class="form-textarea" style="min-height: 100px" placeholder="Flowchart adalah representasi visual dari langkah-langkah algoritma menggunakan simbol-simbol khusus..."></textarea>
               </div>
             </div>
           </div>
@@ -675,7 +691,7 @@
             </div>
           </div>
 
-          <!-- TUGAS 3 — IDENTIFIKASI SIMBOL (5 SIMBOL SAJA) -->
+          <!-- TUGAS 3 — IDENTIFIKASI SIMBOL -->
           <div class="task-card bg-brandGray border border-white/10 rounded-2xl p-5 md:p-6 space-y-4" id="task-3-card">
             <div class="flex items-start gap-3 border-b border-white/10 pb-4">
               <div class="w-11 h-11 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 font-bold text-lg shrink-0">3</div>
@@ -697,7 +713,7 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <!-- Simbol 1 — Arrow (Panah) -->
+              <!-- Simbol 1 -->
               <div class="symbol-quiz-card space-y-3">
                 <div class="flex items-center gap-3">
                   <span class="text-xs font-bold text-brandGreen bg-brandGreen/10 border border-brandGreen/25 rounded-full w-7 h-7 flex items-center justify-center shrink-0">1</span>
@@ -719,7 +735,7 @@
                 </div>
               </div>
 
-              <!-- Simbol 2 — Oval (Terminator) -->
+              <!-- Simbol 2 -->
               <div class="symbol-quiz-card space-y-3">
                 <div class="flex items-center gap-3">
                   <span class="text-xs font-bold text-amber-400 bg-amber-500/10 border border-amber-500/25 rounded-full w-7 h-7 flex items-center justify-center shrink-0">2</span>
@@ -740,7 +756,7 @@
                 </div>
               </div>
 
-              <!-- Simbol 3 — Rectangle (Process) -->
+              <!-- Simbol 3 -->
               <div class="symbol-quiz-card space-y-3">
                 <div class="flex items-center gap-3">
                   <span class="text-xs font-bold text-sky-400 bg-sky-500/10 border border-sky-500/25 rounded-full w-7 h-7 flex items-center justify-center shrink-0">3</span>
@@ -761,7 +777,7 @@
                 </div>
               </div>
 
-              <!-- Simbol 4 — Diamond (Decision) -->
+              <!-- Simbol 4 -->
               <div class="symbol-quiz-card space-y-3">
                 <div class="flex items-center gap-3">
                   <span class="text-xs font-bold text-rose-400 bg-rose-500/10 border border-rose-500/25 rounded-full w-7 h-7 flex items-center justify-center shrink-0">4</span>
@@ -782,7 +798,7 @@
                 </div>
               </div>
 
-              <!-- Simbol 5 — Parallelogram (Input/Output) -->
+              <!-- Simbol 5 -->
               <div class="symbol-quiz-card space-y-3">
                 <div class="flex items-center gap-3">
                   <span class="text-xs font-bold text-purple-400 bg-purple-500/10 border border-purple-500/25 rounded-full w-7 h-7 flex items-center justify-center shrink-0">5</span>
@@ -805,7 +821,7 @@
             </div>
           </div>
 
-          <!-- TUGAS 4 — PERANCANGAN DIAGRAM ALIR -->
+          <!-- TUGAS 4 — FLOWCHART -->
           <div class="task-card bg-brandGray border border-white/10 rounded-2xl p-5 md:p-6 space-y-4" id="task-4-card">
             <div class="flex items-start gap-3 border-b border-white/10 pb-4">
               <div class="w-11 h-11 rounded-xl bg-purple-500/15 border border-purple-500/30 flex items-center justify-center text-purple-400 font-bold text-lg shrink-0">4</div>
@@ -854,7 +870,7 @@
               <p class="text-sm font-bold text-purple-300 flex items-center gap-2"><i class="fa-solid fa-hand-pointer"></i> Cara Pakai Playground:</p>
               <ul class="text-xs text-textGray space-y-1 pl-6 list-disc">
                 <li><strong class="text-white">Klik simbol</strong> di palet kiri → muncul di canvas.</li>
-                <li><strong class="text-white">Drag</strong> simbol untuk mengatur posisi.</li>
+                <li><strong class="text-white">Drag</strong> simbol untuk mengatur posisi. Canvas akan <strong class="text-brandGreen">otomatis memanjang</strong> jika flowchart-mu panjang.</li>
                 <li><strong class="text-white">Double-click</strong> pada teks untuk edit label.</li>
                 <li>Aktifkan <strong class="text-purple-300">Connect Mode</strong> → klik 2 simbol untuk panah penghubung.</li>
                 <li><strong class="text-brandGreen">Dari simbol Keputusan</strong> → akan muncul pilihan label <strong class="text-brandGreen">Ya</strong> / <strong class="text-rose-400">Tidak</strong> di panah.</li>
@@ -922,7 +938,7 @@
               </div>
 
               <div class="lg:col-span-3">
-                <div id="playground-canvas" class="relative w-full min-h-[560px] bg-black/40 rounded-2xl border-2 border-dashed border-white/15 overflow-hidden select-none">
+                <div id="playground-canvas" class="relative w-full bg-black/40 rounded-2xl border-2 border-dashed border-white/15 overflow-hidden select-none" style="min-height: 560px">
                   <svg id="arrow-layer" class="absolute inset-0 w-full h-full pointer-events-none z-[5]" xmlns="http://www.w3.org/2000/svg" style="overflow: visible">
                     <g id="arrows-group"></g>
                   </svg>
@@ -1169,7 +1185,7 @@
 
       function selectCase(id) {
         if (selectedCaseId && selectedCaseId !== id) {
-          const hasData = ["task1-input", "task1-proses", "task1-output", "task2-lanjutan", "task4-deskripsi"].some((fid) => document.getElementById(fid).value.trim() !== "");
+          const hasData = ["task1-pengertian-algoritma", "task1-ciri-algoritma", "task1-pengertian-flowchart", "task2-lanjutan", "task4-deskripsi"].some((fid) => document.getElementById(fid).value.trim() !== "");
           if (hasData) {
             if (!confirm("Mengganti studi kasus akan tetap menyimpan jawaban Tugas 1-4 kamu, tetapi pastikan jawaban kamu sudah sesuai dengan kasus baru. Lanjutkan?")) return;
           }
@@ -1246,10 +1262,6 @@
         const c = STUDI_KASUS[selectedCaseId];
         const v = c.input.nama;
 
-        document.getElementById("task1-input").placeholder = `Sebutkan variabel/data apa saja yang perlu di-input (contoh: ${v})...`;
-        document.getElementById("task1-proses").placeholder = `Jelaskan proses/kondisi logika percabangan (misal cek apakah ${v} memenuhi syarat)...`;
-        document.getElementById("task1-output").placeholder = `Sebutkan hasil/output yang ditampilkan ke layar...`;
-
         const codeEl = document.getElementById("contoh-variabel");
         if (codeEl) codeEl.textContent = v;
 
@@ -1283,6 +1295,30 @@
         connector: { label: "A", width: 50, height: 50 },
       };
 
+      /* ============================================================
+         AUTO-GROW CANVAS
+         Canvas akan otomatis memanjang ke bawah jika simbol
+         diletakkan/di-drag mendekati batas bawah.
+         ============================================================ */
+      const CANVAS_BASE_HEIGHT = 560;
+      const CANVAS_BOTTOM_BUFFER = 120;
+
+      function recalcCanvasHeight() {
+        let maxBottom = 0;
+        canvas.querySelectorAll(".flowchart-symbol").forEach((el) => {
+          const bottom = el.offsetTop + el.offsetHeight;
+          if (bottom > maxBottom) maxBottom = bottom;
+        });
+        const target = Math.max(CANVAS_BASE_HEIGHT, maxBottom + CANVAS_BOTTOM_BUFFER);
+        canvas.style.minHeight = target + "px";
+      }
+
+      // Panggil saat resize window (label bisa wrap beda)
+      window.addEventListener("resize", () => {
+        // Beri delay agar reflow selesai dulu
+        setTimeout(recalcCanvasHeight, 60);
+      });
+
       document.querySelectorAll(".palette-item").forEach((item) => {
         item.addEventListener("click", () => {
           const type = item.dataset.type;
@@ -1312,6 +1348,14 @@
         placeholder.style.display = "none";
         attachSymbolEvents(el);
         selectSymbol(el);
+
+        // Auto-grow jika simbol baru berada dekat/melewati batas bawah
+        const desired = y + el.offsetHeight + 80;
+        if (desired > canvas.clientHeight) {
+          canvas.style.minHeight = desired + "px";
+        }
+        recalcCanvasHeight();
+
         return el;
       }
 
@@ -1329,6 +1373,8 @@
         });
         el.querySelector(".symbol-label").addEventListener("blur", (e) => {
           e.target.contentEditable = "false";
+          // Setelah label diedit, ukuran mungkin berubah — recalc canvas
+          setTimeout(recalcCanvasHeight, 30);
         });
         el.querySelector(".symbol-label").addEventListener("keydown", (e) => {
           if (e.key === "Enter" && !e.shiftKey) {
@@ -1362,7 +1408,14 @@
           let newX = e.clientX - canvasRect.left - offsetX;
           let newY = e.clientY - canvasRect.top - offsetY;
           newX = Math.max(0, Math.min(canvasRect.width - el.offsetWidth, newX));
-          newY = Math.max(0, Math.min(canvasRect.height - el.offsetHeight, newY));
+          newY = Math.max(0, newY);
+
+          // AUTO-GROW: jika posisi prediksi melewati batas bawah, panjangkan canvas
+          const projectedBottom = newY + el.offsetHeight + 80;
+          if (projectedBottom > canvas.clientHeight) {
+            canvas.style.minHeight = projectedBottom + "px";
+          }
+
           el.style.left = newX + "px";
           el.style.top = newY + "px";
           redrawArrows();
@@ -1373,9 +1426,11 @@
           try {
             el.releasePointerCapture(e.pointerId);
           } catch (_) {}
+          recalcCanvasHeight();
         });
         el.addEventListener("pointercancel", () => {
           dragging = false;
+          recalcCanvasHeight();
         });
       }
 
@@ -1405,6 +1460,7 @@
         if (!selectedSymbol) return;
         removeSymbol(selectedSymbol);
         selectedSymbol = null;
+        setTimeout(recalcCanvasHeight, 30);
       }
 
       function removeSymbol(el) {
@@ -1424,7 +1480,11 @@
       }
 
       function clearPlayground() {
-        if (canvas.querySelectorAll(".flowchart-symbol").length === 0) return;
+        if (canvas.querySelectorAll(".flowchart-symbol").length === 0) {
+          // Tetap reset tinggi walaupun kosong
+          canvas.style.minHeight = CANVAS_BASE_HEIGHT + "px";
+          return;
+        }
         if (!confirm("Hapus semua simbol dan panah di canvas?")) return;
         canvas.querySelectorAll(".flowchart-symbol").forEach((s) => s.remove());
         arrowsGroup.innerHTML = "";
@@ -1432,6 +1492,7 @@
         selectedSymbol = null;
         connectSource = null;
         placeholder.style.display = "flex";
+        canvas.style.minHeight = CANVAS_BASE_HEIGHT + "px";
       }
 
       function toggleConnectMode() {
@@ -1594,6 +1655,8 @@
 
         loadDraft();
         setupProgressListeners();
+        // Set tinggi dasar canvas
+        canvas.style.minHeight = CANVAS_BASE_HEIGHT + "px";
       });
 
       function setupProgressListeners() {
@@ -1603,11 +1666,11 @@
           "lkpd-anggota2-nama",
           "lkpd-anggota2-absen",
           "lkpd-kelas",
-          "task1-input",
-          "task1-proses",
-          "task1-output",
+          // Tugas 1 — teori
+          "task1-pengertian-algoritma",
+          "task1-ciri-algoritma",
+          "task1-pengertian-flowchart",
           "task2-lanjutan",
-          // Tugas 3 - Simbol (5 simbol)
           "task3-sym1-nama",
           "task3-sym1-fungsi",
           "task3-sym2-nama",
@@ -1618,7 +1681,6 @@
           "task3-sym4-fungsi",
           "task3-sym5-nama",
           "task3-sym5-fungsi",
-          // Tugas 4 - Flowchart
           "task4-deskripsi",
         ];
         fields.forEach((id) => {
@@ -1636,13 +1698,13 @@
         const identitasOk = ["lkpd-anggota1-nama", "lkpd-anggota1-absen", "lkpd-anggota2-nama", "lkpd-anggota2-absen", "lkpd-kelas"].every((id) => document.getElementById(id).value.trim() !== "");
         if (identitasOk) completed++;
 
-        const tugas1Ok = ["task1-input", "task1-proses", "task1-output"].every((id) => document.getElementById(id).value.trim() !== "");
+        // Tugas 1 — Konsep dasar
+        const tugas1Ok = ["task1-pengertian-algoritma", "task1-ciri-algoritma", "task1-pengertian-flowchart"].every((id) => document.getElementById(id).value.trim() !== "");
         if (tugas1Ok) completed++;
 
         const tugas2Ok = document.getElementById("task2-lanjutan").value.trim() !== "";
         if (tugas2Ok) completed++;
 
-        // Tugas 3 - 5 Simbol
         const tugas3Fields = ["task3-sym1-nama", "task3-sym1-fungsi", "task3-sym2-nama", "task3-sym2-fungsi", "task3-sym3-nama", "task3-sym3-fungsi", "task3-sym4-nama", "task3-sym4-fungsi", "task3-sym5-nama", "task3-sym5-fungsi"];
         const tugas3Ok = tugas3Fields.every((id) => document.getElementById(id).value.trim() !== "");
         if (tugas3Ok) completed++;
@@ -1669,9 +1731,9 @@
         const a2n = document.getElementById("lkpd-anggota2-nama").value.trim();
         const a2a = document.getElementById("lkpd-anggota2-absen").value.trim();
         const kelas = document.getElementById("lkpd-kelas").value.trim();
-        const t1in = document.getElementById("task1-input").value.trim();
-        const t1pr = document.getElementById("task1-proses").value.trim();
-        const t1out = document.getElementById("task1-output").value.trim();
+        const t1a = document.getElementById("task1-pengertian-algoritma").value.trim();
+        const t1b = document.getElementById("task1-ciri-algoritma").value.trim();
+        const t1c = document.getElementById("task1-pengertian-flowchart").value.trim();
         const t2 = document.getElementById("task2-lanjutan").value.trim();
         const t4 = document.getElementById("task4-deskripsi").value.trim();
         const t4cb = document.getElementById("task4-checkbox").checked;
@@ -1685,12 +1747,11 @@
         if (!a2a) errors.push("Anggota 2 — No absen belum diisi");
         else if (parseInt(a2a) < 1 || parseInt(a2a) > 50) errors.push("Anggota 2 — No absen harus 1-50");
         if (!kelas) errors.push("Kelas belum diisi");
-        if (!t1in) errors.push("Tugas 1 — bagian Input belum diisi");
-        if (!t1pr) errors.push("Tugas 1 — bagian Proses belum diisi");
-        if (!t1out) errors.push("Tugas 1 — bagian Output belum diisi");
+        if (!t1a) errors.push("Tugas 1 — Pengertian Algoritma belum diisi");
+        if (!t1b) errors.push("Tugas 1 — Ciri-ciri Algoritma belum diisi");
+        if (!t1c) errors.push("Tugas 1 — Pengertian Flowchart belum diisi");
         if (!t2) errors.push("Tugas 2 — Lanjutan algoritma belum diisi");
 
-        // Tugas 3 - 5 Simbol
         for (let i = 1; i <= 5; i++) {
           if (!document.getElementById(`task3-sym${i}-nama`).value.trim()) errors.push(`Tugas 3 — Nama Simbol #${i} belum diisi`);
           if (!document.getElementById(`task3-sym${i}-fungsi`).value.trim()) errors.push(`Tugas 3 — Fungsi Simbol #${i} belum diisi`);
@@ -1781,9 +1842,9 @@
           a2n: document.getElementById("lkpd-anggota2-nama").value,
           a2a: document.getElementById("lkpd-anggota2-absen").value,
           kelas: document.getElementById("lkpd-kelas").value,
-          task1Input: document.getElementById("task1-input").value,
-          task1Proses: document.getElementById("task1-proses").value,
-          task1Output: document.getElementById("task1-output").value,
+          task1PengertianAlgoritma: document.getElementById("task1-pengertian-algoritma").value,
+          task1CiriAlgoritma: document.getElementById("task1-ciri-algoritma").value,
+          task1PengertianFlowchart: document.getElementById("task1-pengertian-flowchart").value,
           task2: document.getElementById("task2-lanjutan").value,
           task3Symbols: [
             { nama: document.getElementById("task3-sym1-nama").value, fungsi: document.getElementById("task3-sym1-fungsi").value },
@@ -1820,9 +1881,9 @@
             document.getElementById("lkpd-anggota2-nama").value = draft.a2n || "";
             document.getElementById("lkpd-anggota2-absen").value = draft.a2a || "";
             document.getElementById("lkpd-kelas").value = draft.kelas || "";
-            document.getElementById("task1-input").value = draft.task1Input || "";
-            document.getElementById("task1-proses").value = draft.task1Proses || "";
-            document.getElementById("task1-output").value = draft.task1Output || "";
+            document.getElementById("task1-pengertian-algoritma").value = draft.task1PengertianAlgoritma || "";
+            document.getElementById("task1-ciri-algoritma").value = draft.task1CiriAlgoritma || "";
+            document.getElementById("task1-pengertian-flowchart").value = draft.task1PengertianFlowchart || "";
             document.getElementById("task2-lanjutan").value = draft.task2 || "";
 
             if (Array.isArray(draft.task3Symbols)) {
@@ -2133,9 +2194,9 @@
           a2n: document.getElementById("lkpd-anggota2-nama").value.trim() || "-",
           a2a: document.getElementById("lkpd-anggota2-absen").value.trim() || "-",
           kelas: document.getElementById("lkpd-kelas").value.trim() || "-",
-          task1Input: document.getElementById("task1-input").value.trim() || "-",
-          task1Proses: document.getElementById("task1-proses").value.trim() || "-",
-          task1Output: document.getElementById("task1-output").value.trim() || "-",
+          task1PengertianAlgoritma: document.getElementById("task1-pengertian-algoritma").value.trim() || "-",
+          task1CiriAlgoritma: document.getElementById("task1-ciri-algoritma").value.trim() || "-",
+          task1PengertianFlowchart: document.getElementById("task1-pengertian-flowchart").value.trim() || "-",
           task2: document.getElementById("task2-lanjutan").value.trim() || "-",
           task3Symbols: [
             { no: 1, nama: document.getElementById("task3-sym1-nama").value.trim() || "-", fungsi: document.getElementById("task3-sym1-fungsi").value.trim() || "-" },
@@ -2192,7 +2253,9 @@
           y += cardH + 5;
         }
 
-        // Tugas 1
+        // ==========================================
+        // TUGAS 1 — Konsep Dasar Algoritma & Flowchart
+        // ==========================================
         {
           const padX = 6;
           const bodySize = 9.5;
@@ -2200,9 +2263,9 @@
           const innerW = contentW - padX * 2 - 4;
 
           const blocks = [
-            { label: "INPUT (MASUKAN)", value: data.task1Input, color: C.sky, bg: C.inputBg, border: C.inputBorder },
-            { label: "PROSES (KONDISI PERCABANGAN)", value: data.task1Proses, color: C.amber, bg: C.processBg, border: C.processBorder },
-            { label: "OUTPUT (KELUARAN)", value: data.task1Output, color: C.purple, bg: C.outputBg, border: C.outputBorder },
+            { label: "1. PENGERTIAN ALGORITMA", value: data.task1PengertianAlgoritma, color: C.sky, bg: C.inputBg, border: C.inputBorder },
+            { label: "2. CIRI-CIRI ALGORITMA YANG BAIK", value: data.task1CiriAlgoritma, color: C.amber, bg: C.processBg, border: C.processBorder },
+            { label: "3. PENGERTIAN FLOWCHART", value: data.task1PengertianFlowchart, color: C.purple, bg: C.outputBg, border: C.outputBorder },
           ];
           const blockTitleH = 7;
           const blockGap = 3;
@@ -2219,7 +2282,7 @@
           setText(C.green);
           doc.setFont("helvetica", "bold");
           doc.setFontSize(10.5);
-          doc.text("TUGAS 1: ANALISIS INPUT - PROSES - OUTPUT", margin + padX + 2, y + 6);
+          doc.text("TUGAS 1: KONSEP DASAR ALGORITMA & FLOWCHART", margin + padX + 2, y + 6);
 
           let cy = y + titleH + 2;
           blocksMeasured.forEach((b, i) => {
@@ -2298,7 +2361,7 @@
           y += cardH + 5;
         }
 
-        // Tugas 3: Identifikasi Simbol (5 simbol + gambar simbol)
+        // Tugas 3: Identifikasi Simbol
         {
           const padX = 6;
           const bodySize = 9.5;
@@ -2314,14 +2377,13 @@
           const itemPadX = 4;
           const itemInnerW = innerW - itemPadX * 2;
 
-          // Layout: simbol di kiri, teks di kanan
-          const symbolAreaW = 36; // lebar area simbol (mm)
-          const symbolSize = 18; // sisi simbol (mm) — diamond pakai ini
+          const symbolAreaW = 36;
+          const symbolSize = 18;
           const textX = itemPadX + symbolAreaW + 3;
           const textInnerW = itemInnerW - textX - itemPadX;
-          const topPad = 8; // ruang label "Simbol #n"
+          const topPad = 8;
           const bottomPad = 3;
-          const symbolMinH = symbolSize + topPad + bottomPad; // = 29mm
+          const symbolMinH = symbolSize + topPad + bottomPad;
 
           const rows = data.task3Symbols.map((it) => {
             const namaLines = measure("Nama   : " + it.nama, 9, "bold", textInnerW, "helvetica");
@@ -2352,13 +2414,11 @@
           });
           cy += 1;
 
-          // ===== Helper: gambar simbol pakai primitive jsPDF =====
           function drawSymbolShape(no, cx, cyMid, size) {
             const half = size / 2;
             doc.setLineWidth(0.55);
 
             if (no === 1) {
-              // Arrow / Panah (hijau)
               setDraw(C.green);
               const x1 = cx - half;
               const x2 = cx + half - 3;
@@ -2366,15 +2426,12 @@
               setFill(C.green);
               doc.triangle(x2, cyMid - 2.2, x2, cyMid + 2.2, x2 + 3, cyMid, "F");
             } else if (no === 2) {
-              // Oval / Terminator (hijau)
               setDraw(C.green);
               doc.ellipse(cx, cyMid, half, half * 0.55);
             } else if (no === 3) {
-              // Rectangle / Process (kuning)
               setDraw(C.amber);
               doc.rect(cx - half, cyMid - half * 0.55, size, size * 0.55);
             } else if (no === 4) {
-              // Diamond / Decision (merah) — beri margin 10% biar tidak overflow
               setDraw(C.rose);
               const dHalf = half * 0.9;
               const pts = [
@@ -2389,7 +2446,6 @@
                 doc.line(p1[0], p1[1], p2[0], p2[1]);
               }
             } else if (no === 5) {
-              // Parallelogram / I-O (biru)
               setDraw(C.sky);
               const skew = half * 0.45;
               const vHalf = half * 0.55;
@@ -2406,24 +2462,20 @@
               }
             }
           }
-          // =======================================================
 
           rows.forEach((r) => {
             const bx = margin + padX + 2;
             drawCard(bx, cy, innerW, r.rowH, { fill: C.card, borderColor: C.border });
 
-            // Label "Simbol #n"
             setText(C.amber);
             doc.setFont("helvetica", "bold");
             doc.setFontSize(8.5);
             doc.text("Simbol #" + r.no, bx + itemPadX, cy + 4.5);
 
-            // Gambar simbol di kiri (di bawah label, di area symbolAreaW)
             const symCX = bx + itemPadX + symbolAreaW / 2;
             const symCY = cy + topPad + (r.rowH - topPad - bottomPad) / 2;
             drawSymbolShape(r.no, symCX, symCY, symbolSize);
 
-            // Teks nama & fungsi (font helvetica)
             let ry = cy + topPad + 3;
             doc.setFont("helvetica", "bold");
             doc.setFontSize(9);
@@ -2449,7 +2501,7 @@
           const aspect = flowW / flowH;
           let imgW = contentW - 12;
           let imgH = imgW / aspect;
-          const maxImgH = 155;
+          const maxImgH = 210;
           if (imgH > maxImgH) {
             imgH = maxImgH;
             imgW = imgH * aspect;
