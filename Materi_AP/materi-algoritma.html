@@ -3,37 +3,168 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Algoritma & Pemrograman - RuangInformatika</title>
+    <title>Algoritma &amp; Pemrograman — RuangInformatika</title>
     <link rel="shortcut icon" href="../images/Logo Patbhe.png" type="image/x-icon" />
+
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet" />
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+
+    <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <!-- Vanilla Tilt -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
 
     <script>
       tailwind.config = {
         theme: {
           extend: {
             fontFamily: {
-              sans: ["Inter", "sans-serif"],
-              mono: ["Fira Code", "ui-monospace", "Consolas", "monospace"],
+              sans: ["Plus Jakarta Sans", "sans-serif"],
+              mono: ["JetBrains Mono", "ui-monospace", "monospace"],
             },
             colors: {
-              brandDark: "#0a0a0a",
-              brandGray: "#151515",
+              brandDark: "#080c10",
+              brandGray: "#111820",
               brandGreen: "#00e676",
-              textGray: "#d1d5db",
+              textGray: "#8896a7",
             },
           },
         },
       };
     </script>
 
+    <!-- MASTER CSS -->
+    <link rel="stylesheet" href="../style.css" />
+
     <style>
-      .bg-grid {
-        background-size: 40px 40px;
-        background-image: linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+      .tilt-card {
+        transform-style: preserve-3d;
+      }
+      .tilt-card-content {
+        transform: translateZ(30px);
       }
 
+      main {
+        background: transparent;
+      }
+
+      /* ── Reading Progress Bar ── */
+      #readProgress {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 3px;
+        background: linear-gradient(90deg, var(--green), var(--blue));
+        z-index: 999;
+        transition: width 0.1s ease-out;
+        width: 0%;
+        box-shadow: 0 0 12px rgba(0, 230, 118, 0.5);
+      }
+
+      /* ── Page Hero ── */
+      .page-hero {
+        position: relative;
+        padding: 64px 0 40px;
+        overflow: hidden;
+      }
+      .page-hero-glow {
+        position: absolute;
+        top: -100px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 700px;
+        height: 400px;
+        background: radial-gradient(ellipse, rgba(0, 230, 118, 0.1) 0%, rgba(56, 189, 248, 0.05) 40%, transparent 70%);
+        filter: blur(40px);
+        pointer-events: none;
+      }
+      .page-hero-inner {
+        max-width: 1024px;
+        margin: 0 auto;
+        padding: 0 24px;
+        position: relative;
+        z-index: 10;
+      }
+      .page-hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 14px;
+        border-radius: 999px;
+        background: var(--bg-glass);
+        border: 1px solid var(--border-green);
+        font-size: 0.78rem;
+        font-weight: 700;
+        color: var(--green);
+        margin-bottom: 18px;
+        backdrop-filter: blur(8px);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
+      .page-hero-title {
+        font-size: clamp(2rem, 4.5vw, 3rem);
+        font-weight: 800;
+        line-height: 1.15;
+        letter-spacing: -0.03em;
+        margin-bottom: 16px;
+      }
+      .page-hero-title .gradient-text {
+        background: linear-gradient(135deg, #00e676 0%, #38bdf8 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .page-hero-desc {
+        font-size: 1rem;
+        line-height: 1.7;
+        color: var(--text-muted);
+        max-width: 640px;
+      }
+
+      /* ── Tab pills ── */
+      .tab-nav-pills {
+        display: flex;
+        gap: 8px;
+        padding: 6px;
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        overflow-x: auto;
+        backdrop-filter: blur(12px);
+      }
+      .tab-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 11px 20px;
+        border-radius: 10px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: var(--text-muted);
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        transition: all 0.25s ease;
+        white-space: nowrap;
+        font-family: var(--font-sans);
+      }
+      .tab-btn:hover {
+        color: var(--text-primary);
+        background: rgba(255, 255, 255, 0.04);
+      }
+      .tab-btn.active {
+        color: var(--green);
+        background: var(--green-dim);
+        box-shadow:
+          0 0 20px rgba(0, 230, 118, 0.15),
+          inset 0 0 0 1px rgba(0, 230, 118, 0.25);
+      }
+
+      /* ==================== FLOWCHART SIMULATOR NODES ==================== */
       .fc-node {
         border: 2px solid rgba(255, 255, 255, 0.1);
         background: rgba(0, 0, 0, 0.5);
@@ -219,7 +350,7 @@
       }
       .chapter-item.active .chapter-time {
         background: #00e676;
-        color: #0a0a0a;
+        color: #080c10;
         font-weight: 800;
       }
       .chapter-item.active .chapter-title {
@@ -235,7 +366,7 @@
         background: rgba(0, 230, 118, 0.12);
         border: 1px solid rgba(0, 230, 118, 0.3);
         color: #00e676;
-        font-family: "Fira Code", monospace;
+        font-family: "JetBrains Mono", monospace;
         font-size: 12px;
         font-weight: 700;
         height: fit-content;
@@ -307,7 +438,7 @@
       .option-label input[type="radio"]:checked ~ .option-marker {
         border-color: #00e676;
         background: #00e676;
-        color: #0a0a0a;
+        color: #080c10;
       }
       .option-label.selected {
         background: rgba(0, 230, 118, 0.08);
@@ -324,7 +455,7 @@
       .option-label.review-correct .option-marker {
         background: #00e676;
         border-color: #00e676;
-        color: #0a0a0a;
+        color: #080c10;
       }
       .option-label.review-wrong {
         background: rgba(244, 63, 94, 0.1) !important;
@@ -384,6 +515,7 @@
         animation: modalPop 0.25s ease forwards;
       }
 
+      /* Responsive fonts mobile */
       @media (max-width: 640px) {
         body {
           font-size: 1rem;
@@ -393,7 +525,25 @@
           line-height: 1.2 !important;
         }
         h2 {
-          font-size: 1.35rem !important;
+          font-size: 1.5rem !important;
+        }
+        h3 {
+          font-size: 1.25rem !important;
+        }
+        .text-4xl {
+          font-size: 1.875rem !important;
+        }
+        .text-3xl {
+          font-size: 1.5rem !important;
+        }
+        .text-2xl {
+          font-size: 1.25rem !important;
+        }
+        .text-xl {
+          font-size: 1.125rem !important;
+        }
+        .text-lg {
+          font-size: 1rem !important;
         }
         .flowchart-symbol {
           font-size: 11px;
@@ -402,83 +552,77 @@
       }
     </style>
   </head>
-  <body class="bg-brandDark text-white font-sans antialiased overflow-x-hidden flex flex-col min-h-screen text-lg">
-    <!-- Navbar -->
-    <nav class="max-w-7xl mx-auto px-6 py-6 flex items-center justify-between border-b border-white/5 relative z-50 w-full">
-      <div class="flex items-center gap-3">
-        <i class="fa-solid fa-code text-brandGreen text-xl"></i>
-        <span class="text-xl font-bold tracking-tight text-brandGreen">RuangInformatika</span>
+
+  <body class="bg-grid text-white font-sans antialiased overflow-x-hidden flex flex-col min-h-screen">
+    <div id="readProgress"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+      <div class="navbar-inner">
+        <a href="../index.html" class="navbar-logo">
+          <div class="navbar-logo-icon"><i class="fa-solid fa-code"></i></div>
+          <span class="navbar-logo-text">RuangInformatika</span>
+        </a>
+        <div class="navbar-links">
+          <a href="../index.html" class="nav-link">Dashboard</a>
+          <a href="../index.html#materi" class="nav-link">Daftar Modul</a>
+          <a href="../leaderboard.html" class="nav-link">Leaderboard</a>
+          <a href="../forum.html" class="nav-link">Forum Diskusi</a>
+        </div>
+        <button class="nav-badge"><i class="fa-solid fa-chalkboard-user"></i> Kelas XE6</button>
+        <button class="hamburger-btn" id="hamburgerBtn" aria-label="Menu">
+          <i class="fa-solid fa-bars"></i>
+        </button>
       </div>
 
-      <div class="hidden md:flex items-center gap-8 text-sm font-medium text-gray-300">
-        <a href="../index.html" class="hover:text-white transition">Dashboard</a>
-        <a href="../index.html#materi" class="text-white">Daftar Materi</a>
-        <a href="../leaderboard.html" class="hover:text-white transition">Leaderboard</a>
-        <a href="../forum.html" class="hover:text-white transition">Forum Diskusi</a>
-      </div>
-
-      <button class="hidden md:flex items-center gap-2 border border-white/10 rounded-full px-5 py-2.5 text-sm font-medium hover:bg-white/5 transition"><i class="fa-solid fa-chalkboard-user text-brandGreen"></i> XE6</button>
-
-      <button id="hamburgerBtn" class="md:hidden text-white text-2xl focus:outline-none" aria-label="Menu">
-        <i class="fa-solid fa-bars"></i>
-      </button>
-
-      <div id="mobileMenu" class="hidden absolute top-full left-0 right-0 bg-brandDark border-b border-white/10 md:hidden z-[60] shadow-lg">
-        <div class="px-6 py-4 flex flex-col gap-4 text-sm font-medium text-gray-300">
-          <a href="../index.html" class="hover:text-white transition py-2">Dashboard</a>
-          <a href="../index.html#materi" class="text-white py-2">Daftar Materi</a>
-          <a href="../leaderboard.html" class="hover:text-white transition py-2">Leaderboard</a>
-          <a href="../forum.html" class="hover:text-white transition py-2">Forum Diskusi</a>
-          <button class="flex items-center gap-2 border border-white/10 rounded-full px-5 py-2.5 text-sm font-medium hover:bg-white/5 transition mt-2"><i class="fa-solid fa-chalkboard-user text-brandGreen"></i> XE6</button>
+      <!-- Mobile Drawer -->
+      <div class="mobile-menu" id="mobileMenu">
+        <a href="../index.html" class="mobile-nav-link"> <i class="fa-solid fa-house" style="margin-right: 10px"></i> Dashboard </a>
+        <a href="../index.html#materi" class="mobile-nav-link"> <i class="fa-solid fa-book-open" style="margin-right: 10px"></i> Daftar Modul </a>
+        <a href="../leaderboard.html" class="mobile-nav-link"> <i class="fa-solid fa-trophy" style="margin-right: 10px"></i> Leaderboard </a>
+        <a href="../forum.html" class="mobile-nav-link"> <i class="fa-solid fa-comments" style="margin-right: 10px"></i> Forum Diskusi </a>
+        <div style="padding: 12px 16px">
+          <button class="nav-badge" style="width: 100%; justify-content: center"><i class="fa-solid fa-chalkboard-user"></i> Kelas XE6 — SMAN 4 Yogyakarta</button>
         </div>
       </div>
     </nav>
 
-    <!-- Main Content -->
-    <div class="flex-grow relative bg-grid">
-      <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-brandGreen/5 rounded-full blur-[120px] pointer-events-none"></div>
-
-      <main class="max-w-5xl mx-auto px-6 py-12 relative z-10">
-        <!-- Header Materi -->
-        <div class="mb-10 text-center md:text-left">
-          <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brandGreen/10 border border-brandGreen/20 text-sm font-bold text-brandGreen mb-4"><i class="fa-solid fa-microchip"></i> Modul 02 • Informatika SMA</div>
-          <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight mb-4">Algoritma & Pemrograman Dasar</h1>
-          <p class="text-textGray text-lg md:text-xl max-w-3xl leading-relaxed">
-            Pahami logika dasar komputer: mulai dari menyusun langkah logis (Algoritma), menggambarkan alur (Flowchart), menuliskan kode semu (Pseudocode), hingga mengeksekusinya dalam kode program nyata (Bahasa C++).
-          </p>
+    <!-- Main Content Wrapper -->
+    <div class="flex-grow relative">
+      <!-- Page Hero -->
+      <header class="page-hero">
+        <div class="page-hero-glow"></div>
+        <div class="page-hero-inner">
+          <div class="reveal">
+            <div class="page-hero-badge"><i class="fa-solid fa-microchip"></i> Modul 02</div>
+            <h1 class="page-hero-title">Algoritma &amp; <span class="gradient-text">Pemrograman</span></h1>
+            <p class="page-hero-desc">Pahami logika dasar komputer: mulai dari menyusun langkah logis (Algoritma), menggambarkan alur (Flowchart), menuliskan kode semu (Pseudocode), hingga mengeksekusinya dalam kode program nyata.</p>
+          </div>
         </div>
+      </header>
 
-        <!-- Navigation Tabs -->
-        <div class="flex border-b border-white/10 mb-8 space-x-2 overflow-x-auto">
-          <button onclick="openTab(event, 'pretest')" class="tab-btn py-3 px-6 text-base font-semibold border-b-2 border-amber-400 text-amber-400 flex items-center gap-2 transition whitespace-nowrap">
-            <i class="fa-solid fa-clipboard-question"></i> Pre-Test
-          </button>
-          <button onclick="openTab(event, 'materi')" class="tab-btn py-3 px-6 text-base font-semibold border-b-2 border-transparent text-textGray hover:text-white flex items-center gap-2 transition whitespace-nowrap">
-            <i class="fa-solid fa-book-open"></i> Materi Lengkap
-          </button>
-          <button onclick="openTab(event, 'simulasi')" class="tab-btn py-3 px-6 text-base font-semibold border-b-2 border-transparent text-textGray hover:text-white flex items-center gap-2 transition whitespace-nowrap">
-            <i class="fa-solid fa-gamepad"></i> Simulasi Flowchart
-          </button>
-          <button onclick="openTab(event, 'video')" class="tab-btn py-3 px-6 text-base font-semibold border-b-2 border-transparent text-textGray hover:text-white flex items-center gap-2 transition whitespace-nowrap">
-            <i class="fa-solid fa-play"></i> Video Penjelasan
-          </button>
-          <button onclick="openTab(event, 'lembarkerja')" class="tab-btn py-3 px-6 text-base font-semibold border-b-2 border-transparent text-textGray hover:text-white flex items-center gap-2 transition whitespace-nowrap">
-            <i class="fa-solid fa-clipboard-list"></i> Lembar Kerja
-          </button>
+      <main class="max-w-5xl mx-auto px-6 pb-12 relative z-10">
+        <!-- Navigation Tabs (Pills) -->
+        <div class="tab-nav-pills reveal mb-8">
+          <button onclick="openTab(event, 'pretest')" class="tab-btn active"><i class="fa-solid fa-clipboard-question"></i> Pre-Test</button>
+          <button onclick="openTab(event, 'materi')" class="tab-btn"><i class="fa-solid fa-book-open"></i> Materi Lengkap</button>
+          <button onclick="openTab(event, 'simulasi')" class="tab-btn"><i class="fa-solid fa-gamepad"></i> Simulasi Flowchart</button>
+          <button onclick="openTab(event, 'video')" class="tab-btn"><i class="fa-solid fa-play"></i> Video Penjelasan</button>
+          <button onclick="openTab(event, 'lembarkerja')" class="tab-btn"><i class="fa-solid fa-clipboard-list"></i> Lembar Kerja</button>
         </div>
 
         <!-- ==================== TAB 0: PRE-TEST ==================== -->
         <div id="pretest" class="tab-content block space-y-6">
           <div id="pretest-form-section" class="space-y-6">
-            <div class="bg-gradient-to-br from-amber-500/10 via-brandGray to-brandGray border border-amber-500/30 rounded-3xl p-6 md:p-8 text-center md:text-left">
-              <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/15 border border-amber-500/30 text-sm font-bold text-amber-400 mb-4"><i class="fa-solid fa-clipboard-question"></i> Tahap 1 • Pre-Test</div>
-              <h2 class="text-2xl md:text-4xl font-extrabold tracking-tight mb-3">Ukur Kemampuan Awalmu</h2>
+            <div class="reveal bg-gradient-to-br from-brandGreen/10 via-brandGray to-brandGray border border-brandGreen/30 rounded-3xl p-6 md:p-8">
+              <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brandGreen/10 border border-brandGreen/20 text-sm font-bold text-brandGreen mb-4"><i class="fa-solid fa-clipboard-question"></i> Tahap 1 • Pre-Test</div>
+              <h2 class="text-2xl md:text-3xl font-bold tracking-tight mb-3">Ukur Kemampuan Awalmu</h2>
               <p class="text-textGray text-base md:text-lg max-w-2xl leading-relaxed">
                 Sebelum masuk ke materi, jawab 10 soal singkat berikut. Tidak ada nilai benar/salah yang menghukum — ini hanya <strong class="text-white">peta awal</strong> sebelum belajar.
               </p>
             </div>
 
-            <div class="bg-brandGray border border-white/10 rounded-2xl p-5 md:p-6">
+            <div class="reveal bg-brandGray border border-white/5 rounded-3xl p-6 md:p-8">
               <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div class="flex items-center gap-3">
                   <div class="w-11 h-11 rounded-xl bg-brandGreen/10 border border-brandGreen/25 flex items-center justify-center text-brandGreen text-lg shrink-0">
@@ -510,7 +654,7 @@
               </div>
             </div>
 
-            <div class="bg-brandGray border border-brandGreen/30 rounded-2xl p-6 md:p-8 space-y-5">
+            <div class="reveal bg-brandGray border border-brandGreen/30 rounded-3xl p-6 md:p-8 space-y-5">
               <div class="flex items-center gap-3 border-b border-white/10 pb-4">
                 <div class="w-11 h-11 rounded-xl bg-brandGreen/10 border border-brandGreen/25 flex items-center justify-center text-brandGreen text-lg shrink-0">
                   <i class="fa-solid fa-user-pen"></i>
@@ -548,14 +692,14 @@
                 <i class="fa-solid fa-triangle-exclamation mr-2"></i><span id="pretest-form-warning-text"></span>
               </div>
 
-              <button onclick="startPretest()" class="w-full py-4 bg-brandGreen text-black font-bold rounded-xl hover:bg-green-400 transition shadow-lg shadow-brandGreen/20 flex items-center justify-center gap-2 text-base">
+              <button onclick="startPretest()" class="w-full py-4 bg-brandGreen text-black font-bold rounded-xl hover:bg-green-400 transition shadow-lg shadow-brandGreen/20 flex items-center justify-center gap-2 text-base cursor-pointer">
                 <i class="fa-solid fa-play"></i> Mulai Pre-Test
               </button>
             </div>
           </div>
 
           <div id="pretest-quiz-section" class="hidden space-y-6">
-            <div class="bg-brandGray border border-white/10 rounded-2xl p-4 md:p-5 flex items-center justify-between flex-wrap gap-3">
+            <div class="bg-brandGray border border-white/5 rounded-2xl p-4 md:p-5 flex items-center justify-between flex-wrap gap-3">
               <div class="flex items-center gap-3">
                 <div class="w-11 h-11 rounded-xl bg-brandGreen/15 border border-brandGreen/30 flex items-center justify-center text-brandGreen text-lg font-bold shrink-0">
                   <i class="fa-solid fa-user-check"></i>
@@ -565,10 +709,10 @@
                   <p class="text-white font-bold text-base"><span id="display-nama">-</span> • Absen <span id="display-absen">-</span></p>
                 </div>
               </div>
-              <button onclick="cancelPretest()" class="text-xs text-textGray hover:text-rose-400 transition flex items-center gap-1.5 font-semibold"><i class="fa-solid fa-rotate-left"></i> Ganti Identitas</button>
+              <button onclick="cancelPretest()" class="text-xs text-textGray hover:text-rose-400 transition flex items-center gap-1.5 font-semibold cursor-pointer"><i class="fa-solid fa-rotate-left"></i> Ganti Identitas</button>
             </div>
 
-            <div id="progress-container" class="bg-brandGray/90 backdrop-blur-md border border-white/10 rounded-2xl p-4 sticky top-2 z-40">
+            <div id="progress-container" class="bg-brandGray/90 backdrop-blur-md border border-white/5 rounded-2xl p-4 sticky top-2 z-40">
               <div class="flex items-center justify-between mb-2">
                 <span class="text-sm font-bold text-white flex items-center gap-2"> <i class="fa-solid fa-chart-simple text-brandGreen"></i> Progress Pengerjaan </span>
                 <span class="text-sm font-bold">
@@ -588,7 +732,7 @@
               <button
                 id="btn-submit"
                 onclick="submitQuiz()"
-                class="inline-flex items-center gap-3 px-8 py-3.5 bg-brandGreen text-black font-bold rounded-xl hover:bg-green-400 transition shadow-lg shadow-brandGreen/20 disabled:opacity-50 disabled:cursor-not-allowed"
+                class="inline-flex items-center gap-3 px-8 py-3.5 bg-brandGreen text-black font-bold rounded-xl hover:bg-green-400 transition shadow-lg shadow-brandGreen/20 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
               >
                 <i class="fa-solid fa-paper-plane"></i> Kumpulkan Jawaban
               </button>
@@ -629,273 +773,260 @@
         </div>
 
         <!-- ==================== TAB 1: MATERI LENGKAP ==================== -->
-        <div id="materi" class="tab-content hidden space-y-12">
+        <div id="materi" class="tab-content hidden space-y-10">
           <!-- BAGIAN 1: KONSEP DASAR ALGORITMA -->
-          <section class="bg-brandGray border border-white/10 rounded-3xl p-6 md:p-8 space-y-6">
-            <div class="space-y-6 relative z-10">
-              <div class="flex items-center gap-4 border-b border-white/10 pb-4">
-                <div class="w-12 h-12 rounded-2xl bg-brandGreen/10 flex items-center justify-center text-brandGreen text-2xl font-bold border border-brandGreen/20 shrink-0">
-                  <i class="fa-solid fa-cubes"></i>
-                </div>
-                <div>
-                  <span class="text-xs font-bold uppercase tracking-widest text-brandGreen">BAGIAN 1</span>
-                  <h2 class="text-2xl md:text-3xl font-bold text-white">Konsep Dasar Algoritma</h2>
-                </div>
+          <section class="bg-brandGray border border-white/5 rounded-3xl p-6 md:p-8 space-y-6">
+            <div class="flex items-center gap-3 border-b border-white/10 pb-4">
+              <div class="w-12 h-12 rounded-xl bg-brandGreen/10 flex items-center justify-center text-brandGreen text-2xl font-bold border border-brandGreen/20 shrink-0">
+                <i class="fa-solid fa-cubes"></i>
               </div>
+              <div>
+                <span class="text-xs font-bold uppercase tracking-widest text-brandGreen">Bagian 1</span>
+                <h2 class="text-2xl md:text-3xl font-bold text-white">Konsep Dasar Algoritma</h2>
+              </div>
+            </div>
 
-              <div class="space-y-4">
-                <h3 class="text-xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-circle-dot text-brandGreen text-sm"></i> 1. Pengertian Algoritma</h3>
-                <p class="text-textGray leading-relaxed">
-                  Secara sederhana, <strong class="text-white">Algoritma</strong> adalah urutan langkah-langkah logis, terstruktur, dan terbatas yang disusun secara sistematis untuk menyelesaikan suatu masalah atau mencapai tujuan tertentu.
+            <div class="space-y-4">
+              <h3 class="text-xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-circle-dot text-brandGreen text-sm"></i> 1. Pengertian Algoritma</h3>
+              <p class="text-textGray leading-relaxed">
+                Secara sederhana, <strong class="text-white">Algoritma</strong> adalah urutan langkah-langkah logis, terstruktur, dan terbatas yang disusun secara sistematis untuk menyelesaikan suatu masalah atau mencapai tujuan tertentu.
+              </p>
+
+              <div class="bg-black/40 border border-brandGreen/20 rounded-2xl p-5 space-y-3">
+                <h4 class="font-bold text-brandGreen flex items-center gap-2"><i class="fa-solid fa-utensils"></i> Analogi Kehidupan Sehari-hari: Membuat Mie Instan</h4>
+                <p class="text-sm text-gray-300">Pikirkan algoritma seperti resep masakan atau petunjuk merakit furnitur:</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm mt-2">
+                  <div class="bg-white/5 p-4 rounded-xl border border-white/5 space-y-1">
+                    <span class="text-xs text-brandGreen font-bold uppercase">Masalah / Input:</span>
+                    <p class="text-white font-medium">Ingin menyajikan Mie Instan siap makan.</p>
+                  </div>
+                  <div class="bg-white/5 p-4 rounded-xl border border-white/5 space-y-1">
+                    <span class="text-xs text-brandGreen font-bold uppercase">Langkah Algoritma:</span>
+                    <ol class="list-decimal list-inside text-gray-300 space-y-1">
+                      <li>Rebus 400 ml air hingga mendidih.</li>
+                      <li>Masukkan mie ke dalam air mendidih selama 3 menit.</li>
+                      <li>Tuang bumbu ke dalam piring.</li>
+                      <li>Tiriskan mie dan campur dengan bumbu di piring.</li>
+                      <li>Mie siap disajikan (Output).</li>
+                    </ol>
+                  </div>
+                </div>
+                <p class="text-xs text-amber-300 italic pt-1">
+                  ⚠️ <strong>Penting:</strong> Jika urutan diacak (misal: bumbu dituang sebelum air direbus, atau mie tidak direbus), hasilnya tidak akan sesuai. Komputer bekerja persis seperti ini: harus mengikuti instruksi yang berurutan
+                  dan logis.
                 </p>
-
-                <div class="bg-black/40 border border-brandGreen/20 rounded-2xl p-5 space-y-3">
-                  <h4 class="font-bold text-brandGreen flex items-center gap-2"><i class="fa-solid fa-utensils"></i> Analogi Kehidupan Sehari-hari: Membuat Mie Instan</h4>
-                  <p class="text-sm text-gray-300">Pikirkan algoritma seperti resep masakan atau petunjuk merakit furnitur:</p>
-                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm mt-2">
-                    <div class="bg-white/5 p-4 rounded-xl border border-white/5 space-y-1">
-                      <span class="text-xs text-brandGreen font-bold uppercase">Masalah / Input:</span>
-                      <p class="text-white font-medium">Ingin menyajikan Mie Instan siap makan.</p>
-                    </div>
-                    <div class="bg-white/5 p-4 rounded-xl border border-white/5 space-y-1">
-                      <span class="text-xs text-brandGreen font-bold uppercase">Langkah Algoritma:</span>
-                      <ol class="list-decimal list-inside text-gray-300 space-y-1">
-                        <li>Rebus 400 ml air hingga mendidih.</li>
-                        <li>Masukkan mie ke dalam air mendidih selama 3 menit.</li>
-                        <li>Tuang bumbu ke dalam piring.</li>
-                        <li>Tiriskan mie dan campur dengan bumbu di piring.</li>
-                        <li>Mie siap disajikan (Output).</li>
-                      </ol>
-                    </div>
-                  </div>
-                  <p class="text-xs text-amber-300 italic pt-1">
-                    ⚠️ <strong>Penting:</strong> Jika urutan diacak (misal: bumbu dituang sebelum air direbus, atau mie tidak direbus), hasilnya tidak akan sesuai. Komputer bekerja persis seperti ini: harus mengikuti instruksi yang
-                    berurutan dan logis.
-                  </p>
-                </div>
               </div>
+            </div>
 
-              <div class="space-y-4 pt-2">
-                <h3 class="text-xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-circle-dot text-brandGreen text-sm"></i> 2. Ciri-Ciri Algoritma yang Baik</h3>
-                <p class="text-textGray">Menurut ilmuwan komputer terkenal <strong>Donald E. Knuth</strong>, sebuah algoritma yang baik harus memenuhi 5 ciri utama:</p>
+            <div class="space-y-4 pt-2">
+              <h3 class="text-xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-circle-dot text-brandGreen text-sm"></i> 2. Ciri-Ciri Algoritma yang Baik</h3>
+              <p class="text-textGray">Menurut ilmuwan komputer terkenal <strong class="text-white">Donald E. Knuth</strong>, sebuah algoritma yang baik harus memenuhi 5 ciri utama:</p>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  <div class="bg-white/5 border border-white/10 p-5 rounded-2xl">
-                    <div class="text-brandGreen text-xl font-bold mb-1"><i class="fa-solid fa-right-to-bracket mr-2"></i> Ada Input</div>
-                    <p class="text-sm text-textGray">Memiliki zero (0) atau lebih data yang dimasukkan untuk diproses oleh algoritma.</p>
-                  </div>
-                  <div class="bg-white/5 border border-white/10 p-5 rounded-2xl">
-                    <div class="text-brandGreen text-xl font-bold mb-1"><i class="fa-solid fa-right-from-bracket mr-2"></i> Ada Output</div>
-                    <p class="text-sm text-textGray">Menghasilkan minimal satu solusi / hasil akhir sebagai output pekerjaan.</p>
-                  </div>
-                  <div class="bg-white/5 border border-white/10 p-5 rounded-2xl">
-                    <div class="text-brandGreen text-xl font-bold mb-1"><i class="fa-solid fa-stopwatch mr-2"></i> Keterbatasan (Finiteness)</div>
-                    <p class="text-sm text-textGray">Algoritma harus berhenti setelah melakukan sejumlah langkah tertentu (tidak boleh infinite loop).</p>
-                  </div>
-                  <div class="bg-white/5 border border-white/10 p-5 rounded-2xl">
-                    <div class="text-brandGreen text-xl font-bold mb-1"><i class="fa-solid fa-bullseye mr-2"></i> Kepastian (Definiteness)</div>
-                    <p class="text-sm text-textGray">Setiap langkah terdefinisi secara jelas, presisi, dan tidak menimbulkan makna ganda (ambigu).</p>
-                  </div>
-                  <div class="bg-white/5 border border-white/10 p-5 rounded-2xl sm:col-span-2 lg:col-span-1">
-                    <div class="text-brandGreen text-xl font-bold mb-1"><i class="fa-solid fa-gauge-high mr-2"></i> Efektif (Effectiveness)</div>
-                    <p class="text-sm text-textGray">Setiap instruksi harus sederhana dan dapat dikerjakan secara rasional dalam waktu yang masuk akal.</p>
-                  </div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div class="bg-white/5 border border-white/5 p-5 rounded-2xl">
+                  <div class="text-brandGreen text-xl font-bold mb-1"><i class="fa-solid fa-right-to-bracket mr-2"></i> Ada Input</div>
+                  <p class="text-sm text-textGray">Memiliki zero (0) atau lebih data yang dimasukkan untuk diproses oleh algoritma.</p>
+                </div>
+                <div class="bg-white/5 border border-white/5 p-5 rounded-2xl">
+                  <div class="text-brandGreen text-xl font-bold mb-1"><i class="fa-solid fa-right-from-bracket mr-2"></i> Ada Output</div>
+                  <p class="text-sm text-textGray">Menghasilkan minimal satu solusi / hasil akhir sebagai output pekerjaan.</p>
+                </div>
+                <div class="bg-white/5 border border-white/5 p-5 rounded-2xl">
+                  <div class="text-brandGreen text-xl font-bold mb-1"><i class="fa-solid fa-stopwatch mr-2"></i> Keterbatasan</div>
+                  <p class="text-sm text-textGray">Algoritma harus berhenti setelah melakukan sejumlah langkah tertentu (tidak boleh infinite loop).</p>
+                </div>
+                <div class="bg-white/5 border border-white/5 p-5 rounded-2xl">
+                  <div class="text-brandGreen text-xl font-bold mb-1"><i class="fa-solid fa-bullseye mr-2"></i> Kepastian</div>
+                  <p class="text-sm text-textGray">Setiap langkah terdefinisi secara jelas, presisi, dan tidak menimbulkan makna ganda (ambigu).</p>
+                </div>
+                <div class="bg-white/5 border border-white/5 p-5 rounded-2xl sm:col-span-2 lg:col-span-1">
+                  <div class="text-brandGreen text-xl font-bold mb-1"><i class="fa-solid fa-gauge-high mr-2"></i> Efektif</div>
+                  <p class="text-sm text-textGray">Setiap instruksi harus sederhana dan dapat dikerjakan secara rasional dalam waktu yang masuk akal.</p>
                 </div>
               </div>
             </div>
           </section>
 
           <!-- BAGIAN 2: DIAGRAM ALIR (FLOWCHART) -->
-          <section class="bg-brandGray border border-white/10 rounded-3xl p-6 md:p-8 space-y-6">
-            <div class="space-y-6 relative z-10">
-              <div class="flex items-center gap-4 border-b border-white/10 pb-4">
-                <div class="w-12 h-12 rounded-2xl bg-sky-500/10 flex items-center justify-center text-sky-400 text-2xl font-bold border border-sky-500/20 shrink-0">
-                  <i class="fa-solid fa-project-diagram"></i>
-                </div>
-                <div>
-                  <span class="text-xs font-bold uppercase tracking-widest text-sky-400">BAGIAN 2</span>
-                  <h2 class="text-2xl md:text-3xl font-bold text-white">Diagram Alir (Flowchart)</h2>
-                </div>
+          <section class="bg-brandGray border border-white/5 rounded-3xl p-6 md:p-8 space-y-6">
+            <div class="flex items-center gap-3 border-b border-white/10 pb-4">
+              <div class="w-12 h-12 rounded-xl bg-sky-500/10 flex items-center justify-center text-sky-400 text-2xl font-bold border border-sky-500/20 shrink-0">
+                <i class="fa-solid fa-project-diagram"></i>
+              </div>
+              <div>
+                <span class="text-xs font-bold uppercase tracking-widest text-sky-400">Bagian 2</span>
+                <h2 class="text-2xl md:text-3xl font-bold text-white">Diagram Alir (Flowchart)</h2>
+              </div>
+            </div>
+
+            <div class="space-y-3">
+              <h3 class="text-xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-circle-dot text-sky-400 text-sm"></i> 1. Pengertian Flowchart</h3>
+              <p class="text-textGray leading-relaxed">
+                <strong class="text-white">Flowchart (Diagram Alir)</strong> adalah representasi visual/grafis dari alur langkah-langkah algoritma menggunakan simbol-simbol geometris standar. Flowchart membantu developer melihat alur
+                logika, keputusan, dan pemrosesan data secara intuitif.
+              </p>
+            </div>
+
+            <div class="space-y-4">
+              <h3 class="text-xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-circle-dot text-sky-400 text-sm"></i> 2. Simbol-Simbol Standar Flowchart</h3>
+
+              <div class="overflow-x-auto border border-white/10 rounded-2xl">
+                <table class="w-full text-left text-sm text-gray-300">
+                  <thead class="bg-white/5 text-white uppercase text-xs font-bold border-b border-white/10">
+                    <tr>
+                      <th class="p-4 w-[140px] text-center">Simbol</th>
+                      <th class="p-4 w-1/4">Nama</th>
+                      <th class="p-4">Deskripsi</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-white/5 font-sans">
+                    <tr class="hover:bg-white/[0.02]">
+                      <td class="p-4">
+                        <div class="flex items-center justify-center">
+                          <svg width="90" height="30" viewBox="0 0 90 30" xmlns="http://www.w3.org/2000/svg">
+                            <line x1="5" y1="15" x2="80" y2="15" stroke="#00e676" stroke-width="2" stroke-linecap="round" />
+                            <polygon points="75,8 88,15 75,22" fill="#00e676" />
+                          </svg>
+                        </div>
+                      </td>
+                      <td class="p-4 font-bold text-white">Garis Alir <span class="block text-xs font-normal text-gray-400 italic">(flowline)</span></td>
+                      <td class="p-4">Arah yang menunjukkan aliran program dari awal hingga akhir.</td>
+                    </tr>
+
+                    <tr class="hover:bg-white/[0.02]">
+                      <td class="p-4">
+                        <div class="flex items-center justify-center">
+                          <svg width="100" height="34" viewBox="0 0 100 34" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="2" y="2" width="96" height="30" rx="15" ry="15" fill="none" stroke="#00e676" stroke-width="2" />
+                          </svg>
+                        </div>
+                      </td>
+                      <td class="p-4 font-bold text-white">Terminator</td>
+                      <td class="p-4">Titik awal atau titik akhir suatu program.</td>
+                    </tr>
+
+                    <tr class="hover:bg-white/[0.02]">
+                      <td class="p-4">
+                        <div class="flex items-center justify-center">
+                          <svg width="100" height="34" viewBox="0 0 100 34" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="2" y="2" width="96" height="30" fill="none" stroke="#fbbf24" stroke-width="2" />
+                          </svg>
+                        </div>
+                      </td>
+                      <td class="p-4 font-bold text-white">Proses</td>
+                      <td class="p-4">Suatu kegiatan komputasi yang dilakukan oleh program: misalnya operasi aritmatika.</td>
+                    </tr>
+
+                    <tr class="hover:bg-white/[0.02]">
+                      <td class="p-4">
+                        <div class="flex items-center justify-center">
+                          <svg width="70" height="70" viewBox="0 0 70 70" xmlns="http://www.w3.org/2000/svg">
+                            <polygon points="35,3 67,35 35,67 3,35" fill="none" stroke="#fb7185" stroke-width="2" />
+                          </svg>
+                        </div>
+                      </td>
+                      <td class="p-4 font-bold text-white">Keputusan</td>
+                      <td class="p-4">Merupakan titik percabangan yang salah satu cabangnya dapat dilalui oleh program berdasarkan suatu kondisi.</td>
+                    </tr>
+
+                    <tr class="hover:bg-white/[0.02]">
+                      <td class="p-4">
+                        <div class="flex items-center justify-center">
+                          <svg width="110" height="40" viewBox="0 0 110 40" xmlns="http://www.w3.org/2000/svg">
+                            <polygon points="20,4 106,4 90,36 4,36" fill="none" stroke="#38bdf8" stroke-width="2" />
+                          </svg>
+                        </div>
+                      </td>
+                      <td class="p-4 font-bold text-white">Masukan / Keluaran</td>
+                      <td class="p-4">Melambangkan titik saat program akan menerima suatu data atau menghasilkan suatu informasi.</td>
+                    </tr>
+
+                    <tr class="hover:bg-white/[0.02]">
+                      <td class="p-4">
+                        <div class="flex items-center justify-center">
+                          <svg width="100" height="34" viewBox="0 0 100 34" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="2" y="2" width="96" height="30" fill="none" stroke="#a78bfa" stroke-width="2" />
+                            <line x1="14" y1="2" x2="14" y2="32" stroke="#a78bfa" stroke-width="2" />
+                            <line x1="86" y1="2" x2="86" y2="32" stroke="#a78bfa" stroke-width="2" />
+                          </svg>
+                        </div>
+                      </td>
+                      <td class="p-4 font-bold text-white">Subprogram</td>
+                      <td class="p-4">Melambangkan suatu kegiatan atau proses lain yang telah didefinisikan sebelumnya.</td>
+                    </tr>
+
+                    <tr class="hover:bg-white/[0.02]">
+                      <td class="p-4">
+                        <div class="flex items-center justify-center">
+                          <svg width="50" height="50" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="25" cy="25" r="22" fill="none" stroke="#facc15" stroke-width="2" />
+                          </svg>
+                        </div>
+                      </td>
+                      <td class="p-4 font-bold text-white">Penghubung dalam Halaman</td>
+                      <td class="p-4">Digunakan untuk menghubungkan suatu titik pada diagram alir ke titik lain pada halaman yang sama.</td>
+                    </tr>
+
+                    <tr class="hover:bg-white/[0.02]">
+                      <td class="p-4">
+                        <div class="flex items-center justify-center">
+                          <svg width="80" height="50" viewBox="0 0 80 50" xmlns="http://www.w3.org/2000/svg">
+                            <polygon points="8,4 72,4 72,34 40,46 8,34" fill="none" stroke="#34d399" stroke-width="2" />
+                          </svg>
+                        </div>
+                      </td>
+                      <td class="p-4 font-bold text-white">Penghubung antar Halaman</td>
+                      <td class="p-4">Digunakan untuk menghubungkan suatu titik pada diagram alir ke titik lain pada halaman yang berbeda. Digunakan apabila diagram cukup kompleks sehingga tidak dapat digambar dalam satu halaman.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="space-y-4">
+              <h3 class="text-xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-circle-dot text-sky-400 text-sm"></i> 3. Studi Kasus Flowchart: Membuat Mie Instan</h3>
+              <p class="text-textGray"><strong>Aturan Soal:</strong> Bayangkan kamu ingin membuat mie instan. Susunlah diagram alir berdasarkan langkah-langkah berikut agar flowchart mudah dipahami oleh orang lain.</p>
+
+              <div class="bg-black/40 border border-brandGreen/20 rounded-2xl p-5 space-y-3">
+                <h4 class="font-bold text-brandGreen flex items-center gap-2"><i class="fa-solid fa-list-ol"></i> Langkah Algoritma Membuat Mie Instan</h4>
+                <ol class="list-decimal list-inside text-gray-300 space-y-1.5 text-sm">
+                  <li>Rebus 400 ml air hingga mendidih.</li>
+                  <li>Masukkan mie ke dalam air mendidih selama 3 menit.</li>
+                  <li>Tuang bumbu ke dalam piring.</li>
+                  <li>Tiriskan mie dan campur dengan bumbu di piring.</li>
+                  <li>Mie siap disajikan (Output).</li>
+                </ol>
               </div>
 
-              <div class="space-y-3">
-                <h3 class="text-xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-circle-dot text-sky-400 text-sm"></i> 1. Pengertian Flowchart</h3>
-                <p class="text-textGray leading-relaxed">
-                  <strong class="text-white">Flowchart (Diagram Alir)</strong> adalah representasi visual/grafis dari alur langkah-langkah algoritma menggunakan simbol-simbol geometris standar. Flowchart membantu developer melihat alur
-                  logika, keputusan, dan pemrosesan data secara intuitif.
-                </p>
+              <div class="flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-textGray bg-white/5 border border-white/10 rounded-xl px-4 py-3">
+                <span class="flex items-center gap-2"> <span class="inline-block w-6 h-3 rounded-full border-2 border-brandGreen"></span> Terminator </span>
+                <span class="flex items-center gap-2"> <span class="inline-block w-6 h-3 border-2 border-sky-400" style="transform: skewX(-15deg)"></span> Input / Output </span>
+                <span class="flex items-center gap-2"> <span class="inline-block w-6 h-3 border-2 border-amber-400"></span> Proses </span>
               </div>
 
-              <div class="space-y-4">
-                <h3 class="text-xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-circle-dot text-sky-400 text-sm"></i> 2. Simbol-Simbol Standar Flowchart</h3>
+              <div class="bg-[#0d1117] border border-white/10 rounded-2xl p-6 md:p-10 overflow-x-auto">
+                <div class="text-gray-500 mb-3 font-mono text-xs text-center">// Canvas Kosong — Rangkai Flowchart-mu di Sini</div>
 
-                <div class="overflow-x-auto border border-white/10 rounded-2xl">
-                  <table class="w-full text-left text-sm text-gray-300">
-                    <thead class="bg-white/5 text-white uppercase text-xs font-bold border-b border-white/10">
-                      <tr>
-                        <th class="p-4 w-[140px] text-center">Simbol</th>
-                        <th class="p-4 w-1/4">Nama</th>
-                        <th class="p-4">Deskripsi</th>
-                      </tr>
-                    </thead>
-                    <tbody class="divide-y divide-white/5 font-sans">
-                      <tr class="hover:bg-white/[0.02]">
-                        <td class="p-4">
-                          <div class="flex items-center justify-center">
-                            <svg width="90" height="30" viewBox="0 0 90 30" xmlns="http://www.w3.org/2000/svg">
-                              <line x1="5" y1="15" x2="80" y2="15" stroke="#00e676" stroke-width="2" stroke-linecap="round" />
-                              <polygon points="75,8 88,15 75,22" fill="#00e676" />
-                            </svg>
-                          </div>
-                        </td>
-                        <td class="p-4 font-bold text-white">Garis Alir <span class="block text-xs font-normal text-gray-400 italic">(flowline)</span></td>
-                        <td class="p-4">Arah yang menunjukkan aliran program dari awal hingga akhir.</td>
-                      </tr>
-
-                      <tr class="hover:bg-white/[0.02]">
-                        <td class="p-4">
-                          <div class="flex items-center justify-center">
-                            <svg width="100" height="34" viewBox="0 0 100 34" xmlns="http://www.w3.org/2000/svg">
-                              <rect x="2" y="2" width="96" height="30" rx="15" ry="15" fill="none" stroke="#00e676" stroke-width="2" />
-                            </svg>
-                          </div>
-                        </td>
-                        <td class="p-4 font-bold text-white">Terminator</td>
-                        <td class="p-4">Titik awal atau titik akhir suatu program.</td>
-                      </tr>
-
-                      <tr class="hover:bg-white/[0.02]">
-                        <td class="p-4">
-                          <div class="flex items-center justify-center">
-                            <svg width="100" height="34" viewBox="0 0 100 34" xmlns="http://www.w3.org/2000/svg">
-                              <rect x="2" y="2" width="96" height="30" fill="none" stroke="#fbbf24" stroke-width="2" />
-                            </svg>
-                          </div>
-                        </td>
-                        <td class="p-4 font-bold text-white">Proses</td>
-                        <td class="p-4">Suatu kegiatan komputasi yang dilakukan oleh program: misalnya operasi aritmatika.</td>
-                      </tr>
-
-                      <tr class="hover:bg-white/[0.02]">
-                        <td class="p-4">
-                          <div class="flex items-center justify-center">
-                            <svg width="70" height="70" viewBox="0 0 70 70" xmlns="http://www.w3.org/2000/svg">
-                              <polygon points="35,3 67,35 35,67 3,35" fill="none" stroke="#fb7185" stroke-width="2" />
-                            </svg>
-                          </div>
-                        </td>
-                        <td class="p-4 font-bold text-white">Keputusan</td>
-                        <td class="p-4">Merupakan titik percabangan yang salah satu cabangnya dapat dilalui oleh program berdasarkan suatu kondisi.</td>
-                      </tr>
-
-                      <tr class="hover:bg-white/[0.02]">
-                        <td class="p-4">
-                          <div class="flex items-center justify-center">
-                            <svg width="110" height="40" viewBox="0 0 110 40" xmlns="http://www.w3.org/2000/svg">
-                              <polygon points="20,4 106,4 90,36 4,36" fill="none" stroke="#38bdf8" stroke-width="2" />
-                            </svg>
-                          </div>
-                        </td>
-                        <td class="p-4 font-bold text-white">Masukan <span class="text-xs font-normal text-gray-400 italic">(Input)</span> / Keluaran <span class="text-xs font-normal text-gray-400 italic">(Output)</span></td>
-                        <td class="p-4">Melambangkan titik saat program akan menerima suatu data atau menghasilkan suatu informasi.</td>
-                      </tr>
-
-                      <tr class="hover:bg-white/[0.02]">
-                        <td class="p-4">
-                          <div class="flex items-center justify-center">
-                            <svg width="100" height="34" viewBox="0 0 100 34" xmlns="http://www.w3.org/2000/svg">
-                              <rect x="2" y="2" width="96" height="30" fill="none" stroke="#a78bfa" stroke-width="2" />
-                              <line x1="14" y1="2" x2="14" y2="32" stroke="#a78bfa" stroke-width="2" />
-                              <line x1="86" y1="2" x2="86" y2="32" stroke="#a78bfa" stroke-width="2" />
-                            </svg>
-                          </div>
-                        </td>
-                        <td class="p-4 font-bold text-white">Subprogram</td>
-                        <td class="p-4">Melambangkan suatu kegiatan atau proses lain yang telah didefinisikan sebelumnya.</td>
-                      </tr>
-
-                      <tr class="hover:bg-white/[0.02]">
-                        <td class="p-4">
-                          <div class="flex items-center justify-center">
-                            <svg width="50" height="50" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
-                              <circle cx="25" cy="25" r="22" fill="none" stroke="#facc15" stroke-width="2" />
-                            </svg>
-                          </div>
-                        </td>
-                        <td class="p-4 font-bold text-white">Penghubung dalam Halaman</td>
-                        <td class="p-4">Digunakan untuk menghubungkan suatu titik pada diagram alir ke titik lain pada halaman yang sama.</td>
-                      </tr>
-
-                      <tr class="hover:bg-white/[0.02]">
-                        <td class="p-4">
-                          <div class="flex items-center justify-center">
-                            <svg width="80" height="50" viewBox="0 0 80 50" xmlns="http://www.w3.org/2000/svg">
-                              <polygon points="8,4 72,4 72,34 40,46 8,34" fill="none" stroke="#34d399" stroke-width="2" />
-                            </svg>
-                          </div>
-                        </td>
-                        <td class="p-4 font-bold text-white">Penghubung antar Halaman</td>
-                        <td class="p-4">
-                          Digunakan untuk menghubungkan suatu titik pada diagram alir ke titik lain pada halaman yang berbeda. Digunakan apabila diagram lain cukup kompleks sehingga tidak dapat digambar dalam satu halaman.
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-
-              <!-- ============ 3. STUDI KASUS FLOWCHART (REVISI) ============ -->
-              <div class="space-y-4">
-                <h3 class="text-xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-circle-dot text-sky-400 text-sm"></i> 3. Studi Kasus Flowchart: Membuat Mie Instan</h3>
-                <p class="text-textGray"><strong>Aturan Soal:</strong> Bayangkan kamu ingin membuat mie instan. Susunlah diagram alir berdasarkan langkah-langkah berikut agar flowchart mudah dipahami oleh orang lain.</p>
-
-                <!-- Langkah Algoritma -->
-                <div class="bg-black/40 border border-brandGreen/20 rounded-2xl p-5 space-y-3">
-                  <h4 class="font-bold text-brandGreen flex items-center gap-2"><i class="fa-solid fa-list-ol"></i> Langkah Algoritma Membuat Mie Instan</h4>
-                  <ol class="list-decimal list-inside text-gray-300 space-y-1.5 text-sm">
-                    <li>Rebus 400 ml air hingga mendidih.</li>
-                    <li>Masukkan mie ke dalam air mendidih selama 3 menit.</li>
-                    <li>Tuang bumbu ke dalam piring.</li>
-                    <li>Tiriskan mie dan campur dengan bumbu di piring.</li>
-                    <li>Mie siap disajikan (Output).</li>
-                  </ol>
+                <div class="bg-brandGreen/5 border border-brandGreen/20 rounded-xl p-4 mb-6 max-w-2xl mx-auto">
+                  <p class="text-xs md:text-sm text-textGray text-center leading-relaxed">
+                    <i class="fa-solid fa-lightbulb text-brandGreen mr-1"></i>
+                    <strong class="text-white">Tugasmu:</strong> Rangkai flowchart membuat mie instan menggunakan <strong class="text-brandGreen">Flowchart Playground</strong> di tab <strong class="text-white">"Simulasi Flowchart"</strong>.
+                  </p>
                 </div>
 
-                <!-- Legend -->
-                <div class="flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-textGray bg-white/5 border border-white/10 rounded-xl px-4 py-3">
-                  <span class="flex items-center gap-2"> <span class="inline-block w-6 h-3 rounded-full border-2 border-brandGreen"></span> Terminator </span>
-                  <span class="flex items-center gap-2"> <span class="inline-block w-6 h-3 border-2 border-sky-400" style="transform: skewX(-15deg)"></span> Input / Output </span>
-                  <span class="flex items-center gap-2"> <span class="inline-block w-6 h-3 border-2 border-amber-400"></span> Proses </span>
-                </div>
-
-                <!-- Canvas Kosong untuk Praktik Siswa -->
-                <div class="bg-[#0d1117] border border-white/10 rounded-2xl p-6 md:p-10 overflow-x-auto">
-                  <div class="text-gray-500 mb-3 font-mono text-xs text-center">// Canvas Kosong — Rangkai Flowchart-mu di Sini</div>
-
-                  <!-- Petunjuk singkat -->
-                  <div class="bg-brandGreen/5 border border-brandGreen/20 rounded-xl p-4 mb-6 max-w-2xl mx-auto">
-                    <p class="text-xs md:text-sm text-textGray text-center leading-relaxed">
-                      <i class="fa-solid fa-lightbulb text-brandGreen mr-1"></i>
-                      <strong class="text-white">Tugasmu:</strong> Rangkai flowchart membuat mie instan menggunakan <strong class="text-brandGreen">Flowchart Playground</strong> di tab
-                      <strong class="text-white">"Simulasi Flowchart"</strong>.
-                    </p>
-                  </div>
-
-                  <!-- Placeholder Canvas Kosong -->
-                  <div
-                    class="bg-black/30 border-2 border-dashed border-white/15 rounded-2xl min-h-[400px] flex flex-col items-center justify-center text-center px-6 py-12"
-                    style="background-image: radial-gradient(circle, rgba(255, 255, 255, 0.08) 1px, transparent 1px); background-size: 24px 24px"
-                  >
-                    <i class="fa-solid fa-diagram-project text-6xl text-white/10 mb-4"></i>
-                    <p class="text-lg font-semibold text-white/40 mb-2">Canvas Kosong</p>
-                    <p class="text-sm text-white/30 max-w-md leading-relaxed">
-                      Di sinilah flowchart hasil rangkaianmu akan ditampilkan.<br />
-                      Klik tombol di bawah untuk mulai merangkai.
-                    </p>
-                    <button onclick="switchToTab('simulasi')" class="mt-6 inline-flex items-center gap-2 px-6 py-3 bg-brandGreen text-black font-bold rounded-xl hover:bg-green-400 transition shadow-lg shadow-brandGreen/20">
-                      <i class="fa-solid fa-wand-magic-sparkles"></i> Buka Flowchart Playground
-                    </button>
-                  </div>
+                <div
+                  class="bg-black/30 border-2 border-dashed border-white/15 rounded-2xl min-h-[400px] flex flex-col items-center justify-center text-center px-6 py-12"
+                  style="background-image: radial-gradient(circle, rgba(255, 255, 255, 0.08) 1px, transparent 1px); background-size: 24px 24px"
+                >
+                  <i class="fa-solid fa-diagram-project text-6xl text-white/10 mb-4"></i>
+                  <p class="text-lg font-semibold text-white/40 mb-2">Canvas Kosong</p>
+                  <p class="text-sm text-white/30 max-w-md leading-relaxed">
+                    Di sinilah flowchart hasil rangkaianmu akan ditampilkan.<br />
+                    Klik tombol di bawah untuk mulai merangkai.
+                  </p>
+                  <button onclick="switchToTab('simulasi')" class="mt-6 inline-flex items-center gap-2 px-6 py-3 bg-brandGreen text-black font-bold rounded-xl hover:bg-green-400 transition shadow-lg shadow-brandGreen/20 cursor-pointer">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> Buka Flowchart Playground
+                  </button>
                 </div>
               </div>
             </div>
@@ -933,11 +1064,11 @@
                   <button
                     id="btn-next-step"
                     onclick="nextSimulationStep()"
-                    class="w-full py-3.5 bg-brandGreen text-black font-bold rounded-xl hover:bg-green-400 transition shadow-lg shadow-brandGreen/20 flex items-center justify-center gap-2"
+                    class="w-full py-3.5 bg-brandGreen text-black font-bold rounded-xl hover:bg-green-400 transition shadow-lg shadow-brandGreen/20 flex items-center justify-center gap-2 cursor-pointer"
                   >
                     <i class="fa-solid fa-forward-step"></i> Mulai / Langkah Selanjutnya
                   </button>
-                  <button onclick="resetSimulation()" class="w-full py-2.5 bg-white/5 border border-white/10 text-gray-300 font-bold rounded-xl hover:bg-red-500/20 hover:text-red-400 transition">
+                  <button onclick="resetSimulation()" class="w-full py-2.5 bg-white/5 border border-white/10 text-gray-300 font-bold rounded-xl hover:bg-red-500/20 hover:text-red-400 transition cursor-pointer">
                     <i class="fa-solid fa-rotate-left"></i> Reset Simulator
                   </button>
                 </div>
@@ -1012,14 +1143,20 @@
               <button
                 id="btn-connect-mode"
                 onclick="toggleConnectMode()"
-                class="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-sm font-semibold hover:bg-purple-500/20 hover:border-purple-500/50 hover:text-purple-300 transition"
+                class="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-sm font-semibold hover:bg-purple-500/20 hover:border-purple-500/50 hover:text-purple-300 transition cursor-pointer"
               >
                 <i class="fa-solid fa-link"></i> <span id="connect-mode-label">Connect Mode: OFF</span>
               </button>
-              <button onclick="deleteSelected()" class="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-sm font-semibold hover:bg-rose-500/20 hover:border-rose-500/50 hover:text-rose-300 transition">
+              <button
+                onclick="deleteSelected()"
+                class="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-sm font-semibold hover:bg-rose-500/20 hover:border-rose-500/50 hover:text-rose-300 transition cursor-pointer"
+              >
                 <i class="fa-solid fa-trash"></i> Hapus Terpilih
               </button>
-              <button onclick="clearPlayground()" class="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-sm font-semibold hover:bg-amber-500/20 hover:border-amber-500/50 hover:text-amber-300 transition">
+              <button
+                onclick="clearPlayground()"
+                class="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-sm font-semibold hover:bg-amber-500/20 hover:border-amber-500/50 hover:text-amber-300 transition cursor-pointer"
+              >
                 <i class="fa-solid fa-broom"></i> Bersihkan Semua
               </button>
               <div id="connect-hint" class="hidden text-xs text-purple-300 font-semibold ml-auto items-center gap-1.5"><i class="fa-solid fa-hand-pointer animate-pulse"></i> Klik simbol pertama sebagai titik awal panah...</div>
@@ -1172,10 +1309,6 @@
                   </li>
                   <li class="flex items-start gap-2">
                     <i class="fa-solid fa-circle text-[6px] text-brandGreen mt-2.5 shrink-0"></i>
-                    <span>Berperan penting dalam memutuskan langkah atau fungsionalitas program yang melibatkan <strong class="text-white">banyak orang sekaligus</strong>.</span>
-                  </li>
-                  <li class="flex items-start gap-2">
-                    <i class="fa-solid fa-circle text-[6px] text-brandGreen mt-2.5 shrink-0"></i>
                     <span>Berfungsi menyajikan alur proses secara <strong class="text-white">jelas dan ringkas</strong> untuk meminimalkan salah penafsiran.</span>
                   </li>
                   <li class="flex items-start gap-2">
@@ -1216,7 +1349,7 @@
                       <i class="fa-solid fa-arrow-right text-brandGreen text-sm"></i>
                     </div>
                     <div class="min-w-0">
-                      <p class="font-bold text-white text-sm">Flow / Connecting Line</p>
+                      <p class="font-bold text-white text-sm">Flow Line</p>
                       <p class="text-xs text-textGray leading-snug mt-0.5">Menghubungkan antara simbol satu dengan simbol lainnya.</p>
                     </div>
                   </div>
@@ -1246,7 +1379,7 @@
                       <i class="fa-solid fa-play text-brandGreen text-xs"></i>
                     </div>
                     <div class="min-w-0">
-                      <p class="font-bold text-white text-sm">Terminator <span class="text-xs text-textGray italic font-normal">(Bentuk Lonjong)</span></p>
+                      <p class="font-bold text-white text-sm">Terminator</p>
                       <p class="text-xs text-textGray leading-snug mt-0.5">Menandakan <strong class="text-white">awal (start)</strong> atau <strong class="text-white">akhir (stop)</strong> suatu program.</p>
                     </div>
                   </div>
@@ -1256,7 +1389,7 @@
                       <i class="fa-solid fa-gears text-amber-400 text-sm"></i>
                     </div>
                     <div class="min-w-0">
-                      <p class="font-bold text-white text-sm">Process <span class="text-xs text-textGray italic font-normal">(Persegi Panjang)</span></p>
+                      <p class="font-bold text-white text-sm">Process</p>
                       <p class="text-xs text-textGray leading-snug mt-0.5">Menyatakan <strong class="text-white">proses</strong> yang dilaksanakan oleh komputer.</p>
                     </div>
                   </div>
@@ -1266,8 +1399,8 @@
                       <i class="fa-solid fa-code-branch text-rose-400 text-sm"></i>
                     </div>
                     <div class="min-w-0">
-                      <p class="font-bold text-white text-sm">Decision <span class="text-xs text-textGray italic font-normal">(Belah Ketupat)</span></p>
-                      <p class="text-xs text-textGray leading-snug mt-0.5">Menunjukkan <strong class="text-white">kondisi logika</strong> dengan dua kemungkinan jawaban (ya atau tidak).</p>
+                      <p class="font-bold text-white text-sm">Decision</p>
+                      <p class="text-xs text-textGray leading-snug mt-0.5">Menunjukkan <strong class="text-white">kondisi logika</strong> dengan dua kemungkinan jawaban.</p>
                     </div>
                   </div>
 
@@ -1276,7 +1409,7 @@
                       <i class="fa-solid fa-right-left text-sky-400 text-sm"></i>
                     </div>
                     <div class="min-w-0">
-                      <p class="font-bold text-white text-sm">Input / Output <span class="text-xs text-textGray italic font-normal">(Jajar Genjang)</span></p>
+                      <p class="font-bold text-white text-sm">Input / Output</p>
                       <p class="text-xs text-textGray leading-snug mt-0.5">Menyatakan proses <strong class="text-white">input data</strong> atau <strong class="text-white">output data</strong>.</p>
                     </div>
                   </div>
@@ -1286,7 +1419,7 @@
                       <i class="fa-solid fa-hand text-orange-400 text-sm"></i>
                     </div>
                     <div class="min-w-0">
-                      <p class="font-bold text-white text-sm">Manual Operation <span class="text-xs text-textGray italic font-normal">(Trapesium)</span></p>
+                      <p class="font-bold text-white text-sm">Manual Operation</p>
                       <p class="text-xs text-textGray leading-snug mt-0.5">Menyatakan proses yang <strong class="text-white">tidak dilakukan oleh komputer</strong>.</p>
                     </div>
                   </div>
@@ -1296,8 +1429,8 @@
                       <i class="fa-solid fa-file-lines text-blue-400 text-sm"></i>
                     </div>
                     <div class="min-w-0">
-                      <p class="font-bold text-white text-sm">Document <span class="text-xs text-textGray italic font-normal">(Persegi Berlekuk Bawah)</span></p>
-                      <p class="text-xs text-textGray leading-snug mt-0.5">Menyatakan input dari <strong class="text-white">dokumen fisik</strong> atau output yang perlu <strong class="text-white">dicetak</strong>.</p>
+                      <p class="font-bold text-white text-sm">Document</p>
+                      <p class="text-xs text-textGray leading-snug mt-0.5">Input dari <strong class="text-white">dokumen fisik</strong> atau output yang perlu <strong class="text-white">dicetak</strong>.</p>
                     </div>
                   </div>
 
@@ -1306,8 +1439,8 @@
                       <i class="fa-solid fa-layer-group text-violet-400 text-sm"></i>
                     </div>
                     <div class="min-w-0">
-                      <p class="font-bold text-white text-sm">Predefined Process <span class="text-xs text-textGray italic font-normal">(Persegi Bergaris Ganda)</span></p>
-                      <p class="text-xs text-textGray leading-snug mt-0.5">Menjalankan bagian <strong class="text-white">sub-program</strong> atau <strong class="text-white">prosedur</strong>.</p>
+                      <p class="font-bold text-white text-sm">Predefined Process</p>
+                      <p class="text-xs text-textGray leading-snug mt-0.5">Menjalankan bagian <strong class="text-white">sub-program</strong> atau prosedur.</p>
                     </div>
                   </div>
 
@@ -1326,7 +1459,7 @@
                       <i class="fa-solid fa-diamond text-pink-400 text-sm"></i>
                     </div>
                     <div class="min-w-0">
-                      <p class="font-bold text-white text-sm">Preparation <span class="text-xs text-textGray italic font-normal">(Prisma/Heksagon)</span></p>
+                      <p class="font-bold text-white text-sm">Preparation</p>
                       <p class="text-xs text-textGray leading-snug mt-0.5">Persediaan tempat penyimpanan untuk memberikan <strong class="text-white">nilai awal</strong>.</p>
                     </div>
                   </div>
@@ -1371,14 +1504,20 @@
                     </div>
                   </div>
 
-                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-                    <div class="bg-brandGreen/5 border border-brandGreen/25 rounded-lg p-3 space-y-1">
-                      <div class="flex items-center gap-2 text-brandGreen font-bold text-sm"><i class="fa-solid fa-check-circle"></i> Jika YA (sisa = 0)</div>
-                      <p class="text-xs text-textGray pl-6">Bilangan tersebut adalah <strong class="text-white">GENAP</strong>.</p>
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 items-start">
+                    <div class="bg-brandGreen/5 border border-brandGreen/25 rounded-lg p-3 flex items-start gap-2 self-start">
+                      <i class="fa-solid fa-check-circle text-brandGreen mt-0.5 shrink-0"></i>
+                      <div>
+                        <div class="text-brandGreen font-bold text-sm leading-tight">Jika YA (sisa = 0)</div>
+                        <p class="text-xs text-textGray mt-1 leading-snug">Bilangan tersebut adalah <strong class="text-white">GENAP</strong>.</p>
+                      </div>
                     </div>
-                    <div class="bg-rose-500/5 border border-rose-500/25 rounded-lg p-3 space-y-1">
-                      <div class="flex items-center gap-2 text-rose-400 font-bold text-sm"><i class="fa-solid fa-xmark-circle"></i> Jika TIDAK (sisa ≠ 0)</div>
-                      <p class="text-xs text-textGray pl-6">Bilangan tersebut adalah <strong class="text-white">GANJIL</strong>.</p>
+                    <div class="bg-rose-500/5 border border-rose-500/25 rounded-lg p-3 flex items-start gap-2 self-start">
+                      <i class="fa-solid fa-xmark-circle text-rose-400 mt-0.5 shrink-0"></i>
+                      <div>
+                        <div class="text-rose-400 font-bold text-sm leading-tight">Jika TIDAK (sisa ≠ 0)</div>
+                        <p class="text-xs text-textGray mt-1 leading-snug">Bilangan tersebut adalah <strong class="text-white">GANJIL</strong>.</p>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -1406,14 +1545,20 @@
                     </div>
                   </div>
 
-                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-                    <div class="bg-rose-500/5 border border-rose-500/25 rounded-lg p-3 space-y-1">
-                      <div class="flex items-center gap-2 text-rose-400 font-bold text-sm"><i class="fa-solid fa-rotate-left"></i> Jika SUDAH ADA</div>
-                      <p class="text-xs text-textGray pl-6">Alur <strong class="text-white">kembali (looping)</strong> ke tahap <em>Memasukkan data diri</em>.</p>
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 items-start">
+                    <div class="bg-rose-500/5 border border-rose-500/25 rounded-lg p-3 flex items-start gap-2 self-start">
+                      <i class="fa-solid fa-rotate-left text-rose-400 mt-0.5 shrink-0"></i>
+                      <div>
+                        <div class="text-rose-400 font-bold text-sm leading-tight">Jika SUDAH ADA</div>
+                        <p class="text-xs text-textGray mt-1 leading-snug">Alur <strong class="text-white">kembali (looping)</strong> ke tahap <em>Memasukkan data diri</em>.</p>
+                      </div>
                     </div>
-                    <div class="bg-brandGreen/5 border border-brandGreen/25 rounded-lg p-3 space-y-1">
-                      <div class="flex items-center gap-2 text-brandGreen font-bold text-sm"><i class="fa-solid fa-arrow-right"></i> Jika BELUM ADA</div>
-                      <p class="text-xs text-textGray pl-6">Alur lanjut ke <em>Memasukkan data ke sistem</em> → <strong class="text-white">Pendaftaran berhasil</strong> → <em>Selesai</em>.</p>
+                    <div class="bg-brandGreen/5 border border-brandGreen/25 rounded-lg p-3 flex items-start gap-2 self-start">
+                      <i class="fa-solid fa-arrow-right text-brandGreen mt-0.5 shrink-0"></i>
+                      <div>
+                        <div class="text-brandGreen font-bold text-sm leading-tight">Jika BELUM ADA</div>
+                        <p class="text-xs text-textGray mt-1 leading-snug">Alur lanjut ke <em>Memasukkan data ke sistem</em> → <strong class="text-white">Pendaftaran berhasil</strong> → <em>Selesai</em>.</p>
+                      </div>
                     </div>
                   </div>
 
@@ -1442,7 +1587,7 @@
                   <h4 class="font-bold text-white text-base mb-1">Kesimpulan</h4>
                   <p class="text-sm text-textGray leading-relaxed">
                     Flowchart adalah <strong class="text-white">jembatan komunikasi</strong> antara kebutuhan bisnis (non-teknis) dan implementasi teknis. Dengan simbol-simbol standar yang jelas, seluruh tim bisa memahami alur program
-                    <strong class="text-white">sebelum satu baris kode pun ditulis</strong>. Itulah mengapa flowchart menjadi alat wajib dalam perancangan sistem.
+                    <strong class="text-white">sebelum satu baris kode pun ditulis</strong>.
                   </p>
                 </div>
               </div>
@@ -1452,7 +1597,6 @@
 
         <!-- ==================== TAB 4: LEMBAR KERJA ==================== -->
         <div id="lembarkerja" class="tab-content hidden space-y-6">
-          <!-- Header -->
           <div class="bg-gradient-to-br from-brandGreen/10 via-brandGray to-brandGray border border-brandGreen/30 rounded-3xl p-6 md:p-8">
             <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brandGreen/15 border border-brandGreen/30 text-sm font-bold text-brandGreen mb-4">
               <i class="fa-solid fa-clipboard-list"></i> Tahap Akhir • Lembar Kerja &amp; Evaluasi
@@ -1461,31 +1605,24 @@
             <p class="text-textGray text-base md:text-lg max-w-3xl leading-relaxed">Selesaikan tiga tahap berikut secara berurutan untuk menutup modul ini. Kerjakan dengan jujur dan sungguh-sungguh ya! 💪</p>
           </div>
 
-          <!-- Alur Pengerjaan -->
-          <div class="bg-brandGray border border-white/10 rounded-2xl p-5 md:p-6">
+          <div class="bg-brandGray border border-white/5 rounded-3xl p-5 md:p-6">
             <div class="flex items-center justify-between flex-wrap gap-2 mb-5">
               <h3 class="font-bold text-white flex items-center gap-2"><i class="fa-solid fa-route text-brandGreen"></i> Alur Pengerjaan</h3>
               <span class="text-xs text-textGray bg-white/5 border border-white/10 px-3 py-1.5 rounded-full"> <i class="fa-solid fa-circle-info mr-1"></i> Kerjakan berurutan </span>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <!-- CARD 1: LKPD -->
               <a
                 href="lkpd.ap.html"
                 class="group block bg-gradient-to-br from-amber-500/5 to-transparent border border-amber-500/30 rounded-2xl p-5 md:p-6 hover:border-amber-500/60 hover:bg-amber-500/10 transition-all duration-300 transform hover:-translate-y-1 relative overflow-hidden"
               >
-                <!-- Step badge -->
                 <div class="absolute top-4 right-4 w-9 h-9 rounded-full bg-amber-500/20 border-2 border-amber-500/50 flex items-center justify-center text-amber-400 font-bold text-sm">1</div>
-
                 <div class="w-14 h-14 rounded-2xl bg-amber-500/15 border border-amber-500/40 flex items-center justify-center mb-4">
                   <i class="fa-solid fa-file-pen text-amber-400 text-2xl"></i>
                 </div>
-
                 <h4 class="text-lg font-bold text-white mb-2">LKPD</h4>
                 <p class="text-xs text-amber-400 font-bold uppercase tracking-wider mb-3">Lembar Kerja Peserta Didik</p>
-
                 <p class="text-sm text-textGray leading-relaxed mb-4">Studi kasus <strong class="text-white">Sistem Diskon Patbhe Mart</strong>. Rangkai algoritma, flowchart, dan analisis I-P-O secara berpasangan.</p>
-
                 <div class="flex items-center gap-2 text-xs text-textGray mb-4">
                   <i class="fa-solid fa-clock text-amber-400"></i>
                   <span>±30 menit</span>
@@ -1493,26 +1630,20 @@
                   <i class="fa-solid fa-users text-amber-400"></i>
                   <span>2 orang</span>
                 </div>
-
                 <div class="inline-flex items-center gap-2 text-sm font-bold text-amber-400 group-hover:gap-3 transition-all">Kerjakan LKPD <i class="fa-solid fa-arrow-right"></i></div>
               </a>
 
-              <!-- CARD 2: POST-TEST -->
               <a
                 href="posttest-ap.html"
                 class="group block bg-gradient-to-br from-sky-500/5 to-transparent border border-sky-500/30 rounded-2xl p-5 md:p-6 hover:border-sky-500/60 hover:bg-sky-500/10 transition-all duration-300 transform hover:-translate-y-1 relative overflow-hidden"
               >
                 <div class="absolute top-4 right-4 w-9 h-9 rounded-full bg-sky-500/20 border-2 border-sky-500/50 flex items-center justify-center text-sky-400 font-bold text-sm">2</div>
-
                 <div class="w-14 h-14 rounded-2xl bg-sky-500/15 border border-sky-500/40 flex items-center justify-center mb-4">
                   <i class="fa-solid fa-clipboard-check text-sky-400 text-2xl"></i>
                 </div>
-
                 <h4 class="text-lg font-bold text-white mb-2">Post-Test</h4>
                 <p class="text-xs text-sky-400 font-bold uppercase tracking-wider mb-3">Evaluasi Akhir Modul</p>
-
                 <p class="text-sm text-textGray leading-relaxed mb-4">Ukur pemahamanmu setelah belajar. Berisi soal <strong class="text-white">Pilihan Ganda</strong> &amp; <strong class="text-white">Esai</strong> sebagai evaluasi akhir.</p>
-
                 <div class="flex items-center gap-2 text-xs text-textGray mb-4">
                   <i class="fa-solid fa-clock text-sky-400"></i>
                   <span>±20 menit</span>
@@ -1520,26 +1651,20 @@
                   <i class="fa-solid fa-user text-sky-400"></i>
                   <span>Individu</span>
                 </div>
-
                 <div class="inline-flex items-center gap-2 text-sm font-bold text-sky-400 group-hover:gap-3 transition-all">Mulai Post-Test <i class="fa-solid fa-arrow-right"></i></div>
               </a>
 
-              <!-- CARD 3: REFLEKSI -->
               <a
                 href="refleksi-algoritma.html"
                 class="group block bg-gradient-to-br from-purple-500/5 to-transparent border border-purple-500/30 rounded-2xl p-5 md:p-6 hover:border-purple-500/60 hover:bg-purple-500/10 transition-all duration-300 transform hover:-translate-y-1 relative overflow-hidden"
               >
                 <div class="absolute top-4 right-4 w-9 h-9 rounded-full bg-purple-500/20 border-2 border-purple-500/50 flex items-center justify-center text-purple-400 font-bold text-sm">3</div>
-
                 <div class="w-14 h-14 rounded-2xl bg-purple-500/15 border border-purple-500/40 flex items-center justify-center mb-4">
                   <i class="fa-solid fa-lightbulb text-purple-400 text-2xl"></i>
                 </div>
-
                 <h4 class="text-lg font-bold text-white mb-2">Refleksi</h4>
                 <p class="text-xs text-purple-400 font-bold uppercase tracking-wider mb-3">Refleksi Pembelajaran</p>
-
                 <p class="text-sm text-textGray leading-relaxed mb-4">Tuliskan kesan, kesulitan, dan hal menarik yang kamu dapat setelah mempelajari modul ini.</p>
-
                 <div class="flex items-center gap-2 text-xs text-textGray mb-4">
                   <i class="fa-solid fa-clock text-purple-400"></i>
                   <span>±5 menit</span>
@@ -1547,13 +1672,11 @@
                   <i class="fa-solid fa-user text-purple-400"></i>
                   <span>Individu</span>
                 </div>
-
                 <div class="inline-flex items-center gap-2 text-sm font-bold text-purple-400 group-hover:gap-3 transition-all">Isi Refleksi <i class="fa-solid fa-arrow-right"></i></div>
               </a>
             </div>
           </div>
 
-          <!-- Info Tambahan -->
           <div class="bg-gradient-to-r from-brandGreen/10 via-purple-500/5 to-transparent border border-brandGreen/20 rounded-2xl p-5 flex items-start gap-4">
             <div class="w-12 h-12 rounded-xl bg-brandGreen/15 border border-brandGreen/30 flex items-center justify-center text-brandGreen text-xl shrink-0">
               <i class="fa-solid fa-circle-check"></i>
@@ -1571,48 +1694,62 @@
     </div>
 
     <!-- Footer -->
-    <footer class="border-t border-white/5 bg-[#080808] pt-12 pb-8 relative z-10 w-full mt-auto">
-      <div class="max-w-7xl mx-auto px-6">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-          <div class="md:col-span-2">
-            <div class="flex items-center gap-3 mb-4">
-              <i class="fa-solid fa-code text-brandGreen text-2xl"></i>
-              <span class="text-2xl font-bold tracking-tight text-brandGreen">RuangInformatika</span>
+    <footer class="footer">
+      <div class="container" style="max-width: 1280px; margin: 0 auto; padding: 0 24px">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <div class="footer-logo">
+              <div class="footer-logo-icon"><i class="fa-solid fa-code"></i></div>
+              <span class="footer-logo-text">RuangInformatika</span>
             </div>
-            <p class="text-textGray text-base leading-relaxed max-w-sm">Platform e-learning interaktif modern yang dirancang khusus untuk memfasilitasi gaya belajar visual dan praktik koding C++ siswa SMA.</p>
+            <p class="footer-desc">Platform e-learning interaktif modern yang dirancang untuk memfasilitasi gaya belajar visual dan praktik murid SMA Negeri 4 Yogyakarta.</p>
           </div>
-          <div>
-            <h4 class="text-white font-semibold text-lg mb-4">Pintasan Modul</h4>
-            <ul class="space-y-3 text-base text-textGray">
-              <li><a href="../kisi.html" class="hover:text-brandGreen transition">Bedah Kisi-Kisi</a></li>
-              <li><a href="../materi-bk.html" class="hover:text-brandGreen transition">Berpikir Komputasional</a></li>
-              <li><a href="../materi-algoritma.html" class="hover:text-brandGreen transition text-brandGreen font-bold">Algoritma & Pemrograman Dasar</a></li>
-              <li><a href="../materi-stack-queue.html" class="hover:text-brandGreen transition">Stack & Queue</a></li>
+
+          <div class="footer-col">
+            <h4 class="footer-heading">Pintasan Modul</h4>
+            <ul class="footer-links">
+              <li>
+                <a href="../kisi.html" class="footer-link"><i class="fa-solid fa-chevron-right" style="font-size: 0.65rem"></i> Bedah Kisi-Kisi</a>
+              </li>
+              <li>
+                <a href="../materi-bk.html" class="footer-link"><i class="fa-solid fa-chevron-right" style="font-size: 0.65rem"></i> Berpikir Komputasional</a>
+              </li>
+              <li>
+                <a href="materi-algoritma.html" class="footer-link" style="color: var(--green)"><i class="fa-solid fa-chevron-right" style="font-size: 0.65rem"></i> Algoritma &amp; Pemrograman</a>
+              </li>
+              <li>
+                <a href="../materi-stack-queue.html" class="footer-link"><i class="fa-solid fa-chevron-right" style="font-size: 0.65rem"></i> Stack &amp; Queue</a>
+              </li>
+              <li>
+                <a href="../materi-search-sort.html" class="footer-link"><i class="fa-solid fa-chevron-right" style="font-size: 0.65rem"></i> Searching &amp; Sorting</a>
+              </li>
             </ul>
           </div>
-          <div>
-            <h4 class="text-white font-semibold text-lg mb-4">Dukungan</h4>
-            <ul class="space-y-3 text-base text-textGray">
+
+          <div class="footer-col">
+            <h4 class="footer-heading">Fitur &amp; Dukungan</h4>
+            <ul class="footer-links">
               <li>
-                <a href="../leaderboard.html" class="hover:text-brandGreen transition"><i class="fa-solid fa-ranking-star mr-2"></i> Leaderboard</a>
+                <a href="../leaderboard.html" class="footer-link"><i class="fa-solid fa-trophy" style="color: var(--amber)"></i> Leaderboard Kelas</a>
               </li>
               <li>
-                <a href="../forum.html" class="hover:text-brandGreen transition"><i class="fa-solid fa-comments mr-2"></i> Forum Diskusi</a>
+                <a href="../forum.html" class="footer-link"><i class="fa-solid fa-comments" style="color: var(--blue)"></i> Forum Diskusi</a>
               </li>
               <li>
-                <a href="https://wa.me/6285282386260?text=Halo%20Pak%20Ilyas%2C%20saya%20ingin%20bertanya%20tentang%20materi%20Informatika." target="_blank" class="hover:text-brandGreen transition">
-                  <i class="fa-solid fa-chalkboard-user mr-2"></i> Hubungi Pak Ilyas
+                <a href="https://wa.me/6285282386260?text=Halo%20Pak%20Ilyas%2C%20saya%20ingin%20bertanya%20tentang%20materi%20Informatika." target="_blank" class="footer-link">
+                  <i class="fa-solid fa-chalkboard-user" style="color: var(--green)"></i> Hubungi Pak Ilyas
                 </a>
               </li>
             </ul>
           </div>
         </div>
-        <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-base text-textGray">
-          <p>&copy; 2026 RuangInformatika. Dikembangkan oleh Pak Ilyas untuk kelas Informatika SMA Negeri 4 Yogyakarta.</p>
-          <div class="flex gap-4 text-2xl">
-            <a href="https://github.com/fandhi19" class="hover:text-brandGreen transition"><i class="fa-brands fa-github"></i></a>
-            <a href="https://e-portofolio-fandhi.vercel.app/" class="hover:text-brandGreen transition"><i class="fa-solid fa-globe"></i></a>
-            <a href="https://www.instagram.com/fandhidk17/" class="hover:text-brandGreen transition"><i class="fa-brands fa-instagram"></i></a>
+
+        <div class="footer-bottom">
+          <p class="footer-copy">&copy; 2026 RuangInformatika. Dikembangkan untuk kelas Informatika XE6 SMA Negeri 4 Yogyakarta.</p>
+          <div class="footer-socials">
+            <a href="https://github.com/fandhi19" target="_blank" class="footer-social" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+            <a href="https://e-portofolio-fandhi.vercel.app/" target="_blank" class="footer-social" aria-label="Portfolio"><i class="fa-solid fa-globe"></i></a>
+            <a href="https://www.instagram.com/fandhidk17/" target="_blank" class="footer-social" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
           </div>
         </div>
       </div>
@@ -1630,17 +1767,17 @@
         </div>
 
         <div class="grid grid-cols-2 gap-3 mb-4">
-          <button onclick="applyBranchLabel('Ya')" class="py-4 bg-brandGreen text-black font-bold rounded-xl hover:bg-green-400 transition shadow-lg shadow-brandGreen/30 flex flex-col items-center gap-1">
+          <button onclick="applyBranchLabel('Ya')" class="py-4 bg-brandGreen text-black font-bold rounded-xl hover:bg-green-400 transition shadow-lg shadow-brandGreen/30 flex flex-col items-center gap-1 cursor-pointer">
             <i class="fa-solid fa-check-circle text-xl"></i>
             <span>Ya (True)</span>
           </button>
-          <button onclick="applyBranchLabel('Tidak')" class="py-4 bg-rose-500 text-white font-bold rounded-xl hover:bg-rose-400 transition shadow-lg shadow-rose-500/30 flex flex-col items-center gap-1">
+          <button onclick="applyBranchLabel('Tidak')" class="py-4 bg-rose-500 text-white font-bold rounded-xl hover:bg-rose-400 transition shadow-lg shadow-rose-500/30 flex flex-col items-center gap-1 cursor-pointer">
             <i class="fa-solid fa-xmark-circle text-xl"></i>
             <span>Tidak (False)</span>
           </button>
         </div>
 
-        <button onclick="cancelBranchLabel()" class="w-full py-2.5 text-textGray text-sm font-semibold hover:text-white hover:bg-white/5 rounded-lg transition"><i class="fa-solid fa-xmark mr-1"></i> Batalkan Panah</button>
+        <button onclick="cancelBranchLabel()" class="w-full py-2.5 text-textGray text-sm font-semibold hover:text-white hover:bg-white/5 rounded-lg transition cursor-pointer"><i class="fa-solid fa-xmark mr-1"></i> Batalkan Panah</button>
       </div>
     </div>
 
@@ -1649,6 +1786,26 @@
 
     <!-- Main Script -->
     <script>
+      /* ── Reading Progress Bar ── */
+      window.addEventListener("scroll", () => {
+        const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrolled = (winScroll / height) * 100;
+        const p = document.getElementById("readProgress");
+        if (p) p.style.width = scrolled + "%";
+      });
+
+      /* ── Vanilla Tilt ── */
+      if (typeof VanillaTilt !== "undefined") {
+        VanillaTilt.init(document.querySelectorAll(".tilt-card"), {
+          max: 6,
+          speed: 400,
+          glare: true,
+          "max-glare": 0.15,
+        });
+      }
+
+      /* ── Tab System (pill) ── */
       function openTab(evt, tabName) {
         const tabContents = document.getElementsByClassName("tab-content");
         for (let i = 0; i < tabContents.length; i++) {
@@ -1657,23 +1814,11 @@
         }
         const tabBtns = document.getElementsByClassName("tab-btn");
         for (let i = 0; i < tabBtns.length; i++) {
-          tabBtns[i].classList.remove("border-brandGreen", "text-brandGreen", "border-amber-400", "text-amber-400", "border-purple-400", "text-purple-400");
-          tabBtns[i].classList.add("border-transparent", "text-textGray");
+          tabBtns[i].classList.remove("active");
         }
         document.getElementById(tabName).classList.remove("hidden");
         document.getElementById(tabName).classList.add("block");
-
-        const activeBtn = evt ? evt.currentTarget : null;
-        if (activeBtn) {
-          activeBtn.classList.remove("border-transparent", "text-textGray");
-          if (tabName === "pretest") {
-            activeBtn.classList.add("border-amber-400", "text-amber-400");
-          } else if (tabName === "lembarkerja") {
-            activeBtn.classList.add("border-purple-400", "text-purple-400");
-          } else {
-            activeBtn.classList.add("border-brandGreen", "text-brandGreen");
-          }
-        }
+        if (evt && evt.currentTarget) evt.currentTarget.classList.add("active");
       }
 
       function switchToTab(tabName) {
@@ -1702,7 +1847,7 @@
         const btnNext = document.getElementById("btn-next-step");
         btnNext.innerHTML = `<i class="fa-solid fa-forward-step"></i> Mulai Simulator`;
         btnNext.disabled = false;
-        btnNext.className = "w-full py-3.5 bg-brandGreen text-black font-bold rounded-xl hover:bg-green-400 transition shadow-lg shadow-brandGreen/20 flex items-center justify-center gap-2";
+        btnNext.className = "w-full py-3.5 bg-brandGreen text-black font-bold rounded-xl hover:bg-green-400 transition shadow-lg shadow-brandGreen/20 flex items-center justify-center gap-2 cursor-pointer";
 
         document.querySelectorAll(".fc-node, .fc-arrow").forEach((el) => {
           el.classList.remove("active");
@@ -1780,20 +1925,38 @@
       /* ============ MOBILE MENU ============ */
       const hamburgerBtn = document.getElementById("hamburgerBtn");
       const mobileMenu = document.getElementById("mobileMenu");
-      hamburgerBtn.addEventListener("click", function () {
-        mobileMenu.classList.toggle("hidden");
-        const icon = hamburgerBtn.querySelector("i");
-        icon.classList.toggle("fa-bars");
-        icon.classList.toggle("fa-xmark");
-      });
-      mobileMenu.querySelectorAll("a, button").forEach((item) => {
-        item.addEventListener("click", () => {
-          mobileMenu.classList.add("hidden");
+
+      if (hamburgerBtn && mobileMenu) {
+        hamburgerBtn.addEventListener("click", () => {
+          mobileMenu.classList.toggle("open");
           const icon = hamburgerBtn.querySelector("i");
-          icon.classList.add("fa-bars");
-          icon.classList.remove("fa-xmark");
+          icon.classList.toggle("fa-bars");
+          icon.classList.toggle("fa-xmark");
         });
-      });
+
+        mobileMenu.querySelectorAll("a, button").forEach((item) => {
+          item.addEventListener("click", () => {
+            mobileMenu.classList.remove("open");
+            const icon = hamburgerBtn.querySelector("i");
+            icon.classList.add("fa-bars");
+            icon.classList.remove("fa-xmark");
+          });
+        });
+      }
+
+      /* ── Scroll Reveal ── */
+      const revealObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("visible");
+              revealObserver.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.1 },
+      );
+      document.querySelectorAll(".reveal").forEach((el) => revealObserver.observe(el));
 
       /* ============================================================
          FLOWCHART PLAYGROUND
@@ -1886,8 +2049,6 @@
         let dragging = false;
         let offsetX = 0;
         let offsetY = 0;
-        let startX = 0;
-        let startY = 0;
 
         el.addEventListener("pointerdown", (e) => {
           if (e.target.classList.contains("symbol-label") && e.target.isContentEditable) return;
@@ -1902,8 +2063,6 @@
           const rect = el.getBoundingClientRect();
           offsetX = e.clientX - rect.left;
           offsetY = e.clientY - rect.top;
-          startX = e.clientX;
-          startY = e.clientY;
 
           el.style.zIndex = ++zIndexCounter;
           selectSymbol(el);
@@ -2024,7 +2183,6 @@
             return;
           }
 
-          // Kalau sumber adalah Decision → tampilkan modal pilih Ya/Tidak
           if (connectSource.dataset.type === "decision") {
             pendingArrow = { fromId: connectSource.id, toId: el.id };
             document.getElementById("branch-modal").classList.remove("hidden");
@@ -2033,7 +2191,6 @@
             return;
           }
 
-          // Selain decision → buat panah tanpa label
           createArrow(connectSource.id, el.id, "");
           connectSource = null;
           selectSymbol(null);
@@ -2041,7 +2198,6 @@
         }
       }
 
-      /* Modal handlers */
       function applyBranchLabel(label) {
         document.getElementById("branch-modal").classList.add("hidden");
         if (!pendingArrow) return;
@@ -2061,22 +2217,20 @@
         const exists = arrows.some((a) => a.from === fromId && a.to === toId);
         if (exists) return;
 
-        // Buat garis panah
         const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
         line.setAttribute("stroke", "#00e676");
         line.setAttribute("stroke-width", "2");
         line.setAttribute("marker-end", "url(#arrowhead)");
         arrowsGroup.appendChild(line);
 
-        // Kalau ada label (Ya/Tidak) → buat teks di tengah panah
         let textEl = null;
         if (label) {
           textEl = document.createElementNS("http://www.w3.org/2000/svg", "text");
           textEl.setAttribute("fill", label === "Ya" ? "#00e676" : "#fb7185");
-          textEl.setAttribute("stroke", "#0a0a0a");
+          textEl.setAttribute("stroke", "#080c10");
           textEl.setAttribute("stroke-width", "5");
           textEl.setAttribute("paint-order", "stroke");
-          textEl.setAttribute("font-family", "Inter, sans-serif");
+          textEl.setAttribute("font-family", "Plus Jakarta Sans, sans-serif");
           textEl.setAttribute("font-size", "15");
           textEl.setAttribute("font-weight", "800");
           textEl.setAttribute("text-anchor", "middle");
@@ -2127,7 +2281,6 @@
           arrow.el.setAttribute("x2", end.x);
           arrow.el.setAttribute("y2", end.y);
 
-          // Update posisi teks label di tengah panah
           if (arrow.textEl) {
             const midX = (start.x + end.x) / 2;
             const midY = (start.y + end.y) / 2;
@@ -2141,7 +2294,7 @@
 
       /* ============================================================
          PRE-TEST QUIZ (with Google Sheets integration)
-         ============================================================ */
+      ============================================================ */
 
       const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyLlfvMPJDEfj2dazOrTUxyfjpN7Ys7kbxs4lC1bwN1eR8KniAGTEPEyeYHGM7nozA5/exec";
 
@@ -2164,8 +2317,6 @@
           answer: 1,
           explanation: "Flowchart adalah gambar visual berupa bentuk geometris (simbol) yang menggambarkan alur program.",
         },
-
-        /* ============ SOAL 4 — GAMBAR OVAL ============ */
         {
           q: `Perhatikan gambar simbol flowchart berikut. Apa nama dari simbol tersebut?
         <div class="mt-4 flex justify-center">
@@ -2179,8 +2330,6 @@
           answer: 2,
           explanation: "Simbol oval (lonjong) disebut Terminator, untuk menandai titik awal (Start) atau akhir (End) program.",
         },
-
-        /* ============ SOAL 5 — GAMBAR JAJAR GENJANG ============ */
         {
           q: `Perhatikan gambar simbol flowchart berikut. Apa fungsi dari simbol tersebut?
         <div class="mt-4 flex justify-center">
@@ -2194,8 +2343,6 @@
           answer: 3,
           explanation: "Simbol jajar genjang berfungsi untuk menerima input atau menampilkan output.",
         },
-
-        /* ============ SOAL 6 — PILIH GAMBAR (INPUT/OUTPUT) ============ */
         {
           q: 'Manakah simbol flowchart yang digunakan untuk menggambarkan proses <strong class="text-brandGreen">input dan output data</strong>?',
           options: [
@@ -2223,8 +2370,6 @@
           answer: 2,
           explanation: "Input/Output data digambarkan dengan simbol jajar genjang (parallelogram).",
         },
-
-        /* ============ SOAL 7 — GAMBAR BELAH KETUPAT ============ */
         {
           q: `Perhatikan gambar simbol flowchart berikut. Simbol ini berfungsi untuk…
         <div class="mt-4 flex justify-center">
@@ -2238,8 +2383,6 @@
           answer: 1,
           explanation: "Simbol belah ketupat (diamond) menunjukkan keputusan atau percabangan kondisi (Ya/Tidak).",
         },
-
-        /* ============ SOAL 8 — GAMBAR PERSEGI PANJANG ============ */
         {
           q: `Perhatikan gambar simbol flowchart berikut. Simbol ini digunakan untuk melambangkan…
         <div class="mt-4 flex justify-center">
@@ -2253,7 +2396,6 @@
           answer: 0,
           explanation: "Simbol persegi panjang melambangkan proses komputasi atau perhitungan data.",
         },
-
         {
           q: "Dalam ciri algoritma yang baik, algoritma harus berhenti setelah melakukan sejumlah langkah tertentu dan tidak boleh mengalami <em>infinite loop</em>. Ciri algoritma ini disebut…",
           options: ["Input", "Output", "Finiteness (Keterbatasan)", "Definiteness (Kepastian)"],
@@ -2283,7 +2425,6 @@
       const answeredCountEl = document.getElementById("answered-count");
       const progressFill = document.getElementById("progress-fill");
 
-      /* ============ FORM IDENTITAS ============ */
       function startPretest() {
         const namaInput = document.getElementById("pretest-nama");
         const absenInput = document.getElementById("pretest-absen");
@@ -2350,7 +2491,6 @@
         isSubmitted = false;
       }
 
-      /* ============ RENDER SOAL ============ */
       function renderQuestions() {
         questionsContainer.innerHTML = "";
         QUESTIONS.forEach((item, idx) => {
@@ -2414,7 +2554,6 @@
         progressFill.style.width = pct + "%";
       }
 
-      /* ============ SUBMIT ============ */
       function submitQuiz() {
         const unanswered = answers.filter((a) => a === null).length;
         if (unanswered > 0) {
@@ -2488,7 +2627,6 @@
         }, 200);
       }
 
-      /* ============ KIRIM KE GOOGLE SHEETS ============ */
       async function sendToGoogleSheets(benar, salah, skor) {
         const statusEl = document.getElementById("save-status");
         const statusText = document.getElementById("save-status-text");
@@ -2507,10 +2645,6 @@
           formData.append("jawaban", answers.map((a) => LETTERS[a] || "?").join(","));
           formData.append("kunci", QUESTIONS.map((q) => LETTERS[q.answer]).join(","));
 
-          console.log("📤 Mengirim data ke Apps Script...");
-          console.log("URL:", APPS_SCRIPT_URL);
-          console.log("Payload:", Object.fromEntries(formData));
-
           await fetch(APPS_SCRIPT_URL, {
             method: "POST",
             mode: "no-cors",
@@ -2520,7 +2654,6 @@
 
           statusEl.className = "mt-5 inline-flex items-center gap-2 text-sm font-semibold px-4 py-2 rounded-full bg-brandGreen/15 border border-brandGreen/30 text-brandGreen";
           statusText.innerHTML = '<i class="fa-solid fa-circle-check mr-1"></i> Hasil berhasil dikirim!';
-          console.log("✅ Data terkirim. Cek Spreadsheet untuk verifikasi.");
         } catch (err) {
           statusEl.className = "mt-5 inline-flex items-center gap-2 text-sm font-semibold px-4 py-2 rounded-full bg-rose-500/15 border border-rose-500/30 text-rose-400";
           statusText.innerHTML = '<i class="fa-solid fa-circle-xmark mr-1"></i> Gagal menyimpan (cek koneksi internet)';
@@ -2528,29 +2661,9 @@
         }
       }
 
-      /* ============ RETRY ============ */
-      function retryPretest() {
-        if (!confirm("Yakin ingin mengulang Pre-Test? Jawaban sebelumnya akan direset.")) return;
-
-        isSubmitted = false;
-        answers = new Array(QUESTIONS.length).fill(null);
-        renderQuestions();
-        updateProgress();
-
-        document.getElementById("pretest-result-section").classList.add("hidden");
-        document.getElementById("pretest-quiz-section").classList.remove("hidden");
-        document.getElementById("progress-container").classList.remove("hidden");
-        document.getElementById("submit-section").classList.remove("hidden");
-
-        document.getElementById("btn-submit").disabled = false;
-        document.getElementById("save-status").classList.add("hidden");
-
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      }
-
       /* ============================================================
          YOUTUBE VIDEO CHAPTERS
-         ============================================================ */
+      ============================================================ */
       const VIDEO_ID = "TN5hLn8ebxE";
 
       const CHAPTERS = [
@@ -2567,6 +2680,7 @@
 
       function renderChapters() {
         const listEl = document.getElementById("chapters-list");
+        if (!listEl) return;
         document.getElementById("chapter-count").textContent = CHAPTERS.length + " Bab";
 
         listEl.innerHTML = "";
@@ -2629,6 +2743,7 @@
       }
 
       function onYouTubeIframeAPIReady() {
+        if (!document.getElementById("yt-player")) return;
         ytPlayer = new YT.Player("yt-player", {
           videoId: VIDEO_ID,
           playerVars: {

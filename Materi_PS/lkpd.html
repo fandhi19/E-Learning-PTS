@@ -3,38 +3,126 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>LKPD: Pseudocode & Bahasa Pemrograman - RuangInformatika</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>LKPD: Pseudocode & Bahasa Pemrograman — RuangInformatika</title>
     <link rel="shortcut icon" href="../images/Logo Patbhe.png" type="image/x-icon" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet" />
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+
+    <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <!-- jsPDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <!-- Vanilla Tilt -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
 
     <script>
       tailwind.config = {
         theme: {
           extend: {
             fontFamily: {
-              sans: ["Inter", "sans-serif"],
-              mono: ["Fira Code", "ui-monospace", "Consolas", "monospace"],
+              sans: ["Plus Jakarta Sans", "sans-serif"],
+              mono: ["JetBrains Mono", "ui-monospace", "monospace"],
             },
             colors: {
-              brandDark: "#0a0a0a",
-              brandGray: "#151515",
+              brandDark: "#080c10",
+              brandGray: "#111820",
               brandGreen: "#00e676",
-              textGray: "#d1d5db",
+              textGray: "#8896a7",
             },
           },
         },
       };
     </script>
 
+    <!-- MASTER CSS -->
+    <link rel="stylesheet" href="../style.css" />
+
     <style>
-      .bg-grid {
-        background-size: 40px 40px;
-        background-image: linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+      /* Konten utama transparan agar grid body tembus */
+      main {
+        background: transparent;
       }
 
+      /* ── Reading Progress Bar ── */
+      #readProgress {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #00e676, #38bdf8);
+        z-index: 999;
+        transition: width 0.1s ease-out;
+        width: 0%;
+        box-shadow: 0 0 12px rgba(0, 230, 118, 0.5);
+      }
+
+      /* ── Page Hero ── */
+      .page-hero {
+        position: relative;
+        padding: 64px 0 40px;
+        overflow: hidden;
+      }
+      .page-hero-glow {
+        position: absolute;
+        top: -100px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 700px;
+        height: 400px;
+        background: radial-gradient(ellipse, rgba(168, 85, 247, 0.1) 0%, rgba(56, 189, 248, 0.05) 40%, transparent 70%);
+        filter: blur(40px);
+        pointer-events: none;
+      }
+      .page-hero-inner {
+        max-width: 1024px;
+        margin: 0 auto;
+        padding: 0 24px;
+        position: relative;
+        z-index: 10;
+      }
+      .page-hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 14px;
+        border-radius: 999px;
+        background: rgba(168, 85, 247, 0.08);
+        border: 1px solid rgba(168, 85, 247, 0.3);
+        font-size: 0.78rem;
+        font-weight: 700;
+        color: #c084fc;
+        margin-bottom: 18px;
+        backdrop-filter: blur(8px);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
+      .page-hero-title {
+        font-size: clamp(2rem, 4.5vw, 3rem);
+        font-weight: 800;
+        line-height: 1.15;
+        letter-spacing: -0.03em;
+        margin-bottom: 16px;
+      }
+      .page-hero-title .gradient-text {
+        background: linear-gradient(135deg, #00e676 0%, #38bdf8 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .page-hero-desc {
+        font-size: 1rem;
+        line-height: 1.7;
+        color: #8896a7;
+        max-width: 640px;
+      }
+
+      /* ── Form Elements ── */
       .form-input,
       .form-textarea,
       .form-select {
@@ -62,15 +150,16 @@
       }
       .form-textarea.mono,
       .form-input.mono {
-        font-family: "Fira Code", monospace;
+        font-family: "JetBrains Mono", monospace;
         font-size: 13.5px;
         line-height: 1.7;
       }
       .form-textarea::placeholder,
       .form-input::placeholder {
-        color: rgba(209, 213, 219, 0.4);
+        color: rgba(136, 150, 167, 0.5);
       }
 
+      /* ── Task Card ── */
       .task-card {
         transition: all 0.3s ease;
       }
@@ -78,10 +167,12 @@
         border-color: rgba(0, 230, 118, 0.4);
       }
 
+      /* ── Progress Bar ── */
       .progress-bar-fill {
         transition: width 0.4s ease;
       }
 
+      /* ── Animations ── */
       @keyframes fadeInUp {
         from {
           opacity: 0;
@@ -95,6 +186,7 @@
       .fade-in-up {
         animation: fadeInUp 0.5s ease forwards;
       }
+
       @keyframes scorePulse {
         0% {
           transform: scale(0.8);
@@ -116,19 +208,7 @@
         backdrop-filter: blur(8px);
       }
 
-      @media (max-width: 640px) {
-        body {
-          font-size: 1rem;
-        }
-        h1 {
-          font-size: 1.75rem !important;
-          line-height: 1.2 !important;
-        }
-        h2 {
-          font-size: 1.35rem !important;
-        }
-      }
-
+      /* ── Anti Copy ── */
       body {
         -webkit-user-select: none;
         -moz-user-select: none;
@@ -173,11 +253,12 @@
         transform: translateX(-50%) translateY(0);
       }
 
+      /* ── Pseudo Code Block ── */
       .pseudo-block {
         background: #0d1117;
         border: 1px solid rgba(255, 255, 255, 0.1);
         border-radius: 14px;
-        font-family: "Fira Code", monospace;
+        font-family: "JetBrains Mono", monospace;
         font-size: 13px;
         line-height: 1.75;
         padding: 18px;
@@ -204,37 +285,94 @@
       .pseudo-block .lbl {
         color: #38bdf8;
       }
+
+      /* ── Responsive fonts mobile ── */
+      @media (max-width: 640px) {
+        body {
+          font-size: 1rem;
+        }
+        h1 {
+          font-size: 1.75rem !important;
+          line-height: 1.2 !important;
+        }
+        h2 {
+          font-size: 1.35rem !important;
+        }
+        .text-4xl {
+          font-size: 1.875rem !important;
+        }
+        .text-3xl {
+          font-size: 1.5rem !important;
+        }
+        .text-2xl {
+          font-size: 1.25rem !important;
+        }
+        .text-xl {
+          font-size: 1.125rem !important;
+        }
+        .text-lg {
+          font-size: 1rem !important;
+        }
+      }
     </style>
   </head>
-  <body class="bg-brandDark text-white font-sans antialiased overflow-x-hidden flex flex-col min-h-screen text-lg">
-    <nav class="max-w-7xl mx-auto px-6 py-6 flex items-center justify-between border-b border-white/5 relative z-50 w-full">
-      <div class="flex items-center gap-3">
-        <i class="fa-solid fa-code text-brandGreen text-xl"></i>
-        <span class="text-xl font-bold tracking-tight text-brandGreen">RuangInformatika</span>
-      </div>
-      <div class="flex items-center gap-3">
-        <a href="materi.html" class="hidden md:flex items-center gap-2 border border-white/10 rounded-full px-5 py-2.5 text-sm font-medium hover:bg-white/5 transition"> <i class="fa-solid fa-arrow-left text-brandGreen"></i> Kembali </a>
-        <button class="hidden md:flex items-center gap-2 border border-white/10 rounded-full px-5 py-2.5 text-sm font-medium hover:bg-white/5 transition"><i class="fa-solid fa-chalkboard-user text-brandGreen"></i> XE6</button>
-        <a href="materi.html" class="md:hidden flex items-center justify-center w-10 h-10 border border-white/10 rounded-full hover:bg-white/5 transition" aria-label="Kembali">
-          <i class="fa-solid fa-arrow-left text-brandGreen"></i>
+
+  <body class="bg-grid text-white font-sans antialiased overflow-x-hidden flex flex-col min-h-screen">
+    <div id="readProgress"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+      <div class="navbar-inner">
+        <a href="materi.html" class="navbar-logo">
+          <div class="navbar-logo-icon"><i class="fa-solid fa-code"></i></div>
+          <span class="navbar-logo-text">RuangInformatika</span>
         </a>
+        <div class="navbar-links">
+          <a href="../index.html" class="nav-link">Dashboard</a>
+          <a href="../index.html#materi" class="nav-link">Daftar Modul</a>
+          <a href="../leaderboard.html" class="nav-link">Leaderboard</a>
+          <a href="../forum.html" class="nav-link">Forum Diskusi</a>
+        </div>
+        <button class="nav-badge"><i class="fa-solid fa-chalkboard-user"></i> Kelas XE6</button>
+        <button class="hamburger-btn" id="hamburgerBtn" aria-label="Menu">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+
+      <!-- Mobile Drawer -->
+      <div class="mobile-menu" id="mobileMenu">
+        <a href="../index.html" class="mobile-nav-link"> <i class="fa-solid fa-house" style="margin-right: 10px"></i> Dashboard </a>
+        <a href="../index.html#materi" class="mobile-nav-link"> <i class="fa-solid fa-book-open" style="margin-right: 10px"></i> Daftar Modul </a>
+        <a href="../leaderboard.html" class="mobile-nav-link"> <i class="fa-solid fa-trophy" style="margin-right: 10px"></i> Leaderboard </a>
+        <a href="../forum.html" class="mobile-nav-link"> <i class="fa-solid fa-comments" style="margin-right: 10px"></i> Forum Diskusi </a>
+        <div style="padding: 12px 16px">
+          <a href="materi.html" class="nav-badge" style="width: 100%; justify-content: center; text-decoration: none"><i class="fa-solid fa-arrow-left"></i> Kembali ke Materi</a>
+        </div>
       </div>
     </nav>
 
-    <div class="flex-grow relative bg-grid">
-      <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-brandGreen/5 rounded-full blur-[120px] pointer-events-none"></div>
-
-      <main class="max-w-4xl mx-auto px-6 py-12 relative z-10">
-        <div class="mb-8 text-center md:text-left fade-in-up">
-          <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/30 text-sm font-bold text-purple-400 mb-4"><i class="fa-solid fa-clipboard-list"></i> LKPD Digital • Pertemuan 2</div>
-          <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight mb-3 leading-tight">
-            Lembar Kerja Peserta Didik<br />
-            <span class="text-brandGreen">Pseudocode &amp; Pengenalan Bahasa Pemrograman</span>
-          </h1>
-          <p class="text-textGray text-base md:text-lg max-w-2xl leading-relaxed">Studi Kasus: <strong class="text-white">Kriteria Kelulusan Ujian "Patbhe Test"</strong> — Dikerjakan berpasangan (2 orang).</p>
+    <!-- Main Content Wrapper -->
+    <div class="flex-grow relative">
+      <!-- Page Hero -->
+      <header class="page-hero">
+        <div class="page-hero-glow"></div>
+        <div class="page-hero-inner">
+          <div class="reveal">
+            <div class="page-hero-badge"><i class="fa-solid fa-clipboard-list"></i> LKPD Digital • Pertemuan 2</div>
+            <h1 class="page-hero-title">Lembar Kerja Peserta Didik<br /><span class="gradient-text">Pseudocode & Bahasa Pemrograman</span></h1>
+            <p class="page-hero-desc">Studi Kasus: <strong class="text-white">Kriteria Kelulusan Ujian "Patbhe Test"</strong> — Dikerjakan berpasangan (2 orang).</p>
+            <div class="mt-5 flex flex-wrap gap-3">
+              <a href="materi.html" class="inline-flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-xl text-sm font-semibold hover:bg-white/10 transition">
+                <i class="fa-solid fa-arrow-left text-brandGreen"></i> Kembali ke Materi
+              </a>
+            </div>
+          </div>
         </div>
+      </header>
 
-        <div class="bg-brandGray border border-white/10 rounded-2xl p-5 md:p-6 mb-6 fade-in-up">
+      <main class="max-w-4xl mx-auto px-6 pb-12 relative z-10">
+        <!-- Info Cards -->
+        <div class="bg-brandGray border border-white/5 rounded-3xl p-5 md:p-6 mb-6 fade-in-up">
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div class="flex items-center gap-3">
               <div class="w-11 h-11 rounded-xl bg-brandGreen/10 border border-brandGreen/25 flex items-center justify-center text-brandGreen text-lg shrink-0"><i class="fa-solid fa-bullseye"></i></div>
@@ -260,7 +398,8 @@
           </div>
         </div>
 
-        <div class="bg-brandGray border border-amber-500/30 rounded-2xl p-5 md:p-6 mb-8 fade-in-up">
+        <!-- Petunjuk K3 -->
+        <div class="bg-brandGray border border-amber-500/30 rounded-3xl p-5 md:p-6 mb-6 fade-in-up">
           <div class="flex items-center gap-3 border-b border-white/10 pb-4 mb-4">
             <div class="w-11 h-11 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 text-lg shrink-0"><i class="fa-solid fa-triangle-exclamation"></i></div>
             <div>
@@ -284,7 +423,8 @@
           </ul>
         </div>
 
-        <div id="form-identitas-section" class="bg-brandGray border border-brandGreen/30 rounded-2xl p-6 md:p-8 mb-8 space-y-5 fade-in-up">
+        <!-- Identitas -->
+        <div id="form-identitas-section" class="bg-brandGray border border-brandGreen/30 rounded-3xl p-6 md:p-8 mb-6 space-y-5 fade-in-up">
           <div class="flex items-center gap-3 border-b border-white/10 pb-4">
             <div class="w-11 h-11 rounded-xl bg-brandGreen/10 border border-brandGreen/25 flex items-center justify-center text-brandGreen text-lg shrink-0"><i class="fa-solid fa-user-pen"></i></div>
             <div>
@@ -293,7 +433,7 @@
             </div>
           </div>
 
-          <div class="bg-white/5 border border-white/10 rounded-xl p-4 md:p-5 space-y-3">
+          <div class="bg-white/5 border border-white/5 rounded-2xl p-4 md:p-5 space-y-3">
             <div class="flex items-center gap-2 mb-1">
               <div class="w-7 h-7 rounded-lg bg-brandGreen/15 border border-brandGreen/30 flex items-center justify-center text-brandGreen text-xs font-bold">1</div>
               <span class="text-sm font-bold text-brandGreen uppercase tracking-wider">Anggota 1</span>
@@ -310,7 +450,7 @@
             </div>
           </div>
 
-          <div class="bg-white/5 border border-white/10 rounded-xl p-4 md:p-5 space-y-3">
+          <div class="bg-white/5 border border-white/5 rounded-2xl p-4 md:p-5 space-y-3">
             <div class="flex items-center gap-2 mb-1">
               <div class="w-7 h-7 rounded-lg bg-sky-500/15 border border-sky-500/30 flex items-center justify-center text-sky-400 text-xs font-bold">2</div>
               <span class="text-sm font-bold text-sky-400 uppercase tracking-wider">Anggota 2</span>
@@ -333,8 +473,8 @@
           </div>
         </div>
 
-        <!-- ============ STUDI KASUS ============ -->
-        <div id="studi-kasus-display" class="bg-gradient-to-br from-purple-500/10 via-brandGray to-brandGray border border-purple-500/30 rounded-2xl p-5 md:p-6 mb-8 fade-in-up">
+        <!-- Studi Kasus -->
+        <div id="studi-kasus-display" class="bg-gradient-to-br from-purple-500/10 via-brandGray to-brandGray border border-purple-500/30 rounded-3xl p-5 md:p-6 mb-6 fade-in-up">
           <div class="flex items-center gap-3 border-b border-white/10 pb-4 mb-5">
             <div class="w-11 h-11 rounded-xl bg-purple-500/15 border border-purple-500/40 flex items-center justify-center text-purple-400 text-lg shrink-0"><i class="fa-solid fa-graduation-cap"></i></div>
             <div>
@@ -360,9 +500,10 @@
           </div>
         </div>
 
-        <div id="tugas-section" class="space-y-6 mb-8">
+        <!-- Tugas -->
+        <div id="tugas-section" class="space-y-6 mb-6">
           <!-- TUGAS 1 -->
-          <div class="task-card bg-brandGray border border-white/10 rounded-2xl p-5 md:p-6 space-y-4" id="task-1-card">
+          <div class="task-card bg-brandGray border border-white/5 rounded-3xl p-5 md:p-6 space-y-4" id="task-1-card">
             <div class="flex items-start gap-3 border-b border-white/10 pb-4">
               <div class="w-11 h-11 rounded-xl bg-purple-500/15 border border-purple-500/30 flex items-center justify-center text-purple-400 font-bold text-lg shrink-0">1</div>
               <div class="flex-1">
@@ -418,8 +559,8 @@
             </div>
           </div>
 
-          <!-- TUGAS 3 -->
-          <div class="task-card bg-brandGray border border-white/10 rounded-2xl p-5 md:p-6 space-y-4" id="task-3-card">
+          <!-- TUGAS 2 -->
+          <div class="task-card bg-brandGray border border-white/5 rounded-3xl p-5 md:p-6 space-y-4" id="task-3-card">
             <div class="flex items-start gap-3 border-b border-white/10 pb-4">
               <div class="w-11 h-11 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 font-bold text-lg shrink-0">2</div>
               <div class="flex-1">
@@ -448,10 +589,8 @@
                 </div>
 
                 <div class="space-y-3 pt-1">
-                  <div class="bg-white/5 border border-white/10 rounded-xl p-4 grid grid-cols-1 md:grid-cols-12 gap-3 items-start md:items-center">
-                    <div class="md:col-span-1 flex items-center gap-2">
-                      <span class="w-7 h-7 rounded-lg bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 text-xs font-bold">1</span>
-                    </div>
+                  <div class="bg-white/5 border border-white/5 rounded-xl p-4 grid grid-cols-1 md:grid-cols-12 gap-3 items-start md:items-center">
+                    <div class="md:col-span-1 flex items-center gap-2"><span class="w-7 h-7 rounded-lg bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 text-xs font-bold">1</span></div>
                     <div class="md:col-span-4">
                       <p class="text-xs text-textGray uppercase font-bold mb-1 md:hidden">Kata Kunci</p>
                       <code class="text-sm text-purple-300 font-mono font-bold">INPUT / READ</code>
@@ -461,11 +600,8 @@
                       <input type="text" id="task3-fungsi1" class="form-input" placeholder="Menerima..." />
                     </div>
                   </div>
-
-                  <div class="bg-white/5 border border-white/10 rounded-xl p-4 grid grid-cols-1 md:grid-cols-12 gap-3 items-start md:items-center">
-                    <div class="md:col-span-1 flex items-center gap-2">
-                      <span class="w-7 h-7 rounded-lg bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 text-xs font-bold">2</span>
-                    </div>
+                  <div class="bg-white/5 border border-white/5 rounded-xl p-4 grid grid-cols-1 md:grid-cols-12 gap-3 items-start md:items-center">
+                    <div class="md:col-span-1 flex items-center gap-2"><span class="w-7 h-7 rounded-lg bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 text-xs font-bold">2</span></div>
                     <div class="md:col-span-4">
                       <p class="text-xs text-textGray uppercase font-bold mb-1 md:hidden">Kata Kunci</p>
                       <code class="text-sm text-purple-300 font-mono font-bold">PRINT / OUTPUT</code>
@@ -475,11 +611,8 @@
                       <input type="text" id="task3-fungsi2" class="form-input" placeholder="Menampilkan..." />
                     </div>
                   </div>
-
-                  <div class="bg-white/5 border border-white/10 rounded-xl p-4 grid grid-cols-1 md:grid-cols-12 gap-3 items-start md:items-center">
-                    <div class="md:col-span-1 flex items-center gap-2">
-                      <span class="w-7 h-7 rounded-lg bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 text-xs font-bold">3</span>
-                    </div>
+                  <div class="bg-white/5 border border-white/5 rounded-xl p-4 grid grid-cols-1 md:grid-cols-12 gap-3 items-start md:items-center">
+                    <div class="md:col-span-1 flex items-center gap-2"><span class="w-7 h-7 rounded-lg bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 text-xs font-bold">3</span></div>
                     <div class="md:col-span-4">
                       <p class="text-xs text-textGray uppercase font-bold mb-1 md:hidden">Kata Kunci</p>
                       <code class="text-sm text-purple-300 font-mono font-bold">SET / &larr;</code>
@@ -489,11 +622,8 @@
                       <input type="text" id="task3-fungsi3" class="form-input" placeholder="Mengisi..." />
                     </div>
                   </div>
-
-                  <div class="bg-white/5 border border-white/10 rounded-xl p-4 grid grid-cols-1 md:grid-cols-12 gap-3 items-start md:items-center">
-                    <div class="md:col-span-1 flex items-center gap-2">
-                      <span class="w-7 h-7 rounded-lg bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 text-xs font-bold">4</span>
-                    </div>
+                  <div class="bg-white/5 border border-white/5 rounded-xl p-4 grid grid-cols-1 md:grid-cols-12 gap-3 items-start md:items-center">
+                    <div class="md:col-span-1 flex items-center gap-2"><span class="w-7 h-7 rounded-lg bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 text-xs font-bold">4</span></div>
                     <div class="md:col-span-4">
                       <p class="text-xs text-textGray uppercase font-bold mb-1 md:hidden">Kata Kunci</p>
                       <code class="text-sm text-purple-300 font-mono font-bold">IF – ELSE</code>
@@ -503,11 +633,8 @@
                       <input type="text" id="task3-fungsi4" class="form-input" placeholder="Mengambil..." />
                     </div>
                   </div>
-
-                  <div class="bg-white/5 border border-white/10 rounded-xl p-4 grid grid-cols-1 md:grid-cols-12 gap-3 items-start md:items-center">
-                    <div class="md:col-span-1 flex items-center gap-2">
-                      <span class="w-7 h-7 rounded-lg bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 text-xs font-bold">5</span>
-                    </div>
+                  <div class="bg-white/5 border border-white/5 rounded-xl p-4 grid grid-cols-1 md:grid-cols-12 gap-3 items-start md:items-center">
+                    <div class="md:col-span-1 flex items-center gap-2"><span class="w-7 h-7 rounded-lg bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 text-xs font-bold">5</span></div>
                     <div class="md:col-span-4">
                       <p class="text-xs text-textGray uppercase font-bold mb-1 md:hidden">Kata Kunci</p>
                       <code class="text-sm text-purple-300 font-mono font-bold">WHILE / FOR</code>
@@ -522,8 +649,8 @@
             </div>
           </div>
 
-          <!-- TUGAS 4 -->
-          <div class="task-card bg-brandGray border border-white/10 rounded-2xl p-5 md:p-6 space-y-4" id="task-4-card">
+          <!-- TUGAS 3 -->
+          <div class="task-card bg-brandGray border border-white/5 rounded-3xl p-5 md:p-6 space-y-4" id="task-4-card">
             <div class="flex items-start gap-3 border-b border-white/10 pb-4">
               <div class="w-11 h-11 rounded-xl bg-orange-500/15 border border-orange-500/30 flex items-center justify-center text-orange-400 font-bold text-lg shrink-0">3</div>
               <div class="flex-1">
@@ -544,8 +671,8 @@
             </div>
           </div>
 
-          <!-- TUGAS 5 -->
-          <div class="task-card bg-brandGray border border-white/10 rounded-2xl p-5 md:p-6 space-y-4" id="task-5-card">
+          <!-- TUGAS 4 -->
+          <div class="task-card bg-brandGray border border-white/5 rounded-3xl p-5 md:p-6 space-y-4" id="task-5-card">
             <div class="flex items-start gap-3 border-b border-white/10 pb-4">
               <div class="w-11 h-11 rounded-xl bg-sky-500/15 border border-sky-500/30 flex items-center justify-center text-sky-400 font-bold text-lg shrink-0">4</div>
               <div class="flex-1">
@@ -572,7 +699,7 @@
                 <div class="col-span-5">Contoh</div>
               </div>
 
-              <div class="bg-white/5 border border-white/10 rounded-xl p-4 grid grid-cols-1 md:grid-cols-12 gap-3 items-start md:items-center">
+              <div class="bg-white/5 border border-white/5 rounded-xl p-4 grid grid-cols-1 md:grid-cols-12 gap-3 items-start md:items-center">
                 <div class="md:col-span-2">
                   <p class="text-xs text-textGray uppercase font-bold mb-1 md:hidden">Tipe Data</p>
                   <code class="text-sm text-sky-400 font-mono font-bold">int</code>
@@ -586,8 +713,7 @@
                   <input type="text" id="task5-contoh1" class="form-input mono" placeholder="1, 10, -5" />
                 </div>
               </div>
-
-              <div class="bg-white/5 border border-white/10 rounded-xl p-4 grid grid-cols-1 md:grid-cols-12 gap-3 items-start md:items-center">
+              <div class="bg-white/5 border border-white/5 rounded-xl p-4 grid grid-cols-1 md:grid-cols-12 gap-3 items-start md:items-center">
                 <div class="md:col-span-2">
                   <p class="text-xs text-textGray uppercase font-bold mb-1 md:hidden">Tipe Data</p>
                   <code class="text-sm text-sky-400 font-mono font-bold">float / double</code>
@@ -601,8 +727,7 @@
                   <input type="text" id="task5-contoh2" class="form-input mono" placeholder="3.14, 7.5" />
                 </div>
               </div>
-
-              <div class="bg-white/5 border border-white/10 rounded-xl p-4 grid grid-cols-1 md:grid-cols-12 gap-3 items-start md:items-center">
+              <div class="bg-white/5 border border-white/5 rounded-xl p-4 grid grid-cols-1 md:grid-cols-12 gap-3 items-start md:items-center">
                 <div class="md:col-span-2">
                   <p class="text-xs text-textGray uppercase font-bold mb-1 md:hidden">Tipe Data</p>
                   <code class="text-sm text-sky-400 font-mono font-bold">char</code>
@@ -616,8 +741,7 @@
                   <input type="text" id="task5-contoh3" class="form-input mono" placeholder="'A', '%'" />
                 </div>
               </div>
-
-              <div class="bg-white/5 border border-white/10 rounded-xl p-4 grid grid-cols-1 md:grid-cols-12 gap-3 items-start md:items-center">
+              <div class="bg-white/5 border border-white/5 rounded-xl p-4 grid grid-cols-1 md:grid-cols-12 gap-3 items-start md:items-center">
                 <div class="md:col-span-2">
                   <p class="text-xs text-textGray uppercase font-bold mb-1 md:hidden">Tipe Data</p>
                   <code class="text-sm text-sky-400 font-mono font-bold">string</code>
@@ -635,7 +759,8 @@
           </div>
         </div>
 
-        <div id="progress-section" class="bg-brandGray border border-brandGreen/30 rounded-2xl p-5 md:p-6 mb-6 space-y-4">
+        <!-- Progress Section -->
+        <div id="progress-section" class="bg-brandGray border border-brandGreen/30 rounded-3xl p-5 md:p-6 mb-6 space-y-4">
           <div class="flex items-center justify-between">
             <span class="text-sm font-bold text-white flex items-center gap-2"> <i class="fa-solid fa-chart-simple text-brandGreen"></i> Progress Pengisian LKPD </span>
             <span class="text-sm font-bold"> <span id="progress-text" class="text-brandGreen">0</span><span class="text-textGray">/ 5 bagian</span> </span>
@@ -661,6 +786,7 @@
           </div>
         </div>
 
+        <!-- Result Section -->
         <div id="result-section" class="hidden space-y-6">
           <div class="bg-gradient-to-br from-brandGreen/15 via-brandGray to-brandGray border-2 border-brandGreen/40 rounded-3xl p-8 text-center">
             <div class="score-pulse inline-flex items-center justify-center w-24 h-24 rounded-full bg-brandGreen/10 border-4 border-brandGreen mb-4">
@@ -679,19 +805,63 @@
       </main>
     </div>
 
-    <footer class="border-t border-white/5 bg-[#080808] pt-8 pb-6 relative z-10 w-full mt-auto">
-      <div class="max-w-7xl mx-auto px-6 text-center md:text-left">
-        <div class="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-textGray">
-          <p>&copy; 2026 RuangInformatika. Dikembangkan oleh Pak Ilyas untuk kelas Informatika SMA Negeri 4 Yogyakarta.</p>
-          <div class="flex gap-4 text-xl">
-            <a href="https://github.com/fandhi19" class="hover:text-brandGreen transition"><i class="fa-brands fa-github"></i></a>
-            <a href="https://e-portofolio-fandhi.vercel.app/" class="hover:text-brandGreen transition"><i class="fa-solid fa-globe"></i></a>
-            <a href="https://www.instagram.com/fandhidk17/" class="hover:text-brandGreen transition"><i class="fa-brands fa-instagram"></i></a>
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container" style="max-width: 1280px; margin: 0 auto; padding: 0 24px">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <div class="footer-logo">
+              <div class="footer-logo-icon"><i class="fa-solid fa-code"></i></div>
+              <span class="footer-logo-text">RuangInformatika</span>
+            </div>
+            <p class="footer-desc">Platform e-learning interaktif modern yang dirancang untuk memfasilitasi gaya belajar visual dan praktik murid SMA Negeri 4 Yogyakarta.</p>
+          </div>
+          <div class="footer-col">
+            <h4 class="footer-heading">Pintasan Modul</h4>
+            <ul class="footer-links">
+              <li>
+                <a href="../kisi.html" class="footer-link"><i class="fa-solid fa-chevron-right" style="font-size: 0.65rem"></i> Bedah Kisi-Kisi</a>
+              </li>
+              <li>
+                <a href="../materi-bk.html" class="footer-link"><i class="fa-solid fa-chevron-right" style="font-size: 0.65rem"></i> Berpikir Komputasional</a>
+              </li>
+              <li>
+                <a href="materi.html" class="footer-link"><i class="fa-solid fa-chevron-right" style="font-size: 0.65rem"></i> Pseudocode & Bahasa Pemrograman</a>
+              </li>
+              <li>
+                <a href="../Materi_AP/materi-algoritma.html" class="footer-link"><i class="fa-solid fa-chevron-right" style="font-size: 0.65rem"></i> Algoritma Pemrograman</a>
+              </li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h4 class="footer-heading">Fitur & Dukungan</h4>
+            <ul class="footer-links">
+              <li>
+                <a href="../leaderboard.html" class="footer-link"><i class="fa-solid fa-trophy" style="color: var(--amber)"></i> Leaderboard Kelas</a>
+              </li>
+              <li>
+                <a href="../forum.html" class="footer-link"><i class="fa-solid fa-comments" style="color: var(--blue)"></i> Forum Diskusi</a>
+              </li>
+              <li>
+                <a href="https://wa.me/6285282386260?text=Halo%20Pak%20Ilyas%2C%20saya%20ingin%20bertanya%20tentang%20materi%20Informatika." target="_blank" class="footer-link"
+                  ><i class="fa-solid fa-chalkboard-user" style="color: var(--green)"></i> Hubungi Pak Ilyas</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p class="footer-copy">&copy; 2026 RuangInformatika. Dikembangkan untuk kelas Informatika XE6 SMA Negeri 4 Yogyakarta.</p>
+          <div class="footer-socials">
+            <a href="https://github.com/fandhi19" target="_blank" class="footer-social" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+            <a href="https://e-portofolio-fandhi.vercel.app/" target="_blank" class="footer-social" aria-label="Portfolio"><i class="fa-solid fa-globe"></i></a>
+            <a href="https://www.instagram.com/fandhidk17/" target="_blank" class="footer-social" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
           </div>
         </div>
       </div>
     </footer>
 
+    <!-- PDF Loading Overlay -->
     <div id="pdf-loading" class="hidden fixed inset-0 bg-black/85 z-[200] flex items-center justify-center">
       <div class="text-center space-y-4">
         <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-brandGreen/15 border-2 border-brandGreen/40">
@@ -702,13 +872,58 @@
       </div>
     </div>
 
+    <!-- Anti Copy Toast -->
     <div id="anti-copy-toast">
       <i class="fa-solid fa-ban"></i>
       <span>Copy-paste tidak diizinkan!</span>
     </div>
 
     <script>
-      const UPLOAD_URL = "https://script.google.com/macros/s/AKfycbx7j8rMvVWwxCAL3MHj596uQC61yxeDwNF5jhzWA4Oub8YDEwMaHrLsA5I4Z_BaqIa5jQ/exec";
+      /* Reading Progress */
+      window.addEventListener("scroll", () => {
+        const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrolled = (winScroll / height) * 100;
+        const p = document.getElementById("readProgress");
+        if (p) p.style.width = scrolled + "%";
+      });
+
+      /* Mobile Menu */
+      const hamburgerBtn = document.getElementById("hamburgerBtn");
+      const mobileMenu = document.getElementById("mobileMenu");
+      if (hamburgerBtn && mobileMenu) {
+        hamburgerBtn.addEventListener("click", () => {
+          mobileMenu.classList.toggle("open");
+          const icon = hamburgerBtn.querySelector("i");
+          icon.classList.toggle("fa-bars");
+          icon.classList.toggle("fa-xmark");
+        });
+        mobileMenu.querySelectorAll("a, button").forEach((item) => {
+          item.addEventListener("click", () => {
+            mobileMenu.classList.remove("open");
+            const icon = hamburgerBtn.querySelector("i");
+            icon.classList.add("fa-bars");
+            icon.classList.remove("fa-xmark");
+          });
+        });
+      }
+
+      /* Scroll Reveal */
+      const revealObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("visible");
+              revealObserver.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.1 },
+      );
+      document.querySelectorAll(".reveal").forEach((el) => revealObserver.observe(el));
+
+      /* LKPD LOGIC */
+      const UPLOAD_URL = "https://script.google.com/macros/s/AKfycbwPLuf5JF_QFSt-lIzuafTMvxUWPc8LmPzZ1uY_1CgNqXOFnFXHX4CsFpioTx6iozMGpw/exec";
 
       window.addEventListener("DOMContentLoaded", () => {
         const savedNama = localStorage.getItem("siswa_nama");
@@ -755,7 +970,6 @@
 
       function updateProgress() {
         let completed = 0;
-
         const identitasOk = ["lkpd-anggota1-nama", "lkpd-anggota1-absen", "lkpd-anggota2-nama", "lkpd-anggota2-absen", "lkpd-kelas"].every((id) => document.getElementById(id).value.trim() !== "");
         if (identitasOk) completed++;
 
@@ -865,7 +1079,6 @@
           if (!result.success) throw new Error(result.message || "Upload gagal");
 
           loadingEl.classList.add("hidden");
-
           localStorage.setItem("siswa_nama", data.a1n);
           localStorage.setItem("siswa_absen", data.a1a);
           localStorage.removeItem("lkpd_draft_ps");
@@ -953,7 +1166,6 @@
 
       async function buildPDFBlob() {
         if (!window.jspdf || !window.jspdf.jsPDF) throw new Error("Library PDF belum termuat. Refresh halaman & coba lagi.");
-
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
         const measureDoc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
@@ -988,14 +1200,11 @@
 
         const setFill = (c) => doc.setFillColor(c[0], c[1], c[2]);
         const setDraw = (c) => doc.setDrawColor(c[0], c[1], c[2]);
-        const setText = (c) => doc.setTextColor(c[0], c[1], c[2]);
-
         function setFont(style, size, color) {
           doc.setFont("helvetica", style);
           doc.setFontSize(size);
           if (color) doc.setTextColor(color[0], color[1], color[2]);
         }
-
         function paintBg() {
           setFill(C.bg);
           doc.rect(0, 0, pageW, pageH, "F");
@@ -1021,7 +1230,6 @@
             doc.rect(x + 0.4, yy + 2, 1.2, h - 4, "F");
           }
         }
-
         function measure(text, size, style, w) {
           measureDoc.setFont("helvetica", style);
           measureDoc.setFontSize(size);
@@ -1040,7 +1248,6 @@
 
         paintBg();
 
-        // ===== BANNER =====
         const bannerH = 26;
         setFill(C.green);
         doc.roundedRect(margin, y, contentW, bannerH, 3, 3, "F");
@@ -1050,10 +1257,8 @@
         doc.text("Pseudocode & Pengenalan Bahasa Pemrograman", pageW / 2, y + 16.5, { align: "center" });
         setFont("normal", 8.5, [10, 10, 10]);
         doc.text('Studi Kasus: Kriteria Kelulusan "Patbhe Test"  •  Fase E / Kelas X', pageW / 2, y + 22.5, { align: "center" });
-
         y += bannerH + 5;
 
-        // ===== DATA =====
         const data = {
           a1n: document.getElementById("lkpd-anggota1-nama").value.trim() || "-",
           a1a: document.getElementById("lkpd-anggota1-absen").value.trim() || "-",
@@ -1086,16 +1291,13 @@
             { label: "ANGGOTA 2", name: data.a2n, absen: data.a2a, color: C.sky },
             { label: "KELAS", name: data.kelas, absen: null, color: C.purple },
           ];
-          const rowH = 10;
-          const titleH = 8;
+          const rowH = 10,
+            titleH = 8;
           const cardH = titleH + rowH * rows.length + 4;
-
           ensureSpace(cardH + 5);
           drawCard(margin, y, contentW, cardH, { accent: C.green, borderColor: [30, 100, 60] });
-
           setFont("bold", 10.5, C.green);
           doc.text("IDENTITAS KELOMPOK", margin + padX + 2, y + 6);
-
           let cy = y + titleH + 3;
           rows.forEach((r) => {
             setFont("bold", 7, r.color);
@@ -1108,50 +1310,39 @@
             }
             cy += rowH;
           });
-
           y += cardH + 5;
         }
 
         // ===== STUDI KASUS =====
         {
-          const padX = 6;
-          const bodySize = 9;
-          const bodyLh = lh(bodySize);
+          const padX = 6,
+            bodySize = 9,
+            bodyLh = lh(bodySize);
           const innerW = contentW - padX * 2 - 4;
-
           const descText = "Sistem penilaian sekolah membutuhkan program otomatis untuk menentukan status kelulusan siswa pada mata pelajaran Informatika. Program hanya menerima satu masukan (input), yaitu nilai_ujian siswa.";
           const descLines = measure(descText, bodySize, "normal", innerW - 4);
-
           const aturan1 = 'JIKA nilai_ujian >= 75, maka sistem akan menampilkan pesan "Selamat, Anda Dinyatakan LULUS!" ke layar.';
           const aturan1Lines = measure(aturan1, bodySize, "normal", innerW - 12);
-
           const aturan2 = 'JIKA TIDAK (yaitu nilai_ujian < 75), sistem akan menampilkan pesan "Maaf, Anda Harus Mengikuti Remedial!"';
           const aturan2Lines = measure(aturan2, bodySize, "normal", innerW - 12);
-
           const titleH = 8;
           const descH = descLines.length * bodyLh + 3;
           const boxTitleH = 5;
           const box1H = boxTitleH + aturan1Lines.length * bodyLh + 4;
           const box2H = boxTitleH + aturan2Lines.length * bodyLh + 4;
           const gap = 2;
-
           const cardH = titleH + descH + box1H + gap + box2H + 4;
-
           ensureSpace(cardH + 5);
           drawCard(margin, y, contentW, cardH, { accent: C.purple, borderColor: [90, 60, 140] });
-
           setFont("bold", 10.5, C.purple);
           doc.text('STUDI KASUS: KRITERIA KELULUSAN UJIAN "PATBHE TEST"', margin + padX + 2, y + 6);
-
           let cy = y + titleH + 1;
-
           setFont("normal", bodySize, C.text);
           descLines.forEach((line) => {
             doc.text(line, margin + padX + 2, cy + 3);
             cy += bodyLh;
           });
           cy += 2;
-
           const box1X = margin + padX + 2;
           drawCard(box1X, cy, innerW, box1H, { fill: C.greenBoxBg, borderColor: C.greenBoxBrd });
           setFont("bold", 7.5, C.green);
@@ -1163,7 +1354,6 @@
             b1y += bodyLh;
           });
           cy += box1H + gap;
-
           const box2X = margin + padX + 2;
           drawCard(box2X, cy, innerW, box2H, { fill: C.roseBoxBg, borderColor: C.roseBoxBrd });
           setFont("bold", 7.5, C.rose);
@@ -1174,55 +1364,42 @@
             doc.text(line, box2X + 4, b2y);
             b2y += bodyLh;
           });
-
           y += cardH + 5;
         }
 
-        // ===== HELPER renderTextBlock =====
         function renderTextBlock(title, content, accent, borderAccent) {
           const padX = 6;
           const innerW = contentW - padX * 2 - 4;
-
-          const titleH = 8;
-          const bodySize = 9;
-          const bodyLh = lh(bodySize);
+          const titleH = 8,
+            bodySize = 9,
+            bodyLh = lh(bodySize);
           const lines = measure(content, bodySize, "normal", innerW - 8);
           const blockH = Math.max(lines.length * bodyLh + 6, 14);
-
           const cardH = titleH + blockH + 4;
-
           ensureSpace(cardH + 5);
           drawCard(margin, y, contentW, cardH, { accent, borderColor: borderAccent });
-
           setFont("bold", 10.5, accent);
           doc.text(title, margin + padX + 2, y + 6);
-
           const bx = margin + padX + 2;
           const bw = innerW;
           const by0 = y + titleH;
           drawCard(bx, by0, bw, blockH, { fill: C.codeBg, borderColor: C.codeBorder });
-
           setFont("normal", bodySize, C.codeText);
           let by = by0 + bodyLh + 2;
           lines.forEach((line) => {
             doc.text(line, bx + 4, by);
             by += bodyLh;
           });
-
           y += cardH + 5;
         }
 
-        // ===== TUGAS 1 =====
         renderTextBlock("TUGAS 1: MERANCANG PSEUDOCODE", data.task1, C.purple, [90, 60, 140]);
-
-        // ===== TUGAS 2 — Pengertian Pseudocode =====
         renderTextBlock("TUGAS 2.1: PENGERTIAN PSEUDOCODE", data.task3Pengertian, C.amber, [120, 90, 20]);
 
-        // ===== TUGAS 2.2 — Tabel Istilah =====
+        // ===== TUGAS 2.2 =====
         {
           const padX = 6;
           const innerW = contentW - padX * 2 - 4;
-
           const rows = [
             { no: 1, kunci: "INPUT / READ", fungsi: data.task3Fungsi1 },
             { no: 2, kunci: "PRINT / OUTPUT", fungsi: data.task3Fungsi2 },
@@ -1230,32 +1407,25 @@
             { no: 4, kunci: "IF - ELSE", fungsi: data.task3Fungsi4 },
             { no: 5, kunci: "WHILE / FOR", fungsi: data.task3Fungsi5 },
           ];
-
-          const titleH = 8;
-          const headerH = 7;
-          const rowPadY = 3;
-          const bodySize = 9.5;
-          const bodyLh = lh(bodySize);
-
+          const titleH = 8,
+            headerH = 7,
+            rowPadY = 3,
+            bodySize = 9.5,
+            bodyLh = lh(bodySize);
           const colNo = margin + padX + 2;
           const colKunci = colNo + 8;
           const colFungsi = colKunci + 45;
-
           const rowData = rows.map((r) => {
             const fungsiLines = measure(r.fungsi, bodySize, "normal", innerW - 55);
             const rowH = Math.max(12, fungsiLines.length * bodyLh + rowPadY * 2);
             return { ...r, fungsiLines, rowH };
           });
-
           const totalRowsH = rowData.reduce((a, r) => a + r.rowH, 0);
           const cardH = titleH + headerH + totalRowsH + 4;
-
           ensureSpace(cardH + 5);
           drawCard(margin, y, contentW, cardH, { accent: C.amber, borderColor: [120, 90, 20] });
-
           setFont("bold", 10.5, C.amber);
           doc.text("TUGAS 2.2: ISTILAH PERINTAH UMUM PSEUDOCODE", margin + padX + 2, y + 6);
-
           let cy = y + titleH;
           setFill([30, 30, 30]);
           doc.rect(colNo, cy, innerW, headerH, "F");
@@ -1264,59 +1434,47 @@
           doc.text("KATA KUNCI", colKunci, cy + 4.5);
           doc.text("FUNGSI", colFungsi, cy + 4.5);
           cy += headerH;
-
           rowData.forEach((r) => {
             setDraw([45, 45, 45]);
             doc.setLineWidth(0.15);
             doc.line(colNo, cy + r.rowH, colNo + innerW, cy + r.rowH);
-
             const midY = cy + r.rowH / 2 + 1;
-
             setFont("bold", 9.5, C.amber);
             doc.text(String(r.no), colNo + 2, midY);
-
             setFont("bold", 9.5, [192, 132, 252]);
             doc.text(r.kunci, colKunci, midY);
-
             setFont("normal", bodySize, C.text);
             let fy = cy + rowPadY + 3;
             r.fungsiLines.forEach((line) => {
               doc.text(line, colFungsi, fy);
               fy += bodyLh;
             });
-
             cy += r.rowH;
           });
-
           y += cardH + 5;
         }
 
-        // ===== TUGAS 3 — Variabel =====
         renderTextBlock("TUGAS 3: PENGERTIAN VARIABEL", data.task4Variabel, C.orange, [150, 80, 30]);
 
         // ===== TUGAS 4 — Tabel Tipe Data =====
         {
           const padX = 6;
           const innerW = contentW - padX * 2 - 4;
-
           const rows = [
             { tipe: "int", ket: data.task5Ket1, contoh: data.task5Contoh1 },
             { tipe: "float / double", ket: data.task5Ket2, contoh: data.task5Contoh2 },
             { tipe: "char", ket: data.task5Ket3, contoh: data.task5Contoh3 },
             { tipe: "string", ket: data.task5Ket4, contoh: data.task5Contoh4 },
           ];
-
-          const titleH = 8;
-          const headerH = 7;
-          const bodySize = 9.5;
-          const bodyLh = lh(bodySize);
-          const rowPadY = 3;
-
+          const titleH = 8,
+            headerH = 7,
+            bodySize = 9.5,
+            bodyLh = lh(bodySize),
+            rowPadY = 3;
           const colNo = margin + padX + 2;
           const colTipe = colNo + 8;
           const colKet = colTipe + 38;
           const colContoh = colKet + (innerW - 46) * 0.55;
-
           const rowData = rows.map((r) => {
             const ketLines = measure(r.ket, bodySize, "normal", colContoh - colKet - 4);
             const contohLines = measure(r.contoh, bodySize, "normal", colNo + innerW - colContoh - 2);
@@ -1324,16 +1482,12 @@
             const rowH = Math.max(12, contentLines * bodyLh + rowPadY * 2);
             return { ...r, ketLines, contohLines, rowH };
           });
-
           const totalRowsH = rowData.reduce((a, r) => a + r.rowH, 0);
           const cardH = titleH + headerH + totalRowsH + 4;
-
           ensureSpace(cardH + 5);
           drawCard(margin, y, contentW, cardH, { accent: C.sky, borderColor: [40, 100, 130] });
-
           setFont("bold", 10.5, C.sky);
           doc.text("TUGAS 4: TABEL TIPE DATA DASAR", margin + padX + 2, y + 6);
-
           let cy = y + titleH;
           setFill([30, 30, 30]);
           doc.rect(colNo, cy, innerW, headerH, "F");
@@ -1343,37 +1497,29 @@
           doc.text("KETERANGAN", colKet, cy + 4.5);
           doc.text("CONTOH", colContoh, cy + 4.5);
           cy += headerH;
-
           rowData.forEach((r, i) => {
             setDraw([45, 45, 45]);
             doc.setLineWidth(0.15);
             doc.line(colNo, cy + r.rowH, colNo + innerW, cy + r.rowH);
-
             const midY = cy + r.rowH / 2 + 1;
-
             setFont("bold", 9.5, C.sky);
             doc.text(String(i + 1), colNo + 2, midY);
-
             setFont("bold", 9.5, [56, 189, 248]);
             doc.text(r.tipe, colTipe, midY);
-
             setFont("normal", bodySize, C.text);
             let ky = cy + rowPadY + 3;
             r.ketLines.forEach((line) => {
               doc.text(line, colKet, ky);
               ky += bodyLh;
             });
-
             setFont("normal", bodySize, [251, 191, 36]);
             let cyy = cy + rowPadY + 3;
             r.contohLines.forEach((line) => {
               doc.text(line, colContoh, cyy);
               cyy += bodyLh;
             });
-
             cy += r.rowH;
           });
-
           y += cardH + 5;
         }
 
@@ -1383,11 +1529,9 @@
         for (let i = 1; i <= totalPages; i++) {
           doc.setPage(i);
           const fY = pageH - 8;
-
           setDraw([45, 45, 45]);
           doc.setLineWidth(0.2);
           doc.line(margin, fY - 4, pageW - margin, fY - 4);
-
           setFont("normal", 7.5, C.dim);
           doc.text("Platform: RuangInformatika  •  SMA Negeri 4 Yogyakarta  •  Dikembangkan oleh Pak Ilyas", margin, fY);
           doc.text("Halaman " + i + " / " + totalPages, pageW - margin, fY, { align: "right" });
@@ -1396,7 +1540,6 @@
 
         const safeName = (s) => (s || "-").replace(/[^\w\d]+/g, "_").replace(/^_+|_+$/g, "");
         const filename = "LKPD_Pseudocode_" + safeName(data.a1n) + "_" + safeName(data.kelas) + ".pdf";
-
         return { pdf: doc, data, filename };
       }
 
@@ -1414,17 +1557,16 @@
         }
       }
 
+      /* ANTI COPY */
       (function () {
         const toast = document.getElementById("anti-copy-toast");
         let toastTimeout;
-
         function showToast() {
           if (!toast) return;
           toast.classList.add("show");
           clearTimeout(toastTimeout);
           toastTimeout = setTimeout(() => toast.classList.remove("show"), 2000);
         }
-
         document.addEventListener("copy", (e) => {
           e.preventDefault();
           showToast();
@@ -1437,19 +1579,14 @@
           e.preventDefault();
           showToast();
         });
-
         document.addEventListener("contextmenu", (e) => {
           e.preventDefault();
           showToast();
         });
-
         document.addEventListener("selectstart", (e) => {
           const tag = (e.target.tagName || "").toUpperCase();
-          if (tag !== "INPUT" && tag !== "TEXTAREA" && tag !== "SELECT") {
-            e.preventDefault();
-          }
+          if (tag !== "INPUT" && tag !== "TEXTAREA" && tag !== "SELECT") e.preventDefault();
         });
-
         document.addEventListener("keydown", (e) => {
           if (e.ctrlKey || e.metaKey) {
             const k = (e.key || "").toLowerCase();

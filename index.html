@@ -3,47 +3,178 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dashboard PTS Informatika</title>
+    <title>RuangInformatika — Platform Persiapan PTS Informatika PATBHE</title>
+    <meta name="description" content="Platform e-learning interaktif modern kelas XE6 SMA Negeri 4 Yogyakarta. Kuasai Berpikir Komputasional, Stack & Queue, serta Algoritma Searching & Sorting." />
     <link rel="shortcut icon" href="images/Logo Patbhe.png" type="image/x-icon" />
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-    <!-- FontAwesome CDN -->
+    <link rel="stylesheet" href="style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-    <!-- Vanilla Tilt JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
-
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            fontFamily: {
-              sans: ["Inter", "sans-serif"],
-              mono: ["ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "monospace"],
-            },
-            colors: {
-              brandDark: "#0a0a0a",
-              brandGray: "#151515",
-              brandGreen: "#00e676",
-              textGray: "#a3a3a3",
-            },
-          },
-        },
-      };
-    </script>
     <style>
-      .bg-grid {
-        background-size: 40px 40px;
-        background-image: linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+      /* Hero section styles */
+      .hero {
+        position: relative;
+        padding: 72px 0 84px;
+        overflow: hidden;
       }
-      .glow {
-        box-shadow: 0 0 80px 10px rgba(0, 230, 118, 0.15);
+      .hero-bg-glow {
+        position: absolute;
+        top: -120px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 700px;
+        height: 450px;
+        background: radial-gradient(ellipse, rgba(0, 230, 118, 0.12) 0%, rgba(56, 189, 248, 0.06) 40%, transparent 70%);
+        pointer-events: none;
+        filter: blur(40px);
       }
-      .tilt-card {
-        transform-style: preserve-3d;
+      .hero-grid {
+        display: grid;
+        grid-template-columns: 1.15fr 0.85fr;
+        gap: 48px;
+        align-items: center;
       }
-      .tilt-card-content {
-        transform: translateZ(30px);
+      @media (max-width: 992px) {
+        .hero-grid {
+          grid-template-columns: 1fr;
+          gap: 40px;
+        }
+      }
+
+      .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 14px;
+        border-radius: 999px;
+        background: var(--bg-glass);
+        border: 1px solid var(--border-green);
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--green);
+        margin-bottom: 20px;
+        backdrop-filter: blur(8px);
+      }
+      .hero-title {
+        font-size: clamp(2.2rem, 5vw, 3.8rem);
+        font-weight: 800;
+        line-height: 1.12;
+        letter-spacing: -0.03em;
+        margin-bottom: 20px;
+      }
+      .hero-title .gradient-text {
+        background: linear-gradient(135deg, #00e676 0%, #38bdf8 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .hero-desc {
+        font-size: 1.05rem;
+        line-height: 1.65;
+        color: var(--text-muted);
+        max-width: 540px;
+        margin-bottom: 32px;
+      }
+
+      .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 40px;
+      }
+
+      /* Interactive Terminal Card */
+      .terminal-card {
+        background: #0b0f14;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+        box-shadow:
+          0 20px 50px rgba(0, 0, 0, 0.6),
+          0 0 30px rgba(0, 230, 118, 0.08);
+        position: relative;
+      }
+      .terminal-header {
+        background: rgba(255, 255, 255, 0.03);
+        border-bottom: 1px solid var(--border);
+        padding: 12px 18px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .terminal-dots {
+        display: flex;
+        gap: 8px;
+      }
+      .terminal-dot {
+        width: 11px;
+        height: 11px;
+        border-radius: 50%;
+      }
+      .dot-red {
+        background: #ef4444;
+      }
+      .dot-yellow {
+        background: #f59e0b;
+      }
+      .dot-green {
+        background: #10b981;
+      }
+
+      .terminal-title {
+        font-family: var(--font-mono);
+        font-size: 0.75rem;
+        color: var(--text-muted);
+      }
+      .terminal-body {
+        padding: 22px;
+        font-family: var(--font-mono);
+        font-size: 0.85rem;
+        line-height: 1.7;
+        color: #e2e8f0;
+        overflow-x: auto;
+      }
+      .terminal-line {
+        display: flex;
+        flex-wrap: wrap;
+        white-space: pre-wrap;
+      }
+      .syn-keyword {
+        color: #f472b6;
+        font-weight: 600;
+      }
+      .syn-var {
+        color: #38bdf8;
+      }
+      .syn-string {
+        color: #fde047;
+      }
+      .syn-operator {
+        color: var(--green);
+      }
+      .syn-comment {
+        color: #64748b;
+        font-style: italic;
+      }
+
+      .terminal-exec {
+        margin-top: 16px;
+        padding-top: 14px;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--green);
+        font-weight: 700;
+      }
+      .blinking-cursor {
+        display: inline-block;
+        width: 8px;
+        height: 16px;
+        background: var(--green);
+        animation: blink 1s infinite;
+        vertical-align: middle;
       }
       @keyframes blink {
         0%,
@@ -54,311 +185,759 @@
           opacity: 0;
         }
       }
-      .animate-blink {
-        animation: blink 1s step-end infinite;
+
+      /* Stats strip */
+      .stats-strip {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+        margin-top: 20px;
+        border-top: 1px solid var(--border);
+        padding-top: 28px;
+      }
+      @media (max-width: 768px) {
+        .stats-strip {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 16px;
+        }
+      }
+      .stat-item {
+        display: flex;
+        flex-direction: column;
+      }
+      .stat-val {
+        font-size: 1.6rem;
+        font-weight: 800;
+        font-family: var(--font-sans);
+        color: var(--text-primary);
+        letter-spacing: -0.02em;
+      }
+      .stat-val span {
+        color: var(--green);
+      }
+      .stat-label {
+        font-size: 0.78rem;
+        color: var(--text-muted);
+        margin-top: 2px;
+      }
+
+      /* Bento Grid Modul */
+      .bento-section {
+        padding: 60px 0 90px;
+      }
+      .section-header {
+        margin-bottom: 40px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .section-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--green);
+      }
+      .section-title {
+        font-size: clamp(1.8rem, 3.5vw, 2.5rem);
+        font-weight: 800;
+        letter-spacing: -0.02em;
+      }
+      .section-desc {
+        font-size: 0.95rem;
+        color: var(--text-muted);
+        max-width: 600px;
+      }
+
+      .bento-grid {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        gap: 24px;
+      }
+
+      .bento-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-xl);
+        padding: 32px;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        overflow: hidden;
+        transition: var(--transition);
+        cursor: pointer;
+      }
+      .bento-card:hover {
+        transform: translateY(-4px);
+        border-color: rgba(0, 230, 118, 0.3);
+        box-shadow:
+          0 16px 40px rgba(0, 0, 0, 0.5),
+          0 0 30px rgba(0, 230, 118, 0.06);
+      }
+
+      /* Highlight green card */
+      .card-highlight-green {
+        background: linear-gradient(145deg, #092617 0%, var(--bg-card) 60%);
+        border-color: rgba(0, 230, 118, 0.3);
+      }
+      .card-highlight-green:hover {
+        border-color: var(--green);
+        box-shadow: var(--shadow-green);
+      }
+
+      /* Col spans */
+      .col-6 {
+        grid-column: span 6;
+      }
+      .col-12 {
+        grid-column: span 12;
+      }
+      @media (max-width: 900px) {
+        .col-6 {
+          grid-column: span 12;
+        }
+      }
+
+      .card-icon-wrap {
+        width: 52px;
+        height: 52px;
+        border-radius: var(--radius-md);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.35rem;
+        margin-bottom: 24px;
+        border: 1px solid;
+      }
+      .icon-green {
+        background: var(--green-dim);
+        border-color: var(--border-green);
+        color: var(--green);
+      }
+      .icon-blue {
+        background: rgba(56, 189, 248, 0.1);
+        border-color: rgba(56, 189, 248, 0.25);
+        color: var(--blue);
+      }
+      .icon-purple {
+        background: rgba(167, 139, 250, 0.1);
+        border-color: rgba(167, 139, 250, 0.25);
+        color: var(--purple);
+      }
+      .icon-amber {
+        background: rgba(251, 191, 36, 0.1);
+        border-color: rgba(251, 191, 36, 0.25);
+        color: var(--amber);
+      }
+
+      .card-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 16px;
+      }
+      .card-tag {
+        font-size: 0.72rem;
+        font-weight: 600;
+        padding: 3px 10px;
+        border-radius: 999px;
+        border: 1px solid;
+      }
+      .tag-featured {
+        background: rgba(0, 230, 118, 0.15);
+        color: var(--green);
+        border-color: rgba(0, 230, 118, 0.3);
+      }
+      .tag-info {
+        background: rgba(255, 255, 255, 0.05);
+        color: var(--text-muted);
+        border-color: var(--border);
+      }
+
+      .card-title {
+        font-size: 1.45rem;
+        font-weight: 800;
+        letter-spacing: -0.01em;
+        margin-bottom: 12px;
+        color: var(--text-primary);
+      }
+      .card-desc {
+        font-size: 0.92rem;
+        color: var(--text-muted);
+        line-height: 1.6;
+        margin-bottom: 28px;
+      }
+
+      .card-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+        padding-top: 18px;
+        margin-top: auto;
+      }
+      .card-meta {
+        font-size: 0.8rem;
+        color: var(--text-faint);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .card-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.88rem;
+        font-weight: 700;
+        text-decoration: none;
+        padding: 10px 18px;
+        border-radius: var(--radius-sm);
+        transition: var(--transition);
+      }
+      .btn-solid-green {
+        background: var(--green);
+        color: #080c10;
+      }
+      .btn-solid-green:hover {
+        background: #22f78e;
+        box-shadow: var(--shadow-btn);
+        transform: translateX(2px);
+      }
+
+      /* Featured Horizontal layout */
+      .bento-card-featured {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 32px;
+        align-items: center;
+      }
+      @media (max-width: 800px) {
+        .bento-card-featured {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* Why Section */
+      .why-section {
+        padding: 60px 0 90px;
+        border-top: 1px solid var(--border);
+      }
+      .why-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+      }
+      @media (max-width: 860px) {
+        .why-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+      .why-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 28px;
+        transition: var(--transition);
+      }
+      .why-card:hover {
+        border-color: var(--border-green);
+        transform: translateY(-3px);
+      }
+      .why-card-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        background: var(--green-dim);
+        border: 1px solid var(--border-green);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--green);
+        font-size: 1.15rem;
+        margin-bottom: 18px;
+      }
+      .why-card-title {
+        font-size: 1.15rem;
+        font-weight: 700;
+        margin-bottom: 8px;
+      }
+      .why-card-desc {
+        font-size: 0.88rem;
+        color: var(--text-muted);
+        line-height: 1.6;
+      }
+
+      /* CTA Banner */
+      .cta-banner {
+        background: linear-gradient(135deg, rgba(0, 230, 118, 0.1) 0%, rgba(56, 189, 248, 0.05) 100%), var(--bg-card);
+        border: 1px solid var(--border-green);
+        border-radius: var(--radius-xl);
+        padding: 48px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+        margin-bottom: 80px;
+      }
+      .cta-banner-title {
+        font-size: clamp(1.8rem, 3.5vw, 2.4rem);
+        font-weight: 800;
+        margin-bottom: 14px;
+      }
+      .cta-banner-desc {
+        font-size: 1rem;
+        color: var(--text-muted);
+        max-width: 580px;
+        margin: 0 auto 28px;
+      }
+      .cta-banner-btns {
+        display: flex;
+        justify-content: center;
+        gap: 16px;
+        flex-wrap: wrap;
       }
     </style>
   </head>
-  <body class="bg-brandDark text-white font-sans antialiased overflow-x-hidden flex flex-col min-h-screen">
-    <!-- Navigation -->
-    <nav class="max-w-7xl mx-auto px-6 py-6 flex items-center justify-between border-b border-white/5 relative z-50 w-full">
-      <!-- Logo -->
-      <div class="flex items-center gap-3">
-        <i class="fa-solid fa-code text-brandGreen text-xl"></i>
-        <span class="text-xl font-bold tracking-tight text-brandGreen">RuangInformatika</span>
+
+  <body class="bg-grid">
+    <!-- Navbar -->
+    <nav class="navbar">
+      <div class="navbar-inner">
+        <a href="index.html" class="navbar-logo">
+          <div class="navbar-logo-icon"><i class="fa-solid fa-code"></i></div>
+          <span class="navbar-logo-text">RuangInformatika</span>
+        </a>
+
+        <div class="navbar-links">
+          <a href="index.html" class="nav-link active">Dashboard</a>
+          <a href="#materi" class="nav-link">Daftar Modul</a>
+          <a href="leaderboard.html" class="nav-link">Leaderboard</a>
+          <a href="forum.html" class="nav-link">Forum Diskusi</a>
+        </div>
+
+        <button class="nav-badge"><i class="fa-solid fa-chalkboard-user"></i> Kelas XE6</button>
+
+        <button class="hamburger-btn" id="hamburgerBtn" aria-label="Menu">
+          <i class="fa-solid fa-bars"></i>
+        </button>
       </div>
 
-      <!-- Menu Desktop (md ke atas) -->
-      <div class="hidden md:flex items-center gap-8 text-sm font-medium text-gray-300">
-        <a href="index.html" class="text-white">Dashboard</a>
-        <a href="index.html#materi" class="hover:text-white transition">Daftar Materi</a>
-        <a href="leaderboard.html" class="hover:text-white transition">Leaderboard</a>
-        <a href="forum.html" class="hover:text-white transition">Forum Diskusi</a>
-      </div>
-
-      <!-- Tombol Pak Ilyas (Desktop) -->
-      <button class="hidden md:flex items-center gap-2 border border-white/10 rounded-full px-5 py-2.5 text-sm font-medium hover:bg-white/5 transition"><i class="fa-solid fa-chalkboard-user text-brandGreen"></i> XE6</button>
-
-      <!-- Tombol Hamburger (Mobile) -->
-      <button id="hamburgerBtn" class="md:hidden text-white text-2xl focus:outline-none" aria-label="Menu">
-        <i class="fa-solid fa-bars"></i>
-      </button>
-
-      <!-- Menu Mobile (Dropdown) -->
-      <div id="mobileMenu" class="hidden absolute top-full left-0 right-0 bg-brandDark border-b border-white/10 md:hidden z-[60] shadow-lg">
-        <div class="px-6 py-4 flex flex-col gap-4 text-sm font-medium text-gray-300">
-          <a href="index.html" class="text-white py-2">Dashboard</a>
-          <a href="index.html#materi" class="hover:text-white transition py-2">Daftar Materi</a>
-          <a href="leaderboard.html" class="hover:text-white transition py-2">Leaderboard</a>
-          <a href="forum.html" class="hover:text-white transition py-2">Forum Diskusi</a>
-          <button class="flex items-center gap-2 border border-white/10 rounded-full px-5 py-2.5 text-sm font-medium hover:bg-white/5 transition mt-2"><i class="fa-solid fa-chalkboard-user text-brandGreen"></i> XE6</button>
+      <!-- Mobile Drawer -->
+      <div class="mobile-menu" id="mobileMenu">
+        <a href="index.html" class="mobile-nav-link" style="color: var(--green)"> <i class="fa-solid fa-house" style="margin-right: 10px"></i> Dashboard </a>
+        <a href="#materi" class="mobile-nav-link"> <i class="fa-solid fa-book-open" style="margin-right: 10px"></i> Daftar Modul </a>
+        <a href="leaderboard.html" class="mobile-nav-link"> <i class="fa-solid fa-trophy" style="margin-right: 10px"></i> Leaderboard </a>
+        <a href="forum.html" class="mobile-nav-link"> <i class="fa-solid fa-comments" style="margin-right: 10px"></i> Forum Diskusi </a>
+        <div style="padding: 12px 16px">
+          <button class="nav-badge" style="width: 100%; justify-content: center"><i class="fa-solid fa-chalkboard-user"></i> Kelas XE6 — SMAN 4 Yogyakarta</button>
         </div>
       </div>
     </nav>
 
-    <!-- Main Content Wrapper (Agar footer selalu di bawah) -->
-    <div class="flex-grow">
-      <!-- Hero Section -->
-      <main class="relative bg-grid pb-16 pt-16 overflow-hidden">
-        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] max-w-[800px] h-[60vw] max-h-[500px] bg-brandGreen/10 rounded-full blur-[150px] pointer-events-none"></div>
+    <!-- Hero Section -->
+    <header class="hero">
+      <div class="hero-bg-glow"></div>
+      <div class="container" style="max-width: 1280px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 10">
+        <div class="hero-grid">
+          <!-- Kolom Kiri: Teks & Aksi -->
+          <div class="reveal">
+            <div class="hero-badge"><i class="fa-solid fa-rocket"></i> Semangat Persiapan PTS Informatika PATBHE!</div>
 
-        <div class="max-w-7xl mx-auto px-6 py-12 flex flex-col md:flex-row items-center gap-12 relative z-10">
-          <!-- Kolom Kiri: Teks -->
-          <div class="flex-1 text-left w-full md:pr-10">
-            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-medium text-gray-300 mb-6">
-              <i class="fa-solid fa-rocket text-brandGreen"></i> Semangat Persiapan PTS PATBHE!
-            </div>
-
-            <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.2] mb-6">
+            <h1 class="hero-title">
               Taklukkan Logika, <br />
-              <span class="text-brandGreen">Kuasai Informatika</span>
+              <span class="gradient-text">Kuasai Informatika</span>
             </h1>
 
-            <p class="text-textGray text-base md:text-lg mb-8 leading-relaxed max-w-xl">
-              Setiap <i>error</i> adalah kesempatan belajar. Mari eksplorasi Berpikir Komputasional, Stack & Queue, hingga algoritma pencarian bersama-sama sebelum ujian tiba.
+            <p class="hero-desc">
+              Setiap <i>error</i> adalah kesempatan belajar terbaik. Eksplorasi konsep Berpikir Komputasional, struktur data Stack &amp; Queue, serta algoritma pencarian &amp; pengurutan secara interaktif sebelum ujian tiba.
             </p>
 
-            <div class="flex flex-wrap items-center gap-4">
-              <button onclick="window.location.href = '#materi'" class="bg-brandGreen text-black font-semibold rounded-xl px-6 py-3.5 hover:bg-green-400 transition flex items-center gap-2">
-                Mulai Belajar <i class="fa-solid fa-arrow-right"></i>
-              </button>
+            <div class="hero-actions">
+              <a href="#materi" class="btn-primary"> Mulai Belajar <i class="fa-solid fa-arrow-down" style="font-size: 0.8rem"></i> </a>
+              <a href="leaderboard.html" class="btn-secondary"> <i class="fa-solid fa-trophy" style="color: var(--amber)"></i> Cek Leaderboard </a>
+            </div>
+
+            <!-- Stats Strip -->
+            <div class="stats-strip">
+              <div class="stat-item">
+                <div class="stat-val">6<span>+</span></div>
+                <div class="stat-label">Modul Pembelajaran</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-val">100<span>%</span></div>
+                <div class="stat-label">Simulasi Interaktif</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-val">XE6</div>
+                <div class="stat-label">Kelas Terintegrasi</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-val">24<span>/7</span></div>
+                <div class="stat-label">Akses Materi Online</div>
+              </div>
             </div>
           </div>
 
-          <!-- Kolom Kanan: Ilustrasi Vektor Kode HTML/CSS -->
-          <div class="flex-1 w-full max-w-lg mx-auto mt-10 md:mt-0 relative">
-            <div class="tilt-card w-full" data-tilt data-tilt-glare data-tilt-max-glare="0.2">
-              <div class="tilt-card-content relative bg-[#111] border border-white/10 rounded-2xl overflow-hidden shadow-2xl glow">
-                <div class="bg-white/5 border-b border-white/5 px-4 py-3 flex items-center gap-2">
-                  <div class="w-3 h-3 rounded-full bg-red-500"></div>
-                  <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
-                  <div class="w-3 h-3 rounded-full bg-brandGreen"></div>
-                  <div class="ml-4 text-xs text-textGray font-mono">persiapan_pts.js</div>
+          <!-- Kolom Kanan: Visual Terminal Interaktif -->
+          <div class="reveal delay-100">
+            <div class="terminal-card tilt-card" data-tilt data-tilt-glare data-tilt-max-glare="0.12">
+              <div class="terminal-header">
+                <div class="terminal-dots">
+                  <span class="terminal-dot dot-red"></span>
+                  <span class="terminal-dot dot-yellow"></span>
+                  <span class="terminal-dot dot-green"></span>
                 </div>
-
-                <div class="p-6 font-mono text-sm sm:text-base text-gray-300 space-y-2 overflow-x-auto">
-                  <div class="flex"><span class="text-pink-500 mr-2">function</span> <span class="text-blue-400">siapUjian</span>() {</div>
-                  <div class="pl-6 flex"><span class="text-pink-500 mr-2">const</span> pilar <span class="text-brandGreen">=</span> [<span class="text-yellow-300">'Dekomposisi'</span>, <span class="text-yellow-300">'Pola'</span>];</div>
-                  <div class="pl-6 flex"><span class="text-pink-500 mr-2">const</span> struktur <span class="text-brandGreen">=</span> [<span class="text-yellow-300">'Stack'</span>, <span class="text-yellow-300">'Queue'</span>];</div>
-                  <br />
-                  <div class="pl-6 flex"><span class="text-pink-500 mr-2">if</span> (paham_materi <span class="text-brandGreen">===</span> <span class="text-purple-400">true</span>) {</div>
-                  <div class="pl-12 flex"><span class="text-blue-400">console</span>.log(<span class="text-yellow-300">"Siap hadapi PTS!"</span>);</div>
-                  <div class="pl-6 flex">} <span class="text-pink-500 mx-2">else</span> {</div>
-                  <div class="pl-12 flex"><span class="text-blue-400">belajarLagi</span>(ruangInformatika);</div>
-                  <div class="pl-6 flex">}</div>
-                  <div class="flex">}</div>
-
-                  <div class="mt-4 flex items-center gap-1 text-brandGreen font-bold pt-4">
-                    > execute siapUjian();
-                    <div class="w-2.5 h-5 bg-brandGreen animate-blink ml-1"></div>
-                  </div>
+                <span class="terminal-title"><i class="fa-solid fa-file-code" style="margin-right: 6px"></i>persiapan_pts.js</span>
+                <button
+                  onclick="salinKode()"
+                  title="Salin kode"
+                  style="background: none; border: none; color: var(--text-faint); cursor: pointer; font-size: 0.8rem; transition: color 0.2s"
+                  onmouseover="this.style.color = 'var(--green)'"
+                  onmouseout="this.style.color = 'var(--text-faint)'"
+                >
+                  <i class="fa-regular fa-copy" id="copyIcon"></i>
+                </button>
+              </div>
+              <div class="terminal-body" id="codeContent">
+                <div class="terminal-line"><span class="syn-keyword">function</span> <span class="syn-var">siapUjianPTS</span>() {</div>
+                <div class="terminal-line">
+                  <span class="syn-keyword">const</span> pilarBK <span class="syn-operator">=</span> [<span class="syn-string">'Dekomposisi'</span>, <span class="syn-string">'Pola'</span>, <span class="syn-string">'Abstraksi'</span>,
+                  <span class="syn-string">'Algoritma'</span>];
+                </div>
+                <div class="terminal-line"><span class="syn-keyword">const</span> struktur <span class="syn-operator">=</span> [<span class="syn-string">'Stack (LIFO)'</span>, <span class="syn-string">'Queue (FIFO)'</span>];</div>
+                <div class="terminal-line"><span class="syn-keyword">const</span> algoritma <span class="syn-operator">=</span> [<span class="syn-string">'Searching'</span>, <span class="syn-string">'Sorting'</span>];</div>
+                <div class="terminal-line">&nbsp;</div>
+                <div class="terminal-line"><span class="syn-keyword">if</span> (pahamKonsep <span class="syn-operator">&amp;&amp;</span> seringLatihan) {</div>
+                <div class="terminal-line"><span class="syn-var">console</span>.log(<span class="syn-string">"🚀 Nilai 100 di tangan! Taklukkan PTS!"</span>);</div>
+                <div class="terminal-line">} <span class="syn-keyword">else</span> {</div>
+                <div class="terminal-line"><span class="syn-var">bukaModul</span>(ruangInformatika);</div>
+                <div class="terminal-line">}</div>
+                <div class="terminal-line">}</div>
+                <div class="terminal-exec">
+                  <span>&gt; execute siapUjianPTS();</span>
+                  <span class="blinking-cursor"></span>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </main>
+      </div>
+    </header>
 
-      <!-- Menu Modul Belajar (Bento Grid) -->
-      <section class="max-w-7xl mx-auto px-6 py-12" id="materi">
-        <h2 class="text-2xl font-bold mb-8 border-l-4 border-brandGreen pl-4">Pilih Modul Belajarmu</h2>
+    <!-- Bento Grid Modul Belajar -->
+    <main id="materi" class="bento-section">
+      <div class="container" style="max-width: 1280px; margin: 0 auto; padding: 0 24px">
+        <!-- Section Header -->
+        <div class="section-header reveal">
+          <span class="section-tag"><i class="fa-solid fa-cubes"></i> Kurikulum Persiapan PTS</span>
+          <h2 class="section-title">Pilih Modul Belajarmu</h2>
+          <p class="section-desc">Setiap modul dilengkapi materi ringkas, video penjelasan, simulasi interaktif, dan kuis latihan soal bertingkat.</p>
+        </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 text-left">
-          <!-- 1. Berpikir Komputasional -->
-          <div class="tilt-card bg-[#0b4d24] border border-brandGreen/20 rounded-3xl p-8 cursor-pointer relative overflow-hidden flex flex-col" data-tilt data-tilt-glare data-tilt-max-glare="0.2">
-            <div class="absolute inset-0 bg-grid opacity-20 mix-blend-overlay pointer-events-none"></div>
-            <div class="tilt-card-content flex flex-col h-full relative z-10">
-              <div class="bg-black/30 backdrop-blur-md w-12 h-12 rounded-2xl flex items-center justify-center mb-6 border border-white/10">
-                <i class="fa-solid fa-brain text-2xl text-white"></i>
+        <div class="bento-grid">
+          <!-- 1. Berpikir Komputasional (Col-6) -->
+          <div class="bento-card col-6 card-highlight-green tilt-card reveal" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
+            <div>
+              <div class="card-icon-wrap icon-green">
+                <i class="fa-solid fa-brain"></i>
               </div>
-              <h3 class="text-2xl font-bold mb-3 text-white">Berpikir Komputasional</h3>
-              <p class="text-white/80 text-sm mb-8 flex-grow">Kuasai 4 Pilar utama: Dekomposisi, Pengenalan Pola, Abstraksi, dan Perancangan Algoritma.</p>
-
-              <a href="materi-bk.html">
-                <button class="bg-white text-black w-full py-3 rounded-xl text-sm font-semibold hover:bg-gray-200 transition">Buka Modul</button>
-              </a>
+              <div class="card-tags">
+                <span class="card-tag tag-featured"><i class="fa-solid fa-star"></i> Fondasi Utama</span>
+                <span class="card-tag tag-info"><i class="fa-regular fa-clock"></i> 20 Menit</span>
+              </div>
+              <h3 class="card-title">Berpikir Komputasional</h3>
+              <p class="card-desc">Kuasai 4 Pilar utama: Dekomposisi persoalan, Pengenalan Pola, Abstraksi konsep esensial, dan Perancangan Algoritma langkah demi langkah.</p>
+            </div>
+            <div class="card-footer">
+              <span class="card-meta"><i class="fa-solid fa-list-check"></i> 10 Latihan Soal</span>
+              <a href="materi-bk.html" class="card-btn btn-solid-green"> Buka Modul <i class="fa-solid fa-arrow-right"></i> </a>
             </div>
           </div>
 
-          <!-- 2. Stack & Queue -->
-          <div class="tilt-card bg-brandGray border border-white/5 rounded-3xl p-8 cursor-pointer hover:border-brandGreen/30 transition-colors flex flex-col" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
-            <div class="tilt-card-content flex flex-col h-full">
-              <div class="bg-brandGreen/10 w-12 h-12 rounded-2xl flex items-center justify-center mb-6 border border-brandGreen/20">
-                <i class="fa-solid fa-layer-group text-2xl text-brandGreen"></i>
+          <!-- 2. Stack & Queue (Col-6) -->
+          <div class="bento-card col-6 tilt-card reveal delay-100" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
+            <div>
+              <div class="card-icon-wrap icon-blue">
+                <i class="fa-solid fa-layer-group"></i>
               </div>
-              <h3 class="text-2xl font-bold mb-3">Stack & Queue</h3>
-              <p class="text-textGray text-sm mb-8 flex-grow">Pelajari struktur data fundamental. Pahami konsep tumpukan (LIFO) dan antrean (FIFO).</p>
-
-              <a href="materi-stack-queue.html">
-                <button class="bg-white/5 border border-white/10 w-full py-3 rounded-xl text-sm font-semibold hover:bg-brandGreen hover:text-black transition">Buka Modul</button>
-              </a>
+              <div class="card-tags">
+                <span class="card-tag tag-featured" style="background: rgba(56, 189, 248, 0.15); color: var(--blue); border-color: rgba(56, 189, 248, 0.3)"><i class="fa-solid fa-diagram-project"></i> Struktur Data</span>
+                <span class="card-tag tag-info"><i class="fa-regular fa-clock"></i> 25 Menit</span>
+              </div>
+              <h3 class="card-title">Stack &amp; Queue</h3>
+              <p class="card-desc">Pelajari konsep tumpukan (LIFO - Last In First Out) vs antrean (FIFO - First In First Out) lengkap dengan visualisasi animasi Push, Pop, dan Dequeue.</p>
+            </div>
+            <div class="card-footer">
+              <span class="card-meta"><i class="fa-solid fa-microchip"></i> Simulasi Visual</span>
+              <a href="materi-stack-queue.html" class="card-btn btn-outline"> Buka Modul <i class="fa-solid fa-arrow-right"></i> </a>
             </div>
           </div>
 
-          <!-- 3. Algoritma Standar: Searching & Sorting (lebar penuh di baris kedua) -->
-          <div
-            class="tilt-card bg-brandGray border border-white/5 rounded-3xl p-8 md:p-12 cursor-pointer hover:border-brandGreen/30 transition-colors lg:col-span-2 flex flex-col lg:flex-row items-center gap-8"
-            data-tilt
-            data-tilt-glare
-            data-tilt-max-glare="0.1"
-          >
-            <div class="tilt-card-content flex-grow w-full">
-              <div class="flex items-center gap-4 mb-4">
-                <div class="bg-brandGreen/10 w-12 h-12 rounded-2xl flex items-center justify-center border border-brandGreen/20">
-                  <i class="fa-solid fa-magnifying-glass-chart text-2xl text-brandGreen"></i>
+          <!-- 3. Searching & Sorting (Col-12 Featured Baris Penuh) -->
+          <div class="bento-card col-12 tilt-card reveal delay-150" data-tilt data-tilt-glare data-tilt-max-glare="0.06">
+            <div class="bento-card-featured">
+              <div>
+                <div class="card-icon-wrap icon-amber">
+                  <i class="fa-solid fa-magnifying-glass-chart"></i>
                 </div>
-                <span class="px-3 py-1 bg-brandGreen/20 text-brandGreen text-xs font-bold rounded-full border border-brandGreen/30"> Materi Terpenting </span>
-              </div>
-              <h3 class="text-3xl font-bold mb-3">Algoritma Standar: Searching & Sorting</h3>
-              <p class="text-textGray text-sm md:text-base max-w-2xl">Dari Bubble Sort, Insertion Sort, hingga Binary Search. Dilengkapi dengan video penjelasan dan simulasi interaktif agar kamu bisa melihat langsung pergerakan datanya.</p>
-            </div>
-            <div class="tilt-card-content w-full lg:w-auto shrink-0 mt-4 lg:mt-0">
-              <a href="materi-search-sort.html">
-                <button class="bg-brandGreen text-black w-full lg:w-auto px-8 py-4 rounded-xl text-sm font-bold hover:bg-green-400 transition shadow-[0_0_20px_rgba(0,230,118,0.4)] flex items-center justify-center gap-2">
-                  Mulai Modul <i class="fa-solid fa-arrow-right"></i>
-                </button>
-              </a>
-            </div>
-          </div>
-
-          <!-- 5. Bedah Kisi-Kisi (Sekarang berukuran sama dengan modul lain agar seimbang) -->
-          <div class="tilt-card bg-brandGray border border-white/5 rounded-3xl p-8 cursor-pointer hover:border-brandGreen/30 transition-colors flex flex-col" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
-            <div class="tilt-card-content flex flex-col h-full">
-              <div class="bg-brandGreen/10 w-12 h-12 rounded-2xl flex items-center justify-center mb-6 border border-brandGreen/20">
-                <i class="fa-solid fa-bullseye text-2xl text-brandGreen"></i>
-              </div>
-              <h3 class="text-2xl font-bold mb-3">Bedah Kisi-Kisi</h3>
-              <p class="text-textGray text-sm mb-8 flex-grow">Pahami peta jalan ujianmu. Lihat bobot soal dan strategi jitu menaklukkan setiap materi PTS.</p>
-
-              <a href="kisi.html">
-                <button class="bg-white/5 border border-white/10 w-full py-3 rounded-xl text-sm font-semibold hover:bg-brandGreen hover:text-black transition">Buka Modul</button>
-              </a>
-            </div>
-          </div>
-
-          <!-- 4. Algoritma & Pemrograman (Modul Baru di baris ketiga) -->
-          <div class="tilt-card bg-brandGray border border-white/5 rounded-3xl p-8 cursor-pointer hover:border-brandGreen/30 transition-colors flex flex-col" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
-            <div class="tilt-card-content flex flex-col h-full">
-              <div class="bg-brandGreen/10 w-12 h-12 rounded-2xl flex items-center justify-center mb-6 border border-brandGreen/20">
-                <i class="fa-solid fa-laptop-code text-2xl text-brandGreen"></i>
-              </div>
-              <h3 class="text-2xl font-bold mb-3">Algoritma & Pemrograman</h3>
-              <p class="text-textGray text-sm mb-8 flex-grow">Pelajari logika algortima terstruktur melalui diagram alir (flowchart).</p>
-
-              <a href="Materi_AP/materi-algoritma.html">
-                <button class="bg-white/5 border border-white/10 w-full py-3 rounded-xl text-sm font-semibold hover:bg-brandGreen hover:text-black transition">Buka Modul</button>
-              </a>
-            </div>
-          </div>
-
-          <!-- 6. Pseudocode & Pengenalan Bahasa Pemrograman (Featured) -->
-          <div
-            class="tilt-card bg-brandGray border border-white/5 rounded-3xl p-8 md:p-12 cursor-pointer hover:border-brandGreen/30 transition-colors lg:col-span-2 flex flex-col lg:flex-row items-center gap-8"
-            data-tilt
-            data-tilt-glare
-            data-tilt-max-glare="0.1"
-          >
-            <div class="tilt-card-content flex-grow w-full">
-              <div class="flex items-center gap-4 mb-4">
-                <div class="bg-brandGreen/10 w-12 h-12 rounded-2xl flex items-center justify-center border border-brandGreen/20">
-                  <i class="fa-solid fa-terminal text-2xl text-brandGreen"></i>
+                <div class="card-tags">
+                  <span class="card-tag tag-featured" style="background: rgba(251, 191, 36, 0.15); color: var(--amber); border-color: rgba(251, 191, 36, 0.3)"><i class="fa-solid fa-fire"></i> Materi Terpenting PTS</span>
+                  <span class="card-tag tag-info"><i class="fa-regular fa-clock"></i> 35 Menit</span>
+                  <span class="card-tag tag-info"><i class="fa-solid fa-play"></i> Video Interaktif</span>
                 </div>
-                <span class="px-3 py-1 bg-brandGreen/20 text-brandGreen text-xs font-bold rounded-full border border-brandGreen/30"> Materi Wajib Dikuasai </span>
+                <h3 class="card-title" style="font-size: 1.8rem">Algoritma Standar: Searching &amp; Sorting</h3>
+                <p class="card-desc" style="max-width: 700px; margin-bottom: 0">
+                  Pahami algoritma Linear Search, Binary Search, Bubble Sort, hingga Insertion Sort. Dilengkapi visualizer interaktif langkah-demi-langkah sehingga kamu dapat melihat perpindahan elemen data secara langsung.
+                </p>
               </div>
-              <h3 class="text-3xl font-bold mb-3">Pseudocode & Pengenalan Bahasa Pemrograman</h3>
-              <p class="text-textGray text-sm md:text-base max-w-2xl">Belajar menuliskan logika program dalam bentuk pseudocode, lalu mengenal sintaks dasar bahasa pemrograman C++.</p>
+              <div style="flex-shrink: 0">
+                <a href="materi-search-sort.html" class="card-btn btn-solid-green" style="padding: 14px 28px; font-size: 1rem"> Mulai Modul Ini <i class="fa-solid fa-arrow-right"></i> </a>
+              </div>
             </div>
-            <div class="tilt-card-content w-full lg:w-auto shrink-0 mt-4 lg:mt-0">
-              <a href="Materi_PS/materi.html">
-                <button class="bg-brandGreen text-black w-full lg:w-auto px-8 py-4 rounded-xl text-sm font-bold hover:bg-green-400 transition shadow-[0_0_20px_rgba(0,230,118,0.4)] flex items-center justify-center gap-2">
-                  Mulai Modul <i class="fa-solid fa-arrow-right"></i>
-                </button>
-              </a>
+          </div>
+
+          <!-- 4. Bedah Kisi-Kisi PTS (Col-6) -->
+          <div class="bento-card col-6 tilt-card reveal delay-200" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
+            <div>
+              <div class="card-icon-wrap icon-purple">
+                <i class="fa-solid fa-bullseye"></i>
+              </div>
+              <div class="card-tags">
+                <span class="card-tag tag-info"><i class="fa-solid fa-map"></i> Peta Jalan Ujian</span>
+                <span class="card-tag tag-info"><i class="fa-solid fa-award"></i> Bobot Nilai</span>
+              </div>
+              <h3 class="card-title">Bedah Kisi-Kisi PTS</h3>
+              <p class="card-desc">Pahami indikator capaian kompetensi, tipe-tipe soal yang akan keluar, dan strategi taktis belajar efisien sebelum menghadapi lembar ujian.</p>
+            </div>
+            <div class="card-footer">
+              <span class="card-meta"><i class="fa-solid fa-clipboard-check"></i> Kisi Resmi Patbhe</span>
+              <a href="kisi.html" class="card-btn btn-outline"> Buka Kisi-Kisi <i class="fa-solid fa-arrow-right"></i> </a>
+            </div>
+          </div>
+
+          <!-- 5. Algoritma & Pemrograman (Col-6) -->
+          <div class="bento-card col-6 tilt-card reveal delay-250" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
+            <div>
+              <div class="card-icon-wrap icon-green">
+                <i class="fa-solid fa-laptop-code"></i>
+              </div>
+              <div class="card-tags">
+                <span class="card-tag tag-info"><i class="fa-solid fa-shapes"></i> Flowchart Logika</span>
+                <span class="card-tag tag-info"><i class="fa-regular fa-clock"></i> 20 Menit</span>
+              </div>
+              <h3 class="card-title">Algoritma &amp; Pemrograman</h3>
+              <p class="card-desc">Pelajari konstruksi algoritma terstruktur menggunakan diagram alir (flowchart), simbol standar, kondisi percabangan, dan perulangan.</p>
+            </div>
+            <div class="card-footer">
+              <span class="card-meta"><i class="fa-solid fa-diagram-project"></i> Diagram Alir</span>
+              <a href="Materi_AP/materi-algoritma.html" class="card-btn btn-outline"> Buka Modul <i class="fa-solid fa-arrow-right"></i> </a>
+            </div>
+          </div>
+
+          <!-- 6. Pseudocode & Pengenalan Bahasa Pemrograman (Col-12 Featured) -->
+          <div class="bento-card col-12 tilt-card reveal delay-300" data-tilt data-tilt-glare data-tilt-max-glare="0.06">
+            <div class="bento-card-featured">
+              <div>
+                <div class="card-icon-wrap icon-blue">
+                  <i class="fa-solid fa-terminal"></i>
+                </div>
+                <div class="card-tags">
+                  <span class="card-tag tag-featured" style="background: rgba(56, 189, 248, 0.15); color: var(--blue); border-color: rgba(56, 189, 248, 0.3)"><i class="fa-solid fa-code"></i> Materi Lanjutan</span>
+                  <span class="card-tag tag-info"><i class="fa-solid fa-gear"></i> Dasar C++</span>
+                </div>
+                <h3 class="card-title" style="font-size: 1.8rem">Pseudocode &amp; Pengenalan Pemrograman C++</h3>
+                <p class="card-desc" style="max-width: 700px; margin-bottom: 0">Latih kemampuan menuangkan gagasan solusi ke dalam bentuk notasi algoritmik semu (pseudocode), lalu mentranslasikannya ke kode sumber C++ nyata.</p>
+              </div>
+              <div style="flex-shrink: 0">
+                <a href="Materi_PS/materi.html" class="card-btn btn-solid-green" style="padding: 14px 28px; font-size: 1rem"> Mulai Modul Ini <i class="fa-solid fa-arrow-right"></i> </a>
+              </div>
             </div>
           </div>
         </div>
-      </section>
+      </div>
+    </main>
+
+    <!-- Kenapa Belajar di RuangInformatika? -->
+    <section class="why-section">
+      <div class="container" style="max-width: 1280px; margin: 0 auto; padding: 0 24px">
+        <div class="section-header reveal">
+          <span class="section-tag"><i class="fa-solid fa-sparkles"></i> Keunggulan Platform</span>
+          <h2 class="section-title">Metode Belajar Efektif</h2>
+          <p class="section-desc">Dirancang sesuai kurikulum Informatika SMA untuk membantu murid memahami logika komputasi tanpa rasa bosan.</p>
+        </div>
+
+        <div class="why-grid">
+          <div class="why-card reveal">
+            <div class="why-card-icon"><i class="fa-solid fa-eye"></i></div>
+            <h3 class="why-card-title">Visualisasi Interaktif</h3>
+            <p class="why-card-desc">Bukan sekadar teks membosankan. Kamu bisa melihat data bergerak, tumpukan buku bertambah, hingga algoritma bekerja di layar.</p>
+          </div>
+
+          <div class="why-card reveal delay-100">
+            <div class="why-card-icon"><i class="fa-solid fa-chart-line"></i></div>
+            <h3 class="why-card-title">Papan Peringkat Realtime</h3>
+            <p class="why-card-desc">Setiap keaktifan dan skor latihan langsung tercatat pada Leaderboard kelas XE6 yang disinkronkan ke Google Sheets.</p>
+          </div>
+
+          <div class="why-card reveal delay-200">
+            <div class="why-card-icon"><i class="fa-solid fa-comments"></i></div>
+            <h3 class="why-card-title">Forum Tanya Jawab</h3>
+            <p class="why-card-desc">Punya kendala atau bingung dengan soal logika tertentu? Ajukan di Forum Diskusi dan diskusikan langsung bersama teman &amp; guru.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Banner -->
+    <div class="container" style="max-width: 1280px; margin: 0 auto; padding: 0 24px">
+      <div class="cta-banner reveal">
+        <h2 class="cta-banner-title">Siap Taklukkan Ujian PTS Informatika?</h2>
+        <p class="cta-banner-desc">Mulai latihan sekarang dari modul Berpikir Komputasional dan buktikan pemahaman logikamu di papan peringkat!</p>
+        <div class="cta-banner-btns">
+          <a href="materi-bk.html" class="btn-primary"> Mulai dari Modul 1 <i class="fa-solid fa-arrow-right"></i> </a>
+          <a href="leaderboard.html" class="btn-secondary"> <i class="fa-solid fa-trophy" style="color: var(--amber)"></i> Buka Leaderboard </a>
+        </div>
+      </div>
     </div>
 
-    <!-- Footer Area (Identik dengan index.html) -->
-    <footer class="border-t border-white/5 bg-[#080808] pt-12 pb-8 relative z-10 w-full mt-auto">
-      <div class="max-w-7xl mx-auto px-6">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-          <div class="md:col-span-2">
-            <div class="flex items-center gap-3 mb-4">
-              <i class="fa-solid fa-code text-brandGreen text-2xl"></i>
-              <span class="text-2xl font-bold tracking-tight text-brandGreen">RuangInformatika</span>
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container" style="max-width: 1280px; margin: 0 auto; padding: 0 24px">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <div class="footer-logo">
+              <div class="footer-logo-icon"><i class="fa-solid fa-code"></i></div>
+              <span class="footer-logo-text">RuangInformatika</span>
             </div>
-            <p class="text-textGray text-base leading-relaxed max-w-sm">
-              Platform e-learning interaktif modern yang dirancang khusus untuk memfasilitasi gaya belajar visual dan praktik, memastikan pemahaman mendalam untuk menaklukkan soal-soal PTS.
-            </p>
+            <p class="footer-desc">Platform e-learning interaktif modern yang dirancang untuk memfasilitasi gaya belajar visual dan praktik murid SMA Negeri 4 Yogyakarta.</p>
           </div>
-          <div>
-            <h4 class="text-white font-semibold text-lg mb-4">Pintasan Modul</h4>
-            <ul class="space-y-3 text-base text-textGray">
-              <li><a href="kisi.html" class="hover:text-brandGreen transition">Bedah Kisi-Kisi</a></li>
-              <li><a href="materi-bk.html" class="hover:text-brandGreen transition">Berpikir Komputasional</a></li>
-              <li><a href="materi-stack-queue.html" class="hover:text-brandGreen transition">Stack & Queue</a></li>
-              <li><a href="materi-search-sort.html" class="hover:text-brandGreen transition">Searching & Sorting</a></li>
+
+          <div class="footer-col">
+            <h4 class="footer-heading">Pintasan Modul</h4>
+            <ul class="footer-links">
+              <li>
+                <a href="kisi.html" class="footer-link"><i class="fa-solid fa-chevron-right" style="font-size: 0.65rem"></i> Bedah Kisi-Kisi</a>
+              </li>
+              <li>
+                <a href="materi-bk.html" class="footer-link"><i class="fa-solid fa-chevron-right" style="font-size: 0.65rem"></i> Berpikir Komputasional</a>
+              </li>
+              <li>
+                <a href="materi-stack-queue.html" class="footer-link"><i class="fa-solid fa-chevron-right" style="font-size: 0.65rem"></i> Stack &amp; Queue</a>
+              </li>
+              <li>
+                <a href="materi-search-sort.html" class="footer-link"><i class="fa-solid fa-chevron-right" style="font-size: 0.65rem"></i> Searching &amp; Sorting</a>
+              </li>
+              <li>
+                <a href="Materi_AP/materi-algoritma.html" class="footer-link"><i class="fa-solid fa-chevron-right" style="font-size: 0.65rem"></i> Algoritma Pemrograman</a>
+              </li>
             </ul>
           </div>
-          <div>
-            <h4 class="text-white font-semibold text-lg mb-4">Dukungan</h4>
-            <ul class="space-y-3 text-base text-textGray">
+
+          <div class="footer-col">
+            <h4 class="footer-heading">Fitur &amp; Dukungan</h4>
+            <ul class="footer-links">
               <li>
-                <a href="leaderboard.html" class="hover:text-brandGreen transition"><i class="fa-solid fa-ranking-star mr-2"></i> Leaderboard</a>
+                <a href="leaderboard.html" class="footer-link"><i class="fa-solid fa-trophy" style="color: var(--amber)"></i> Leaderboard Kelas</a>
               </li>
               <li>
-                <a href="forum.html" class="hover:text-brandGreen transition"><i class="fa-solid fa-comments mr-2"></i> Forum Diskusi</a>
+                <a href="forum.html" class="footer-link"><i class="fa-solid fa-comments" style="color: var(--blue)"></i> Forum Diskusi</a>
               </li>
               <li>
-                <a href="https://wa.me/6285282386260?text=Halo%20Pak%20Ilyas%2C%20saya%20ingin%20bertanya%20tentang%20materi%20Informatika." target="_blank" class="hover:text-brandGreen transition">
-                  <i class="fa-solid fa-chalkboard-user mr-2"></i> Hubungi Guru</a
-                >
+                <a href="https://wa.me/6285282386260?text=Halo%20Pak%20Ilyas%2C%20saya%20ingin%20bertanya%20tentang%20materi%20Informatika." target="_blank" class="footer-link">
+                  <i class="fa-solid fa-chalkboard-user" style="color: var(--green)"></i> Hubungi Pak Ilyas
+                </a>
               </li>
             </ul>
           </div>
         </div>
-        <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-base text-textGray">
-          <p>&copy; 2026 RuangInformatika. Dikembangkan oleh Pak Ilyas untuk kelas Informatika SMA Negeri 4 Yogyakarta.</p>
-          <div class="flex gap-4 text-2xl">
-            <a href="https://github.com/fandhi19" class="hover:text-brandGreen transition"><i class="fa-brands fa-github"></i></a>
-            <a href="https://e-portofolio-fandhi.vercel.app/" class="hover:text-brandGreen transition"><i class="fa-solid fa-globe"></i></a>
-            <a href="https://www.instagram.com/fandhidk17/" class="hover:text-brandGreen transition"><i class="fa-brands fa-instagram"></i></a>
+
+        <div class="footer-bottom">
+          <p class="footer-copy">&copy; 2026 RuangInformatika. Dikembangkan untuk kelas Informatika XE6 SMA Negeri 4 Yogyakarta.</p>
+          <div class="footer-socials">
+            <a href="https://github.com/fandhi19" target="_blank" class="footer-social" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+            <a href="https://e-portofolio-fandhi.vercel.app/" target="_blank" class="footer-social" aria-label="Portfolio"><i class="fa-solid fa-globe"></i></a>
+            <a href="https://www.instagram.com/fandhidk17/" target="_blank" class="footer-social" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
           </div>
         </div>
       </div>
     </footer>
 
-    <!-- Script inisiasi Vanilla Tilt -->
+    <!-- Scripts -->
     <script>
-      VanillaTilt.init(document.querySelectorAll(".tilt-card"), {
-        max: 6,
-        speed: 400,
-        glare: true,
-        "max-glare": 0.15,
-      });
+      // VanillaTilt init
+      if (typeof VanillaTilt !== "undefined") {
+        VanillaTilt.init(document.querySelectorAll(".tilt-card"), {
+          max: 5,
+          speed: 400,
+          glare: true,
+          "max-glare": 0.1,
+        });
+      }
 
-      // Humberger Mobile
+      // Hamburger Mobile Menu
       const hamburgerBtn = document.getElementById("hamburgerBtn");
       const mobileMenu = document.getElementById("mobileMenu");
 
-      hamburgerBtn.addEventListener("click", function () {
-        mobileMenu.classList.toggle("hidden");
-        const icon = hamburgerBtn.querySelector("i");
-        icon.classList.toggle("fa-bars");
-        icon.classList.toggle("fa-xmark");
-      });
-
-      // Tutup menu saat salah satu link/button di dalamnya diklik
-      mobileMenu.querySelectorAll("a, button").forEach((item) => {
-        item.addEventListener("click", () => {
-          mobileMenu.classList.add("hidden");
+      if (hamburgerBtn && mobileMenu) {
+        hamburgerBtn.addEventListener("click", () => {
+          mobileMenu.classList.toggle("open");
           const icon = hamburgerBtn.querySelector("i");
-          icon.classList.add("fa-bars");
-          icon.classList.remove("fa-xmark");
+          icon.classList.toggle("fa-bars");
+          icon.classList.toggle("fa-xmark");
         });
-      });
+
+        mobileMenu.querySelectorAll("a, button").forEach((item) => {
+          item.addEventListener("click", () => {
+            mobileMenu.classList.remove("open");
+            const icon = hamburgerBtn.querySelector("i");
+            icon.classList.add("fa-bars");
+            icon.classList.remove("fa-xmark");
+          });
+        });
+      }
+
+      // Scroll reveal animation
+      const reveals = document.querySelectorAll(".reveal");
+      const revealObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("visible");
+              revealObserver.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.1 },
+      );
+
+      reveals.forEach((el) => revealObserver.observe(el));
+
+      // Salin kode interaktif
+      function salinKode() {
+        const code = `function siapUjianPTS() {
+  const pilarBK = ['Dekomposisi', 'Pola', 'Abstraksi', 'Algoritma'];
+  const struktur = ['Stack (LIFO)', 'Queue (FIFO)'];
+  const algoritma = ['Searching', 'Sorting'];
+
+  if (pahamKonsep && seringLatihan) {
+    console.log("🚀 Nilai 100 di tangan! Taklukkan PTS!");
+  } else {
+    bukaModul(ruangInformatika);
+  }
+}`;
+        navigator.clipboard.writeText(code).then(() => {
+          const icon = document.getElementById("copyIcon");
+          icon.className = "fa-solid fa-check";
+          icon.style.color = "var(--green)";
+          setTimeout(() => {
+            icon.className = "fa-regular fa-copy";
+            icon.style.color = "";
+          }, 2000);
+        });
+      }
     </script>
   </body>
 </html>

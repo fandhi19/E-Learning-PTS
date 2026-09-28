@@ -3,37 +3,128 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Post-Test: Algoritma & Pemrograman - RuangInformatika</title>
+    <title>Post-Test: Algoritma &amp; Pemrograman — RuangInformatika</title>
     <link rel="shortcut icon" href="../images/Logo Patbhe.png" type="image/x-icon" />
+
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet" />
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+
+    <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <!-- Vanilla Tilt -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
 
     <script>
       tailwind.config = {
         theme: {
           extend: {
             fontFamily: {
-              sans: ["Inter", "sans-serif"],
-              mono: ["Fira Code", "ui-monospace", "Consolas", "monospace"],
+              sans: ["Plus Jakarta Sans", "sans-serif"],
+              mono: ["JetBrains Mono", "ui-monospace", "monospace"],
             },
             colors: {
-              brandDark: "#0a0a0a",
-              brandGray: "#151515",
+              brandDark: "#080c10",
+              brandGray: "#111820",
               brandGreen: "#00e676",
-              textGray: "#d1d5db",
+              textGray: "#8896a7",
             },
           },
         },
       };
     </script>
 
+    <!-- MASTER CSS -->
+    <link rel="stylesheet" href="../style.css" />
+
     <style>
-      .bg-grid {
-        background-size: 40px 40px;
-        background-image: linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+      .tilt-card {
+        transform-style: preserve-3d;
+      }
+      .tilt-card-content {
+        transform: translateZ(30px);
+      }
+      main {
+        background: transparent;
       }
 
+      /* ── Reading Progress Bar ── */
+      #readProgress {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 3px;
+        background: linear-gradient(90deg, var(--green), var(--blue));
+        z-index: 999;
+        transition: width 0.1s ease-out;
+        width: 0%;
+        box-shadow: 0 0 12px rgba(0, 230, 118, 0.5);
+      }
+
+      /* ── Page Hero ── */
+      .page-hero {
+        position: relative;
+        padding: 64px 0 40px;
+        overflow: hidden;
+      }
+      .page-hero-glow {
+        position: absolute;
+        top: -100px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 700px;
+        height: 400px;
+        background: radial-gradient(ellipse, rgba(56, 189, 248, 0.12) 0%, rgba(0, 230, 118, 0.05) 40%, transparent 70%);
+        filter: blur(40px);
+        pointer-events: none;
+      }
+      .page-hero-inner {
+        max-width: 1024px;
+        margin: 0 auto;
+        padding: 0 24px;
+        position: relative;
+        z-index: 10;
+      }
+      .page-hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 14px;
+        border-radius: 999px;
+        background: rgba(56, 189, 248, 0.1);
+        border: 1px solid rgba(56, 189, 248, 0.3);
+        font-size: 0.78rem;
+        font-weight: 700;
+        color: #38bdf8;
+        margin-bottom: 18px;
+        backdrop-filter: blur(8px);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
+      .page-hero-title {
+        font-size: clamp(2rem, 4.5vw, 3rem);
+        font-weight: 800;
+        line-height: 1.15;
+        letter-spacing: -0.03em;
+        margin-bottom: 16px;
+      }
+      .page-hero-title .gradient-text-blue {
+        background: linear-gradient(135deg, #38bdf8 0%, #00e676 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .page-hero-desc {
+        font-size: 1rem;
+        line-height: 1.7;
+        color: var(--text-muted);
+        max-width: 640px;
+      }
+
+      /* ── QUESTION CARD STYLES ── */
       .question-card {
         transition: all 0.3s ease;
       }
@@ -83,7 +174,7 @@
       .option-label input[type="radio"]:checked ~ .option-marker {
         border-color: #38bdf8;
         background: #38bdf8;
-        color: #0a0a0a;
+        color: #080c10;
       }
       .option-label.selected {
         background: rgba(56, 189, 248, 0.08);
@@ -100,7 +191,7 @@
       .option-label.review-correct .option-marker {
         background: #00e676;
         border-color: #00e676;
-        color: #0a0a0a;
+        color: #080c10;
       }
       .option-label.review-wrong {
         background: rgba(244, 63, 94, 0.1) !important;
@@ -151,68 +242,82 @@
           font-size: 1rem;
         }
         h1 {
-          font-size: 1.75rem !important;
+          font-size: 1.875rem !important;
           line-height: 1.2 !important;
         }
         h2 {
-          font-size: 1.35rem !important;
+          font-size: 1.5rem !important;
+        }
+        h3 {
+          font-size: 1.25rem !important;
         }
       }
     </style>
   </head>
-  <body class="bg-brandDark text-white font-sans antialiased overflow-x-hidden flex flex-col min-h-screen text-lg">
-    <!-- Navbar -->
-    <nav class="max-w-7xl mx-auto px-6 py-6 flex items-center justify-between border-b border-white/5 relative z-50 w-full">
-      <div class="flex items-center gap-3">
-        <i class="fa-solid fa-code text-brandGreen text-xl"></i>
-        <span class="text-xl font-bold tracking-tight text-brandGreen">RuangInformatika</span>
+
+  <body class="bg-grid text-white font-sans antialiased overflow-x-hidden flex flex-col min-h-screen">
+    <div id="readProgress"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+      <div class="navbar-inner">
+        <a href="../index.html" class="navbar-logo">
+          <div class="navbar-logo-icon"><i class="fa-solid fa-code"></i></div>
+          <span class="navbar-logo-text">RuangInformatika</span>
+        </a>
+        <div class="navbar-links">
+          <a href="../index.html" class="nav-link">Dashboard</a>
+          <a href="../index.html#materi" class="nav-link">Daftar Modul</a>
+          <a href="../leaderboard.html" class="nav-link">Leaderboard</a>
+          <a href="../forum.html" class="nav-link">Forum Diskusi</a>
+        </div>
+        <a href="materi-algoritma.html" class="nav-badge" style="text-decoration: none"><i class="fa-solid fa-arrow-left"></i> Kembali</a>
+        <button class="hamburger-btn" id="hamburgerBtn" aria-label="Menu">
+          <i class="fa-solid fa-bars"></i>
+        </button>
       </div>
 
-      <div class="flex items-center gap-3">
-        <!-- Tombol Kembali (Desktop) -->
-        <a href="materi-algoritma.html" class="hidden md:flex items-center gap-2 border border-white/10 rounded-full px-5 py-2.5 text-sm font-medium hover:bg-white/5 transition">
-          <i class="fa-solid fa-arrow-left text-brandGreen"></i> Kembali
-        </a>
-
-        <!-- Tombol Pak Ilyas (Desktop) -->
-        <button class="hidden md:flex items-center gap-2 border border-white/10 rounded-full px-5 py-2.5 text-sm font-medium hover:bg-white/5 transition"><i class="fa-solid fa-chalkboard-user text-brandGreen"></i> XE6</button>
-
-        <!-- Tombol Kembali (Mobile) -->
-        <a href="materi-algoritma.html" class="md:hidden flex items-center justify-center w-10 h-10 border border-white/10 rounded-full hover:bg-white/5 transition" aria-label="Kembali">
-          <i class="fa-solid fa-arrow-left text-brandGreen"></i>
-        </a>
+      <!-- Mobile Drawer -->
+      <div class="mobile-menu" id="mobileMenu">
+        <a href="../index.html" class="mobile-nav-link"> <i class="fa-solid fa-house" style="margin-right: 10px"></i> Dashboard </a>
+        <a href="../index.html#materi" class="mobile-nav-link"> <i class="fa-solid fa-book-open" style="margin-right: 10px"></i> Daftar Modul </a>
+        <a href="../leaderboard.html" class="mobile-nav-link"> <i class="fa-solid fa-trophy" style="margin-right: 10px"></i> Leaderboard </a>
+        <a href="../forum.html" class="mobile-nav-link"> <i class="fa-solid fa-comments" style="margin-right: 10px"></i> Forum Diskusi </a>
+        <a href="materi-algoritma.html" class="mobile-nav-link"> <i class="fa-solid fa-arrow-left" style="margin-right: 10px"></i> Kembali ke Modul </a>
+        <div style="padding: 12px 16px">
+          <button class="nav-badge" style="width: 100%; justify-content: center"><i class="fa-solid fa-chalkboard-user"></i> Kelas XE6 — SMAN 4 Yogyakarta</button>
+        </div>
       </div>
     </nav>
 
-    <!-- Main Content -->
-    <div class="flex-grow relative bg-grid">
-      <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-sky-500/5 rounded-full blur-[120px] pointer-events-none"></div>
-
-      <main class="max-w-4xl mx-auto px-6 py-12 relative z-10">
-        <!-- HEADER POST-TEST -->
-        <div class="mb-8 text-center md:text-left fade-in-up">
-          <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-sky-500/10 border border-sky-500/30 text-sm font-bold text-sky-400 mb-4"><i class="fa-solid fa-clipboard-check"></i> Tahap 2 • Post-Test</div>
-          <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight mb-3 leading-tight">
-            Post-Test<br />
-            <span class="text-sky-400">Algoritma &amp; Pemrograman</span>
-          </h1>
-          <p class="text-textGray text-base md:text-lg max-w-2xl leading-relaxed">
-            Ukur kembali pemahamanmu setelah membaca materi, mengerjakan simulasi, dan menyelesaikan LKPD. Kerjakan dengan jujur — hasil ini untuk melihat perkembanganmu!
-          </p>
+    <!-- Main Content Wrapper -->
+    <div class="flex-grow relative">
+      <!-- Page Hero -->
+      <header class="page-hero">
+        <div class="page-hero-glow"></div>
+        <div class="page-hero-inner">
+          <div class="reveal">
+            <div class="page-hero-badge"><i class="fa-solid fa-clipboard-check"></i> Tahap 2 • Post-Test</div>
+            <h1 class="page-hero-title">Post-Test<br /><span class="gradient-text-blue">Algoritma &amp; Pemrograman</span></h1>
+            <p class="page-hero-desc">Ukur kembali pemahamanmu setelah membaca materi, mengerjakan simulasi, dan menyelesaikan LKPD. Kerjakan dengan jujur — hasil ini untuk melihat perkembanganmu!</p>
+          </div>
         </div>
+      </header>
 
+      <main class="max-w-4xl mx-auto px-6 pb-12 relative z-10">
         <!-- ============ SECTION 1: FORM IDENTITAS ============ -->
         <div id="posttest-form-section" class="space-y-6">
-          <div class="bg-gradient-to-br from-sky-500/10 via-brandGray to-brandGray border border-sky-500/30 rounded-3xl p-6 md:p-8 text-center md:text-left">
+          <!-- Intro Card -->
+          <div class="reveal bg-gradient-to-br from-sky-500/10 via-brandGray to-brandGray border border-sky-500/30 rounded-3xl p-6 md:p-8">
             <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-sky-500/15 border border-sky-500/30 text-sm font-bold text-sky-400 mb-4"><i class="fa-solid fa-clipboard-check"></i> Tahap 2 • Post-Test</div>
-            <h2 class="text-2xl md:text-4xl font-extrabold tracking-tight mb-3">Uji Pemahaman Akhirmu</h2>
+            <h2 class="text-2xl md:text-3xl font-bold tracking-tight mb-3">Uji Pemahaman Akhirmu</h2>
             <p class="text-textGray text-base md:text-lg max-w-2xl leading-relaxed">
               Jawab 10 soal berikut. Nilai Post-Test ini akan <strong class="text-white">dibandingkan dengan nilai Pre-Test</strong> untuk melihat seberapa jauh pemahamanmu berkembang. 💪
             </p>
           </div>
 
           <!-- Info Card -->
-          <div class="bg-brandGray border border-white/10 rounded-2xl p-5 md:p-6">
+          <div class="reveal bg-brandGray border border-white/5 rounded-3xl p-6 md:p-8">
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div class="flex items-center gap-3">
                 <div class="w-11 h-11 rounded-xl bg-sky-500/10 border border-sky-500/25 flex items-center justify-center text-sky-400 text-lg shrink-0">
@@ -245,7 +350,7 @@
           </div>
 
           <!-- Form Input -->
-          <div class="bg-brandGray border border-sky-500/30 rounded-2xl p-6 md:p-8 space-y-5">
+          <div class="reveal bg-brandGray border border-sky-500/30 rounded-3xl p-6 md:p-8 space-y-5">
             <div class="flex items-center gap-3 border-b border-white/10 pb-4">
               <div class="w-11 h-11 rounded-xl bg-sky-500/10 border border-sky-500/25 flex items-center justify-center text-sky-400 text-lg shrink-0">
                 <i class="fa-solid fa-user-pen"></i>
@@ -283,7 +388,7 @@
               <i class="fa-solid fa-triangle-exclamation mr-2"></i><span id="posttest-form-warning-text"></span>
             </div>
 
-            <button onclick="startPostTest()" class="w-full py-4 bg-sky-500 text-white font-bold rounded-xl hover:bg-sky-400 transition shadow-lg shadow-sky-500/20 flex items-center justify-center gap-2 text-base">
+            <button onclick="startPostTest()" class="w-full py-4 bg-sky-500 text-white font-bold rounded-xl hover:bg-sky-400 transition shadow-lg shadow-sky-500/20 flex items-center justify-center gap-2 text-base cursor-pointer">
               <i class="fa-solid fa-play"></i> Mulai Post-Test
             </button>
           </div>
@@ -292,7 +397,7 @@
         <!-- ============ SECTION 2: SOAL POST-TEST ============ -->
         <div id="posttest-quiz-section" class="hidden space-y-6">
           <!-- Info Siswa -->
-          <div class="bg-brandGray border border-white/10 rounded-2xl p-4 md:p-5 flex items-center justify-between flex-wrap gap-3">
+          <div class="bg-brandGray border border-white/5 rounded-2xl p-4 md:p-5 flex items-center justify-between flex-wrap gap-3">
             <div class="flex items-center gap-3">
               <div class="w-11 h-11 rounded-xl bg-sky-500/15 border border-sky-500/30 flex items-center justify-center text-sky-400 text-lg font-bold shrink-0">
                 <i class="fa-solid fa-user-check"></i>
@@ -302,11 +407,11 @@
                 <p class="text-white font-bold text-base"><span id="display-nama">-</span> • Absen <span id="display-absen">-</span></p>
               </div>
             </div>
-            <button onclick="cancelPostTest()" class="text-xs text-textGray hover:text-rose-400 transition flex items-center gap-1.5 font-semibold"><i class="fa-solid fa-rotate-left"></i> Ganti Identitas</button>
+            <button onclick="cancelPostTest()" class="text-xs text-textGray hover:text-rose-400 transition flex items-center gap-1.5 font-semibold cursor-pointer"><i class="fa-solid fa-rotate-left"></i> Ganti Identitas</button>
           </div>
 
           <!-- Progress Bar Sticky -->
-          <div id="progress-container" class="bg-brandGray/90 backdrop-blur-md border border-white/10 rounded-2xl p-4 sticky top-2 z-40">
+          <div id="progress-container" class="bg-brandGray/90 backdrop-blur-md border border-white/5 rounded-2xl p-4 sticky top-2 z-40">
             <div class="flex items-center justify-between mb-2">
               <span class="text-sm font-bold text-white flex items-center gap-2"> <i class="fa-solid fa-chart-simple text-sky-400"></i> Progress Pengerjaan </span>
               <span class="text-sm font-bold">
@@ -328,7 +433,7 @@
             <button
               id="btn-submit"
               onclick="submitPostTest()"
-              class="inline-flex items-center gap-3 px-8 py-3.5 bg-sky-500 text-white font-bold rounded-xl hover:bg-sky-400 transition shadow-lg shadow-sky-500/20 disabled:opacity-50 disabled:cursor-not-allowed"
+              class="inline-flex items-center gap-3 px-8 py-3.5 bg-sky-500 text-white font-bold rounded-xl hover:bg-sky-400 transition shadow-lg shadow-sky-500/20 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
             >
               <i class="fa-solid fa-paper-plane"></i> Kumpulkan Jawaban
             </button>
@@ -385,27 +490,75 @@
 
           <!-- Action Buttons -->
           <div class="flex flex-wrap gap-3 justify-center">
-            <button onclick="retryPostTest()" class="inline-flex items-center gap-2 px-6 py-3 bg-white/5 border border-white/15 text-white font-bold rounded-xl hover:bg-white/10 transition">
+            <button onclick="retryPostTest()" class="inline-flex items-center gap-2 px-6 py-3 bg-white/5 border border-white/15 text-white font-bold rounded-xl hover:bg-white/10 transition cursor-pointer">
               <i class="fa-solid fa-rotate-left"></i> Coba Lagi
             </button>
             <a href="materi-algoritma.html" class="inline-flex items-center gap-2 px-6 py-3 bg-white/5 border border-white/15 text-white font-bold rounded-xl hover:bg-white/10 transition">
               <i class="fa-solid fa-book-open"></i> Kembali ke Materi
             </a>
-            <a href="index.html" class="inline-flex items-center gap-2 px-6 py-3 bg-white/5 border border-white/15 text-white font-bold rounded-xl hover:bg-white/10 transition"> <i class="fa-solid fa-house"></i> Dashboard </a>
+            <a href="../index.html" class="inline-flex items-center gap-2 px-6 py-3 bg-white/5 border border-white/15 text-white font-bold rounded-xl hover:bg-white/10 transition"> <i class="fa-solid fa-house"></i> Dashboard </a>
           </div>
         </div>
       </main>
     </div>
 
     <!-- Footer -->
-    <footer class="border-t border-white/5 bg-[#080808] pt-8 pb-6 relative z-10 w-full mt-auto">
-      <div class="max-w-7xl mx-auto px-6 text-center md:text-left">
-        <div class="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-textGray">
-          <p>&copy; 2026 RuangInformatika. Dikembangkan oleh Pak Ilyas untuk kelas Informatika SMA Negeri 4 Yogyakarta.</p>
-          <div class="flex gap-4 text-xl">
-            <a href="https://github.com/fandhi19" class="hover:text-brandGreen transition"><i class="fa-brands fa-github"></i></a>
-            <a href="https://e-portofolio-fandhi.vercel.app/" class="hover:text-brandGreen transition"><i class="fa-solid fa-globe"></i></a>
-            <a href="https://www.instagram.com/fandhidk17/" class="hover:text-brandGreen transition"><i class="fa-brands fa-instagram"></i></a>
+    <footer class="footer">
+      <div class="container" style="max-width: 1280px; margin: 0 auto; padding: 0 24px">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <div class="footer-logo">
+              <div class="footer-logo-icon"><i class="fa-solid fa-code"></i></div>
+              <span class="footer-logo-text">RuangInformatika</span>
+            </div>
+            <p class="footer-desc">Platform e-learning interaktif modern yang dirancang untuk memfasilitasi gaya belajar visual dan praktik murid SMA Negeri 4 Yogyakarta.</p>
+          </div>
+
+          <div class="footer-col">
+            <h4 class="footer-heading">Pintasan Modul</h4>
+            <ul class="footer-links">
+              <li>
+                <a href="../kisi.html" class="footer-link"><i class="fa-solid fa-chevron-right" style="font-size: 0.65rem"></i> Bedah Kisi-Kisi</a>
+              </li>
+              <li>
+                <a href="../materi-bk.html" class="footer-link"><i class="fa-solid fa-chevron-right" style="font-size: 0.65rem"></i> Berpikir Komputasional</a>
+              </li>
+              <li>
+                <a href="materi-algoritma.html" class="footer-link" style="color: var(--green)"><i class="fa-solid fa-chevron-right" style="font-size: 0.65rem"></i> Algoritma &amp; Pemrograman</a>
+              </li>
+              <li>
+                <a href="../materi-stack-queue.html" class="footer-link"><i class="fa-solid fa-chevron-right" style="font-size: 0.65rem"></i> Stack &amp; Queue</a>
+              </li>
+              <li>
+                <a href="../materi-search-sort.html" class="footer-link"><i class="fa-solid fa-chevron-right" style="font-size: 0.65rem"></i> Searching &amp; Sorting</a>
+              </li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h4 class="footer-heading">Fitur &amp; Dukungan</h4>
+            <ul class="footer-links">
+              <li>
+                <a href="../leaderboard.html" class="footer-link"><i class="fa-solid fa-trophy" style="color: var(--amber)"></i> Leaderboard Kelas</a>
+              </li>
+              <li>
+                <a href="../forum.html" class="footer-link"><i class="fa-solid fa-comments" style="color: var(--blue)"></i> Forum Diskusi</a>
+              </li>
+              <li>
+                <a href="https://wa.me/6285282386260?text=Halo%20Pak%20Ilyas%2C%20saya%20ingin%20bertanya%20tentang%20materi%20Informatika." target="_blank" class="footer-link">
+                  <i class="fa-solid fa-chalkboard-user" style="color: var(--green)"></i> Hubungi Pak Ilyas
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="footer-bottom">
+          <p class="footer-copy">&copy; 2026 RuangInformatika. Dikembangkan untuk kelas Informatika XE6 SMA Negeri 4 Yogyakarta.</p>
+          <div class="footer-socials">
+            <a href="https://github.com/fandhi19" target="_blank" class="footer-social" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+            <a href="https://e-portofolio-fandhi.vercel.app/" target="_blank" class="footer-social" aria-label="Portfolio"><i class="fa-solid fa-globe"></i></a>
+            <a href="https://www.instagram.com/fandhidk17/" target="_blank" class="footer-social" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
           </div>
         </div>
       </div>
@@ -413,12 +566,64 @@
 
     <!-- Main Script -->
     <script>
+      /* ── Reading Progress Bar ── */
+      window.addEventListener("scroll", () => {
+        const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrolled = (winScroll / height) * 100;
+        const p = document.getElementById("readProgress");
+        if (p) p.style.width = scrolled + "%";
+      });
+
+      /* ── Vanilla Tilt ── */
+      if (typeof VanillaTilt !== "undefined") {
+        VanillaTilt.init(document.querySelectorAll(".tilt-card"), {
+          max: 6,
+          speed: 400,
+          glare: true,
+          "max-glare": 0.15,
+        });
+      }
+
+      /* ── Mobile Menu ── */
+      const hamburgerBtn = document.getElementById("hamburgerBtn");
+      const mobileMenu = document.getElementById("mobileMenu");
+      if (hamburgerBtn && mobileMenu) {
+        hamburgerBtn.addEventListener("click", () => {
+          mobileMenu.classList.toggle("open");
+          const icon = hamburgerBtn.querySelector("i");
+          icon.classList.toggle("fa-bars");
+          icon.classList.toggle("fa-xmark");
+        });
+        mobileMenu.querySelectorAll("a, button").forEach((item) => {
+          item.addEventListener("click", () => {
+            mobileMenu.classList.remove("open");
+            const icon = hamburgerBtn.querySelector("i");
+            icon.classList.add("fa-bars");
+            icon.classList.remove("fa-xmark");
+          });
+        });
+      }
+
+      /* ── Scroll Reveal ── */
+      const revealObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("visible");
+              revealObserver.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.1 },
+      );
+      document.querySelectorAll(".reveal").forEach((el) => revealObserver.observe(el));
+
       /* ============================================================
          POST-TEST QUIZ
          Soal & kunci SAMA PERSIS dengan Pre-Test
-         ============================================================ */
+      ============================================================ */
 
-      // 👇 GANTI URL INI DENGAN URL APPS SCRIPT KAMU
       const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyLlfvMPJDEfj2dazOrTUxyfjpN7Ys7kbxs4lC1bwN1eR8KniAGTEPEyeYHGM7nozA5/exec";
 
       const QUESTIONS = [
@@ -440,8 +645,6 @@
           answer: 1,
           explanation: "Flowchart adalah gambar visual berupa bentuk geometris (simbol) yang menggambarkan alur program.",
         },
-
-        /* ============ SOAL 4 — GAMBAR OVAL ============ */
         {
           q: `Perhatikan gambar simbol flowchart berikut. Apa nama dari simbol tersebut?
         <div class="mt-4 flex justify-center">
@@ -455,8 +658,6 @@
           answer: 2,
           explanation: "Simbol oval (lonjong) disebut Terminator, untuk menandai titik awal (Start) atau akhir (End) program.",
         },
-
-        /* ============ SOAL 5 — GAMBAR JAJAR GENJANG ============ */
         {
           q: `Perhatikan gambar simbol flowchart berikut. Apa fungsi dari simbol tersebut?
         <div class="mt-4 flex justify-center">
@@ -470,8 +671,6 @@
           answer: 3,
           explanation: "Simbol jajar genjang berfungsi untuk menerima input atau menampilkan output.",
         },
-
-        /* ============ SOAL 6 — PILIH GAMBAR (INPUT/OUTPUT) ============ */
         {
           q: 'Manakah simbol flowchart yang digunakan untuk menggambarkan proses <strong class="text-brandGreen">input dan output data</strong>?',
           options: [
@@ -499,8 +698,6 @@
           answer: 2,
           explanation: "Input/Output data digambarkan dengan simbol jajar genjang (parallelogram).",
         },
-
-        /* ============ SOAL 7 — GAMBAR BELAH KETUPAT ============ */
         {
           q: `Perhatikan gambar simbol flowchart berikut. Simbol ini berfungsi untuk…
         <div class="mt-4 flex justify-center">
@@ -514,8 +711,6 @@
           answer: 1,
           explanation: "Simbol belah ketupat (diamond) menunjukkan keputusan atau percabangan kondisi (Ya/Tidak).",
         },
-
-        /* ============ SOAL 8 — GAMBAR PERSEGI PANJANG ============ */
         {
           q: `Perhatikan gambar simbol flowchart berikut. Simbol ini digunakan untuk melambangkan…
         <div class="mt-4 flex justify-center">
@@ -529,7 +724,6 @@
           answer: 0,
           explanation: "Simbol persegi panjang melambangkan proses komputasi atau perhitungan data.",
         },
-
         {
           q: "Dalam ciri algoritma yang baik, algoritma harus berhenti setelah melakukan sejumlah langkah tertentu dan tidak boleh mengalami <em>infinite loop</em>. Ciri algoritma ini disebut…",
           options: ["Input", "Output", "Finiteness (Keterbatasan)", "Definiteness (Kepastian)"],

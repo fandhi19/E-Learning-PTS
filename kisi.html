@@ -5,12 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Bedah Kisi-Kisi PTS Informatika | RuangInformatika</title>
     <link rel="shortcut icon" href="images/Logo Patbhe.png" type="image/x-icon" />
+
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
-    <!-- FontAwesome CDN -->
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+
+    <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-    <!-- Vanilla Tilt JS -->
+
+    <!-- Vanilla Tilt -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
 
     <script>
@@ -18,44 +23,119 @@
         theme: {
           extend: {
             fontFamily: {
-              sans: ["Inter", "sans-serif"],
-              mono: ["ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "monospace"],
+              sans: ["Plus Jakarta Sans", "sans-serif"],
+              mono: ["JetBrains Mono", "ui-monospace", "monospace"],
             },
             colors: {
-              brandDark: "#0a0a0a",
-              brandGray: "#151515",
-              brandCard: "#121212",
+              brandDark: "#080c10",
+              brandGray: "#111820",
+              brandCard: "#0d1319",
               brandGreen: "#00e676",
               brandGreenDark: "#0b4d24",
-              textGray: "#a3a3a3",
+              textGray: "#8896a7",
             },
           },
         },
       };
     </script>
+
+    <!-- MASTER CSS -->
+    <link rel="stylesheet" href="style.css" />
+
     <style>
-      .bg-grid {
-        background-size: 40px 40px;
-        background-image: linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-      }
-      .glow-green {
-        box-shadow: 0 0 25px rgba(0, 230, 118, 0.2);
-      }
-      .glow {
-        box-shadow: 0 0 80px 10px rgba(0, 230, 118, 0.15);
-      }
       .tilt-card {
         transform-style: preserve-3d;
       }
       .tilt-card-content {
         transform: translateZ(30px);
       }
-      /* Cegah overflow horizontal pada main hero */
-      main.relative.bg-grid {
-        overflow: hidden;
+
+      /* Konten utama transparan agar grid body tembus */
+      main {
+        background: transparent;
       }
 
-      /* Buat elemen blur responsif */
+      /* ── Page Hero ── */
+      .page-hero {
+        position: relative;
+        padding: 64px 0 40px;
+        overflow: hidden;
+      }
+      .page-hero-glow {
+        position: absolute;
+        top: -100px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 700px;
+        height: 400px;
+        background: radial-gradient(ellipse, rgba(0, 230, 118, 0.1) 0%, rgba(56, 189, 248, 0.05) 40%, transparent 70%);
+        filter: blur(40px);
+        pointer-events: none;
+      }
+      .page-hero-inner {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 0 24px;
+        position: relative;
+        z-index: 10;
+      }
+      .page-hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 14px;
+        border-radius: 999px;
+        background: var(--bg-glass);
+        border: 1px solid var(--border-green);
+        font-size: 0.78rem;
+        font-weight: 700;
+        color: var(--green);
+        margin-bottom: 18px;
+        backdrop-filter: blur(8px);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
+      .page-hero-title {
+        font-size: clamp(2rem, 4.5vw, 3rem);
+        font-weight: 800;
+        line-height: 1.15;
+        letter-spacing: -0.03em;
+        margin-bottom: 16px;
+      }
+      .page-hero-title .gradient-text {
+        background: linear-gradient(135deg, #00e676 0%, #38bdf8 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .page-hero-desc {
+        font-size: 1rem;
+        line-height: 1.7;
+        color: var(--text-muted);
+        max-width: 700px;
+      }
+
+      /* Section heading with green accent */
+      .section-heading {
+        font-size: 1.5rem;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        padding-left: 16px;
+        position: relative;
+        margin-bottom: 32px;
+      }
+      .section-heading::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 6px;
+        bottom: 6px;
+        width: 4px;
+        background: linear-gradient(180deg, var(--green), rgba(0, 230, 118, 0.2));
+        border-radius: 4px;
+      }
+
+      /* Glow responsif */
       main > .absolute.bg-brandGreen\/10 {
         width: 90vw;
         max-width: 800px;
@@ -63,999 +143,984 @@
         max-height: 500px;
       }
 
-      /* Penyesuaian ukuran font untuk layar kecil (mobile) */
+      /* Modal scrollbar */
+      .modal-scroll::-webkit-scrollbar {
+        width: 6px;
+      }
+      .modal-scroll::-webkit-scrollbar-thumb {
+        background: rgba(0, 230, 118, 0.3);
+        border-radius: 4px;
+      }
+
+      /* Responsive fonts mobile */
       @media (max-width: 640px) {
         body {
-          font-size: 1rem; /* 16px */
+          font-size: 1rem;
         }
-
         h1 {
-          font-size: 1.875rem !important; /* 30px */
+          font-size: 1.875rem !important;
           line-height: 1.2 !important;
         }
-
         h2 {
-          font-size: 1.5rem !important; /* 24px */
+          font-size: 1.5rem !important;
         }
-
         h3 {
-          font-size: 1.25rem !important; /* 20px */
+          font-size: 1.25rem !important;
         }
-
-        .text-2xl {
-          font-size: 1.25rem !important; /* 20px */
-        }
-
-        .text-3xl {
-          font-size: 1.5rem !important; /* 24px */
-        }
-
         .text-4xl {
-          font-size: 1.875rem !important; /* 30px */
+          font-size: 1.875rem !important;
         }
-
+        .text-3xl {
+          font-size: 1.5rem !important;
+        }
+        .text-2xl {
+          font-size: 1.25rem !important;
+        }
         .text-xl {
-          font-size: 1.125rem !important; /* 18px */
+          font-size: 1.125rem !important;
         }
-
         .text-lg {
-          font-size: 1rem !important; /* 16px */
+          font-size: 1rem !important;
         }
-
         .text-base {
-          font-size: 0.9375rem !important; /* 15px */
+          font-size: 0.9375rem !important;
         }
       }
     </style>
   </head>
-  <body class="bg-brandDark text-white font-sans antialiased overflow-x-hidden flex flex-col min-h-screen">
+
+  <body class="bg-grid text-white font-sans antialiased overflow-x-hidden flex flex-col min-h-screen">
     <!-- Navigation -->
-    <nav class="max-w-7xl mx-auto px-6 py-6 flex items-center justify-between border-b border-white/5 relative z-50 w-full">
-      <!-- Logo -->
-      <div class="flex items-center gap-3">
-        <i class="fa-solid fa-code text-brandGreen text-xl"></i>
-        <span class="text-xl font-bold tracking-tight text-brandGreen">RuangInformatika</span>
+    <nav class="navbar">
+      <div class="navbar-inner">
+        <a href="index.html" class="navbar-logo">
+          <div class="navbar-logo-icon"><i class="fa-solid fa-code"></i></div>
+          <span class="navbar-logo-text">RuangInformatika</span>
+        </a>
+        <div class="navbar-links">
+          <a href="index.html" class="nav-link">Dashboard</a>
+          <a href="index.html#materi" class="nav-link">Daftar Materi</a>
+          <a href="leaderboard.html" class="nav-link">Leaderboard</a>
+          <a href="forum.html" class="nav-link">Forum Diskusi</a>
+        </div>
+        <button class="nav-badge"><i class="fa-solid fa-chalkboard-user"></i> Kelas XE6</button>
+        <button class="hamburger-btn" id="hamburgerBtn" aria-label="Menu">
+          <i class="fa-solid fa-bars"></i>
+        </button>
       </div>
 
-      <!-- Menu Desktop (md ke atas) -->
-      <div class="hidden md:flex items-center gap-8 text-sm font-medium text-gray-300">
-        <a href="index.html" class="text-white">Dashboard</a>
-        <a href="index.html#materi" class="hover:text-white transition">Daftar Materi</a>
-        <a href="leaderboard.html" class="hover:text-white transition">Leaderboard</a>
-        <a href="forum.html" class="hover:text-white transition">Forum Diskusi</a>
-      </div>
-
-      <!-- Tombol Pak Ilyas (Desktop) -->
-      <button class="hidden md:flex items-center gap-2 border border-white/10 rounded-full px-5 py-2.5 text-sm font-medium hover:bg-white/5 transition"><i class="fa-solid fa-chalkboard-user text-brandGreen"></i> XE6</button>
-
-      <!-- Tombol Hamburger (Mobile) -->
-      <button id="hamburgerBtn" class="md:hidden text-white text-2xl focus:outline-none" aria-label="Menu">
-        <i class="fa-solid fa-bars"></i>
-      </button>
-
-      <!-- Menu Mobile (Dropdown) -->
-      <div id="mobileMenu" class="hidden absolute top-full left-0 right-0 bg-brandDark border-b border-white/10 md:hidden z-[60] shadow-lg">
-        <div class="px-6 py-4 flex flex-col gap-4 text-sm font-medium text-gray-300">
-          <a href="index.html" class="text-white py-2">Dashboard</a>
-          <a href="index.html#materi" class="hover:text-white transition py-2">Daftar Materi</a>
-          <a href="leaderboard.html" class="hover:text-white transition py-2">Leaderboard</a>
-          <a href="forum.html" class="hover:text-white transition py-2">Forum Diskusi</a>
-          <button class="flex items-center gap-2 border border-white/10 rounded-full px-5 py-2.5 text-sm font-medium hover:bg-white/5 transition mt-2"><i class="fa-solid fa-chalkboard-user text-brandGreen"></i> XE6</button>
+      <!-- Mobile Drawer -->
+      <div class="mobile-menu" id="mobileMenu">
+        <a href="index.html" class="mobile-nav-link"> <i class="fa-solid fa-house" style="margin-right: 10px"></i> Dashboard </a>
+        <a href="index.html#materi" class="mobile-nav-link"> <i class="fa-solid fa-book-open" style="margin-right: 10px"></i> Daftar Materi </a>
+        <a href="leaderboard.html" class="mobile-nav-link"> <i class="fa-solid fa-trophy" style="margin-right: 10px"></i> Leaderboard </a>
+        <a href="forum.html" class="mobile-nav-link"> <i class="fa-solid fa-comments" style="margin-right: 10px"></i> Forum Diskusi </a>
+        <div style="padding: 12px 16px">
+          <button class="nav-badge" style="width: 100%; justify-content: center"><i class="fa-solid fa-chalkboard-user"></i> Kelas XE6 — SMAN 4 Yogyakarta</button>
         </div>
       </div>
     </nav>
 
     <!-- Main Content Wrapper -->
-    <div class="flex-grow">
-      <!-- Hero Section Bedah Kisi-Kisi -->
-      <main class="relative bg-grid pb-16 pt-16">
-        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-brandGreen/10 rounded-full blur-[150px] pointer-events-none"></div>
-
-        <div class="max-w-7xl mx-auto px-6 py-12 relative z-10">
-          <div class="text-center md:text-left">
-            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-medium text-gray-300 mb-6"><i class="fa-solid fa-bullseye text-brandGreen"></i> Modul Khusus</div>
-            <h1 class="text-4xl md:text-5xl font-bold tracking-tight mb-4">Bedah Kisi-Kisi PTS Informatika</h1>
-            <p class="text-textGray text-base md:text-lg max-w-2xl leading-relaxed">Pahami peta soal ujianmu secara menyeluruh. Lihat distribusi materi, bobot, dan indikator penting yang akan diujikan. Strategi jitu menantimu di sini.</p>
+    <div class="flex-grow relative">
+      <!-- Page Hero -->
+      <header class="page-hero">
+        <div class="page-hero-glow"></div>
+        <div class="page-hero-inner">
+          <div class="reveal">
+            <div class="page-hero-badge"><i class="fa-solid fa-bullseye"></i> Modul Khusus</div>
+            <h1 class="page-hero-title">Bedah <span class="gradient-text">Kisi-Kisi PTS</span> Informatika</h1>
+            <p class="page-hero-desc">Pahami peta soal ujianmu secara menyeluruh. Lihat distribusi materi, bobot, dan indikator penting yang akan diujikan. Strategi jitu menantimu di sini.</p>
           </div>
         </div>
+      </header>
+
+      <main class="max-w-7xl mx-auto px-6 pb-12 relative z-10">
+        <!-- ================== TABEL DISTRIBUSI MATERI ================== -->
+        <section class="reveal py-8 w-full">
+          <h2 class="section-heading">Distribusi Materi &amp; Bobot Soal</h2>
+
+          <div class="bg-brandGray border border-white/5 rounded-3xl overflow-hidden w-full">
+            <div class="overflow-x-auto w-full">
+              <table class="w-full text-left">
+                <thead class="bg-white/5 border-b border-white/10 text-textGray text-xs uppercase tracking-wider">
+                  <tr>
+                    <th class="px-5 py-4">Materi</th>
+                    <th class="px-5 py-4 text-center">Jumlah Soal</th>
+                    <th class="px-5 py-4 text-center">Bobot (%)</th>
+                    <th class="px-5 py-4">Indikator Penting</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-white/5 text-sm">
+                  <tr class="hover:bg-white/5 transition">
+                    <td class="px-5 py-4">
+                      <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-brandGreen/10 border border-brandGreen/20 flex items-center justify-center text-brandGreen shrink-0">
+                          <i class="fa-solid fa-brain"></i>
+                        </div>
+                        <div>
+                          <p class="font-bold text-white">Berpikir Komputasional</p>
+                          <p class="text-textGray text-xs">4 Pilar Utama</p>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="px-5 py-4 text-center font-semibold text-white">10</td>
+                    <td class="px-5 py-4 text-center">
+                      <div class="flex items-center justify-center gap-2">
+                        <span class="text-brandGreen font-bold">50%</span>
+                        <div class="w-24 h-1.5 bg-white/10 rounded-full overflow-hidden">
+                          <div class="h-full bg-brandGreen" style="width: 50%"></div>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="px-5 py-4 text-textGray">Dekomposisi, Pengenalan Pola, Abstraksi, Algoritma. Terapkan pada studi kasus sederhana.</td>
+                  </tr>
+
+                  <tr class="hover:bg-white/5 transition">
+                    <td class="px-5 py-4">
+                      <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-brandGreen/10 border border-brandGreen/20 flex items-center justify-center text-brandGreen shrink-0">
+                          <i class="fa-solid fa-layer-group"></i>
+                        </div>
+                        <div>
+                          <p class="font-bold text-white">Stack &amp; Queue</p>
+                          <p class="text-textGray text-xs">Struktur Data Linier</p>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="px-5 py-4 text-center font-semibold text-white">6</td>
+                    <td class="px-5 py-4 text-center">
+                      <div class="flex items-center justify-center gap-2">
+                        <span class="text-brandGreen font-bold">30%</span>
+                        <div class="w-24 h-1.5 bg-white/10 rounded-full overflow-hidden">
+                          <div class="h-full bg-brandGreen" style="width: 30%"></div>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="px-5 py-4 text-textGray">Prinsip LIFO &amp; FIFO, operasi push/pop, enqueue/dequeue, contoh penerapan sehari-hari.</td>
+                  </tr>
+
+                  <tr class="hover:bg-white/5 transition">
+                    <td class="px-5 py-4">
+                      <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-brandGreen/10 border border-brandGreen/20 flex items-center justify-center text-brandGreen shrink-0">
+                          <i class="fa-solid fa-magnifying-glass-chart"></i>
+                        </div>
+                        <div>
+                          <p class="font-bold text-white">Searching &amp; Sorting</p>
+                          <p class="text-textGray text-xs">Algoritma Standar</p>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="px-5 py-4 text-center font-semibold text-white">4</td>
+                    <td class="px-5 py-4 text-center">
+                      <div class="flex items-center justify-center gap-2">
+                        <span class="text-brandGreen font-bold">20%</span>
+                        <div class="w-24 h-1.5 bg-white/10 rounded-full overflow-hidden">
+                          <div class="h-full bg-brandGreen" style="width: 20%"></div>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="px-5 py-4 text-textGray">Linear &amp; Binary Search, Bubble/Insertion/Selection Sort. Mampu menelusuri proses langkah demi langkah.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================== STRATEGI JITU ================== -->
+        <section class="reveal py-8 w-full">
+          <h2 class="section-heading">Strategi Jitu Menaklukkan PTS</h2>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full">
+            <div class="bg-brandGray border border-white/5 rounded-3xl p-6 hover:border-brandGreen/30 transition">
+              <div class="w-12 h-12 rounded-2xl bg-brandGreen/10 border border-brandGreen/20 flex items-center justify-center mb-4 text-2xl text-brandGreen">
+                <i class="fa-solid fa-list-check"></i>
+              </div>
+              <h4 class="font-bold text-white mb-2">1. Kuasai Prioritas</h4>
+              <p class="text-textGray text-sm">Fokus pada materi dengan bobot tertinggi: Berpikir Komputasional (50%), lalu Stack &amp; Queue (30%).</p>
+            </div>
+
+            <div class="bg-brandGray border border-white/5 rounded-3xl p-6 hover:border-brandGreen/30 transition">
+              <div class="w-12 h-12 rounded-2xl bg-brandGreen/10 border border-brandGreen/20 flex items-center justify-center mb-4 text-2xl text-brandGreen">
+                <i class="fa-solid fa-repeat"></i>
+              </div>
+              <h4 class="font-bold text-white mb-2">2. Latihan Simulasi</h4>
+              <p class="text-textGray text-sm">Gunakan simulasi interaktif di modul Searching &amp; Sorting untuk memahami proses secara visual.</p>
+            </div>
+
+            <div class="bg-brandGray border border-white/5 rounded-3xl p-6 hover:border-brandGreen/30 transition">
+              <div class="w-12 h-12 rounded-2xl bg-brandGreen/10 border border-brandGreen/20 flex items-center justify-center mb-4 text-2xl text-brandGreen">
+                <i class="fa-solid fa-book-open"></i>
+              </div>
+              <h4 class="font-bold text-white mb-2">3. Pahami Konsep, Bukan Hafalan</h4>
+              <p class="text-textGray text-sm">Setiap soal HOTS menuntut penalaran. Pastikan kamu mengerti "mengapa" bukan hanya "apa".</p>
+            </div>
+
+            <div class="bg-brandGray border border-white/5 rounded-3xl p-6 hover:border-brandGreen/30 transition">
+              <div class="w-12 h-12 rounded-2xl bg-brandGreen/10 border border-brandGreen/20 flex items-center justify-center mb-4 text-2xl text-brandGreen">
+                <i class="fa-solid fa-stopwatch"></i>
+              </div>
+              <h4 class="font-bold text-white mb-2">4. Manajemen Waktu</h4>
+              <p class="text-textGray text-sm">Alokasikan ~2 menit per soal. Jangan terpaku pada satu soal, tandai dan kembali lagi nanti.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================== KUIS INTERAKTIF ================== -->
+        <section class="reveal py-8 w-full">
+          <div class="text-center mb-10">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-medium text-gray-300 mb-4"><i class="fa-solid fa-pen-to-square text-brandGreen"></i> Uji Pemahamanmu</div>
+            <h2 class="text-3xl md:text-4xl font-bold tracking-tight mb-3">Bedah Kisi-Kisi Pilihan Ganda</h2>
+            <p class="text-textGray text-sm md:text-base max-w-2xl mx-auto">20 soal pilihan ganda dengan pembahasan. Pilih jawabanmu, dapatkan clue, dan pelajari polanya!</p>
+          </div>
+
+          <div class="grid grid-cols-4 sm:grid-cols-5 gap-4 w-full" id="gridSoal"></div>
+        </section>
+
+        <!-- POP-UP MODAL SOAL -->
+        <div id="modalOverlay" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+          <div
+            class="bg-brandCard border border-brandGreen/30 rounded-3xl max-w-2xl w-full p-6 md:p-8 relative shadow-2xl modal-scroll max-h-[90vh] overflow-y-auto"
+            style="
+              box-shadow:
+                0 0 40px rgba(0, 230, 118, 0.15),
+                0 0 80px rgba(0, 230, 118, 0.05);
+            "
+          >
+            <button onclick="tutupModal()" class="absolute top-5 right-6 text-textGray hover:text-white text-xl font-bold transition">✕</button>
+
+            <div class="flex items-center gap-3 mb-4">
+              <span id="modalNumberBadge" class="bg-brandGreen text-black font-bold px-3 py-1 rounded-full text-xs">Soal #1</span>
+              <span id="statusSoalBadge" class="text-xs text-textGray">Pilihan Ganda</span>
+            </div>
+
+            <div id="modalSoalTeks" class="text-base md:text-lg font-normal leading-relaxed mb-6 text-gray-100 space-y-3"></div>
+
+            <div id="modalGambarContainer" class="hidden mb-6 flex justify-center bg-white/5 border border-white/10 rounded-2xl p-3"></div>
+
+            <div id="modalTabelContainer" class="hidden mb-6 overflow-x-auto bg-white/5 border border-white/10 rounded-2xl p-4"></div>
+
+            <div id="aiClueBox" class="hidden bg-brandGreenDark/30 border border-brandGreen/30 rounded-2xl p-4 mb-4 text-sm text-green-200"><span class="font-bold text-brandGreen">🤖 Clue:</span> <span id="aiClueTeks"></span></div>
+
+            <div id="modalOpsiContainer" class="space-y-3 mb-6"></div>
+
+            <div id="penjelasanBox" class="hidden bg-white/5 border border-white/10 rounded-2xl p-5 mb-6">
+              <div id="penjelasanStatus" class="font-bold mb-1 text-sm"></div>
+              <div class="text-xs font-semibold text-textGray uppercase tracking-wider mb-2">Penjelasan / Pembahasan:</div>
+              <p id="penjelasanTeks" class="text-sm text-gray-300 leading-relaxed"></p>
+            </div>
+
+            <div class="flex items-center justify-between border-t border-white/10 pt-4">
+              <button onclick="tampilkanClue()" class="bg-white/5 border border-white/10 hover:bg-white/10 text-white font-medium py-2 px-4 rounded-xl text-xs transition">💡 Petunjuk (Clue)</button>
+              <button onclick="tutupModal()" class="bg-brandGreen text-black font-bold py-2 px-6 rounded-xl text-xs hover:bg-green-400 transition">Tutup Soal</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================== SOAL URAIAN ================== -->
+        <section class="reveal py-8 w-full">
+          <div class="text-center mb-10">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-medium text-gray-300 mb-4"><i class="fa-solid fa-pen-to-square text-brandGreen"></i> Uji Kemampuan Berpikir</div>
+            <h2 class="text-3xl md:text-4xl font-bold tracking-tight mb-3">Bedah Soal Uraian</h2>
+            <p class="text-textGray text-sm md:text-base max-w-2xl mx-auto">Kerjakan soal di bawah ini dengan cara penyelesaiannya! Klik tombol pembahasan untuk mencocokkan jawabanmu.</p>
+          </div>
+
+          <!-- ================== SOAL 1 : Simulator Stack & Queue ================== -->
+          <div class="w-full bg-brandGray border border-white/5 rounded-3xl p-6 md:p-8 mb-10 box-border">
+            <div class="flex items-start gap-4 mb-6 w-full">
+              <div class="flex-1 min-w-0">
+                <h3 class="text-xl md:text-2xl font-bold text-white">Simulator Stack &amp; Queue</h3>
+                <p class="text-textGray text-sm mt-2 leading-relaxed">Edo dan Adi sedang bermain menggunakan simulator stack &amp; queue. Alat simulator ini memiliki perintah sebagai berikut.</p>
+
+                <div class="overflow-x-auto my-4 bg-white/5 border border-white/10 rounded-2xl p-3 w-full">
+                  <table class="w-full text-center border-collapse text-xs md:text-sm font-sans">
+                    <thead>
+                      <tr class="bg-brandGreen/20 text-brandGreen font-bold">
+                        <th class="p-2 border border-white/10 text-white">Perintah</th>
+                        <th class="p-2 border border-white/10 text-white">Hal yang dilakukan Simulator</th>
+                      </tr>
+                    </thead>
+                    <tbody class="text-gray-200">
+                      <tr class="hover:bg-white/5 transition">
+                        <td class="p-2 border border-white/10 font-semibold text-white">Push</td>
+                        <td class="p-2 border border-white/10">Memasukan angka pada simulator stack &amp; queue</td>
+                      </tr>
+                      <tr class="hover:bg-white/5 transition">
+                        <td class="p-2 border border-white/10 font-semibold text-white">Pop 1</td>
+                        <td class="p-2 border border-white/10">Menghapus angka pada antrean pertama simulator</td>
+                      </tr>
+                      <tr class="hover:bg-white/5 transition">
+                        <td class="p-2 border border-white/10 font-semibold text-white">Pop 2</td>
+                        <td class="p-2 border border-white/10">Menghapus angka pada urutan terakhir simulator</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <p class="text-sm text-gray-300 mt-4">Edo memberikan tantangan pada Adi agar simulator menampilkan urutan angka sebagai berikut:</p>
+                <div class="text-center text-2xl md:text-3xl font-bold text-brandGreen my-4">2, 3, 9, 5</div>
+                <p class="text-sm text-gray-300">Bantulah Adi mengisi tabel dengan memasukkan angka inputan agar menghasilkan urutan angka seperti di atas!</p>
+              </div>
+            </div>
+
+            <div class="overflow-x-auto bg-white/5 border border-white/10 rounded-2xl p-4 mb-6 w-full">
+              <table class="w-full text-center border-collapse text-xs md:text-sm font-sans">
+                <thead>
+                  <tr class="bg-brandGreen/20 text-brandGreen font-bold">
+                    <th class="p-2 border border-white/10 text-white">Langkah</th>
+                    <th class="p-2 border border-white/10 text-white">Perintah</th>
+                    <th class="p-2 border border-white/10 text-white">Angka Inputan</th>
+                    <th class="p-2 border border-white/10 text-white">Langkah</th>
+                    <th class="p-2 border border-white/10 text-white">Perintah</th>
+                    <th class="p-2 border border-white/10 text-white">Angka Inputan</th>
+                  </tr>
+                </thead>
+                <tbody class="text-gray-200">
+                  <tr>
+                    <td class="p-2 border border-white/10">1</td>
+                    <td class="p-2 border border-white/10 font-semibold text-white">Push</td>
+                    <td class="p-2 border border-white/10"><span class="bg-brandGreen/20 text-white font-bold px-3 py-1 rounded">4</span></td>
+                    <td class="p-2 border border-white/10">7</td>
+                    <td class="p-2 border border-white/10 font-semibold text-white">Push</td>
+                    <td class="p-2 border border-white/10">
+                      <input type="text" id="soal1_step7" placeholder="..." class="w-16 md:w-20 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-center text-white focus:outline-none focus:border-brandGreen" />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="p-2 border border-white/10">2</td>
+                    <td class="p-2 border border-white/10 font-semibold text-white">Push</td>
+                    <td class="p-2 border border-white/10">
+                      <input type="text" id="soal1_step2" placeholder="..." class="w-16 md:w-20 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-center text-white focus:outline-none focus:border-brandGreen" />
+                    </td>
+                    <td class="p-2 border border-white/10">8</td>
+                    <td class="p-2 border border-white/10 font-semibold text-white">Pop 2</td>
+                    <td class="p-2 border border-white/10"><span class="text-gray-500">-</span></td>
+                  </tr>
+                  <tr>
+                    <td class="p-2 border border-white/10">3</td>
+                    <td class="p-2 border border-white/10 font-semibold text-white">Push</td>
+                    <td class="p-2 border border-white/10">
+                      <input type="text" id="soal1_step3" placeholder="..." class="w-16 md:w-20 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-center text-white focus:outline-none focus:border-brandGreen" />
+                    </td>
+                    <td class="p-2 border border-white/10">9</td>
+                    <td class="p-2 border border-white/10 font-semibold text-white">Pop 1</td>
+                    <td class="p-2 border border-white/10"><span class="text-gray-500">-</span></td>
+                  </tr>
+                  <tr>
+                    <td class="p-2 border border-white/10">4</td>
+                    <td class="p-2 border border-white/10 font-semibold text-white">Pop 1</td>
+                    <td class="p-2 border border-white/10"><span class="text-gray-500">-</span></td>
+                    <td class="p-2 border border-white/10">10</td>
+                    <td class="p-2 border border-white/10 font-semibold text-white">Push</td>
+                    <td class="p-2 border border-white/10"><span class="bg-brandGreen/20 text-white font-bold px-3 py-1 rounded">5</span></td>
+                  </tr>
+                  <tr>
+                    <td class="p-2 border border-white/10">5</td>
+                    <td class="p-2 border border-white/10 font-semibold text-white">Push</td>
+                    <td class="p-2 border border-white/10">
+                      <input type="text" id="soal1_step5" placeholder="..." class="w-16 md:w-20 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-center text-white focus:outline-none focus:border-brandGreen" />
+                    </td>
+                    <td class="p-2 border border-white/10">11</td>
+                    <td class="p-2 border border-white/10 font-semibold text-white">Push</td>
+                    <td class="p-2 border border-white/10">
+                      <input type="text" id="soal1_step11" placeholder="..." class="w-16 md:w-20 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-center text-white focus:outline-none focus:border-brandGreen" />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="p-2 border border-white/10">6</td>
+                    <td class="p-2 border border-white/10 font-semibold text-white">Push</td>
+                    <td class="p-2 border border-white/10">
+                      <input type="text" id="soal1_step6" placeholder="..." class="w-16 md:w-20 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-center text-white focus:outline-none focus:border-brandGreen" />
+                    </td>
+                    <td class="p-2 border border-white/10">12</td>
+                    <td class="p-2 border border-white/10 font-semibold text-white">Pop 2</td>
+                    <td class="p-2 border border-white/10"><span class="text-gray-500">-</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <button
+              onclick="togglePembahasan('pembahasanUraian1')"
+              class="bg-brandGreen/10 border border-brandGreen/30 hover:bg-brandGreen/20 text-brandGreen font-bold py-3 px-6 rounded-2xl text-xs md:text-sm transition flex items-center gap-2"
+            >
+              <i class="fa-solid fa-lightbulb"></i> Lihat Kunci Jawaban &amp; Pembahasan Uraian 1
+            </button>
+
+            <div id="pembahasanUraian1" class="hidden mt-6 w-full bg-brandCard border border-brandGreen/30 rounded-3xl p-6 md:p-8 space-y-4 box-border">
+              <div class="flex items-center gap-2 text-brandGreen font-bold text-lg border-b border-white/10 pb-3"><i class="fa-solid fa-circle-check"></i> Kunci Jawaban &amp; Penjelasan Step-by-Step (Soal 1)</div>
+
+              <div class="space-y-3 text-sm text-gray-200 leading-relaxed">
+                <p><strong class="text-white">Target Output (Angka yang dikeluarkan/Pop):</strong> <span class="text-brandGreen font-bold">2, 3, 9, 5</span></p>
+                <p><strong>Aturan Simulator:</strong></p>
+                <ul class="list-disc list-inside space-y-1 text-textGray pl-2">
+                  <li><strong class="text-white">Push X:</strong> Menambahkan angka X ke posisi paling belakang/akhir simulator.</li>
+                  <li><strong class="text-white">Pop 1 (Queue / FIFO):</strong> Mengeluarkan angka pada urutan <u>pertama</u> (paling depan).</li>
+                  <li><strong class="text-white">Pop 2 (Stack / LIFO):</strong> Mengeluarkan angka pada urutan <u>terakhir</u> (paling belakang).</li>
+                </ul>
+
+                <div class="bg-black/50 border border-white/10 rounded-2xl p-4 mt-4 w-full">
+                  <h4 class="font-bold text-brandGreen mb-3">🔑 Kunci Angka Inputan:</h4>
+                  <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 text-center w-full">
+                    <div class="bg-white/5 p-2 rounded-xl border border-white/10"><span class="text-xs text-textGray block">Langkah 2</span><strong class="text-brandGreen text-base">2</strong></div>
+                    <div class="bg-white/5 p-2 rounded-xl border border-white/10"><span class="text-xs text-textGray block">Langkah 3</span><strong class="text-brandGreen text-base">3</strong></div>
+                    <div class="bg-white/5 p-2 rounded-xl border border-white/10"><span class="text-xs text-textGray block">Langkah 5</span><strong class="text-brandGreen text-base">9</strong></div>
+                    <div class="bg-white/5 p-2 rounded-xl border border-white/10"><span class="text-xs text-textGray block">Langkah 6</span><strong class="text-brandGreen text-base">8</strong></div>
+                    <div class="bg-white/5 p-2 rounded-xl border border-white/10"><span class="text-xs text-textGray block">Langkah 7</span><strong class="text-brandGreen text-base">7</strong></div>
+                    <div class="bg-white/5 p-2 rounded-xl border border-white/10"><span class="text-xs text-textGray block">Langkah 11</span><strong class="text-brandGreen text-base">6</strong></div>
+                  </div>
+                </div>
+
+                <h4 class="font-bold text-white pt-2">Simulasi Penelusuran Langkah demi Langkah:</h4>
+                <ol class="list-decimal list-inside space-y-2 text-xs md:text-sm text-gray-300">
+                  <li><strong>Push 4:</strong> Isinya <code class="text-brandGreen">[4]</code></li>
+                  <li><strong>Push 2:</strong> Isinya <code class="text-brandGreen">[4, 2]</code></li>
+                  <li><strong>Push 3:</strong> Isinya <code class="text-brandGreen">[4, 2, 3]</code></li>
+                  <li><strong>Pop 1:</strong> Menghapus angka pertama (<code class="text-yellow-400">4</code>). Sisa: <code class="text-brandGreen">[2, 3]</code></li>
+                  <li><strong>Push 9:</strong> Isinya <code class="text-brandGreen">[2, 3, 9]</code></li>
+                  <li><strong>Push 8:</strong> Isinya <code class="text-brandGreen">[2, 3, 9, 8]</code></li>
+                  <li><strong>Push 7:</strong> Isinya <code class="text-brandGreen">[2, 3, 9, 8, 7]</code></li>
+                  <li><strong>Pop 2:</strong> Menghapus angka terakhir (<code class="text-yellow-400">7</code>). Sisa: <code class="text-brandGreen">[2, 3, 9, 8]</code></li>
+                  <li><strong>Pop 1:</strong> Menghapus angka pertama (<code class="text-brandGreen font-bold">2</code> ➔ <strong>Output Ke-1 = 2</strong>). Sisa: <code class="text-brandGreen">[3, 9, 8]</code></li>
+                  <li><strong>Push 5:</strong> Isinya <code class="text-brandGreen">[3, 9, 8, 5]</code></li>
+                  <li><strong>Push 6:</strong> Isinya <code class="text-brandGreen">[3, 9, 8, 5, 6]</code></li>
+                  <li><strong>Pop 2:</strong> Menghapus angka terakhir (<code class="text-yellow-400">6</code>). Sisa: <code class="text-brandGreen">[3, 9, 8, 5]</code></li>
+                </ol>
+                <p class="text-xs text-textGray bg-white/5 p-3 rounded-xl border border-white/10 mt-2">
+                  💡 <strong>Catatan Hasil Akhir:</strong> Pada operasi Pop selanjutnya, antrean yang tersisa <code class="text-brandGreen">[3, 9, 8, 5]</code> jika di-pop dengan kombinasi <strong>Pop 1, Pop 1, Pop 2</strong> secara
+                  berturut-turut akan menghasilkan urutan angka <strong class="text-brandGreen">3, 9, 5</strong>.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- ================== SOAL TAMBAHAN 1 : Simulasi Stack ================== -->
+          <div class="w-full bg-brandGray border border-white/5 rounded-3xl p-6 md:p-8 mb-10 box-border">
+            <div class="flex items-start gap-4 mb-6 w-full">
+              <div class="flex-1 min-w-0">
+                <h3 class="text-xl md:text-2xl font-bold text-white">Simulasi Stack</h3>
+                <p class="text-textGray text-sm mt-2 leading-relaxed">Perhatikan aturan simulator stack berikut!</p>
+
+                <div class="overflow-x-auto my-4 bg-white/5 border border-white/10 rounded-2xl p-3 w-full">
+                  <table class="w-full text-center border-collapse text-xs md:text-sm font-sans">
+                    <thead>
+                      <tr class="bg-brandGreen/20 text-brandGreen font-bold">
+                        <th class="p-2 border border-white/10 text-white">Perintah</th>
+                        <th class="p-2 border border-white/10 text-white">Hal yang dilakukan Simulator</th>
+                      </tr>
+                    </thead>
+                    <tbody class="text-gray-200">
+                      <tr class="hover:bg-white/5 transition">
+                        <td class="p-2 border border-white/10 font-semibold text-white">Push</td>
+                        <td class="p-2 border border-white/10">Memasukan angka pada simulator stack</td>
+                      </tr>
+                      <tr class="hover:bg-white/5 transition">
+                        <td class="p-2 border border-white/10 font-semibold text-white">Pop</td>
+                        <td class="p-2 border border-white/10">Menghapus angka akhir pada barisan angka</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <p class="text-sm text-gray-300 mt-4">Edo memberikan tantangan pada Adi agar simulator menampilkan urutan angka sebagai berikut ini!</p>
+                <div class="text-center text-2xl md:text-3xl font-bold text-brandGreen my-4">0, 4, 3, 2</div>
+                <p class="text-sm text-gray-300">Bantu Adi mengisi tabel dengan memasukkan angka inputan agar menghasilkan urutan angka seperti di atas!</p>
+              </div>
+            </div>
+
+            <div class="overflow-x-auto bg-white/5 border border-white/10 rounded-2xl p-4 mb-6 w-full">
+              <table class="w-full text-center border-collapse text-xs md:text-sm font-sans">
+                <thead>
+                  <tr class="bg-brandGreen/20 text-brandGreen font-bold">
+                    <th class="p-2 border border-white/10 text-white">Langkah</th>
+                    <th class="p-2 border border-white/10 text-white">Perintah</th>
+                    <th class="p-2 border border-white/10 text-white">Angka Inputan</th>
+                    <th class="p-2 border border-white/10 text-white">Langkah</th>
+                    <th class="p-2 border border-white/10 text-white">Perintah</th>
+                    <th class="p-2 border border-white/10 text-white">Angka Inputan</th>
+                  </tr>
+                </thead>
+                <tbody class="text-gray-200">
+                  <tr>
+                    <td class="p-2 border border-white/10">1</td>
+                    <td class="p-2 border border-white/10 font-semibold text-white">Push</td>
+                    <td class="p-2 border border-white/10"><span class="bg-brandGreen/20 text-white font-bold px-3 py-1 rounded">0</span></td>
+                    <td class="p-2 border border-white/10">6</td>
+                    <td class="p-2 border border-white/10 font-semibold text-white">Push</td>
+                    <td class="p-2 border border-white/10">
+                      <input type="text" id="stack_step6" placeholder="..." class="w-16 md:w-20 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-center text-white focus:outline-none focus:border-brandGreen" />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="p-2 border border-white/10">2</td>
+                    <td class="p-2 border border-white/10 font-semibold text-white">Push</td>
+                    <td class="p-2 border border-white/10">
+                      <input type="text" id="stack_step2" placeholder="..." class="w-16 md:w-20 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-center text-white focus:outline-none focus:border-brandGreen" />
+                    </td>
+                    <td class="p-2 border border-white/10">7</td>
+                    <td class="p-2 border border-white/10 font-semibold text-white">Push</td>
+                    <td class="p-2 border border-white/10">
+                      <input type="text" id="stack_step7" placeholder="..." class="w-16 md:w-20 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-center text-white focus:outline-none focus:border-brandGreen" />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="p-2 border border-white/10">3</td>
+                    <td class="p-2 border border-white/10 font-semibold text-white">Pop</td>
+                    <td class="p-2 border border-white/10"><span class="text-gray-500">-</span></td>
+                    <td class="p-2 border border-white/10">8</td>
+                    <td class="p-2 border border-white/10 font-semibold text-white">Pop</td>
+                    <td class="p-2 border border-white/10"><span class="text-gray-500">-</span></td>
+                  </tr>
+                  <tr>
+                    <td class="p-2 border border-white/10">4</td>
+                    <td class="p-2 border border-white/10 font-semibold text-white">Pop</td>
+                    <td class="p-2 border border-white/10"><span class="text-gray-500">-</span></td>
+                    <td class="p-2 border border-white/10">9</td>
+                    <td class="p-2 border border-white/10 font-semibold text-white">Push</td>
+                    <td class="p-2 border border-white/10"><span class="bg-brandGreen/20 text-white font-bold px-3 py-1 rounded">3</span></td>
+                  </tr>
+                  <tr>
+                    <td class="p-2 border border-white/10">5</td>
+                    <td class="p-2 border border-white/10 font-semibold text-white">Push</td>
+                    <td class="p-2 border border-white/10">
+                      <input type="text" id="stack_step5" placeholder="..." class="w-16 md:w-20 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-center text-white focus:outline-none focus:border-brandGreen" />
+                    </td>
+                    <td class="p-2 border border-white/10">10</td>
+                    <td class="p-2 border border-white/10 font-semibold text-white">Push</td>
+                    <td class="p-2 border border-white/10">
+                      <input type="text" id="stack_step10" placeholder="..." class="w-16 md:w-20 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-center text-white focus:outline-none focus:border-brandGreen" />
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <button
+              onclick="togglePembahasan('pembahasanStack')"
+              class="bg-brandGreen/10 border border-brandGreen/30 hover:bg-brandGreen/20 text-brandGreen font-bold py-3 px-6 rounded-2xl text-xs md:text-sm transition flex items-center gap-2"
+            >
+              <i class="fa-solid fa-lightbulb"></i> Lihat Kunci Jawaban &amp; Pembahasan Simulasi Stack
+            </button>
+
+            <div id="pembahasanStack" class="hidden mt-6 w-full bg-brandCard border border-brandGreen/30 rounded-3xl p-6 md:p-8 space-y-4 box-border">
+              <div class="flex items-center gap-2 text-brandGreen font-bold text-lg border-b border-white/10 pb-3"><i class="fa-solid fa-circle-check"></i> Kunci Jawaban &amp; Penjelasan Step-by-Step (Simulasi Stack)</div>
+
+              <div class="space-y-3 text-sm text-gray-200 leading-relaxed">
+                <p><strong class="text-white">Target Output (Isi Stack Akhir, dibaca dari bawah ke atas):</strong> <span class="text-brandGreen font-bold">0, 4, 3, 2</span></p>
+                <p><strong>Aturan Simulator:</strong></p>
+                <ul class="list-disc list-inside space-y-1 text-textGray pl-2">
+                  <li><strong class="text-white">Push X:</strong> Menambahkan angka X ke posisi paling belakang (top) stack.</li>
+                  <li><strong class="text-white">Pop (LIFO):</strong> Menghapus angka pada posisi paling akhir (top) stack.</li>
+                </ul>
+
+                <div class="bg-black/50 border border-white/10 rounded-2xl p-4 mt-4 w-full">
+                  <h4 class="font-bold text-brandGreen mb-3">🔑 Kunci Angka Inputan:</h4>
+                  <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 text-center w-full">
+                    <div class="bg-white/5 p-2 rounded-xl border border-white/10">
+                      <span class="text-xs text-textGray block">Langkah 2</span><strong class="text-brandGreen text-base">9</strong><span class="text-[10px] text-textGray block">(bebas)</span>
+                    </div>
+                    <div class="bg-white/5 p-2 rounded-xl border border-white/10"><span class="text-xs text-textGray block">Langkah 5</span><strong class="text-brandGreen text-base">0</strong></div>
+                    <div class="bg-white/5 p-2 rounded-xl border border-white/10"><span class="text-xs text-textGray block">Langkah 6</span><strong class="text-brandGreen text-base">4</strong></div>
+                    <div class="bg-white/5 p-2 rounded-xl border border-white/10">
+                      <span class="text-xs text-textGray block">Langkah 7</span><strong class="text-brandGreen text-base">8</strong><span class="text-[10px] text-textGray block">(bebas)</span>
+                    </div>
+                    <div class="bg-white/5 p-2 rounded-xl border border-white/10"><span class="text-xs text-textGray block">Langkah 10</span><strong class="text-brandGreen text-base">2</strong></div>
+                  </div>
+                  <p class="text-[11px] text-textGray mt-3 italic">*Catatan: Langkah 2 dan Langkah 7 adalah angka "umpan" yang akan langsung dihapus oleh Pop pada langkah berikutnya, sehingga nilainya bisa berapa saja.</p>
+                </div>
+
+                <h4 class="font-bold text-white pt-2">Simulasi Penelusuran Langkah demi Langkah:</h4>
+                <ol class="list-decimal list-inside space-y-2 text-xs md:text-sm text-gray-300">
+                  <li><strong>Push 0:</strong> Isinya <code class="text-brandGreen">[0]</code></li>
+                  <li><strong>Push 9 (bebas):</strong> Isinya <code class="text-brandGreen">[0, 9]</code></li>
+                  <li><strong>Pop:</strong> Menghapus angka terakhir (<code class="text-yellow-400">9</code>). Sisa: <code class="text-brandGreen">[0]</code></li>
+                  <li><strong>Pop:</strong> Menghapus angka terakhir (<code class="text-yellow-400">0</code>). Sisa: <code class="text-brandGreen">[]</code></li>
+                  <li><strong>Push 0:</strong> Isinya <code class="text-brandGreen">[0]</code></li>
+                  <li><strong>Push 4:</strong> Isinya <code class="text-brandGreen">[0, 4]</code></li>
+                  <li><strong>Push 8 (bebas):</strong> Isinya <code class="text-brandGreen">[0, 4, 8]</code></li>
+                  <li><strong>Pop:</strong> Menghapus angka terakhir (<code class="text-yellow-400">8</code>). Sisa: <code class="text-brandGreen">[0, 4]</code></li>
+                  <li><strong>Push 3:</strong> Isinya <code class="text-brandGreen">[0, 4, 3]</code></li>
+                  <li><strong>Push 2:</strong> Isinya <code class="text-brandGreen">[0, 4, 3, 2]</code></li>
+                </ol>
+                <p class="text-xs text-textGray bg-white/5 p-3 rounded-xl border border-white/10 mt-2">
+                  💡 <strong>Hasil Akhir:</strong> Isi stack dari bawah ke atas adalah <strong class="text-brandGreen">0, 4, 3, 2</strong> sesuai dengan urutan angka yang diminta.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- ================== SOAL TAMBAHAN 2 : Simulasi Queue ================== -->
+          <div class="w-full bg-brandGray border border-white/5 rounded-3xl p-6 md:p-8 mb-10 box-border">
+            <div class="flex items-start gap-4 mb-6 w-full">
+              <div class="flex-1 min-w-0">
+                <h3 class="text-xl md:text-2xl font-bold text-white">Simulasi Queue</h3>
+                <p class="text-textGray text-sm mt-2 leading-relaxed">Perhatikan aturan simulator queue berikut!</p>
+
+                <div class="overflow-x-auto my-4 bg-white/5 border border-white/10 rounded-2xl p-3 w-full">
+                  <table class="w-full text-center border-collapse text-xs md:text-sm font-sans">
+                    <thead>
+                      <tr class="bg-brandGreen/20 text-brandGreen font-bold">
+                        <th class="p-2 border border-white/10 text-white">Perintah</th>
+                        <th class="p-2 border border-white/10 text-white">Hal yang dilakukan Simulator</th>
+                      </tr>
+                    </thead>
+                    <tbody class="text-gray-200">
+                      <tr class="hover:bg-white/5 transition">
+                        <td class="p-2 border border-white/10 font-semibold text-white">Enqueue</td>
+                        <td class="p-2 border border-white/10">Memasukan angka pada simulator queue</td>
+                      </tr>
+                      <tr class="hover:bg-white/5 transition">
+                        <td class="p-2 border border-white/10 font-semibold text-white">Dequeue</td>
+                        <td class="p-2 border border-white/10">Menghapus angka pada antrean pertama</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <p class="text-sm text-gray-300 mt-4">Edo memberikan tantangan pada Adi agar simulator menampilkan urutan angka sebagai berikut ini!</p>
+                <div class="text-center text-2xl md:text-3xl font-bold text-brandGreen my-4">2, 6, 1, 3</div>
+                <p class="text-sm text-gray-300">Bantu Adi mengisi tabel dengan memasukkan angka inputan agar menghasilkan urutan angka seperti di atas!</p>
+              </div>
+            </div>
+
+            <div class="overflow-x-auto bg-white/5 border border-white/10 rounded-2xl p-4 mb-6 w-full">
+              <table class="w-full text-center border-collapse text-xs md:text-sm font-sans">
+                <thead>
+                  <tr class="bg-brandGreen/20 text-brandGreen font-bold">
+                    <th class="p-2 border border-white/10 text-white">Langkah</th>
+                    <th class="p-2 border border-white/10 text-white">Perintah</th>
+                    <th class="p-2 border border-white/10 text-white">Angka Inputan</th>
+                    <th class="p-2 border border-white/10 text-white">Langkah</th>
+                    <th class="p-2 border border-white/10 text-white">Perintah</th>
+                    <th class="p-2 border border-white/10 text-white">Angka Inputan</th>
+                  </tr>
+                </thead>
+                <tbody class="text-gray-200">
+                  <tr>
+                    <td class="p-2 border border-white/10">1</td>
+                    <td class="p-2 border border-white/10 font-semibold text-white">Enqueue</td>
+                    <td class="p-2 border border-white/10"><span class="bg-brandGreen/20 text-white font-bold px-3 py-1 rounded">4</span></td>
+                    <td class="p-2 border border-white/10">6</td>
+                    <td class="p-2 border border-white/10 font-semibold text-white">Enqueue</td>
+                    <td class="p-2 border border-white/10">
+                      <input type="text" id="queue_step6" placeholder="..." class="w-16 md:w-20 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-center text-white focus:outline-none focus:border-brandGreen" />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="p-2 border border-white/10">2</td>
+                    <td class="p-2 border border-white/10 font-semibold text-white">Enqueue</td>
+                    <td class="p-2 border border-white/10">
+                      <input type="text" id="queue_step2" placeholder="..." class="w-16 md:w-20 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-center text-white focus:outline-none focus:border-brandGreen" />
+                    </td>
+                    <td class="p-2 border border-white/10">7</td>
+                    <td class="p-2 border border-white/10 font-semibold text-white">Enqueue</td>
+                    <td class="p-2 border border-white/10">
+                      <input type="text" id="queue_step7" placeholder="..." class="w-16 md:w-20 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-center text-white focus:outline-none focus:border-brandGreen" />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="p-2 border border-white/10">3</td>
+                    <td class="p-2 border border-white/10 font-semibold text-white">Dequeue</td>
+                    <td class="p-2 border border-white/10"><span class="text-gray-500">-</span></td>
+                    <td class="p-2 border border-white/10">8</td>
+                    <td class="p-2 border border-white/10 font-semibold text-white">Dequeue</td>
+                    <td class="p-2 border border-white/10"><span class="text-gray-500">-</span></td>
+                  </tr>
+                  <tr>
+                    <td class="p-2 border border-white/10">4</td>
+                    <td class="p-2 border border-white/10 font-semibold text-white">Dequeue</td>
+                    <td class="p-2 border border-white/10"><span class="text-gray-500">-</span></td>
+                    <td class="p-2 border border-white/10">9</td>
+                    <td class="p-2 border border-white/10 font-semibold text-white">Enqueue</td>
+                    <td class="p-2 border border-white/10"><span class="bg-brandGreen/20 text-white font-bold px-3 py-1 rounded">1</span></td>
+                  </tr>
+                  <tr>
+                    <td class="p-2 border border-white/10">5</td>
+                    <td class="p-2 border border-white/10 font-semibold text-white">Enqueue</td>
+                    <td class="p-2 border border-white/10">
+                      <input type="text" id="queue_step5" placeholder="..." class="w-16 md:w-20 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-center text-white focus:outline-none focus:border-brandGreen" />
+                    </td>
+                    <td class="p-2 border border-white/10">10</td>
+                    <td class="p-2 border border-white/10 font-semibold text-white">Enqueue</td>
+                    <td class="p-2 border border-white/10">
+                      <input type="text" id="queue_step10" placeholder="..." class="w-16 md:w-20 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-center text-white focus:outline-none focus:border-brandGreen" />
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <button
+              onclick="togglePembahasan('pembahasanQueue')"
+              class="bg-brandGreen/10 border border-brandGreen/30 hover:bg-brandGreen/20 text-brandGreen font-bold py-3 px-6 rounded-2xl text-xs md:text-sm transition flex items-center gap-2"
+            >
+              <i class="fa-solid fa-lightbulb"></i> Lihat Kunci Jawaban &amp; Pembahasan Simulasi Queue
+            </button>
+
+            <div id="pembahasanQueue" class="hidden mt-6 w-full bg-brandCard border border-brandGreen/30 rounded-3xl p-6 md:p-8 space-y-4 box-border">
+              <div class="flex items-center gap-2 text-brandGreen font-bold text-lg border-b border-white/10 pb-3"><i class="fa-solid fa-circle-check"></i> Kunci Jawaban &amp; Penjelasan Step-by-Step (Simulasi Queue)</div>
+
+              <div class="space-y-3 text-sm text-gray-200 leading-relaxed">
+                <p><strong class="text-white">Target Output (Isi Queue Akhir, dibaca dari depan ke belakang):</strong> <span class="text-brandGreen font-bold">2, 6, 1, 3</span></p>
+                <p><strong>Aturan Simulator:</strong></p>
+                <ul class="list-disc list-inside space-y-1 text-textGray pl-2">
+                  <li><strong class="text-white">Enqueue X:</strong> Menambahkan angka X ke posisi paling belakang antrean.</li>
+                  <li><strong class="text-white">Dequeue (FIFO):</strong> Menghapus angka pada posisi paling depan antrean.</li>
+                </ul>
+
+                <div class="bg-black/50 border border-white/10 rounded-2xl p-4 mt-4 w-full">
+                  <h4 class="font-bold text-brandGreen mb-3">🔑 Kunci Angka Inputan:</h4>
+                  <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 text-center w-full">
+                    <div class="bg-white/5 p-2 rounded-xl border border-white/10">
+                      <span class="text-xs text-textGray block">Langkah 2</span><strong class="text-brandGreen text-base">7</strong><span class="text-[10px] text-textGray block">(bebas)</span>
+                    </div>
+                    <div class="bg-white/5 p-2 rounded-xl border border-white/10">
+                      <span class="text-xs text-textGray block">Langkah 5</span><strong class="text-brandGreen text-base">8</strong><span class="text-[10px] text-textGray block">(bebas)</span>
+                    </div>
+                    <div class="bg-white/5 p-2 rounded-xl border border-white/10"><span class="text-xs text-textGray block">Langkah 6</span><strong class="text-brandGreen text-base">2</strong></div>
+                    <div class="bg-white/5 p-2 rounded-xl border border-white/10"><span class="text-xs text-textGray block">Langkah 7</span><strong class="text-brandGreen text-base">6</strong></div>
+                    <div class="bg-white/5 p-2 rounded-xl border border-white/10"><span class="text-xs text-textGray block">Langkah 10</span><strong class="text-brandGreen text-base">3</strong></div>
+                  </div>
+                  <p class="text-[11px] text-textGray mt-3 italic">*Catatan: Langkah 2 dan Langkah 5 adalah angka "umpan" yang akan langsung dihapus oleh Dequeue pada langkah berikutnya, sehingga nilainya bisa berapa saja.</p>
+                </div>
+
+                <h4 class="font-bold text-white pt-2">Simulasi Penelusuran Langkah demi Langkah:</h4>
+                <ol class="list-decimal list-inside space-y-2 text-xs md:text-sm text-gray-300">
+                  <li><strong>Enqueue 4:</strong> Isinya <code class="text-brandGreen">[4]</code></li>
+                  <li><strong>Enqueue 7 (bebas):</strong> Isinya <code class="text-brandGreen">[4, 7]</code></li>
+                  <li><strong>Dequeue:</strong> Menghapus angka pertama (<code class="text-yellow-400">4</code>). Sisa: <code class="text-brandGreen">[7]</code></li>
+                  <li><strong>Dequeue:</strong> Menghapus angka pertama (<code class="text-yellow-400">7</code>). Sisa: <code class="text-brandGreen">[]</code></li>
+                  <li><strong>Enqueue 8 (bebas):</strong> Isinya <code class="text-brandGreen">[8]</code></li>
+                  <li><strong>Enqueue 2:</strong> Isinya <code class="text-brandGreen">[8, 2]</code></li>
+                  <li><strong>Enqueue 6:</strong> Isinya <code class="text-brandGreen">[8, 2, 6]</code></li>
+                  <li><strong>Dequeue:</strong> Menghapus angka pertama (<code class="text-yellow-400">8</code>). Sisa: <code class="text-brandGreen">[2, 6]</code></li>
+                  <li><strong>Enqueue 1:</strong> Isinya <code class="text-brandGreen">[2, 6, 1]</code></li>
+                  <li><strong>Enqueue 3:</strong> Isinya <code class="text-brandGreen">[2, 6, 1, 3]</code></li>
+                </ol>
+                <p class="text-xs text-textGray bg-white/5 p-3 rounded-xl border border-white/10 mt-2">
+                  💡 <strong>Hasil Akhir:</strong> Isi queue dari depan ke belakang adalah <strong class="text-brandGreen">2, 6, 1, 3</strong> sesuai dengan urutan angka yang diminta.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- ================== SOAL 2 : Tiga Algoritma Sorting ================== -->
+          <div class="w-full bg-brandGray border border-white/5 rounded-3xl p-6 md:p-8 box-border">
+            <div class="flex items-start gap-4 mb-6 w-full">
+              <div class="flex-1 min-w-0">
+                <h3 class="text-xl md:text-2xl font-bold text-white">Mengurutkan dengan Tiga Algoritma</h3>
+                <p class="text-textGray text-sm mt-2 leading-relaxed">Urutkan angka berikut dari yang terkecil ke terbesar menggunakan <strong>bubble sort</strong>, <strong>insertion sort</strong>, dan <strong>selection sort</strong>!</p>
+                <div class="text-center text-2xl md:text-3xl font-bold text-brandGreen my-6">9, 2, 4, 12, 8, 4</div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6 w-full">
+                  <!-- Bubble Sort -->
+                  <div class="bg-black/40 border border-white/10 rounded-2xl p-5 w-full">
+                    <h4 class="font-bold text-white mb-3 flex items-center gap-2"><i class="fa-solid fa-bars-staggered text-brandGreen"></i> Bubble Sort</h4>
+                    <div class="space-y-2 text-sm text-gray-300">
+                      <div class="flex items-center gap-2">
+                        <span class="text-textGray shrink-0">Langkah 1:</span>
+                        <input type="text" class="flex-1 min-w-0 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-white focus:outline-none focus:border-brandGreen" placeholder="tulis langkah..." />
+                      </div>
+                      <div class="flex items-center gap-2">
+                        <span class="text-textGray shrink-0">Langkah 2:</span>
+                        <input type="text" class="flex-1 min-w-0 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-white focus:outline-none focus:border-brandGreen" placeholder="tulis langkah..." />
+                      </div>
+                      <div class="flex items-center gap-2">
+                        <span class="text-textGray shrink-0">Langkah 3:</span>
+                        <input type="text" class="flex-1 min-w-0 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-white focus:outline-none focus:border-brandGreen" placeholder="tulis langkah..." />
+                      </div>
+                      <div class="flex items-center gap-2">
+                        <span class="text-textGray shrink-0">Langkah 4:</span>
+                        <input type="text" class="flex-1 min-w-0 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-white focus:outline-none focus:border-brandGreen" placeholder="tulis langkah..." />
+                      </div>
+                      <div class="flex items-center gap-2">
+                        <span class="text-textGray shrink-0">Langkah 5:</span>
+                        <input type="text" class="flex-1 min-w-0 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-white focus:outline-none focus:border-brandGreen" placeholder="tulis langkah..." />
+                      </div>
+                      <div class="flex items-center gap-2">
+                        <span class="text-textGray shrink-0">Hasil Akhir:</span><input type="text" class="flex-1 min-w-0 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-white font-bold" placeholder="..." />
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Insertion Sort -->
+                  <div class="bg-black/40 border border-white/10 rounded-2xl p-5 w-full">
+                    <h4 class="font-bold text-white mb-3 flex items-center gap-2"><i class="fa-solid fa-arrow-down-wide-short text-brandGreen"></i> Insertion Sort</h4>
+                    <div class="space-y-2 text-sm text-gray-300">
+                      <div class="flex items-center gap-2">
+                        <span class="text-textGray shrink-0">Langkah 1:</span>
+                        <input type="text" class="flex-1 min-w-0 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-white focus:outline-none focus:border-brandGreen" placeholder="tulis langkah..." />
+                      </div>
+                      <div class="flex items-center gap-2">
+                        <span class="text-textGray shrink-0">Langkah 2:</span>
+                        <input type="text" class="flex-1 min-w-0 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-white focus:outline-none focus:border-brandGreen" placeholder="tulis langkah..." />
+                      </div>
+                      <div class="flex items-center gap-2">
+                        <span class="text-textGray shrink-0">Langkah 3:</span>
+                        <input type="text" class="flex-1 min-w-0 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-white focus:outline-none focus:border-brandGreen" placeholder="tulis langkah..." />
+                      </div>
+                      <div class="flex items-center gap-2">
+                        <span class="text-textGray shrink-0">Langkah 4:</span>
+                        <input type="text" class="flex-1 min-w-0 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-white focus:outline-none focus:border-brandGreen" placeholder="tulis langkah..." />
+                      </div>
+                      <div class="flex items-center gap-2">
+                        <span class="text-textGray shrink-0">Langkah 5:</span>
+                        <input type="text" class="flex-1 min-w-0 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-white focus:outline-none focus:border-brandGreen" placeholder="tulis langkah..." />
+                      </div>
+                      <div class="flex items-center gap-2">
+                        <span class="text-textGray shrink-0">Hasil Akhir:</span><input type="text" class="flex-1 min-w-0 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-white font-bold" placeholder="..." />
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Selection Sort -->
+                  <div class="bg-black/40 border border-white/10 rounded-2xl p-5 w-full">
+                    <h4 class="font-bold text-white mb-3 flex items-center gap-2"><i class="fa-solid fa-arrow-up-short-wide text-brandGreen"></i> Selection Sort</h4>
+                    <div class="space-y-2 text-sm text-gray-300">
+                      <div class="flex items-center gap-2">
+                        <span class="text-textGray shrink-0">Langkah 1:</span>
+                        <input type="text" class="flex-1 min-w-0 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-white focus:outline-none focus:border-brandGreen" placeholder="tulis langkah..." />
+                      </div>
+                      <div class="flex items-center gap-2">
+                        <span class="text-textGray shrink-0">Langkah 2:</span>
+                        <input type="text" class="flex-1 min-w-0 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-white focus:outline-none focus:border-brandGreen" placeholder="tulis langkah..." />
+                      </div>
+                      <div class="flex items-center gap-2">
+                        <span class="text-textGray shrink-0">Langkah 3:</span>
+                        <input type="text" class="flex-1 min-w-0 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-white focus:outline-none focus:border-brandGreen" placeholder="tulis langkah..." />
+                      </div>
+                      <div class="flex items-center gap-2">
+                        <span class="text-textGray shrink-0">Langkah 4:</span>
+                        <input type="text" class="flex-1 min-w-0 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-white focus:outline-none focus:border-brandGreen" placeholder="tulis langkah..." />
+                      </div>
+                      <div class="flex items-center gap-2">
+                        <span class="text-textGray shrink-0">Langkah 5:</span>
+                        <input type="text" class="flex-1 min-w-0 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-white focus:outline-none focus:border-brandGreen" placeholder="tulis langkah..." />
+                      </div>
+                      <div class="flex items-center gap-2">
+                        <span class="text-textGray shrink-0">Hasil Akhir:</span><input type="text" class="flex-1 min-w-0 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-white font-bold" placeholder="..." />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <button
+              onclick="togglePembahasan('pembahasanUraian2')"
+              class="mt-6 bg-brandGreen/10 border border-brandGreen/30 hover:bg-brandGreen/20 text-brandGreen font-bold py-3 px-6 rounded-2xl text-xs md:text-sm transition flex items-center gap-2"
+            >
+              <i class="fa-solid fa-lightbulb"></i> Lihat Kunci Jawaban &amp; Pembahasan Uraian 2
+            </button>
+
+            <div id="pembahasanUraian2" class="hidden mt-6 w-full bg-brandCard border border-brandGreen/30 rounded-3xl p-6 md:p-8 space-y-6 box-border">
+              <div class="flex items-center gap-2 text-brandGreen font-bold text-lg border-b border-white/10 pb-3"><i class="fa-solid fa-circle-check"></i> Kunci Jawaban &amp; Penjelasan Tiga Algoritma Pengurutan (Soal 2)</div>
+
+              <p class="text-sm text-gray-300">Data Awal yang akan diurutkan: <strong class="text-brandGreen text-base">9, 2, 4, 12, 8, 4</strong></p>
+
+              <div class="bg-black/50 border border-white/10 rounded-2xl p-4 md:p-5 w-full">
+                <h4 class="font-bold text-brandGreen text-base mb-2 flex items-center gap-2"><i class="fa-solid fa-bars-staggered"></i> 1. Bubble Sort (Pengurutan Gelembung)</h4>
+                <p class="text-xs text-textGray mb-3">Prinsip: Membandingkan dua elemen berdampingan, lalu menukarnya jika urutannya salah.</p>
+                <div class="space-y-1.5 text-xs md:text-sm font-mono text-gray-200 overflow-x-auto">
+                  <p><strong>Langkah 1 (Iterasi 1):</strong> Compare (9,2) ➔ [2,9,4,12,8,4], (9,4) ➔ [2,4,9,12,8,4], (12,8) ➔ [2,4,9,8,12,4], (12,4) ➔ <span class="text-brandGreen font-bold">2, 4, 9, 8, 4, 12</span></p>
+                  <p><strong>Langkah 2 (Iterasi 2):</strong> Compare (9,8) ➔ [2,4,8,9,4,12], (9,4) ➔ <span class="text-brandGreen font-bold">2, 4, 8, 4, 9, 12</span></p>
+                  <p><strong>Langkah 3 (Iterasi 3):</strong> Compare (8,4) ➔ <span class="text-brandGreen font-bold">2, 4, 4, 8, 9, 12</span></p>
+                  <p><strong>Langkah 4 (Iterasi 4):</strong> Tidak ada penukaran lagi (Sudah Terurut).</p>
+                  <p><strong>Langkah 5 (Iterasi 5):</strong> Pengecekan akhir aman.</p>
+                  <p class="pt-2 text-white font-sans"><strong>Hasil Akhir:</strong> <span class="text-brandGreen font-bold font-mono">2, 4, 4, 8, 9, 12</span></p>
+                </div>
+              </div>
+
+              <div class="bg-black/50 border border-white/10 rounded-2xl p-4 md:p-5 w-full">
+                <h4 class="font-bold text-brandGreen text-base mb-2 flex items-center gap-2"><i class="fa-solid fa-arrow-down-wide-short"></i> 2. Insertion Sort (Pengurutan Sisipan)</h4>
+                <p class="text-xs text-textGray mb-3">Prinsip: Mengambil satu per satu elemen dan menyisipkannya ke posisi yang tepat pada bagian yang sudah terurut.</p>
+                <div class="space-y-1.5 text-xs md:text-sm font-mono text-gray-200 overflow-x-auto">
+                  <p><strong>Langkah 1 (Sisip 2):</strong> Menyisipkan 2 sebelum 9 ➔ <span class="text-brandGreen font-bold">2, 9, 4, 12, 8, 4</span></p>
+                  <p><strong>Langkah 2 (Sisip 4):</strong> Menyisipkan 4 antara 2 dan 9 ➔ <span class="text-brandGreen font-bold">2, 4, 9, 12, 8, 4</span></p>
+                  <p><strong>Langkah 3 (Sisip 12):</strong> 12 tetap di posisi belakang 9 ➔ <span class="text-brandGreen font-bold">2, 4, 9, 12, 8, 4</span></p>
+                  <p><strong>Langkah 4 (Sisip 8):</strong> Menyisipkan 8 antara 4 dan 9 ➔ <span class="text-brandGreen font-bold">2, 4, 8, 9, 12, 4</span></p>
+                  <p><strong>Langkah 5 (Sisip 4):</strong> Menyisipkan 4 di sebelah 4 pertama ➔ <span class="text-brandGreen font-bold">2, 4, 4, 8, 9, 12</span></p>
+                  <p class="pt-2 text-white font-sans"><strong>Hasil Akhir:</strong> <span class="text-brandGreen font-bold font-mono">2, 4, 4, 8, 9, 12</span></p>
+                </div>
+              </div>
+
+              <div class="bg-black/50 border border-white/10 rounded-2xl p-4 md:p-5 w-full">
+                <h4 class="font-bold text-brandGreen text-base mb-2 flex items-center gap-2"><i class="fa-solid fa-arrow-up-short-wide"></i> 3. Selection Sort (Pengurutan Pilihan)</h4>
+                <p class="text-xs text-textGray mb-3">Prinsip: Mencari nilai terkecil dari sisa data yang belum terurut, lalu menukarnya ke posisi terdepan yang sesuai.</p>
+                <div class="space-y-1.5 text-xs md:text-sm font-mono text-gray-200 overflow-x-auto">
+                  <p><strong>Langkah 1:</strong> Cari terkecil (2), tukar dengan 9 ➔ <span class="text-brandGreen font-bold">2, 9, 4, 12, 8, 4</span></p>
+                  <p><strong>Langkah 2:</strong> Cari terkecil dari [9,4,12,8,4] yaitu (4 di indeks 2), tukar dengan 9 ➔ <span class="text-brandGreen font-bold">2, 4, 9, 12, 8, 4</span></p>
+                  <p><strong>Langkah 3:</strong> Cari terkecil dari [9,12,8,4] yaitu (4 di indeks 5), tukar dengan 9 ➔ <span class="text-brandGreen font-bold">2, 4, 4, 12, 8, 9</span></p>
+                  <p><strong>Langkah 4:</strong> Cari terkecil dari [12,8,9] yaitu (8), tukar dengan 12 ➔ <span class="text-brandGreen font-bold">2, 4, 4, 8, 12, 9</span></p>
+                  <p><strong>Langkah 5:</strong> Cari terkecil dari [12,9] yaitu (9), tukar dengan 12 ➔ <span class="text-brandGreen font-bold">2, 4, 4, 8, 9, 12</span></p>
+                  <p class="pt-2 text-white font-sans"><strong>Hasil Akhir:</strong> <span class="text-brandGreen font-bold font-mono">2, 4, 4, 8, 9, 12</span></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
       </main>
-
-      <!-- Tabel Distribusi Materi -->
-      <section class="max-w-7xl mx-auto px-6 py-12 w-full">
-        <h2 class="text-2xl font-bold mb-8 border-l-4 border-brandGreen pl-4">Distribusi Materi & Bobot Soal</h2>
-
-        <div class="bg-brandGray border border-white/5 rounded-3xl overflow-hidden w-full">
-          <div class="overflow-x-auto w-full">
-            <table class="w-full text-left">
-              <thead class="bg-white/5 border-b border-white/10 text-textGray text-xs uppercase tracking-wider">
-                <tr>
-                  <th class="px-5 py-4">Materi</th>
-                  <th class="px-5 py-4 text-center">Jumlah Soal</th>
-                  <th class="px-5 py-4 text-center">Bobot (%)</th>
-                  <th class="px-5 py-4">Indikator Penting</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-white/5 text-sm">
-                <!-- Berpikir Komputasional -->
-                <tr class="hover:bg-white/5 transition">
-                  <td class="px-5 py-4">
-                    <div class="flex items-center gap-3">
-                      <div class="w-10 h-10 rounded-xl bg-brandGreen/10 border border-brandGreen/20 flex items-center justify-center text-brandGreen shrink-0">
-                        <i class="fa-solid fa-brain"></i>
-                      </div>
-                      <div>
-                        <p class="font-bold text-white">Berpikir Komputasional</p>
-                        <p class="text-textGray text-xs">4 Pilar Utama</p>
-                      </div>
-                    </div>
-                  </td>
-                  <td class="px-5 py-4 text-center font-semibold text-white">10</td>
-                  <td class="px-5 py-4 text-center">
-                    <div class="flex items-center justify-center gap-2">
-                      <span class="text-brandGreen font-bold">50%</span>
-                      <div class="w-24 h-1.5 bg-white/10 rounded-full overflow-hidden">
-                        <div class="h-full bg-brandGreen" style="width: 50%"></div>
-                      </div>
-                    </div>
-                  </td>
-                  <td class="px-5 py-4 text-textGray">Dekomposisi, Pengenalan Pola, Abstraksi, Algoritma. Terapkan pada studi kasus sederhana.</td>
-                </tr>
-
-                <!-- Stack & Queue -->
-                <tr class="hover:bg-white/5 transition">
-                  <td class="px-5 py-4">
-                    <div class="flex items-center gap-3">
-                      <div class="w-10 h-10 rounded-xl bg-brandGreen/10 border border-brandGreen/20 flex items-center justify-center text-brandGreen shrink-0">
-                        <i class="fa-solid fa-layer-group"></i>
-                      </div>
-                      <div>
-                        <p class="font-bold text-white">Stack & Queue</p>
-                        <p class="text-textGray text-xs">Struktur Data Linier</p>
-                      </div>
-                    </div>
-                  </td>
-                  <td class="px-5 py-4 text-center font-semibold text-white">6</td>
-                  <td class="px-5 py-4 text-center">
-                    <div class="flex items-center justify-center gap-2">
-                      <span class="text-brandGreen font-bold">30%</span>
-                      <div class="w-24 h-1.5 bg-white/10 rounded-full overflow-hidden">
-                        <div class="h-full bg-brandGreen" style="width: 30%"></div>
-                      </div>
-                    </div>
-                  </td>
-                  <td class="px-5 py-4 text-textGray">Prinsip LIFO & FIFO, operasi push/pop, enqueue/dequeue, contoh penerapan sehari-hari.</td>
-                </tr>
-
-                <!-- Searching & Sorting -->
-                <tr class="hover:bg-white/5 transition">
-                  <td class="px-5 py-4">
-                    <div class="flex items-center gap-3">
-                      <div class="w-10 h-10 rounded-xl bg-brandGreen/10 border border-brandGreen/20 flex items-center justify-center text-brandGreen shrink-0">
-                        <i class="fa-solid fa-magnifying-glass-chart"></i>
-                      </div>
-                      <div>
-                        <p class="font-bold text-white">Searching & Sorting</p>
-                        <p class="text-textGray text-xs">Algoritma Standar</p>
-                      </div>
-                    </div>
-                  </td>
-                  <td class="px-5 py-4 text-center font-semibold text-white">4</td>
-                  <td class="px-5 py-4 text-center">
-                    <div class="flex items-center justify-center gap-2">
-                      <span class="text-brandGreen font-bold">20%</span>
-                      <div class="w-24 h-1.5 bg-white/10 rounded-full overflow-hidden">
-                        <div class="h-full bg-brandGreen" style="width: 20%"></div>
-                      </div>
-                    </div>
-                  </td>
-                  <td class="px-5 py-4 text-textGray">Linear & Binary Search, Bubble/Insertion/Selection Sort. Mampu menelusuri proses langkah demi langkah.</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-
-      <!-- Strategi Jitu -->
-      <section class="max-w-7xl mx-auto px-6 py-12 w-full">
-        <h2 class="text-2xl font-bold mb-8 border-l-4 border-brandGreen pl-4">Strategi Jitu Menaklukkan PTS</h2>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full">
-          <!-- Tips 1 -->
-          <div class="bg-brandGray border border-white/5 rounded-3xl p-6 hover:border-brandGreen/30 transition">
-            <div class="w-12 h-12 rounded-2xl bg-brandGreen/10 border border-brandGreen/20 flex items-center justify-center mb-4 text-2xl text-brandGreen">
-              <i class="fa-solid fa-list-check"></i>
-            </div>
-            <h4 class="font-bold text-white mb-2">1. Kuasai Prioritas</h4>
-            <p class="text-textGray text-sm">Fokus pada materi dengan bobot tertinggi: Berpikir Komputasional (50%), lalu Stack & Queue (30%).</p>
-          </div>
-
-          <!-- Tips 2 -->
-          <div class="bg-brandGray border border-white/5 rounded-3xl p-6 hover:border-brandGreen/30 transition">
-            <div class="w-12 h-12 rounded-2xl bg-brandGreen/10 border border-brandGreen/20 flex items-center justify-center mb-4 text-2xl text-brandGreen">
-              <i class="fa-solid fa-repeat"></i>
-            </div>
-            <h4 class="font-bold text-white mb-2">2. Latihan Simulasi</h4>
-            <p class="text-textGray text-sm">Gunakan simulasi interaktif di modul Searching & Sorting untuk memahami proses secara visual.</p>
-          </div>
-
-          <!-- Tips 3 -->
-          <div class="bg-brandGray border border-white/5 rounded-3xl p-6 hover:border-brandGreen/30 transition">
-            <div class="w-12 h-12 rounded-2xl bg-brandGreen/10 border border-brandGreen/20 flex items-center justify-center mb-4 text-2xl text-brandGreen">
-              <i class="fa-solid fa-book-open"></i>
-            </div>
-            <h4 class="font-bold text-white mb-2">3. Pahami Konsep, Bukan Hafalan</h4>
-            <p class="text-textGray text-sm">Setiap soal HOTS menuntut penalaran. Pastikan kamu mengerti "mengapa" bukan hanya "apa".</p>
-          </div>
-
-          <!-- Tips 4 -->
-          <div class="bg-brandGray border border-white/5 rounded-3xl p-6 hover:border-brandGreen/30 transition">
-            <div class="w-12 h-12 rounded-2xl bg-brandGreen/10 border border-brandGreen/20 flex items-center justify-center mb-4 text-2xl text-brandGreen">
-              <i class="fa-solid fa-stopwatch"></i>
-            </div>
-            <h4 class="font-bold text-white mb-2">4. Manajemen Waktu</h4>
-            <p class="text-textGray text-sm">Alokasikan ~2 menit per soal. Jangan terpaku pada satu soal, tandai dan kembali lagi nanti.</p>
-          </div>
-        </div>
-      </section>
-
-      <!-- ================== KUIS INTERAKTIF ================== -->
-      <section class="max-w-7xl mx-auto px-6 py-12 w-full">
-        <div class="text-center mb-10">
-          <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-medium text-gray-300 mb-4"><i class="fa-solid fa-pen-to-square text-brandGreen"></i> Uji Pemahamanmu</div>
-          <h2 class="text-3xl md:text-4xl font-bold tracking-tight mb-3">Bedah Kisi-Kisi Pilhan Ganda</h2>
-          <p class="text-textGray text-sm md:text-base max-w-2xl mx-auto">20 soal pilihan ganda dengan pembahasan. Pilih jawabanmu, dapatkan clue, dan pelajari polanya!</p>
-        </div>
-
-        <!-- Grid Soal 1 - 20 -->
-        <div class="grid grid-cols-4 sm:grid-cols-5 gap-4 w-full" id="gridSoal">
-          <!-- Grid item generated by JS -->
-        </div>
-      </section>
-
-      <!-- POP-UP MODAL SOAL -->
-      <div id="modalOverlay" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
-        <div class="bg-brandCard border border-white/10 rounded-3xl max-w-2xl w-full p-6 md:p-8 relative shadow-2xl glow-green max-h-[90vh] overflow-y-auto">
-          <!-- Close Button -->
-          <button onclick="tutupModal()" class="absolute top-5 right-6 text-textGray hover:text-white text-xl font-bold">✕</button>
-
-          <!-- Badge Header -->
-          <div class="flex items-center gap-3 mb-4">
-            <span id="modalNumberBadge" class="bg-brandGreen text-black font-bold px-3 py-1 rounded-full text-xs">Soal #1</span>
-            <span id="statusSoalBadge" class="text-xs text-textGray">Pilihan Ganda</span>
-          </div>
-
-          <!-- TEKS SOAL -->
-          <div id="modalSoalTeks" class="text-base md:text-lg font-normal leading-relaxed mb-6 text-gray-100 space-y-3"></div>
-
-          <!-- CONTAINER GAMBAR -->
-          <div id="modalGambarContainer" class="hidden mb-6 flex justify-center bg-white/5 border border-white/10 rounded-2xl p-3"></div>
-
-          <!-- CONTAINER TABEL -->
-          <div id="modalTabelContainer" class="hidden mb-6 overflow-x-auto bg-white/5 border border-white/10 rounded-2xl p-4"></div>
-
-          <!-- AI Clue Box -->
-          <div id="aiClueBox" class="hidden bg-brandGreenDark/30 border border-brandGreen/30 rounded-2xl p-4 mb-4 text-sm text-green-200"><span class="font-bold text-brandGreen">🤖 Clue:</span> <span id="aiClueTeks"></span></div>
-
-          <!-- Opsi Jawaban -->
-          <div id="modalOpsiContainer" class="space-y-3 mb-6"></div>
-
-          <!-- Box Penjelasan / Keterangan -->
-          <div id="penjelasanBox" class="hidden bg-white/5 border border-white/10 rounded-2xl p-5 mb-6">
-            <div id="penjelasanStatus" class="font-bold mb-1 text-sm"></div>
-            <div class="text-xs font-semibold text-textGray uppercase tracking-wider mb-2">Penjelasan / Pembahasan:</div>
-            <p id="penjelasanTeks" class="text-sm text-gray-300 leading-relaxed"></p>
-          </div>
-
-          <!-- Action Buttons -->
-          <div class="flex items-center justify-between border-t border-white/10 pt-4">
-            <button onclick="tampilkanClue()" class="bg-white/5 border border-white/10 hover:bg-white/10 text-white font-medium py-2 px-4 rounded-xl text-xs transition">💡 Petunjuk (Clue)</button>
-            <button onclick="tutupModal()" class="bg-brandGreen text-black font-bold py-2 px-6 rounded-xl text-xs hover:bg-green-400 transition">Tutup Soal</button>
-          </div>
-        </div>
-      </div>
     </div>
 
-    <!-- ================== SOAL URAIAN ================== -->
-    <section class="max-w-7xl mx-auto px-6 py-12 w-full">
-      <div class="text-center mb-10">
-        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-medium text-gray-300 mb-4"><i class="fa-solid fa-pen-to-square text-brandGreen"></i> Uji Kemampuan Berpikir</div>
-        <h2 class="text-3xl md:text-4xl font-bold tracking-tight mb-3">Bedah Soal Uraian</h2>
-        <p class="text-textGray text-sm md:text-base max-w-2xl mx-auto">Kerjakan soal di bawah ini dengan cara penyelesaiannya! Klik tombol pembahasan untuk mencocokkan jawabanmu.</p>
-      </div>
-
-      <!-- ================== SOAL 1 : Simulator Stack & Queue ================== -->
-      <div class="w-full bg-brandGray border border-white/5 rounded-3xl p-6 md:p-8 mb-10 box-border">
-        <div class="flex items-start gap-4 mb-6 w-full">
-          <div class="flex-1 min-w-0">
-            <h3 class="text-xl md:text-2xl font-bold text-white">Simulator Stack & Queue</h3>
-            <p class="text-textGray text-sm mt-2 leading-relaxed">Edo dan Adi sedang bermain menggunakan simulator stack & queue. Alat simulator ini memiliki perintah sebagai berikut.</p>
-
-            <!-- Tabel Perintah -->
-            <div class="overflow-x-auto my-4 bg-white/5 border border-white/10 rounded-2xl p-3 w-full">
-              <table class="w-full text-center border-collapse text-xs md:text-sm font-sans">
-                <thead>
-                  <tr class="bg-brandGreen/20 text-brandGreen font-bold">
-                    <th class="p-2 border border-white/10 text-white">Perintah</th>
-                    <th class="p-2 border border-white/10 text-white">Hal yang dilakukan Simulator</th>
-                  </tr>
-                </thead>
-                <tbody class="text-gray-200">
-                  <tr class="hover:bg-white/5 transition">
-                    <td class="p-2 border border-white/10 font-semibold text-white">Push</td>
-                    <td class="p-2 border border-white/10">Memasukan angka pada simulator stack & queue</td>
-                  </tr>
-                  <tr class="hover:bg-white/5 transition">
-                    <td class="p-2 border border-white/10 font-semibold text-white">Pop 1</td>
-                    <td class="p-2 border border-white/10">Menghapus angka pada antrean pertama simulator</td>
-                  </tr>
-                  <tr class="hover:bg-white/5 transition">
-                    <td class="p-2 border border-white/10 font-semibold text-white">Pop 2</td>
-                    <td class="p-2 border border-white/10">Menghapus angka pada urutan terakhir simulator</td>
-                  </tr>
-                </tbody>
-              </table>
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container" style="max-width: 1280px; margin: 0 auto; padding: 0 24px">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <div class="footer-logo">
+              <div class="footer-logo-icon"><i class="fa-solid fa-code"></i></div>
+              <span class="footer-logo-text">RuangInformatika</span>
             </div>
-
-            <p class="text-sm text-gray-300 mt-4">Edo memberikan tantangan pada Adi agar simulator menampilkan urutan angka sebagai berikut:</p>
-            <div class="text-center text-2xl md:text-3xl font-bold text-brandGreen my-4">2, 3, 9, 5</div>
-            <p class="text-sm text-gray-300">Bantulah Adi mengisi tabel dengan memasukkan angka inputan agar menghasilkan urutan angka seperti di atas!</p>
-          </div>
-        </div>
-
-        <!-- Tabel Input Jawaban Soal 1 -->
-        <div class="overflow-x-auto bg-white/5 border border-white/10 rounded-2xl p-4 mb-6 w-full">
-          <table class="w-full text-center border-collapse text-xs md:text-sm font-sans">
-            <thead>
-              <tr class="bg-brandGreen/20 text-brandGreen font-bold">
-                <th class="p-2 border border-white/10 text-white">Langkah</th>
-                <th class="p-2 border border-white/10 text-white">Perintah</th>
-                <th class="p-2 border border-white/10 text-white">Angka Inputan</th>
-                <th class="p-2 border border-white/10 text-white">Langkah</th>
-                <th class="p-2 border border-white/10 text-white">Perintah</th>
-                <th class="p-2 border border-white/10 text-white">Angka Inputan</th>
-              </tr>
-            </thead>
-            <tbody class="text-gray-200">
-              <!-- Baris 1 - 6 dan 7 - 12 -->
-              <tr>
-                <td class="p-2 border border-white/10">1</td>
-                <td class="p-2 border border-white/10 font-semibold text-white">Push</td>
-                <td class="p-2 border border-white/10"><span class="bg-brandGreen/20 text-white font-bold px-3 py-1 rounded">4</span></td>
-                <td class="p-2 border border-white/10">7</td>
-                <td class="p-2 border border-white/10 font-semibold text-white">Push</td>
-                <td class="p-2 border border-white/10">
-                  <input type="text" id="soal1_step7" placeholder="..." class="w-16 md:w-20 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-center text-white focus:outline-none focus:border-brandGreen" />
-                </td>
-              </tr>
-              <tr>
-                <td class="p-2 border border-white/10">2</td>
-                <td class="p-2 border border-white/10 font-semibold text-white">Push</td>
-                <td class="p-2 border border-white/10">
-                  <input type="text" id="soal1_step2" placeholder="..." class="w-16 md:w-20 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-center text-white focus:outline-none focus:border-brandGreen" />
-                </td>
-                <td class="p-2 border border-white/10">8</td>
-                <td class="p-2 border border-white/10 font-semibold text-white">Pop 2</td>
-                <td class="p-2 border border-white/10"><span class="text-gray-500">-</span></td>
-              </tr>
-              <tr>
-                <td class="p-2 border border-white/10">3</td>
-                <td class="p-2 border border-white/10 font-semibold text-white">Push</td>
-                <td class="p-2 border border-white/10">
-                  <input type="text" id="soal1_step3" placeholder="..." class="w-16 md:w-20 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-center text-white focus:outline-none focus:border-brandGreen" />
-                </td>
-                <td class="p-2 border border-white/10">9</td>
-                <td class="p-2 border border-white/10 font-semibold text-white">Pop 1</td>
-                <td class="p-2 border border-white/10"><span class="text-gray-500">-</span></td>
-              </tr>
-              <tr>
-                <td class="p-2 border border-white/10">4</td>
-                <td class="p-2 border border-white/10 font-semibold text-white">Pop 1</td>
-                <td class="p-2 border border-white/10"><span class="text-gray-500">-</span></td>
-                <td class="p-2 border border-white/10">10</td>
-                <td class="p-2 border border-white/10 font-semibold text-white">Push</td>
-                <td class="p-2 border border-white/10"><span class="bg-brandGreen/20 text-white font-bold px-3 py-1 rounded">5</span></td>
-              </tr>
-              <tr>
-                <td class="p-2 border border-white/10">5</td>
-                <td class="p-2 border border-white/10 font-semibold text-white">Push</td>
-                <td class="p-2 border border-white/10">
-                  <input type="text" id="soal1_step5" placeholder="..." class="w-16 md:w-20 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-center text-white focus:outline-none focus:border-brandGreen" />
-                </td>
-                <td class="p-2 border border-white/10">11</td>
-                <td class="p-2 border border-white/10 font-semibold text-white">Push</td>
-                <td class="p-2 border border-white/10">
-                  <input type="text" id="soal1_step11" placeholder="..." class="w-16 md:w-20 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-center text-white focus:outline-none focus:border-brandGreen" />
-                </td>
-              </tr>
-              <tr>
-                <td class="p-2 border border-white/10">6</td>
-                <td class="p-2 border border-white/10 font-semibold text-white">Push</td>
-                <td class="p-2 border border-white/10">
-                  <input type="text" id="soal1_step6" placeholder="..." class="w-16 md:w-20 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-center text-white focus:outline-none focus:border-brandGreen" />
-                </td>
-                <td class="p-2 border border-white/10">12</td>
-                <td class="p-2 border border-white/10 font-semibold text-white">Pop 2</td>
-                <td class="p-2 border border-white/10"><span class="text-gray-500">-</span></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <!-- Tombol Toggle Pembahasan Soal 1 -->
-        <button
-          onclick="togglePembahasan('pembahasanUraian1')"
-          class="bg-brandGreen/10 border border-brandGreen/30 hover:bg-brandGreen/20 text-brandGreen font-bold py-3 px-6 rounded-2xl text-xs md:text-sm transition flex items-center gap-2"
-        >
-          <i class="fa-solid fa-lightbulb"></i> Lihat Kunci Jawaban & Pembahasan Uraian 1
-        </button>
-
-        <!-- KUNCI JAWABAN & PEMBAHASAN SOAL 1 -->
-        <div id="pembahasanUraian1" class="hidden mt-6 w-full bg-brandCard border border-brandGreen/30 rounded-3xl p-6 md:p-8 space-y-4 box-border">
-          <div class="flex items-center gap-2 text-brandGreen font-bold text-lg border-b border-white/10 pb-3"><i class="fa-solid fa-circle-check"></i> Kunci Jawaban & Penjelasan Step-by-Step (Soal 1)</div>
-
-          <div class="space-y-3 text-sm text-gray-200 leading-relaxed">
-            <p><strong class="text-white">Target Output (Angka yang dikeluarkan/Pop):</strong> <span class="text-brandGreen font-bold">2, 3, 9, 5</span></p>
-            <p><strong>Aturan Simulator:</strong></p>
-            <ul class="list-disc list-inside space-y-1 text-textGray pl-2">
-              <li><strong class="text-white">Push X:</strong> Menambahkan angka X ke posisi paling belakang/akhir simulator.</li>
-              <li><strong class="text-white">Pop 1 (Queue / FIFO):</strong> Mengeluarkan angka pada urutan <u>pertama</u> (paling depan).</li>
-              <li><strong class="text-white">Pop 2 (Stack / LIFO):</strong> Mengeluarkan angka pada urutan <u>terakhir</u> (paling belakang).</li>
-            </ul>
-
-            <div class="bg-black/50 border border-white/10 rounded-2xl p-4 mt-4 w-full">
-              <h4 class="font-bold text-brandGreen mb-3">🔑 Kunci Angka Inputan:</h4>
-              <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 text-center w-full">
-                <div class="bg-white/5 p-2 rounded-xl border border-white/10"><span class="text-xs text-textGray block">Langkah 2</span><strong class="text-brandGreen text-base">2</strong></div>
-                <div class="bg-white/5 p-2 rounded-xl border border-white/10"><span class="text-xs text-textGray block">Langkah 3</span><strong class="text-brandGreen text-base">3</strong></div>
-                <div class="bg-white/5 p-2 rounded-xl border border-white/10"><span class="text-xs text-textGray block">Langkah 5</span><strong class="text-brandGreen text-base">9</strong></div>
-                <div class="bg-white/5 p-2 rounded-xl border border-white/10"><span class="text-xs text-textGray block">Langkah 6</span><strong class="text-brandGreen text-base">8</strong></div>
-                <div class="bg-white/5 p-2 rounded-xl border border-white/10"><span class="text-xs text-textGray block">Langkah 7</span><strong class="text-brandGreen text-base">7</strong></div>
-                <div class="bg-white/5 p-2 rounded-xl border border-white/10"><span class="text-xs text-textGray block">Langkah 11</span><strong class="text-brandGreen text-base">6</strong></div>
-              </div>
-            </div>
-
-            <h4 class="font-bold text-white pt-2">Simulasi Penelusuran Langkah demi Langkah:</h4>
-            <ol class="list-decimal list-inside space-y-2 text-xs md:text-sm text-gray-300">
-              <li><strong>Push 4:</strong> Isinya <code class="text-brandGreen">[4]</code></li>
-              <li><strong>Push 2:</strong> Isinya <code class="text-brandGreen">[4, 2]</code></li>
-              <li><strong>Push 3:</strong> Isinya <code class="text-brandGreen">[4, 2, 3]</code></li>
-              <li><strong>Pop 1:</strong> Menghapus angka pertama (<code class="text-yellow-400">4</code>). Sisa: <code class="text-brandGreen">[2, 3]</code></li>
-              <li><strong>Push 9:</strong> Isinya <code class="text-brandGreen">[2, 3, 9]</code></li>
-              <li><strong>Push 8:</strong> Isinya <code class="text-brandGreen">[2, 3, 9, 8]</code></li>
-              <li><strong>Push 7:</strong> Isinya <code class="text-brandGreen">[2, 3, 9, 8, 7]</code></li>
-              <li><strong>Pop 2:</strong> Menghapus angka terakhir (<code class="text-yellow-400">7</code>). Sisa: <code class="text-brandGreen">[2, 3, 9, 8]</code></li>
-              <li><strong>Pop 1:</strong> Menghapus angka pertama (<code class="text-brandGreen font-bold">2</code> ➔ <strong>Output Ke-1 = 2</strong>). Sisa: <code class="text-brandGreen">[3, 9, 8]</code></li>
-              <li><strong>Push 5:</strong> Isinya <code class="text-brandGreen">[3, 9, 8, 5]</code></li>
-              <li><strong>Push 6:</strong> Isinya <code class="text-brandGreen">[3, 9, 8, 5, 6]</code></li>
-              <li><strong>Pop 2:</strong> Menghapus angka terakhir (<code class="text-yellow-400">6</code>). Sisa: <code class="text-brandGreen">[3, 9, 8, 5]</code></li>
-            </ol>
-            <p class="text-xs text-textGray bg-white/5 p-3 rounded-xl border border-white/10 mt-2">
-              💡 <strong>Catatan Hasil Akhir:</strong> Pada operasi Pop selanjutnya, antrean yang tersisa <code class="text-brandGreen">[3, 9, 8, 5]</code> jika di-pop dengan kombinasi <strong>Pop 1, Pop 1, Pop 2</strong> secara
-              berturut-turut akan menghasilkan urutan angka <strong class="text-brandGreen">3, 9, 5</strong>.
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <!-- ================== SOAL TAMBAHAN 1 : Simulasi Stack ================== -->
-      <div class="w-full bg-brandGray border border-white/5 rounded-3xl p-6 md:p-8 mb-10 box-border">
-        <div class="flex items-start gap-4 mb-6 w-full">
-          <div class="flex-1 min-w-0">
-            <h3 class="text-xl md:text-2xl font-bold text-white">Simulasi Stack</h3>
-            <p class="text-textGray text-sm mt-2 leading-relaxed">Perhatikan aturan simulator stack berikut!</p>
-
-            <!-- Tabel Perintah Stack -->
-            <div class="overflow-x-auto my-4 bg-white/5 border border-white/10 rounded-2xl p-3 w-full">
-              <table class="w-full text-center border-collapse text-xs md:text-sm font-sans">
-                <thead>
-                  <tr class="bg-brandGreen/20 text-brandGreen font-bold">
-                    <th class="p-2 border border-white/10 text-white">Perintah</th>
-                    <th class="p-2 border border-white/10 text-white">Hal yang dilakukan Simulator</th>
-                  </tr>
-                </thead>
-                <tbody class="text-gray-200">
-                  <tr class="hover:bg-white/5 transition">
-                    <td class="p-2 border border-white/10 font-semibold text-white">Push</td>
-                    <td class="p-2 border border-white/10">Memasukan angka pada simulator stack</td>
-                  </tr>
-                  <tr class="hover:bg-white/5 transition">
-                    <td class="p-2 border border-white/10 font-semibold text-white">Pop</td>
-                    <td class="p-2 border border-white/10">Menghapus angka akhir pada barisan angka</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
-            <p class="text-sm text-gray-300 mt-4">Edo memberikan tantangan pada Adi agar simulator menampilkan urutan angka sebagai berikut ini!</p>
-            <div class="text-center text-2xl md:text-3xl font-bold text-brandGreen my-4">0, 4, 3, 2</div>
-            <p class="text-sm text-gray-300">Bantu Adi mengisi tabel dengan memasukkan angka inputan agar menghasilkan urutan angka seperti di atas!</p>
-          </div>
-        </div>
-
-        <!-- Tabel Input Jawaban Simulasi Stack -->
-        <div class="overflow-x-auto bg-white/5 border border-white/10 rounded-2xl p-4 mb-6 w-full">
-          <table class="w-full text-center border-collapse text-xs md:text-sm font-sans">
-            <thead>
-              <tr class="bg-brandGreen/20 text-brandGreen font-bold">
-                <th class="p-2 border border-white/10 text-white">Langkah</th>
-                <th class="p-2 border border-white/10 text-white">Perintah</th>
-                <th class="p-2 border border-white/10 text-white">Angka Inputan</th>
-                <th class="p-2 border border-white/10 text-white">Langkah</th>
-                <th class="p-2 border border-white/10 text-white">Perintah</th>
-                <th class="p-2 border border-white/10 text-white">Angka Inputan</th>
-              </tr>
-            </thead>
-            <tbody class="text-gray-200">
-              <tr>
-                <td class="p-2 border border-white/10">1</td>
-                <td class="p-2 border border-white/10 font-semibold text-white">Push</td>
-                <td class="p-2 border border-white/10"><span class="bg-brandGreen/20 text-white font-bold px-3 py-1 rounded">0</span></td>
-                <td class="p-2 border border-white/10">6</td>
-                <td class="p-2 border border-white/10 font-semibold text-white">Push</td>
-                <td class="p-2 border border-white/10">
-                  <input type="text" id="stack_step6" placeholder="..." class="w-16 md:w-20 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-center text-white focus:outline-none focus:border-brandGreen" />
-                </td>
-              </tr>
-              <tr>
-                <td class="p-2 border border-white/10">2</td>
-                <td class="p-2 border border-white/10 font-semibold text-white">Push</td>
-                <td class="p-2 border border-white/10">
-                  <input type="text" id="stack_step2" placeholder="..." class="w-16 md:w-20 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-center text-white focus:outline-none focus:border-brandGreen" />
-                </td>
-                <td class="p-2 border border-white/10">7</td>
-                <td class="p-2 border border-white/10 font-semibold text-white">Push</td>
-                <td class="p-2 border border-white/10">
-                  <input type="text" id="stack_step7" placeholder="..." class="w-16 md:w-20 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-center text-white focus:outline-none focus:border-brandGreen" />
-                </td>
-              </tr>
-              <tr>
-                <td class="p-2 border border-white/10">3</td>
-                <td class="p-2 border border-white/10 font-semibold text-white">Pop</td>
-                <td class="p-2 border border-white/10"><span class="text-gray-500">-</span></td>
-                <td class="p-2 border border-white/10">8</td>
-                <td class="p-2 border border-white/10 font-semibold text-white">Pop</td>
-                <td class="p-2 border border-white/10"><span class="text-gray-500">-</span></td>
-              </tr>
-              <tr>
-                <td class="p-2 border border-white/10">4</td>
-                <td class="p-2 border border-white/10 font-semibold text-white">Pop</td>
-                <td class="p-2 border border-white/10"><span class="text-gray-500">-</span></td>
-                <td class="p-2 border border-white/10">9</td>
-                <td class="p-2 border border-white/10 font-semibold text-white">Push</td>
-                <td class="p-2 border border-white/10"><span class="bg-brandGreen/20 text-white font-bold px-3 py-1 rounded">3</span></td>
-              </tr>
-              <tr>
-                <td class="p-2 border border-white/10">5</td>
-                <td class="p-2 border border-white/10 font-semibold text-white">Push</td>
-                <td class="p-2 border border-white/10">
-                  <input type="text" id="stack_step5" placeholder="..." class="w-16 md:w-20 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-center text-white focus:outline-none focus:border-brandGreen" />
-                </td>
-                <td class="p-2 border border-white/10">10</td>
-                <td class="p-2 border border-white/10 font-semibold text-white">Push</td>
-                <td class="p-2 border border-white/10">
-                  <input type="text" id="stack_step10" placeholder="..." class="w-16 md:w-20 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-center text-white focus:outline-none focus:border-brandGreen" />
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <!-- Tombol Toggle Pembahasan Simulasi Stack -->
-        <button onclick="togglePembahasan('pembahasanStack')" class="bg-brandGreen/10 border border-brandGreen/30 hover:bg-brandGreen/20 text-brandGreen font-bold py-3 px-6 rounded-2xl text-xs md:text-sm transition flex items-center gap-2">
-          <i class="fa-solid fa-lightbulb"></i> Lihat Kunci Jawaban & Pembahasan Simulasi Stack
-        </button>
-
-        <!-- KUNCI JAWABAN & PEMBAHASAN SIMULASI STACK -->
-        <div id="pembahasanStack" class="hidden mt-6 w-full bg-brandCard border border-brandGreen/30 rounded-3xl p-6 md:p-8 space-y-4 box-border">
-          <div class="flex items-center gap-2 text-brandGreen font-bold text-lg border-b border-white/10 pb-3"><i class="fa-solid fa-circle-check"></i> Kunci Jawaban & Penjelasan Step-by-Step (Simulasi Stack)</div>
-
-          <div class="space-y-3 text-sm text-gray-200 leading-relaxed">
-            <p><strong class="text-white">Target Output (Isi Stack Akhir, dibaca dari bawah ke atas):</strong> <span class="text-brandGreen font-bold">0, 4, 3, 2</span></p>
-            <p><strong>Aturan Simulator:</strong></p>
-            <ul class="list-disc list-inside space-y-1 text-textGray pl-2">
-              <li><strong class="text-white">Push X:</strong> Menambahkan angka X ke posisi paling belakang (top) stack.</li>
-              <li><strong class="text-white">Pop (LIFO):</strong> Menghapus angka pada posisi paling akhir (top) stack.</li>
-            </ul>
-
-            <div class="bg-black/50 border border-white/10 rounded-2xl p-4 mt-4 w-full">
-              <h4 class="font-bold text-brandGreen mb-3">🔑 Kunci Angka Inputan:</h4>
-              <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 text-center w-full">
-                <div class="bg-white/5 p-2 rounded-xl border border-white/10">
-                  <span class="text-xs text-textGray block">Langkah 2</span><strong class="text-brandGreen text-base">9</strong><span class="text-[10px] text-textGray block">(bebas)</span>
-                </div>
-                <div class="bg-white/5 p-2 rounded-xl border border-white/10"><span class="text-xs text-textGray block">Langkah 5</span><strong class="text-brandGreen text-base">0</strong></div>
-                <div class="bg-white/5 p-2 rounded-xl border border-white/10"><span class="text-xs text-textGray block">Langkah 6</span><strong class="text-brandGreen text-base">4</strong></div>
-                <div class="bg-white/5 p-2 rounded-xl border border-white/10">
-                  <span class="text-xs text-textGray block">Langkah 7</span><strong class="text-brandGreen text-base">8</strong><span class="text-[10px] text-textGray block">(bebas)</span>
-                </div>
-                <div class="bg-white/5 p-2 rounded-xl border border-white/10"><span class="text-xs text-textGray block">Langkah 10</span><strong class="text-brandGreen text-base">2</strong></div>
-              </div>
-              <p class="text-[11px] text-textGray mt-3 italic">*Catatan: Langkah 2 dan Langkah 7 adalah angka "umpan" yang akan langsung dihapus oleh Pop pada langkah berikutnya, sehingga nilainya bisa berapa saja.</p>
-            </div>
-
-            <h4 class="font-bold text-white pt-2">Simulasi Penelusuran Langkah demi Langkah:</h4>
-            <ol class="list-decimal list-inside space-y-2 text-xs md:text-sm text-gray-300">
-              <li><strong>Push 0:</strong> Isinya <code class="text-brandGreen">[0]</code></li>
-              <li><strong>Push 9 (bebas):</strong> Isinya <code class="text-brandGreen">[0, 9]</code></li>
-              <li><strong>Pop:</strong> Menghapus angka terakhir (<code class="text-yellow-400">9</code>). Sisa: <code class="text-brandGreen">[0]</code></li>
-              <li><strong>Pop:</strong> Menghapus angka terakhir (<code class="text-yellow-400">0</code>). Sisa: <code class="text-brandGreen">[]</code></li>
-              <li><strong>Push 0:</strong> Isinya <code class="text-brandGreen">[0]</code></li>
-              <li><strong>Push 4:</strong> Isinya <code class="text-brandGreen">[0, 4]</code></li>
-              <li><strong>Push 8 (bebas):</strong> Isinya <code class="text-brandGreen">[0, 4, 8]</code></li>
-              <li><strong>Pop:</strong> Menghapus angka terakhir (<code class="text-yellow-400">8</code>). Sisa: <code class="text-brandGreen">[0, 4]</code></li>
-              <li><strong>Push 3:</strong> Isinya <code class="text-brandGreen">[0, 4, 3]</code></li>
-              <li><strong>Push 2:</strong> Isinya <code class="text-brandGreen">[0, 4, 3, 2]</code></li>
-            </ol>
-            <p class="text-xs text-textGray bg-white/5 p-3 rounded-xl border border-white/10 mt-2">
-              💡 <strong>Hasil Akhir:</strong> Isi stack dari bawah ke atas adalah <strong class="text-brandGreen">0, 4, 3, 2</strong> sesuai dengan urutan angka yang diminta.
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <!-- ================== SOAL TAMBAHAN 2 : Simulasi Queue ================== -->
-      <div class="w-full bg-brandGray border border-white/5 rounded-3xl p-6 md:p-8 mb-10 box-border">
-        <div class="flex items-start gap-4 mb-6 w-full">
-          <div class="flex-1 min-w-0">
-            <h3 class="text-xl md:text-2xl font-bold text-white">Simulasi Queue</h3>
-            <p class="text-textGray text-sm mt-2 leading-relaxed">Perhatikan aturan simulator queue berikut!</p>
-
-            <!-- Tabel Perintah Queue -->
-            <div class="overflow-x-auto my-4 bg-white/5 border border-white/10 rounded-2xl p-3 w-full">
-              <table class="w-full text-center border-collapse text-xs md:text-sm font-sans">
-                <thead>
-                  <tr class="bg-brandGreen/20 text-brandGreen font-bold">
-                    <th class="p-2 border border-white/10 text-white">Perintah</th>
-                    <th class="p-2 border border-white/10 text-white">Hal yang dilakukan Simulator</th>
-                  </tr>
-                </thead>
-                <tbody class="text-gray-200">
-                  <tr class="hover:bg-white/5 transition">
-                    <td class="p-2 border border-white/10 font-semibold text-white">Enqueue</td>
-                    <td class="p-2 border border-white/10">Memasukan angka pada simulator queue</td>
-                  </tr>
-                  <tr class="hover:bg-white/5 transition">
-                    <td class="p-2 border border-white/10 font-semibold text-white">Dequeue</td>
-                    <td class="p-2 border border-white/10">Menghapus angka pada antrean pertama</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
-            <p class="text-sm text-gray-300 mt-4">Edo memberikan tantangan pada Adi agar simulator menampilkan urutan angka sebagai berikut ini!</p>
-            <div class="text-center text-2xl md:text-3xl font-bold text-brandGreen my-4">2, 6, 1, 3</div>
-            <p class="text-sm text-gray-300">Bantu Adi mengisi tabel dengan memasukkan angka inputan agar menghasilkan urutan angka seperti di atas!</p>
-          </div>
-        </div>
-
-        <!-- Tabel Input Jawaban Simulasi Queue -->
-        <div class="overflow-x-auto bg-white/5 border border-white/10 rounded-2xl p-4 mb-6 w-full">
-          <table class="w-full text-center border-collapse text-xs md:text-sm font-sans">
-            <thead>
-              <tr class="bg-brandGreen/20 text-brandGreen font-bold">
-                <th class="p-2 border border-white/10 text-white">Langkah</th>
-                <th class="p-2 border border-white/10 text-white">Perintah</th>
-                <th class="p-2 border border-white/10 text-white">Angka Inputan</th>
-                <th class="p-2 border border-white/10 text-white">Langkah</th>
-                <th class="p-2 border border-white/10 text-white">Perintah</th>
-                <th class="p-2 border border-white/10 text-white">Angka Inputan</th>
-              </tr>
-            </thead>
-            <tbody class="text-gray-200">
-              <tr>
-                <td class="p-2 border border-white/10">1</td>
-                <td class="p-2 border border-white/10 font-semibold text-white">Enqueue</td>
-                <td class="p-2 border border-white/10"><span class="bg-brandGreen/20 text-white font-bold px-3 py-1 rounded">4</span></td>
-                <td class="p-2 border border-white/10">6</td>
-                <td class="p-2 border border-white/10 font-semibold text-white">Enqueue</td>
-                <td class="p-2 border border-white/10">
-                  <input type="text" id="queue_step6" placeholder="..." class="w-16 md:w-20 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-center text-white focus:outline-none focus:border-brandGreen" />
-                </td>
-              </tr>
-              <tr>
-                <td class="p-2 border border-white/10">2</td>
-                <td class="p-2 border border-white/10 font-semibold text-white">Enqueue</td>
-                <td class="p-2 border border-white/10">
-                  <input type="text" id="queue_step2" placeholder="..." class="w-16 md:w-20 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-center text-white focus:outline-none focus:border-brandGreen" />
-                </td>
-                <td class="p-2 border border-white/10">7</td>
-                <td class="p-2 border border-white/10 font-semibold text-white">Enqueue</td>
-                <td class="p-2 border border-white/10">
-                  <input type="text" id="queue_step7" placeholder="..." class="w-16 md:w-20 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-center text-white focus:outline-none focus:border-brandGreen" />
-                </td>
-              </tr>
-              <tr>
-                <td class="p-2 border border-white/10">3</td>
-                <td class="p-2 border border-white/10 font-semibold text-white">Dequeue</td>
-                <td class="p-2 border border-white/10"><span class="text-gray-500">-</span></td>
-                <td class="p-2 border border-white/10">8</td>
-                <td class="p-2 border border-white/10 font-semibold text-white">Dequeue</td>
-                <td class="p-2 border border-white/10"><span class="text-gray-500">-</span></td>
-              </tr>
-              <tr>
-                <td class="p-2 border border-white/10">4</td>
-                <td class="p-2 border border-white/10 font-semibold text-white">Dequeue</td>
-                <td class="p-2 border border-white/10"><span class="text-gray-500">-</span></td>
-                <td class="p-2 border border-white/10">9</td>
-                <td class="p-2 border border-white/10 font-semibold text-white">Enqueue</td>
-                <td class="p-2 border border-white/10"><span class="bg-brandGreen/20 text-white font-bold px-3 py-1 rounded">1</span></td>
-              </tr>
-              <tr>
-                <td class="p-2 border border-white/10">5</td>
-                <td class="p-2 border border-white/10 font-semibold text-white">Enqueue</td>
-                <td class="p-2 border border-white/10">
-                  <input type="text" id="queue_step5" placeholder="..." class="w-16 md:w-20 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-center text-white focus:outline-none focus:border-brandGreen" />
-                </td>
-                <td class="p-2 border border-white/10">10</td>
-                <td class="p-2 border border-white/10 font-semibold text-white">Enqueue</td>
-                <td class="p-2 border border-white/10">
-                  <input type="text" id="queue_step10" placeholder="..." class="w-16 md:w-20 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-center text-white focus:outline-none focus:border-brandGreen" />
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <!-- Tombol Toggle Pembahasan Simulasi Queue -->
-        <button onclick="togglePembahasan('pembahasanQueue')" class="bg-brandGreen/10 border border-brandGreen/30 hover:bg-brandGreen/20 text-brandGreen font-bold py-3 px-6 rounded-2xl text-xs md:text-sm transition flex items-center gap-2">
-          <i class="fa-solid fa-lightbulb"></i> Lihat Kunci Jawaban & Pembahasan Simulasi Queue
-        </button>
-
-        <!-- KUNCI JAWABAN & PEMBAHASAN SIMULASI QUEUE -->
-        <div id="pembahasanQueue" class="hidden mt-6 w-full bg-brandCard border border-brandGreen/30 rounded-3xl p-6 md:p-8 space-y-4 box-border">
-          <div class="flex items-center gap-2 text-brandGreen font-bold text-lg border-b border-white/10 pb-3"><i class="fa-solid fa-circle-check"></i> Kunci Jawaban & Penjelasan Step-by-Step (Simulasi Queue)</div>
-
-          <div class="space-y-3 text-sm text-gray-200 leading-relaxed">
-            <p><strong class="text-white">Target Output (Isi Queue Akhir, dibaca dari depan ke belakang):</strong> <span class="text-brandGreen font-bold">2, 6, 1, 3</span></p>
-            <p><strong>Aturan Simulator:</strong></p>
-            <ul class="list-disc list-inside space-y-1 text-textGray pl-2">
-              <li><strong class="text-white">Enqueue X:</strong> Menambahkan angka X ke posisi paling belakang antrean.</li>
-              <li><strong class="text-white">Dequeue (FIFO):</strong> Menghapus angka pada posisi paling depan antrean.</li>
-            </ul>
-
-            <div class="bg-black/50 border border-white/10 rounded-2xl p-4 mt-4 w-full">
-              <h4 class="font-bold text-brandGreen mb-3">🔑 Kunci Angka Inputan:</h4>
-              <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 text-center w-full">
-                <div class="bg-white/5 p-2 rounded-xl border border-white/10">
-                  <span class="text-xs text-textGray block">Langkah 2</span><strong class="text-brandGreen text-base">7</strong><span class="text-[10px] text-textGray block">(bebas)</span>
-                </div>
-                <div class="bg-white/5 p-2 rounded-xl border border-white/10">
-                  <span class="text-xs text-textGray block">Langkah 5</span><strong class="text-brandGreen text-base">8</strong><span class="text-[10px] text-textGray block">(bebas)</span>
-                </div>
-                <div class="bg-white/5 p-2 rounded-xl border border-white/10"><span class="text-xs text-textGray block">Langkah 6</span><strong class="text-brandGreen text-base">2</strong></div>
-                <div class="bg-white/5 p-2 rounded-xl border border-white/10"><span class="text-xs text-textGray block">Langkah 7</span><strong class="text-brandGreen text-base">6</strong></div>
-                <div class="bg-white/5 p-2 rounded-xl border border-white/10"><span class="text-xs text-textGray block">Langkah 10</span><strong class="text-brandGreen text-base">3</strong></div>
-              </div>
-              <p class="text-[11px] text-textGray mt-3 italic">*Catatan: Langkah 2 dan Langkah 5 adalah angka "umpan" yang akan langsung dihapus oleh Dequeue pada langkah berikutnya, sehingga nilainya bisa berapa saja.</p>
-            </div>
-
-            <h4 class="font-bold text-white pt-2">Simulasi Penelusuran Langkah demi Langkah:</h4>
-            <ol class="list-decimal list-inside space-y-2 text-xs md:text-sm text-gray-300">
-              <li><strong>Enqueue 4:</strong> Isinya <code class="text-brandGreen">[4]</code></li>
-              <li><strong>Enqueue 7 (bebas):</strong> Isinya <code class="text-brandGreen">[4, 7]</code></li>
-              <li><strong>Dequeue:</strong> Menghapus angka pertama (<code class="text-yellow-400">4</code>). Sisa: <code class="text-brandGreen">[7]</code></li>
-              <li><strong>Dequeue:</strong> Menghapus angka pertama (<code class="text-yellow-400">7</code>). Sisa: <code class="text-brandGreen">[]</code></li>
-              <li><strong>Enqueue 8 (bebas):</strong> Isinya <code class="text-brandGreen">[8]</code></li>
-              <li><strong>Enqueue 2:</strong> Isinya <code class="text-brandGreen">[8, 2]</code></li>
-              <li><strong>Enqueue 6:</strong> Isinya <code class="text-brandGreen">[8, 2, 6]</code></li>
-              <li><strong>Dequeue:</strong> Menghapus angka pertama (<code class="text-yellow-400">8</code>). Sisa: <code class="text-brandGreen">[2, 6]</code></li>
-              <li><strong>Enqueue 1:</strong> Isinya <code class="text-brandGreen">[2, 6, 1]</code></li>
-              <li><strong>Enqueue 3:</strong> Isinya <code class="text-brandGreen">[2, 6, 1, 3]</code></li>
-            </ol>
-            <p class="text-xs text-textGray bg-white/5 p-3 rounded-xl border border-white/10 mt-2">
-              💡 <strong>Hasil Akhir:</strong> Isi queue dari depan ke belakang adalah <strong class="text-brandGreen">2, 6, 1, 3</strong> sesuai dengan urutan angka yang diminta.
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <!-- ================== SOAL 2 : Tiga Algoritma Sorting ================== -->
-      <div class="w-full bg-brandGray border border-white/5 rounded-3xl p-6 md:p-8 box-border">
-        <div class="flex items-start gap-4 mb-6 w-full">
-          <div class="flex-1 min-w-0">
-            <h3 class="text-xl md:text-2xl font-bold text-white">Mengurutkan dengan Tiga Algoritma</h3>
-            <p class="text-textGray text-sm mt-2 leading-relaxed">Urutkan angka berikut dari yang terkecil ke terbesar menggunakan <strong>bubble sort</strong>, <strong>insertion sort</strong>, dan <strong>selection sort</strong>!</p>
-            <div class="text-center text-2xl md:text-3xl font-bold text-brandGreen my-6">9, 2, 4, 12, 8, 4</div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6 w-full">
-              <!-- Bubble Sort -->
-              <div class="bg-black/40 border border-white/10 rounded-2xl p-5 w-full">
-                <h4 class="font-bold text-white mb-3 flex items-center gap-2"><i class="fa-solid fa-bars-staggered text-brandGreen"></i> Bubble Sort</h4>
-                <div class="space-y-2 text-sm text-gray-300">
-                  <div class="flex items-center gap-2">
-                    <span class="text-textGray shrink-0">Langkah 1:</span>
-                    <input type="text" class="flex-1 min-w-0 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-white focus:outline-none focus:border-brandGreen" placeholder="tulis langkah..." />
-                  </div>
-                  <div class="flex items-center gap-2">
-                    <span class="text-textGray shrink-0">Langkah 2:</span>
-                    <input type="text" class="flex-1 min-w-0 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-white focus:outline-none focus:border-brandGreen" placeholder="tulis langkah..." />
-                  </div>
-                  <div class="flex items-center gap-2">
-                    <span class="text-textGray shrink-0">Langkah 3:</span>
-                    <input type="text" class="flex-1 min-w-0 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-white focus:outline-none focus:border-brandGreen" placeholder="tulis langkah..." />
-                  </div>
-                  <div class="flex items-center gap-2">
-                    <span class="text-textGray shrink-0">Langkah 4:</span>
-                    <input type="text" class="flex-1 min-w-0 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-white focus:outline-none focus:border-brandGreen" placeholder="tulis langkah..." />
-                  </div>
-                  <div class="flex items-center gap-2">
-                    <span class="text-textGray shrink-0">Langkah 5:</span>
-                    <input type="text" class="flex-1 min-w-0 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-white focus:outline-none focus:border-brandGreen" placeholder="tulis langkah..." />
-                  </div>
-                  <div class="flex items-center gap-2">
-                    <span class="text-textGray shrink-0">Hasil Akhir:</span><input type="text" class="flex-1 min-w-0 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-white font-bold" placeholder="..." />
-                  </div>
-                </div>
-              </div>
-
-              <!-- Insertion Sort -->
-              <div class="bg-black/40 border border-white/10 rounded-2xl p-5 w-full">
-                <h4 class="font-bold text-white mb-3 flex items-center gap-2"><i class="fa-solid fa-arrow-down-wide-short text-brandGreen"></i> Insertion Sort</h4>
-                <div class="space-y-2 text-sm text-gray-300">
-                  <div class="flex items-center gap-2">
-                    <span class="text-textGray shrink-0">Langkah 1:</span>
-                    <input type="text" class="flex-1 min-w-0 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-white focus:outline-none focus:border-brandGreen" placeholder="tulis langkah..." />
-                  </div>
-                  <div class="flex items-center gap-2">
-                    <span class="text-textGray shrink-0">Langkah 2:</span>
-                    <input type="text" class="flex-1 min-w-0 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-white focus:outline-none focus:border-brandGreen" placeholder="tulis langkah..." />
-                  </div>
-                  <div class="flex items-center gap-2">
-                    <span class="text-textGray shrink-0">Langkah 3:</span>
-                    <input type="text" class="flex-1 min-w-0 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-white focus:outline-none focus:border-brandGreen" placeholder="tulis langkah..." />
-                  </div>
-                  <div class="flex items-center gap-2">
-                    <span class="text-textGray shrink-0">Langkah 4:</span>
-                    <input type="text" class="flex-1 min-w-0 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-white focus:outline-none focus:border-brandGreen" placeholder="tulis langkah..." />
-                  </div>
-                  <div class="flex items-center gap-2">
-                    <span class="text-textGray shrink-0">Langkah 5:</span>
-                    <input type="text" class="flex-1 min-w-0 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-white focus:outline-none focus:border-brandGreen" placeholder="tulis langkah..." />
-                  </div>
-                  <div class="flex items-center gap-2">
-                    <span class="text-textGray shrink-0">Hasil Akhir:</span><input type="text" class="flex-1 min-w-0 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-white font-bold" placeholder="..." />
-                  </div>
-                </div>
-              </div>
-
-              <!-- Selection Sort -->
-              <div class="bg-black/40 border border-white/10 rounded-2xl p-5 w-full">
-                <h4 class="font-bold text-white mb-3 flex items-center gap-2"><i class="fa-solid fa-arrow-up-short-wide text-brandGreen"></i> Selection Sort</h4>
-                <div class="space-y-2 text-sm text-gray-300">
-                  <div class="flex items-center gap-2">
-                    <span class="text-textGray shrink-0">Langkah 1:</span>
-                    <input type="text" class="flex-1 min-w-0 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-white focus:outline-none focus:border-brandGreen" placeholder="tulis langkah..." />
-                  </div>
-                  <div class="flex items-center gap-2">
-                    <span class="text-textGray shrink-0">Langkah 2:</span>
-                    <input type="text" class="flex-1 min-w-0 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-white focus:outline-none focus:border-brandGreen" placeholder="tulis langkah..." />
-                  </div>
-                  <div class="flex items-center gap-2">
-                    <span class="text-textGray shrink-0">Langkah 3:</span>
-                    <input type="text" class="flex-1 min-w-0 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-white focus:outline-none focus:border-brandGreen" placeholder="tulis langkah..." />
-                  </div>
-                  <div class="flex items-center gap-2">
-                    <span class="text-textGray shrink-0">Langkah 4:</span>
-                    <input type="text" class="flex-1 min-w-0 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-white focus:outline-none focus:border-brandGreen" placeholder="tulis langkah..." />
-                  </div>
-                  <div class="flex items-center gap-2">
-                    <span class="text-textGray shrink-0">Langkah 5:</span>
-                    <input type="text" class="flex-1 min-w-0 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-white focus:outline-none focus:border-brandGreen" placeholder="tulis langkah..." />
-                  </div>
-                  <div class="flex items-center gap-2">
-                    <span class="text-textGray shrink-0">Hasil Akhir:</span><input type="text" class="flex-1 min-w-0 bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-white font-bold" placeholder="..." />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Tombol Toggle Pembahasan Soal 2 -->
-        <button
-          onclick="togglePembahasan('pembahasanUraian2')"
-          class="mt-6 bg-brandGreen/10 border border-brandGreen/30 hover:bg-brandGreen/20 text-brandGreen font-bold py-3 px-6 rounded-2xl text-xs md:text-sm transition flex items-center gap-2"
-        >
-          <i class="fa-solid fa-lightbulb"></i> Lihat Kunci Jawaban & Pembahasan Uraian 2
-        </button>
-
-        <!-- KUNCI JAWABAN & PEMBAHASAN SOAL 2 -->
-        <div id="pembahasanUraian2" class="hidden mt-6 w-full bg-brandCard border border-brandGreen/30 rounded-3xl p-6 md:p-8 space-y-6 box-border">
-          <div class="flex items-center gap-2 text-brandGreen font-bold text-lg border-b border-white/10 pb-3"><i class="fa-solid fa-circle-check"></i> Kunci Jawaban & Penjelasan Tiga Algoritma Pengurutan (Soal 2)</div>
-
-          <p class="text-sm text-gray-300">Data Awal yang akan diurutkan: <strong class="text-brandGreen text-base">9, 2, 4, 12, 8, 4</strong></p>
-
-          <!-- 1. Bubble Sort -->
-          <div class="bg-black/50 border border-white/10 rounded-2xl p-4 md:p-5 w-full">
-            <h4 class="font-bold text-brandGreen text-base mb-2 flex items-center gap-2"><i class="fa-solid fa-bars-staggered"></i> 1. Bubble Sort (Pengurutan Gelembung)</h4>
-            <p class="text-xs text-textGray mb-3">Prinsip: Membandingkan dua elemen berdampingan, lalu menukarnya jika urutannya salah.</p>
-            <div class="space-y-1.5 text-xs md:text-sm font-mono text-gray-200 overflow-x-auto">
-              <p><strong>Langkah 1 (Iterasi 1):</strong> Compare (9,2) ➔ [2,9,4,12,8,4], (9,4) ➔ [2,4,9,12,8,4], (12,8) ➔ [2,4,9,8,12,4], (12,4) ➔ <span class="text-brandGreen font-bold">2, 4, 9, 8, 4, 12</span></p>
-              <p><strong>Langkah 2 (Iterasi 2):</strong> Compare (9,8) ➔ [2,4,8,9,4,12], (9,4) ➔ <span class="text-brandGreen font-bold">2, 4, 8, 4, 9, 12</span></p>
-              <p><strong>Langkah 3 (Iterasi 3):</strong> Compare (8,4) ➔ <span class="text-brandGreen font-bold">2, 4, 4, 8, 9, 12</span></p>
-              <p><strong>Langkah 4 (Iterasi 4):</strong> Tidak ada penukaran lagi (Sudah Terurut).</p>
-              <p><strong>Langkah 5 (Iterasi 5):</strong> Pengecekan akhir aman.</p>
-              <p class="pt-2 text-white font-sans"><strong>Hasil Akhir:</strong> <span class="text-brandGreen font-bold font-mono">2, 4, 4, 8, 9, 12</span></p>
-            </div>
+            <p class="footer-desc">Platform e-learning interaktif modern yang dirancang khusus untuk memfasilitasi gaya belajar visual dan praktik, memastikan pemahaman mendalam untuk menaklukkan soal-soal PTS.</p>
           </div>
 
-          <!-- 2. Insertion Sort -->
-          <div class="bg-black/50 border border-white/10 rounded-2xl p-4 md:p-5 w-full">
-            <h4 class="font-bold text-brandGreen text-base mb-2 flex items-center gap-2"><i class="fa-solid fa-arrow-down-wide-short"></i> 2. Insertion Sort (Pengurutan Sisipan)</h4>
-            <p class="text-xs text-textGray mb-3">Prinsip: Mengambil satu per satu elemen dan menyisipkannya ke posisi yang tepat pada bagian yang sudah terurut.</p>
-            <div class="space-y-1.5 text-xs md:text-sm font-mono text-gray-200 overflow-x-auto">
-              <p><strong>Langkah 1 (Sisip 2):</strong> Menyisipkan 2 sebelum 9 ➔ <span class="text-brandGreen font-bold">2, 9, 4, 12, 8, 4</span></p>
-              <p><strong>Langkah 2 (Sisip 4):</strong> Menyisipkan 4 antara 2 dan 9 ➔ <span class="text-brandGreen font-bold">2, 4, 9, 12, 8, 4</span></p>
-              <p><strong>Langkah 3 (Sisip 12):</strong> 12 tetap di posisi belakang 9 ➔ <span class="text-brandGreen font-bold">2, 4, 9, 12, 8, 4</span></p>
-              <p><strong>Langkah 4 (Sisip 8):</strong> Menyisipkan 8 antara 4 dan 9 ➔ <span class="text-brandGreen font-bold">2, 4, 8, 9, 12, 4</span></p>
-              <p><strong>Langkah 5 (Sisip 4):</strong> Menyisipkan 4 di sebelah 4 pertama ➔ <span class="text-brandGreen font-bold">2, 4, 4, 8, 9, 12</span></p>
-              <p class="pt-2 text-white font-sans"><strong>Hasil Akhir:</strong> <span class="text-brandGreen font-bold font-mono">2, 4, 4, 8, 9, 12</span></p>
-            </div>
-          </div>
-
-          <!-- 3. Selection Sort -->
-          <div class="bg-black/50 border border-white/10 rounded-2xl p-4 md:p-5 w-full">
-            <h4 class="font-bold text-brandGreen text-base mb-2 flex items-center gap-2"><i class="fa-solid fa-arrow-up-short-wide"></i> 3. Selection Sort (Pengurutan Pilihan)</h4>
-            <p class="text-xs text-textGray mb-3">Prinsip: Mencari nilai terkecil dari sisa data yang belum terurut, lalu menukarnya ke posisi terdepan yang sesuai.</p>
-            <div class="space-y-1.5 text-xs md:text-sm font-mono text-gray-200 overflow-x-auto">
-              <p><strong>Langkah 1:</strong> Cari terkecil (2), tukar dengan 9 ➔ <span class="text-brandGreen font-bold">2, 9, 4, 12, 8, 4</span></p>
-              <p><strong>Langkah 2:</strong> Cari terkecil dari [9,4,12,8,4] yaitu (4 di indeks 2), tukar dengan 9 ➔ <span class="text-brandGreen font-bold">2, 4, 9, 12, 8, 4</span></p>
-              <p><strong>Langkah 3:</strong> Cari terkecil dari [9,12,8,4] yaitu (4 di indeks 5), tukar dengan 9 ➔ <span class="text-brandGreen font-bold">2, 4, 4, 12, 8, 9</span></p>
-              <p><strong>Langkah 4:</strong> Cari terkecil dari [12,8,9] yaitu (8), tukar dengan 12 ➔ <span class="text-brandGreen font-bold">2, 4, 4, 8, 12, 9</span></p>
-              <p><strong>Langkah 5:</strong> Cari terkecil dari [12,9] yaitu (9), tukar dengan 12 ➔ <span class="text-brandGreen font-bold">2, 4, 4, 8, 9, 12</span></p>
-              <p class="pt-2 text-white font-sans"><strong>Hasil Akhir:</strong> <span class="text-brandGreen font-bold font-mono">2, 4, 4, 8, 9, 12</span></p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Footer Area (Identik dengan index.html) -->
-    <footer class="border-t border-white/5 bg-[#080808] pt-12 pb-8 relative z-10 w-full mt-auto">
-      <div class="max-w-7xl mx-auto px-6">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-          <div class="md:col-span-2">
-            <div class="flex items-center gap-3 mb-4">
-              <i class="fa-solid fa-code text-brandGreen text-2xl"></i>
-              <span class="text-2xl font-bold tracking-tight text-brandGreen">RuangInformatika</span>
-            </div>
-            <p class="text-textGray text-base leading-relaxed max-w-sm">
-              Platform e-learning interaktif modern yang dirancang khusus untuk memfasilitasi gaya belajar visual dan praktik, memastikan pemahaman mendalam untuk menaklukkan soal-soal PTS.
-            </p>
-          </div>
-          <div>
-            <h4 class="text-white font-semibold text-lg mb-4">Pintasan Modul</h4>
-            <ul class="space-y-3 text-base text-textGray">
-              <li><a href="kisi.html" class="hover:text-brandGreen transition">Bedah Kisi-Kisi</a></li>
-              <li><a href="materi-bk.html" class="hover:text-brandGreen transition">Berpikir Komputasional</a></li>
-              <li><a href="materi-stack-queue.html" class="hover:text-brandGreen transition">Stack & Queue</a></li>
-              <li><a href="materi-search-sort.html" class="hover:text-brandGreen transition">Searching & Sorting</a></li>
-            </ul>
-          </div>
-          <div>
-            <h4 class="text-white font-semibold text-lg mb-4">Dukungan</h4>
-            <ul class="space-y-3 text-base text-textGray">
+          <div class="footer-col">
+            <h4 class="footer-heading">Pintasan Modul</h4>
+            <ul class="footer-links">
               <li>
-                <a href="leaderboard.html" class="hover:text-brandGreen transition"><i class="fa-solid fa-ranking-star mr-2"></i> Leaderboard</a>
+                <a href="kisi.html" class="footer-link"><i class="fa-solid fa-chevron-right" style="font-size: 0.65rem"></i> Bedah Kisi-Kisi</a>
               </li>
               <li>
-                <a href="forum.html" class="hover:text-brandGreen transition"><i class="fa-solid fa-comments mr-2"></i> Forum Diskusi</a>
+                <a href="materi-bk.html" class="footer-link"><i class="fa-solid fa-chevron-right" style="font-size: 0.65rem"></i> Berpikir Komputasional</a>
               </li>
               <li>
-                <a href="https://wa.me/6285282386260?text=Halo%20Pak%20Ilyas%2C%20saya%20ingin%20bertanya%20tentang%20materi%20Informatika." target="_blank" class="hover:text-brandGreen transition">
-                  <i class="fa-solid fa-chalkboard-user mr-2"></i> Hubungi Guru</a
-                >
+                <a href="materi-stack-queue.html" class="footer-link"><i class="fa-solid fa-chevron-right" style="font-size: 0.65rem"></i> Stack &amp; Queue</a>
+              </li>
+              <li>
+                <a href="materi-search-sort.html" class="footer-link"><i class="fa-solid fa-chevron-right" style="font-size: 0.65rem"></i> Searching &amp; Sorting</a>
+              </li>
+              <li>
+                <a href="Materi_AP/materi-algoritma.html" class="footer-link"><i class="fa-solid fa-chevron-right" style="font-size: 0.65rem"></i> Algoritma Pemrograman</a>
+              </li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h4 class="footer-heading">Fitur &amp; Dukungan</h4>
+            <ul class="footer-links">
+              <li>
+                <a href="leaderboard.html" class="footer-link"><i class="fa-solid fa-trophy" style="color: var(--amber)"></i> Leaderboard Kelas</a>
+              </li>
+              <li>
+                <a href="forum.html" class="footer-link"><i class="fa-solid fa-comments" style="color: var(--blue)"></i> Forum Diskusi</a>
+              </li>
+              <li>
+                <a href="https://wa.me/6285282386260?text=Halo%20Pak%20Ilyas%2C%20saya%20ingin%20bertanya%20tentang%20materi%20Informatika." target="_blank" class="footer-link">
+                  <i class="fa-solid fa-chalkboard-user" style="color: var(--green)"></i> Hubungi Pak Ilyas
+                </a>
               </li>
             </ul>
           </div>
         </div>
-        <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-base text-textGray">
-          <p>&copy; 2026 RuangInformatika. Dikembangkan oleh Pak Ilyas untuk kelas Informatika SMA Negeri 4 Yogyakarta.</p>
-          <div class="flex gap-4 text-2xl">
-            <a href="https://github.com/fandhi19" class="hover:text-brandGreen transition"><i class="fa-brands fa-github"></i></a>
-            <a href="https://e-portofolio-fandhi.vercel.app/" class="hover:text-brandGreen transition"><i class="fa-solid fa-globe"></i></a>
-            <a href="https://www.instagram.com/fandhidk17/" class="hover:text-brandGreen transition"><i class="fa-brands fa-instagram"></i></a>
+
+        <div class="footer-bottom">
+          <p class="footer-copy">&copy; 2026 RuangInformatika. Dikembangkan untuk kelas Informatika XE6 SMA Negeri 4 Yogyakarta.</p>
+          <div class="footer-socials">
+            <a href="https://github.com/fandhi19" target="_blank" class="footer-social" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+            <a href="https://e-portofolio-fandhi.vercel.app/" target="_blank" class="footer-social" aria-label="Portfolio"><i class="fa-solid fa-globe"></i></a>
+            <a href="https://www.instagram.com/fandhidk17/" target="_blank" class="footer-social" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
           </div>
         </div>
       </div>
@@ -1063,7 +1128,6 @@
 
     <!-- Scripts -->
     <script>
-      // Inisiasi Vanilla Tilt
       VanillaTilt.init(document.querySelectorAll(".tilt-card"), {
         max: 6,
         speed: 400,
@@ -1071,7 +1135,7 @@
         "max-glare": 0.15,
       });
 
-      // Fungsi Toggle Pembahasan Uraian
+      /* ── Toggle Pembahasan Uraian ── */
       function togglePembahasan(id) {
         const el = document.getElementById(id);
         if (el.classList.contains("hidden")) {
@@ -1081,7 +1145,7 @@
         }
       }
 
-      // ================== DATABASE SOAL ==================
+      /* ================== DATABASE SOAL ================== */
       const databaseSoal = [
         {
           id: 1,
@@ -1199,13 +1263,13 @@
           id: 9,
           teks: `Soal Literasi
                     <p class="indent-8 text-justify">
-                        Pak Dengklek bermain sebuah puzzle klasik di mana ia harus menemukan 3 petak garis lurus berurutan yang memuat tulisan “OSN”. Ketiga petak ini bisa berurutan secara horizontal, vertikal, maupun diagonal; serta boleh dibaca ke 8 arah: atas, bawah, kiri, kanan, kanan-atas, kanan-bawah, kiri-atas, maupun kiri-bawah.  
+                        Pak Dengklek bermain sebuah puzzle klasik di mana ia harus menemukan 3 petak garis lurus berurutan yang memuat tulisan "OSN". Ketiga petak ini bisa berurutan secara horizontal, vertikal, maupun diagonal; serta boleh dibaca ke 8 arah: atas, bawah, kiri, kanan, kanan-atas, kanan-bawah, kiri-atas, maupun kiri-bawah.  
                     </p>
                     <div class="flex justify-center my-4">
                         <img src="images/soal9.png" alt="Ilustrasi Rani" class="max-h-48 rounded-2xl border border-white/10 shadow-lg object-contain">
                     </div>
                     <p class="indent-8 text-justify">
-                        Diketahui bahwa hanya terdapat satu lokasi tulisan “OSN” pada puzzle tersebut. Pak Dengklek meminta bantuan kepadamu: di kolom ke berapakah petak huruf ‘O’ yang memuat tulisan “OSN” tersebut?   
+                        Diketahui bahwa hanya terdapat satu lokasi tulisan "OSN" pada puzzle tersebut. Pak Dengklek meminta bantuan kepadamu: di kolom ke berapakah petak huruf 'O' yang memuat tulisan "OSN" tersebut?   
                     </p>`,
           opsi: ["a. Kolom 5", "b. Kolom 8", "c. Kolom 9", "d. Kolom 14", "e. Kolom 17"],
           jawaban: 2,
@@ -1261,7 +1325,6 @@
                     <p class="indent-8 text-justify">
                         Berikut ini terdapat sebuah pola yang harus dikenali dari sebuah teka teki yang akan diselesaikan kamu.
                     </p>
-                    <!-- SISIPAN TABEL -->
                     <div class="overflow-x-auto my-4 bg-white/5 border border-white/10 rounded-2xl p-3">
                         <table class="w-full text-center border-collapse text-xs md:text-sm font-sans">
                             <tbody class="text-gray-200">
@@ -1427,7 +1490,7 @@
                         Ketika menjelajah web/internet, kita menggunakan sebuah browser (misal Firefox, Chrome dll). Terdapat sebuah fitur yang memungkinkan kita untuk bergerak dari satu halaman yang sudah kita kunjungi ke halaman lainnya, yaitu dengan menekan tombol Back dan Forward. Misalnya, kita mengunjungi halaman A, kemudian B, lalu C. Jika kita kemudian menekan tombol Back, dari halaman C kita akan kembali ke halaman B. Jika kita tekan lagi tombol Back (pada saat ada di B), kita akan kembali ke A. Jika kemudian kita tekan tombol Forward, kita akan kembali halaman B, dan jika kita tekan sekali lagi tombol Forward, kita akan kembali ke halaman C. Oleh karena itu, aplikasi browser tersebut harus menyimpan (dan mengingat) semua halaman yang sudah pernah kita kunjungi sebelumnya (biasa disebut Riwayat atau History). 
                     </p>
                     <p class="font-semibold pt-2">
-                        Berdasarkan paragraf di atas prinsip yang dipakai pada sistem riwayat pada web browser adalah ...   
+                        Berdasarkan paragraf di atas prinsip yang dipakai pada sistem riwayat pada web browser adalah ...    
                     </p>`,
           opsi: ["a. First In First Out", "b. First In Last Out", "c. Last In First Out", "d. First In Medium Out", "e. Last In Last Out"],
           jawaban: 2,
@@ -1604,18 +1667,24 @@
       let activeSoalIndex = null;
       let userAnswers = Array(databaseSoal.length).fill(null);
 
-      // Render Grid Buttons
+      /* Render Grid Buttons */
       const gridEl = document.getElementById("gridSoal");
       databaseSoal.forEach((soal, idx) => {
         const btn = document.createElement("button");
         btn.id = `grid-btn-${idx}`;
-        btn.className =
-          "bg-brandCard border border-white/10 hover:border-brandGreen hover:shadow-[0_0_15px_rgba(0,230,118,0.3)] text-white font-bold py-6 rounded-2xl text-xl transition-all flex flex-col items-center justify-center gap-1 group";
+        btn.className = "bg-brandCard border border-white/10 hover:border-brandGreen text-white font-bold py-6 rounded-2xl text-xl transition-all flex flex-col items-center justify-center gap-1 group";
+        btn.style.transition = "all 0.25s ease";
         btn.innerHTML = `
-                <span class="text-2xl group-hover:scale-110 transition-transform text-brandGreen" id="grid-num-${idx}">${soal.id}</span>
-                <span class="text-[10px] text-textGray font-normal" id="grid-status-${idx}">Soal ${soal.id}</span>
-            `;
+        <span class="text-2xl group-hover:scale-110 transition-transform text-brandGreen" id="grid-num-${idx}">${soal.id}</span>
+        <span class="text-[10px] text-textGray font-normal" id="grid-status-${idx}">Soal ${soal.id}</span>
+      `;
         btn.onclick = () => bukaSoal(idx);
+        btn.addEventListener("mouseenter", () => {
+          btn.style.boxShadow = "0 0 15px rgba(0,230,118,0.3)";
+        });
+        btn.addEventListener("mouseleave", () => {
+          btn.style.boxShadow = "none";
+        });
         gridEl.appendChild(btn);
       });
 
@@ -1628,7 +1697,6 @@
         document.getElementById("aiClueTeks").innerText = data.clue;
         document.getElementById("aiClueBox").classList.add("hidden");
 
-        // Render Gambar
         const gambarContainer = document.getElementById("modalGambarContainer");
         if (data.gambarUrl) {
           gambarContainer.innerHTML = `<img src="${data.gambarUrl}" alt="Gambar Soal ${data.id}" class="max-h-56 w-auto rounded-xl object-contain shadow-md">`;
@@ -1638,7 +1706,6 @@
           gambarContainer.classList.add("hidden");
         }
 
-        // Render Tabel (jika ada properti tabelHtml)
         const tabelContainer = document.getElementById("modalTabelContainer");
         tabelContainer.innerHTML = "";
         tabelContainer.classList.add("hidden");
@@ -1757,26 +1824,39 @@
         document.getElementById("modalOverlay").classList.remove("flex");
       }
 
-      // Toggle Mobile Menu
+      /* ── Mobile Menu ── */
       const hamburgerBtn = document.getElementById("hamburgerBtn");
       const mobileMenu = document.getElementById("mobileMenu");
 
-      hamburgerBtn.addEventListener("click", function () {
-        mobileMenu.classList.toggle("hidden");
+      hamburgerBtn.addEventListener("click", () => {
+        mobileMenu.classList.toggle("open");
         const icon = hamburgerBtn.querySelector("i");
         icon.classList.toggle("fa-bars");
         icon.classList.toggle("fa-xmark");
       });
 
-      // Tutup menu saat salah satu link/button di dalamnya diklik
       mobileMenu.querySelectorAll("a, button").forEach((item) => {
         item.addEventListener("click", () => {
-          mobileMenu.classList.add("hidden");
+          mobileMenu.classList.remove("open");
           const icon = hamburgerBtn.querySelector("i");
           icon.classList.add("fa-bars");
           icon.classList.remove("fa-xmark");
         });
       });
+
+      /* ── Scroll Reveal ── */
+      const revealObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("visible");
+              revealObserver.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.1 },
+      );
+      document.querySelectorAll(".reveal").forEach((el) => revealObserver.observe(el));
     </script>
   </body>
 </html>

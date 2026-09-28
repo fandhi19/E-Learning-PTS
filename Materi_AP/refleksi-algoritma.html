@@ -3,37 +3,129 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Refleksi Pembelajaran - RuangInformatika</title>
+    <title>Refleksi Pembelajaran — RuangInformatika</title>
     <link rel="shortcut icon" href="../images/Logo Patbhe.png" type="image/x-icon" />
+
+
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet" />
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+
+    <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <!-- Vanilla Tilt -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
 
     <script>
       tailwind.config = {
         theme: {
           extend: {
             fontFamily: {
-              sans: ["Inter", "sans-serif"],
-              mono: ["Fira Code", "ui-monospace", "Consolas", "monospace"],
+              sans: ["Plus Jakarta Sans", "sans-serif"],
+              mono: ["JetBrains Mono", "ui-monospace", "monospace"],
             },
             colors: {
-              brandDark: "#0a0a0a",
-              brandGray: "#151515",
+              brandDark: "#080c10",
+              brandGray: "#111820",
               brandGreen: "#00e676",
-              textGray: "#d1d5db",
+              textGray: "#8896a7",
             },
           },
         },
       };
     </script>
 
+    <!-- MASTER CSS -->
+    <link rel="stylesheet" href="../style.css" />
+
     <style>
-      .bg-grid {
-        background-size: 40px 40px;
-        background-image: linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+      .tilt-card {
+        transform-style: preserve-3d;
+      }
+      .tilt-card-content {
+        transform: translateZ(30px);
+      }
+      main {
+        background: transparent;
       }
 
+      /* ── Reading Progress Bar ── */
+      #readProgress {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 3px;
+        background: linear-gradient(90deg, var(--green), var(--blue));
+        z-index: 999;
+        transition: width 0.1s ease-out;
+        width: 0%;
+        box-shadow: 0 0 12px rgba(0, 230, 118, 0.5);
+      }
+
+      /* ── Page Hero ── */
+      .page-hero {
+        position: relative;
+        padding: 64px 0 40px;
+        overflow: hidden;
+      }
+      .page-hero-glow {
+        position: absolute;
+        top: -100px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 700px;
+        height: 400px;
+        background: radial-gradient(ellipse, rgba(192, 132, 252, 0.12) 0%, rgba(0, 230, 118, 0.05) 40%, transparent 70%);
+        filter: blur(40px);
+        pointer-events: none;
+      }
+      .page-hero-inner {
+        max-width: 1024px;
+        margin: 0 auto;
+        padding: 0 24px;
+        position: relative;
+        z-index: 10;
+      }
+      .page-hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 14px;
+        border-radius: 999px;
+        background: rgba(168, 85, 247, 0.1);
+        border: 1px solid rgba(168, 85, 247, 0.3);
+        font-size: 0.78rem;
+        font-weight: 700;
+        color: #c084fc;
+        margin-bottom: 18px;
+        backdrop-filter: blur(8px);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
+      .page-hero-title {
+        font-size: clamp(2rem, 4.5vw, 3rem);
+        font-weight: 800;
+        line-height: 1.15;
+        letter-spacing: -0.03em;
+        margin-bottom: 16px;
+      }
+      .page-hero-title .gradient-text-purple {
+        background: linear-gradient(135deg, #c084fc 0%, #00e676 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .page-hero-desc {
+        font-size: 1rem;
+        line-height: 1.7;
+        color: var(--text-muted);
+        max-width: 640px;
+      }
+
+      /* ── FORM INPUTS ── */
       .form-input,
       .form-textarea {
         width: 100%;
@@ -59,25 +151,11 @@
       }
       .form-textarea::placeholder,
       .form-input::placeholder {
-        color: rgba(209, 213, 219, 0.4);
+        color: rgba(136, 150, 167, 0.5);
       }
 
       .progress-bar-fill {
         transition: width 0.4s ease;
-      }
-
-      @keyframes fadeInUp {
-        from {
-          opacity: 0;
-          transform: translateY(15px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-      .fade-in-up {
-        animation: fadeInUp 0.5s ease forwards;
       }
 
       @keyframes scorePulse {
@@ -102,11 +180,14 @@
           font-size: 1rem;
         }
         h1 {
-          font-size: 1.75rem !important;
+          font-size: 1.875rem !important;
           line-height: 1.2 !important;
         }
         h2 {
-          font-size: 1.35rem !important;
+          font-size: 1.5rem !important;
+        }
+        h3 {
+          font-size: 1.25rem !important;
         }
       }
 
@@ -127,7 +208,6 @@
         -webkit-touch-callout: none;
       }
 
-      /* Toast notifikasi anti copy-paste */
       #anti-copy-toast {
         position: fixed;
         bottom: 24px;
@@ -156,50 +236,62 @@
       }
     </style>
   </head>
-  <body class="bg-brandDark text-white font-sans antialiased overflow-x-hidden flex flex-col min-h-screen text-lg">
-    <!-- Navbar -->
-    <nav class="max-w-7xl mx-auto px-6 py-6 flex items-center justify-between border-b border-white/5 relative z-50 w-full">
-      <div class="flex items-center gap-3">
-        <i class="fa-solid fa-code text-brandGreen text-xl"></i>
-        <span class="text-xl font-bold tracking-tight text-brandGreen">RuangInformatika</span>
+
+  <body class="bg-grid text-white font-sans antialiased overflow-x-hidden flex flex-col min-h-screen">
+    <div id="readProgress"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+      <div class="navbar-inner">
+        <a href="../index.html" class="navbar-logo">
+          <div class="navbar-logo-icon"><i class="fa-solid fa-code"></i></div>
+          <span class="navbar-logo-text">RuangInformatika</span>
+        </a>
+        <div class="navbar-links">
+          <a href="../index.html" class="nav-link">Dashboard</a>
+          <a href="../index.html#materi" class="nav-link">Daftar Modul</a>
+          <a href="../leaderboard.html" class="nav-link">Leaderboard</a>
+          <a href="../forum.html" class="nav-link">Forum Diskusi</a>
+        </div>
+        <a href="materi-algoritma.html" class="nav-badge" style="text-decoration: none"><i class="fa-solid fa-arrow-left"></i> Kembali</a>
+        <button class="hamburger-btn" id="hamburgerBtn" aria-label="Menu">
+          <i class="fa-solid fa-bars"></i>
+        </button>
       </div>
 
-      <div class="flex items-center gap-3">
-        <!-- Tombol Kembali (Desktop) -->
-        <a href="materi-algoritma.html" class="hidden md:flex items-center gap-2 border border-white/10 rounded-full px-5 py-2.5 text-sm font-medium hover:bg-white/5 transition">
-          <i class="fa-solid fa-arrow-left text-brandGreen"></i> Kembali
-        </a>
-
-        <!-- Tombol Pak Ilyas (Desktop) -->
-        <button class="hidden md:flex items-center gap-2 border border-white/10 rounded-full px-5 py-2.5 text-sm font-medium hover:bg-white/5 transition"><i class="fa-solid fa-chalkboard-user text-brandGreen"></i> XE6</button>
-
-        <!-- Tombol Kembali (Mobile) -->
-        <a href="materi-algoritma.html" class="md:hidden flex items-center justify-center w-10 h-10 border border-white/10 rounded-full hover:bg-white/5 transition" aria-label="Kembali">
-          <i class="fa-solid fa-arrow-left text-brandGreen"></i>
-        </a>
+      <!-- Mobile Drawer -->
+      <div class="mobile-menu" id="mobileMenu">
+        <a href="../index.html" class="mobile-nav-link"> <i class="fa-solid fa-house" style="margin-right: 10px"></i> Dashboard </a>
+        <a href="../index.html#materi" class="mobile-nav-link"> <i class="fa-solid fa-book-open" style="margin-right: 10px"></i> Daftar Modul </a>
+        <a href="../leaderboard.html" class="mobile-nav-link"> <i class="fa-solid fa-trophy" style="margin-right: 10px"></i> Leaderboard </a>
+        <a href="../forum.html" class="mobile-nav-link"> <i class="fa-solid fa-comments" style="margin-right: 10px"></i> Forum Diskusi </a>
+        <a href="materi-algoritma.html" class="mobile-nav-link"> <i class="fa-solid fa-arrow-left" style="margin-right: 10px"></i> Kembali ke Modul </a>
+        <div style="padding: 12px 16px">
+          <button class="nav-badge" style="width: 100%; justify-content: center"><i class="fa-solid fa-chalkboard-user"></i> Kelas XE6 — SMAN 4 Yogyakarta</button>
+        </div>
       </div>
     </nav>
 
-    <!-- Main Content -->
-    <div class="flex-grow relative bg-grid">
-      <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-purple-500/5 rounded-full blur-[120px] pointer-events-none"></div>
-
-      <main class="max-w-4xl mx-auto px-6 py-12 relative z-10">
-        <!-- HEADER REFLEKSI -->
-        <div class="mb-8 text-center md:text-left fade-in-up">
-          <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/30 text-sm font-bold text-purple-400 mb-4"><i class="fa-solid fa-lightbulb"></i> Tahap 3 • Refleksi Pembelajaran</div>
-          <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight mb-3 leading-tight">
-            Refleksi Akhir<br />
-            <span class="text-purple-400">3 - 2 - 1 Reflection</span>
-          </h1>
-          <p class="text-textGray text-base md:text-lg max-w-2xl leading-relaxed">Saatnya merefleksikan apa yang sudah kamu pelajari hari ini. Jawab dengan jujur — ini ruang untukmu melihat kembali perjalanan belajarmu. 🌱</p>
+    <!-- Main Content Wrapper -->
+    <div class="flex-grow relative">
+      <!-- Page Hero -->
+      <header class="page-hero">
+        <div class="page-hero-glow"></div>
+        <div class="page-hero-inner">
+          <div class="reveal">
+            <div class="page-hero-badge"><i class="fa-solid fa-lightbulb"></i> Tahap 3 • Refleksi Pembelajaran</div>
+            <h1 class="page-hero-title">Refleksi Akhir<br /><span class="gradient-text-purple">3 - 2 - 1 Reflection</span></h1>
+            <p class="page-hero-desc">Saatnya merefleksikan apa yang sudah kamu pelajari hari ini. Jawab dengan jujur — ini ruang untukmu melihat kembali perjalanan belajarmu. 🌱</p>
+          </div>
         </div>
+      </header>
 
+      <main class="max-w-4xl mx-auto px-6 pb-12 relative z-10">
         <!-- FORM IDENTITAS -->
         <div id="refleksi-form-section" class="space-y-6">
-          <div class="bg-gradient-to-br from-purple-500/10 via-brandGray to-brandGray border border-purple-500/30 rounded-3xl p-6 md:p-8 text-center md:text-left">
+          <div class="reveal bg-gradient-to-br from-purple-500/10 via-brandGray to-brandGray border border-purple-500/30 rounded-3xl p-6 md:p-8">
             <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-purple-500/15 border border-purple-500/30 text-sm font-bold text-purple-400 mb-4"><i class="fa-solid fa-lightbulb"></i> Tahap 3 • Refleksi</div>
-            <h2 class="text-2xl md:text-4xl font-extrabold tracking-tight mb-3">Apa yang Kamu Dapat Hari Ini?</h2>
+            <h2 class="text-2xl md:text-3xl font-bold tracking-tight mb-3">Apa yang Kamu Dapat Hari Ini?</h2>
             <p class="text-textGray text-base md:text-lg max-w-2xl leading-relaxed">
               Format refleksi <strong class="text-white">3-2-1</strong>: tuliskan <strong class="text-purple-300">3 hal yang kamu pelajari</strong>, <strong class="text-purple-300">2 hal menarik</strong>, dan
               <strong class="text-purple-300">1 hal yang masih membingungkan</strong>.
@@ -207,7 +299,7 @@
           </div>
 
           <!-- Form Input Identitas -->
-          <div class="bg-brandGray border border-purple-500/30 rounded-2xl p-6 md:p-8 space-y-5">
+          <div class="reveal bg-brandGray border border-purple-500/30 rounded-3xl p-6 md:p-8 space-y-5">
             <div class="flex items-center gap-3 border-b border-white/10 pb-4">
               <div class="w-11 h-11 rounded-xl bg-purple-500/10 border border-purple-500/25 flex items-center justify-center text-purple-400 text-lg shrink-0">
                 <i class="fa-solid fa-user-pen"></i>
@@ -233,7 +325,7 @@
               <i class="fa-solid fa-triangle-exclamation mr-2"></i><span id="refleksi-form-warning-text"></span>
             </div>
 
-            <button onclick="startRefleksi()" class="w-full py-4 bg-purple-500 text-white font-bold rounded-xl hover:bg-purple-400 transition shadow-lg shadow-purple-500/20 flex items-center justify-center gap-2 text-base">
+            <button onclick="startRefleksi()" class="w-full py-4 bg-purple-500 text-white font-bold rounded-xl hover:bg-purple-400 transition shadow-lg shadow-purple-500/20 flex items-center justify-center gap-2 text-base cursor-pointer">
               <i class="fa-solid fa-play"></i> Mulai Refleksi
             </button>
           </div>
@@ -242,7 +334,7 @@
         <!-- SECTION REFLEKSI 3-2-1 -->
         <div id="refleksi-content-section" class="hidden space-y-6">
           <!-- Info Siswa -->
-          <div class="bg-brandGray border border-white/10 rounded-2xl p-4 md:p-5 flex items-center justify-between flex-wrap gap-3">
+          <div class="bg-brandGray border border-white/5 rounded-2xl p-4 md:p-5 flex items-center justify-between flex-wrap gap-3">
             <div class="flex items-center gap-3">
               <div class="w-11 h-11 rounded-xl bg-purple-500/15 border border-purple-500/30 flex items-center justify-center text-purple-400 text-lg font-bold shrink-0">
                 <i class="fa-solid fa-user-check"></i>
@@ -252,11 +344,11 @@
                 <p class="text-white font-bold text-base"><span id="display-nama">-</span> • Absen <span id="display-absen">-</span></p>
               </div>
             </div>
-            <button onclick="cancelRefleksi()" class="text-xs text-textGray hover:text-rose-400 transition flex items-center gap-1.5 font-semibold"><i class="fa-solid fa-rotate-left"></i> Ganti Identitas</button>
+            <button onclick="cancelRefleksi()" class="text-xs text-textGray hover:text-rose-400 transition flex items-center gap-1.5 font-semibold cursor-pointer"><i class="fa-solid fa-rotate-left"></i> Ganti Identitas</button>
           </div>
 
           <!-- Progress Bar Sticky -->
-          <div id="progress-container" class="bg-brandGray/90 backdrop-blur-md border border-white/10 rounded-2xl p-4 sticky top-2 z-40">
+          <div id="progress-container" class="bg-brandGray/90 backdrop-blur-md border border-white/5 rounded-2xl p-4 sticky top-2 z-40">
             <div class="flex items-center justify-between mb-2">
               <span class="text-sm font-bold text-white flex items-center gap-2"> <i class="fa-solid fa-chart-simple text-purple-400"></i> Progress Refleksi </span>
               <span class="text-sm font-bold">
@@ -269,8 +361,8 @@
             </div>
           </div>
 
-          <!-- BAGIAN 3: HAL YANG DIPELAJARI -->
-          <div class="bg-brandGray border border-brandGreen/30 rounded-2xl p-6 md:p-8 space-y-5">
+          <!-- BAGIAN 3 -->
+          <div class="bg-brandGray border border-brandGreen/30 rounded-3xl p-6 md:p-8 space-y-5">
             <div class="flex items-start gap-4 border-b border-white/10 pb-4">
               <div class="w-14 h-14 rounded-2xl bg-brandGreen/15 border-2 border-brandGreen/40 flex items-center justify-center text-brandGreen font-extrabold text-2xl shrink-0">3</div>
               <div class="flex-1">
@@ -297,8 +389,8 @@
             </div>
           </div>
 
-          <!-- BAGIAN 2: HAL MENARIK -->
-          <div class="bg-brandGray border border-amber-500/30 rounded-2xl p-6 md:p-8 space-y-5">
+          <!-- BAGIAN 2 -->
+          <div class="bg-brandGray border border-amber-500/30 rounded-3xl p-6 md:p-8 space-y-5">
             <div class="flex items-start gap-4 border-b border-white/10 pb-4">
               <div class="w-14 h-14 rounded-2xl bg-amber-500/15 border-2 border-amber-500/40 flex items-center justify-center text-amber-400 font-extrabold text-2xl shrink-0">2</div>
               <div class="flex-1">
@@ -320,8 +412,8 @@
             </div>
           </div>
 
-          <!-- BAGIAN 1: PERTANYAAN -->
-          <div class="bg-brandGray border border-rose-500/30 rounded-2xl p-6 md:p-8 space-y-5">
+          <!-- BAGIAN 1 -->
+          <div class="bg-brandGray border border-rose-500/30 rounded-3xl p-6 md:p-8 space-y-5">
             <div class="flex items-start gap-4 border-b border-white/10 pb-4">
               <div class="w-14 h-14 rounded-2xl bg-rose-500/15 border-2 border-rose-500/40 flex items-center justify-center text-rose-400 font-extrabold text-2xl shrink-0">1</div>
               <div class="flex-1">
@@ -345,7 +437,7 @@
             <button
               id="btn-submit"
               onclick="submitRefleksi()"
-              class="inline-flex items-center gap-3 px-8 py-3.5 bg-purple-500 text-white font-bold rounded-xl hover:bg-purple-400 transition shadow-lg shadow-purple-500/20 disabled:opacity-50 disabled:cursor-not-allowed"
+              class="inline-flex items-center gap-3 px-8 py-3.5 bg-purple-500 text-white font-bold rounded-xl hover:bg-purple-400 transition shadow-lg shadow-purple-500/20 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
             >
               <i class="fa-solid fa-paper-plane"></i> Kumpulkan Refleksi
             </button>
@@ -388,26 +480,75 @@
             <a href="materi-algoritma.html" class="inline-flex items-center gap-2 px-6 py-3 bg-white/5 border border-white/15 text-white font-bold rounded-xl hover:bg-white/10 transition">
               <i class="fa-solid fa-book-open"></i> Ulang Materi
             </a>
+            <a href="../index.html" class="inline-flex items-center gap-2 px-6 py-3 bg-white/5 border border-white/15 text-white font-bold rounded-xl hover:bg-white/10 transition"> <i class="fa-solid fa-house"></i> Dashboard </a>
           </div>
         </div>
       </main>
     </div>
 
     <!-- Footer -->
-    <footer class="border-t border-white/5 bg-[#080808] pt-8 pb-6 relative z-10 w-full mt-auto">
-      <div class="max-w-7xl mx-auto px-6 text-center md:text-left">
-        <div class="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-textGray">
-          <p>&copy; 2026 RuangInformatika. Dikembangkan oleh Pak Ilyas untuk kelas Informatika SMA Negeri 4 Yogyakarta.</p>
-          <div class="flex gap-4 text-xl">
-            <a href="https://github.com/fandhi19" class="hover:text-brandGreen transition"><i class="fa-brands fa-github"></i></a>
-            <a href="https://e-portofolio-fandhi.vercel.app/" class="hover:text-brandGreen transition"><i class="fa-solid fa-globe"></i></a>
-            <a href="https://www.instagram.com/fandhidk17/" class="hover:text-brandGreen transition"><i class="fa-brands fa-instagram"></i></a>
+    <footer class="footer">
+      <div class="container" style="max-width: 1280px; margin: 0 auto; padding: 0 24px">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <div class="footer-logo">
+              <div class="footer-logo-icon"><i class="fa-solid fa-code"></i></div>
+              <span class="footer-logo-text">RuangInformatika</span>
+            </div>
+            <p class="footer-desc">Platform e-learning interaktif modern yang dirancang untuk memfasilitasi gaya belajar visual dan praktik murid SMA Negeri 4 Yogyakarta.</p>
+          </div>
+
+          <div class="footer-col">
+            <h4 class="footer-heading">Pintasan Modul</h4>
+            <ul class="footer-links">
+              <li>
+                <a href="../kisi.html" class="footer-link"><i class="fa-solid fa-chevron-right" style="font-size: 0.65rem"></i> Bedah Kisi-Kisi</a>
+              </li>
+              <li>
+                <a href="../materi-bk.html" class="footer-link"><i class="fa-solid fa-chevron-right" style="font-size: 0.65rem"></i> Berpikir Komputasional</a>
+              </li>
+              <li>
+                <a href="materi-algoritma.html" class="footer-link" style="color: var(--green)"><i class="fa-solid fa-chevron-right" style="font-size: 0.65rem"></i> Algoritma &amp; Pemrograman</a>
+              </li>
+              <li>
+                <a href="../materi-stack-queue.html" class="footer-link"><i class="fa-solid fa-chevron-right" style="font-size: 0.65rem"></i> Stack &amp; Queue</a>
+              </li>
+              <li>
+                <a href="../materi-search-sort.html" class="footer-link"><i class="fa-solid fa-chevron-right" style="font-size: 0.65rem"></i> Searching &amp; Sorting</a>
+              </li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h4 class="footer-heading">Fitur &amp; Dukungan</h4>
+            <ul class="footer-links">
+              <li>
+                <a href="../leaderboard.html" class="footer-link"><i class="fa-solid fa-trophy" style="color: var(--amber)"></i> Leaderboard Kelas</a>
+              </li>
+              <li>
+                <a href="../forum.html" class="footer-link"><i class="fa-solid fa-comments" style="color: var(--blue)"></i> Forum Diskusi</a>
+              </li>
+              <li>
+                <a href="https://wa.me/6285282386260?text=Halo%20Pak%20Ilyas%2C%20saya%20ingin%20bertanya%20tentang%20materi%20Informatika." target="_blank" class="footer-link">
+                  <i class="fa-solid fa-chalkboard-user" style="color: var(--green)"></i> Hubungi Pak Ilyas
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="footer-bottom">
+          <p class="footer-copy">&copy; 2026 RuangInformatika. Dikembangkan untuk kelas Informatika XE6 SMA Negeri 4 Yogyakarta.</p>
+          <div class="footer-socials">
+            <a href="https://github.com/fandhi19" target="_blank" class="footer-social" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+            <a href="https://e-portofolio-fandhi.vercel.app/" target="_blank" class="footer-social" aria-label="Portfolio"><i class="fa-solid fa-globe"></i></a>
+            <a href="https://www.instagram.com/fandhidk17/" target="_blank" class="footer-social" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
           </div>
         </div>
       </div>
     </footer>
 
-    <!-- Toast Notifikasi Anti Copy-Paste -->
+    <!-- Toast Anti Copy-Paste -->
     <div id="anti-copy-toast">
       <i class="fa-solid fa-ban"></i>
       <span>Copy-paste tidak diizinkan!</span>
@@ -415,8 +556,60 @@
 
     <!-- Main Script -->
     <script>
+      /* ── Reading Progress Bar ── */
+      window.addEventListener("scroll", () => {
+        const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrolled = (winScroll / height) * 100;
+        const p = document.getElementById("readProgress");
+        if (p) p.style.width = scrolled + "%";
+      });
+
+      /* ── Vanilla Tilt ── */
+      if (typeof VanillaTilt !== "undefined") {
+        VanillaTilt.init(document.querySelectorAll(".tilt-card"), {
+          max: 6,
+          speed: 400,
+          glare: true,
+          "max-glare": 0.15,
+        });
+      }
+
+      /* ── Mobile Menu ── */
+      const hamburgerBtn = document.getElementById("hamburgerBtn");
+      const mobileMenu = document.getElementById("mobileMenu");
+      if (hamburgerBtn && mobileMenu) {
+        hamburgerBtn.addEventListener("click", () => {
+          mobileMenu.classList.toggle("open");
+          const icon = hamburgerBtn.querySelector("i");
+          icon.classList.toggle("fa-bars");
+          icon.classList.toggle("fa-xmark");
+        });
+        mobileMenu.querySelectorAll("a, button").forEach((item) => {
+          item.addEventListener("click", () => {
+            mobileMenu.classList.remove("open");
+            const icon = hamburgerBtn.querySelector("i");
+            icon.classList.add("fa-bars");
+            icon.classList.remove("fa-xmark");
+          });
+        });
+      }
+
+      /* ── Scroll Reveal ── */
+      const revealObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("visible");
+              revealObserver.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.1 },
+      );
+      document.querySelectorAll(".reveal").forEach((el) => revealObserver.observe(el));
+
       /* ============ CONFIG ============ */
-      // 👇 GANTI URL INI DENGAN URL APPS SCRIPT KAMU
       const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyLlfvMPJDEfj2dazOrTUxyfjpN7Ys7kbxs4lC1bwN1eR8KniAGTEPEyeYHGM7nozA5/exec";
 
       let studentData = { nama: "", absen: "" };
@@ -544,15 +737,12 @@
         warning.classList.add("hidden");
         isSubmitted = true;
 
-        // Simpan identitas
         localStorage.setItem("siswa_nama", studentData.nama);
         localStorage.setItem("siswa_absen", studentData.absen);
         localStorage.removeItem("refleksi_draft");
 
-        // Kirim ke Google Sheets
         sendToGoogleSheets(fields);
 
-        // Tampilkan hasil
         document.getElementById("refleksi-content-section").classList.add("hidden");
         document.getElementById("refleksi-result-section").classList.remove("hidden");
 
@@ -648,7 +838,6 @@
           toastTimeout = setTimeout(() => toast.classList.remove("show"), 2000);
         }
 
-        // Block clipboard events (copy, cut, paste)
         document.addEventListener("copy", (e) => {
           e.preventDefault();
           showToast();
@@ -662,13 +851,11 @@
           showToast();
         });
 
-        // Block right-click (context menu)
         document.addEventListener("contextmenu", (e) => {
           e.preventDefault();
           showToast();
         });
 
-        // Block text selection di luar input & textarea
         document.addEventListener("selectstart", (e) => {
           const tag = (e.target.tagName || "").toUpperCase();
           if (tag !== "INPUT" && tag !== "TEXTAREA") {
@@ -676,7 +863,6 @@
           }
         });
 
-        // Block keyboard shortcuts: Ctrl+C, Ctrl+V, Ctrl+X, Ctrl+A
         document.addEventListener("keydown", (e) => {
           if (e.ctrlKey || e.metaKey) {
             const k = (e.key || "").toLowerCase();

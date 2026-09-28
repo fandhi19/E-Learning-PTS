@@ -5,12 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Stack & Queue - RuangInformatika</title>
     <link rel="shortcut icon" href="images/Logo Patbhe.png" type="image/x-icon" />
+
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-    <!-- FontAwesome CDN -->
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+
+    <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-    <!-- Vanilla Tilt JS -->
+
+    <!-- Vanilla Tilt -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
 
     <script>
@@ -18,36 +23,136 @@
         theme: {
           extend: {
             fontFamily: {
-              sans: ["Inter", "sans-serif"],
-              mono: ["ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "monospace"],
+              sans: ["Plus Jakarta Sans", "sans-serif"],
+              mono: ["JetBrains Mono", "ui-monospace", "monospace"],
             },
             colors: {
-              brandDark: "#0a0a0a",
-              brandGray: "#151515",
+              brandDark: "#080c10",
+              brandGray: "#111820",
               brandGreen: "#00e676",
-              textGray: "#a3a3a3",
+              textGray: "#8896a7",
             },
           },
         },
       };
     </script>
+
+    <!-- MASTER CSS -->
+    <link rel="stylesheet" href="style.css" />
+
     <style>
-      .bg-grid {
-        background-size: 40px 40px;
-        background-image: linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-      }
       .tilt-card {
         transform-style: preserve-3d;
       }
       .tilt-card-content {
         transform: translateZ(30px);
       }
-      /* Cegah overflow horizontal pada wrapper utama */
-      div.flex-grow.relative.bg-grid {
-        overflow: hidden;
+
+      /* Konten utama transparan agar grid body tembus */
+      main {
+        background: transparent;
       }
 
-      /* Buat elemen blur responsif */
+      /* ── Page Hero ── */
+      .page-hero {
+        position: relative;
+        padding: 64px 0 40px;
+        overflow: hidden;
+      }
+      .page-hero-glow {
+        position: absolute;
+        top: -100px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 700px;
+        height: 400px;
+        background: radial-gradient(ellipse, rgba(0, 230, 118, 0.1) 0%, rgba(56, 189, 248, 0.05) 40%, transparent 70%);
+        filter: blur(40px);
+        pointer-events: none;
+      }
+      .page-hero-inner {
+        max-width: 1024px;
+        margin: 0 auto;
+        padding: 0 24px;
+        position: relative;
+        z-index: 10;
+      }
+      .page-hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 14px;
+        border-radius: 999px;
+        background: var(--bg-glass);
+        border: 1px solid var(--border-green);
+        font-size: 0.78rem;
+        font-weight: 700;
+        color: var(--green);
+        margin-bottom: 18px;
+        backdrop-filter: blur(8px);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
+      .page-hero-title {
+        font-size: clamp(2rem, 4.5vw, 3rem);
+        font-weight: 800;
+        line-height: 1.15;
+        letter-spacing: -0.03em;
+        margin-bottom: 16px;
+      }
+      .page-hero-title .gradient-text {
+        background: linear-gradient(135deg, #00e676 0%, #38bdf8 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .page-hero-desc {
+        font-size: 1rem;
+        line-height: 1.7;
+        color: var(--text-muted);
+        max-width: 640px;
+      }
+
+      /* ── Tab pills ── */
+      .tab-nav-pills {
+        display: flex;
+        gap: 8px;
+        padding: 6px;
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        overflow-x: auto;
+        backdrop-filter: blur(12px);
+      }
+      .tab-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 11px 20px;
+        border-radius: 10px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: var(--text-muted);
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        transition: all 0.25s ease;
+        white-space: nowrap;
+        font-family: var(--font-sans);
+      }
+      .tab-btn:hover {
+        color: var(--text-primary);
+        background: rgba(255, 255, 255, 0.04);
+      }
+      .tab-btn.active {
+        color: var(--green);
+        background: var(--green-dim);
+        box-shadow:
+          0 0 20px rgba(0, 230, 118, 0.15),
+          inset 0 0 0 1px rgba(0, 230, 118, 0.25);
+      }
+
+      /* ── Glow responsif ── */
       main .bg-brandGreen\/5 {
         width: 90vw;
         max-width: 600px;
@@ -55,115 +160,96 @@
         max-height: 300px;
       }
 
-      /* Penyesuaian ukuran font untuk layar kecil (mobile) */
+      /* Responsive fonts mobile */
       @media (max-width: 640px) {
         body {
-          font-size: 1rem; /* 16px */
+          font-size: 1rem;
         }
-
         h1 {
-          font-size: 1.875rem !important; /* 30px */
+          font-size: 1.875rem !important;
           line-height: 1.2 !important;
         }
-
         h2 {
-          font-size: 1.5rem !important; /* 24px */
+          font-size: 1.5rem !important;
         }
-
         h3 {
-          font-size: 1.25rem !important; /* 20px */
+          font-size: 1.25rem !important;
         }
-
-        .text-2xl {
-          font-size: 1.25rem !important; /* 20px */
-        }
-
-        .text-3xl {
-          font-size: 1.5rem !important; /* 24px */
-        }
-
         .text-4xl {
-          font-size: 1.875rem !important; /* 30px */
+          font-size: 1.875rem !important;
         }
-
+        .text-3xl {
+          font-size: 1.5rem !important;
+        }
+        .text-2xl {
+          font-size: 1.25rem !important;
+        }
         .text-xl {
-          font-size: 1.125rem !important; /* 18px */
+          font-size: 1.125rem !important;
         }
-
         .text-lg {
-          font-size: 1rem !important; /* 16px */
-        }
-
-        .text-base {
-          font-size: 0.9375rem !important; /* 15px */
+          font-size: 1rem !important;
         }
       }
     </style>
   </head>
-  <body class="bg-brandDark text-white font-sans antialiased overflow-x-hidden flex flex-col min-h-screen">
-    <!-- Navigation Bar -->
-    <nav class="max-w-7xl mx-auto px-6 py-6 flex items-center justify-between border-b border-white/5 relative z-50 w-full">
-      <!-- Logo -->
-      <div class="flex items-center gap-3">
-        <i class="fa-solid fa-code text-brandGreen text-xl"></i>
-        <span class="text-xl font-bold tracking-tight text-brandGreen">RuangInformatika</span>
+
+  <body class="bg-grid text-white font-sans antialiased overflow-x-hidden flex flex-col min-h-screen">
+    <!-- Navigation -->
+    <nav class="navbar">
+      <div class="navbar-inner">
+        <a href="index.html" class="navbar-logo">
+          <div class="navbar-logo-icon"><i class="fa-solid fa-code"></i></div>
+          <span class="navbar-logo-text">RuangInformatika</span>
+        </a>
+        <div class="navbar-links">
+          <a href="index.html" class="nav-link">Dashboard</a>
+          <a href="index.html#materi" class="nav-link">Daftar Materi</a>
+          <a href="leaderboard.html" class="nav-link">Leaderboard</a>
+          <a href="forum.html" class="nav-link">Forum Diskusi</a>
+        </div>
+        <button class="nav-badge"><i class="fa-solid fa-chalkboard-user"></i> Kelas XE6</button>
+        <button class="hamburger-btn" id="hamburgerBtn" aria-label="Menu">
+          <i class="fa-solid fa-bars"></i>
+        </button>
       </div>
 
-      <!-- Menu Desktop (md ke atas) -->
-      <div class="hidden md:flex items-center gap-8 text-sm font-medium text-gray-300">
-        <a href="index.html" class="text-white">Dashboard</a>
-        <a href="index.html#materi" class="hover:text-white transition">Daftar Materi</a>
-        <a href="leaderboard.html" class="hover:text-white transition">Leaderboard</a>
-        <a href="forum.html" class="hover:text-white transition">Forum Diskusi</a>
-      </div>
-
-      <!-- Tombol Pak Ilyas (Desktop) -->
-      <button class="hidden md:flex items-center gap-2 border border-white/10 rounded-full px-5 py-2.5 text-sm font-medium hover:bg-white/5 transition"><i class="fa-solid fa-chalkboard-user text-brandGreen"></i> XE6</button>
-
-      <!-- Tombol Hamburger (Mobile) -->
-      <button id="hamburgerBtn" class="md:hidden text-white text-2xl focus:outline-none" aria-label="Menu">
-        <i class="fa-solid fa-bars"></i>
-      </button>
-
-      <!-- Menu Mobile (Dropdown) -->
-      <div id="mobileMenu" class="hidden absolute top-full left-0 right-0 bg-brandDark border-b border-white/10 md:hidden z-[60] shadow-lg">
-        <div class="px-6 py-4 flex flex-col gap-4 text-sm font-medium text-gray-300">
-          <a href="index.html" class="text-white py-2">Dashboard</a>
-          <a href="index.html#materi" class="hover:text-white transition py-2">Daftar Materi</a>
-          <a href="leaderboard.html" class="hover:text-white transition py-2">Leaderboard</a>
-          <a href="forum.html" class="hover:text-white transition py-2">Forum Diskusi</a>
-          <button class="flex items-center gap-2 border border-white/10 rounded-full px-5 py-2.5 text-sm font-medium hover:bg-white/5 transition mt-2"><i class="fa-solid fa-chalkboard-user text-brandGreen"></i> XE6</button>
+      <!-- Mobile Drawer -->
+      <div class="mobile-menu" id="mobileMenu">
+        <a href="index.html" class="mobile-nav-link"> <i class="fa-solid fa-house" style="margin-right: 10px"></i> Dashboard </a>
+        <a href="index.html#materi" class="mobile-nav-link"> <i class="fa-solid fa-book-open" style="margin-right: 10px"></i> Daftar Materi </a>
+        <a href="leaderboard.html" class="mobile-nav-link"> <i class="fa-solid fa-trophy" style="margin-right: 10px"></i> Leaderboard </a>
+        <a href="forum.html" class="mobile-nav-link"> <i class="fa-solid fa-comments" style="margin-right: 10px"></i> Forum Diskusi </a>
+        <div style="padding: 12px 16px">
+          <button class="nav-badge" style="width: 100%; justify-content: center"><i class="fa-solid fa-chalkboard-user"></i> Kelas XE6 — SMAN 4 Yogyakarta</button>
         </div>
       </div>
     </nav>
 
     <!-- Main Content Wrapper -->
-    <div class="flex-grow relative bg-grid">
-      <!-- Glow Effect Desktop -->
-      <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-brandGreen/5 rounded-full blur-[120px] pointer-events-none"></div>
-
-      <main class="max-w-5xl mx-auto px-6 py-12 relative z-10">
-        <!-- Header Materi -->
-        <div class="mb-10 text-center md:text-left">
-          <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brandGreen/10 border border-brandGreen/20 text-sm font-bold text-brandGreen mb-4"><i class="fa-solid fa-layer-group"></i> Modul 02</div>
-          <h1 class="text-4xl md:text-5xl font-bold tracking-tight mb-4">Struktur Data: Stack & Queue</h1>
-          <p class="text-gray-300 text-lg md:text-xl max-w-2xl">Pahami cara komputer mengorganisasi data. Dari tumpukan riwayat browser hingga antrean print dokumen.</p>
+    <div class="flex-grow relative">
+      <!-- Page Hero -->
+      <header class="page-hero">
+        <div class="page-hero-glow"></div>
+        <div class="page-hero-inner">
+          <div class="reveal">
+            <div class="page-hero-badge"><i class="fa-solid fa-layer-group"></i> Modul 02</div>
+            <h1 class="page-hero-title">
+              Struktur Data:<br />
+              <span class="gradient-text">Stack &amp; Queue</span>
+            </h1>
+            <p class="page-hero-desc">Pahami cara komputer mengorganisasi data. Dari tumpukan riwayat browser hingga antrean print dokumen — lengkap dengan simulasi interaktif.</p>
+          </div>
         </div>
+      </header>
 
-        <!-- Navigation Tabs -->
-        <div class="flex border-b border-white/10 mb-8 space-x-2 overflow-x-auto">
-          <button onclick="openTab(event, 'bacaan')" class="tab-btn py-3 px-6 text-base font-semibold border-b-2 border-brandGreen text-brandGreen flex items-center gap-2 transition whitespace-nowrap">
-            <i class="fa-solid fa-book-open"></i> Materi Baca
-          </button>
-          <button onclick="openTab(event, 'simulasi')" class="tab-btn py-3 px-6 text-base font-semibold border-b-2 border-transparent text-textGray hover:text-white flex items-center gap-2 transition whitespace-nowrap">
-            <i class="fa-solid fa-flask"></i> Simulasi Interaktif
-          </button>
-          <button onclick="openTab(event, 'video')" class="tab-btn py-3 px-6 text-base font-semibold border-b-2 border-transparent text-textGray hover:text-white flex items-center gap-2 transition whitespace-nowrap">
-            <i class="fa-solid fa-play"></i> Video Penjelasan
-          </button>
-          <button onclick="openTab(event, 'latihan')" class="tab-btn py-3 px-6 text-base font-semibold border-b-2 border-transparent text-textGray hover:text-white flex items-center gap-2 transition whitespace-nowrap">
-            <i class="fa-solid fa-pen-to-square"></i> Latihan Soal
-          </button>
+      <main class="max-w-5xl mx-auto px-6 pb-12 relative z-10">
+        <!-- Navigation Tabs (Pills) -->
+        <div class="tab-nav-pills reveal mb-8">
+          <button onclick="openTab(event, 'bacaan')" class="tab-btn active"><i class="fa-solid fa-book-open"></i> Materi Baca</button>
+          <button onclick="openTab(event, 'simulasi')" class="tab-btn"><i class="fa-solid fa-flask"></i> Simulasi Interaktif</button>
+          <button onclick="openTab(event, 'video')" class="tab-btn"><i class="fa-solid fa-play"></i> Video Penjelasan</button>
+          <button onclick="openTab(event, 'latihan')" class="tab-btn"><i class="fa-solid fa-pen-to-square"></i> Latihan Soal</button>
         </div>
 
         <!-- TAB 1: MATERI BACAAN -->
@@ -190,7 +276,7 @@
             </div>
           </div>
 
-          <!-- STACK & QUEUE (FULL WIDTH) -->
+          <!-- STACK & QUEUE -->
           <div class="space-y-8">
             <!-- STACK CARD -->
             <div class="tilt-card bg-brandGray border border-white/5 rounded-3xl p-8 md:p-10 hover:border-brandGreen/30 transition-colors" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
@@ -206,7 +292,6 @@
                   Data yang <strong class="text-white">terakhir masuk</strong> akan menjadi data yang <strong class="text-white">pertama keluar</strong> (Yang terakhir masuk → keluar terlebih dahulu).
                 </p>
 
-                <!-- Analogi Stack -->
                 <div class="bg-white/5 p-6 rounded-xl border border-white/10 space-y-4">
                   <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
                     <h4 class="font-semibold text-white text-xl flex items-center gap-2">🥞 Analogi Stack (Tumpukan Piring)</h4>
@@ -214,7 +299,6 @@
                   </div>
                   <p class="text-gray-300 text-base leading-relaxed">Proses masuk dan keluar data hanya dilakukan dari satu pintu: <strong class="text-white">bagian paling atas (TOP)</strong>.</p>
 
-                  <!-- Container Visual Tumpukan -->
                   <div class="bg-black/30 p-6 rounded-xl border border-white/5 space-y-3">
                     <div class="flex items-center justify-center gap-3 text-brandGreen text-base font-mono mb-2">
                       <span>↓ Push (Masuk)</span>
@@ -222,19 +306,15 @@
                       <span>↑ Pop (Keluar)</span>
                     </div>
 
-                    <!-- Tumpukan Elemen -->
                     <div class="max-w-md mx-auto space-y-2">
-                      <!-- Item C (TOP) -->
                       <div class="bg-brandGreen/20 border border-brandGreen text-white p-3 rounded-lg text-base font-mono flex justify-between items-center shadow-lg shadow-brandGreen/5">
                         <span class="font-bold">Piring C</span>
                         <span class="text-sm bg-brandGreen text-black font-bold px-2 py-0.5 rounded">TOP</span>
                       </div>
-                      <!-- Item B -->
                       <div class="bg-white/5 border border-white/10 text-white/80 p-3 rounded-lg text-base font-mono flex justify-between items-center">
                         <span>Piring B</span>
                         <span class="text-sm text-white/40">Tengah</span>
                       </div>
-                      <!-- Item A (BOTTOM) -->
                       <div class="bg-white/5 border border-white/5 text-white/40 p-3 rounded-lg text-base font-mono flex justify-between items-center">
                         <span>Piring A</span>
                         <span class="text-sm text-white/30">BOTTOM (Pertama ditaruh)</span>
@@ -243,7 +323,6 @@
                   </div>
                 </div>
 
-                <!-- Operasi Stack -->
                 <div class="space-y-3 pt-2">
                   <h4 class="font-bold text-white text-xl">Operasi Utama pada Stack:</h4>
                   <ul class="text-gray-300 text-base space-y-3">
@@ -272,21 +351,18 @@
                   Data yang <strong class="text-white">pertama masuk</strong> akan menjadi data yang <strong class="text-white">pertama keluar</strong> (Yang datang duluan → dilayani duluan).
                 </p>
 
-                <!-- Operasi Queue -->
                 <div class="bg-white/5 p-6 rounded-xl border border-white/10 space-y-4">
                   <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
                     <h4 class="font-bold text-white text-xl">🎟️ Analogi & Operasi Queue (Antrean)</h4>
                     <span class="text-sm bg-blue-500/20 text-blue-400 border border-blue-500/30 px-3 py-1 rounded font-mono">FIFO (First In, First Out)</span>
                   </div>
 
-                  <!-- Diagram Alur Antrean Horisontal -->
                   <div class="bg-black/40 p-5 rounded-xl border border-white/5 space-y-3">
                     <div class="flex items-center justify-between text-sm font-mono text-gray-300">
                       <span class="text-red-400 font-bold flex items-center gap-1">← DEQUEUE (Keluar Pertama)</span>
                       <span class="text-emerald-400 font-bold flex items-center gap-1">ENQUEUE (Masuk Akhir) ←</span>
                     </div>
 
-                    <!-- Visual Antrean Horisontal -->
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 font-mono text-base">
                       <div class="bg-red-500/10 border border-red-500/30 text-white p-4 rounded-lg text-center">
                         <div class="text-xs text-red-400 font-bold uppercase tracking-wider mb-1">FRONT</div>
@@ -304,7 +380,6 @@
                   </div>
                 </div>
 
-                <!-- Operasi Queue -->
                 <div class="space-y-3 pt-2">
                   <h4 class="font-bold text-white text-xl">Operasi Utama pada Queue:</h4>
                   <ul class="text-gray-300 text-base space-y-3">
@@ -318,7 +393,7 @@
             </div>
           </div>
 
-          <!-- CONTOH KEHIDUPAN SEHARI-HARI (SATU KOLOM) -->
+          <!-- CONTOH KEHIDUPAN SEHARI-HARI -->
           <div class="space-y-8">
             <div class="tilt-card bg-brandGray border border-white/5 rounded-3xl p-8 md:p-10 hover:border-brandGreen/30 transition-colors" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
               <div class="tilt-card-content">
@@ -375,7 +450,7 @@
             </div>
           </div>
 
-          <!-- PERBEDAAN & PERBANDINGAN (KARTU TERPISAH) -->
+          <!-- PERBEDAAN & PERBANDINGAN -->
           <div class="tilt-card bg-brandGray border border-white/5 rounded-3xl p-8 md:p-10 hover:border-brandGreen/30 transition-colors" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
             <div class="tilt-card-content space-y-6">
               <div class="flex items-center gap-4">
@@ -388,7 +463,6 @@
                 </div>
               </div>
 
-              <!-- Kartu Perbandingan -->
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="bg-white/5 p-6 rounded-2xl border border-white/10">
                   <h4 class="text-xl font-bold text-brandGreen mb-4">Stack (Tumpukan) 🥞</h4>
@@ -412,7 +486,6 @@
                 </div>
               </div>
 
-              <!-- Simulasi Masuk A -> B -> C -->
               <div class="bg-white/5 p-6 rounded-2xl border border-white/5 space-y-4">
                 <h4 class="font-bold text-white text-xl">Contoh Simulasi Data Masuk: <code class="text-brandGreen font-mono">A → B → C</code></h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-base">
@@ -431,7 +504,7 @@
             </div>
           </div>
 
-          <!-- DALAM PEMROGRAMAN & SIMULASI -->
+          <!-- DALAM PEMROGRAMAN -->
           <div class="tilt-card bg-brandGray border border-white/5 rounded-3xl p-8 md:p-10 hover:border-brandGreen/30 transition-colors" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
             <div class="tilt-card-content space-y-6">
               <div class="flex items-center gap-4">
@@ -445,7 +518,6 @@
               </div>
 
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-base">
-                <!-- Stack Code -->
                 <div class="bg-black/40 p-6 rounded-2xl border border-white/5 space-y-3">
                   <h4 class="font-bold text-white text-xl flex items-center gap-2"><span class="text-brandGreen font-mono">STACK</span> = [10, 20, 30]</h4>
                   <p class="text-gray-300">Anggap <code class="text-brandGreen">30</code> berada di posisi paling atas (TOP).</p>
@@ -457,7 +529,6 @@
                   <p class="text-gray-400 pt-1"><strong class="text-white">Kegunaan Pemrograman:</strong> Undo/Redo, riwayat fungsi, navigasi Back, pengecekan tanda kurung.</p>
                 </div>
 
-                <!-- Queue Code -->
                 <div class="bg-black/40 p-6 rounded-2xl border border-white/5 space-y-3">
                   <h4 class="font-bold text-white text-xl flex items-center gap-2"><span class="text-brandGreen font-mono">QUEUE</span> = [10, 20, 30]</h4>
                   <p class="text-gray-300">Anggap <code class="text-brandGreen">10</code> berada di posisi depan (FRONT).</p>
@@ -472,7 +543,7 @@
             </div>
           </div>
 
-          <!-- KESIMPULAN / CARA MENGINGAT -->
+          <!-- KESIMPULAN -->
           <div class="tilt-card bg-gradient-to-r from-brandGreen/10 via-brandGray to-brandGray border border-brandGreen/30 rounded-3xl p-8 md:p-10 transition-colors">
             <div class="tilt-card-content space-y-6">
               <h3 class="text-2xl md:text-3xl font-bold text-white flex items-center gap-3"><i class="fa-solid fa-lightbulb text-brandGreen"></i> Kesimpulan (Cara Mudah Mengingat)</h3>
@@ -553,11 +624,8 @@
               <p class="text-xl md:text-2xl text-gray-300 leading-relaxed">Pelajari visualisasi konsep dan prinsip dasar Stack dan Queue melalui video singkat di bawah ini.</p>
             </div>
 
-            <!-- Video list: satu kolom -->
             <div class="grid grid-cols-1 gap-8">
-              <!-- 1. STACK VS QUEUE -->
               <div class="bg-black/40 border border-white/10 rounded-2xl p-6 md:p-8 flex flex-col md:flex-row gap-6 items-start">
-                <!-- Video container: potrait 9:16 -->
                 <div class="w-full md:w-2/5 lg:w-1/3 max-w-sm mx-auto md:mx-0 flex-shrink-0">
                   <div class="aspect-[9/16] w-full rounded-xl overflow-hidden bg-black border border-white/10 shadow-lg">
                     <video class="w-full h-full object-contain" controls preload="metadata">
@@ -567,7 +635,6 @@
                   </div>
                 </div>
 
-                <!-- Konten teks -->
                 <div class="flex-1 space-y-6">
                   <div>
                     <h4 class="text-2xl md:text-3xl font-bold text-white flex items-center gap-3">
@@ -577,13 +644,11 @@
                     <p class="text-lg text-emerald-400 font-medium mt-2">LIFO (Last In, First Out) vs FIFO (First In, First Out)</p>
                   </div>
 
-                  <!-- Cara Kerja & Prinsip -->
                   <div class="space-y-3 text-lg md:text-xl text-gray-300 leading-relaxed">
                     <p><b class="text-white">📚 Stack (Tumpukan):</b> Menggunakan prinsip <span class="text-emerald-400 font-semibold">LIFO</span>. Elemen yang <b>terakhir masuk</b> akan menjadi yang <b>pertama keluar</b>.</p>
                     <p><b class="text-white">🚶‍♂️ Queue (Antrean):</b> Menggunakan prinsip <span class="text-emerald-400 font-semibold">FIFO</span>. Elemen yang <b>pertama masuk</b> akan menjadi yang <b>pertama keluar</b>.</p>
                   </div>
 
-                  <!-- Analogi Murid -->
                   <div class="bg-white/5 border border-white/10 rounded-xl p-5 text-lg md:text-xl text-gray-300 space-y-3">
                     <span class="block text-white font-semibold">💡 Analogi Murid:</span>
                     <ul class="list-disc list-inside space-y-2 text-base md:text-lg">
@@ -592,7 +657,6 @@
                     </ul>
                   </div>
 
-                  <!-- Indikator Operasi Utama -->
                   <div class="grid grid-cols-3 gap-3 text-center text-sm md:text-base">
                     <div class="bg-white/5 border border-white/10 rounded-xl p-3">
                       <span class="block text-emerald-400 font-bold text-base md:text-lg">PUSH</span>
@@ -608,7 +672,6 @@
                     </div>
                   </div>
 
-                  <!-- Tabel Perbedaan Kunci -->
                   <div class="overflow-x-auto rounded-xl border border-white/10">
                     <table class="w-full text-left text-sm md:text-base text-gray-300">
                       <thead class="bg-white/10 text-white font-semibold border-b border-white/10">
@@ -654,7 +717,6 @@
               <span class="text-sm font-bold text-brandGreen bg-brandGreen/10 px-4 py-2 rounded-full border border-brandGreen/20"> <i class="fa-solid fa-layer-group mr-1"></i> 10 Soal Pilihan Ganda </span>
             </div>
 
-            <!-- Form Kuis 10 Soal -->
             <div id="quiz-container" class="space-y-8">
               <!-- Soal 1 -->
               <div class="bg-white/5 border border-white/10 p-6 rounded-2xl space-y-4" id="q-block-1">
@@ -967,7 +1029,7 @@ A → B → C
                 </button>
               </div>
 
-              <!-- Ringkasan Hasil/Nilai Kuis -->
+              <!-- Ringkasan Hasil -->
               <div id="quiz-result" class="hidden p-6 rounded-2xl text-base leading-relaxed border mt-6"></div>
             </div>
           </div>
@@ -975,51 +1037,63 @@ A → B → C
       </main>
     </div>
 
-    <!-- Footer Area (Identik dengan index.html) -->
-    <footer class="border-t border-white/5 bg-[#080808] pt-12 pb-8 relative z-10 w-full mt-auto">
-      <div class="max-w-7xl mx-auto px-6">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-          <div class="md:col-span-2">
-            <div class="flex items-center gap-3 mb-4">
-              <i class="fa-solid fa-code text-brandGreen text-2xl"></i>
-              <span class="text-2xl font-bold tracking-tight text-brandGreen">RuangInformatika</span>
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container" style="max-width: 1280px; margin: 0 auto; padding: 0 24px">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <div class="footer-logo">
+              <div class="footer-logo-icon"><i class="fa-solid fa-code"></i></div>
+              <span class="footer-logo-text">RuangInformatika</span>
             </div>
-            <p class="text-textGray text-base leading-relaxed max-w-sm">
-              Platform e-learning interaktif modern yang dirancang khusus untuk memfasilitasi gaya belajar visual dan praktik, memastikan pemahaman mendalam untuk menaklukkan soal-soal PTS.
-            </p>
+            <p class="footer-desc">Platform e-learning interaktif modern yang dirancang khusus untuk memfasilitasi gaya belajar visual dan praktik, memastikan pemahaman mendalam untuk menaklukkan soal-soal PTS.</p>
           </div>
-          <div>
-            <h4 class="text-white font-semibold text-lg mb-4">Pintasan Modul</h4>
-            <ul class="space-y-3 text-base text-textGray">
-              <li><a href="kisi.html" class="hover:text-brandGreen transition">Bedah Kisi-Kisi</a></li>
-              <li><a href="materi-bk.html" class="hover:text-brandGreen transition">Berpikir Komputasional</a></li>
-              <li><a href="materi-stack-queue.html" class="hover:text-brandGreen transition">Stack & Queue</a></li>
-              <li><a href="materi-search-sort.html" class="hover:text-brandGreen transition">Searching & Sorting</a></li>
+
+          <div class="footer-col">
+            <h4 class="footer-heading">Pintasan Modul</h4>
+            <ul class="footer-links">
+              <li>
+                <a href="kisi.html" class="footer-link"><i class="fa-solid fa-chevron-right" style="font-size: 0.65rem"></i> Bedah Kisi-Kisi</a>
+              </li>
+              <li>
+                <a href="materi-bk.html" class="footer-link"><i class="fa-solid fa-chevron-right" style="font-size: 0.65rem"></i> Berpikir Komputasional</a>
+              </li>
+              <li>
+                <a href="materi-stack-queue.html" class="footer-link"><i class="fa-solid fa-chevron-right" style="font-size: 0.65rem"></i> Stack &amp; Queue</a>
+              </li>
+              <li>
+                <a href="materi-search-sort.html" class="footer-link"><i class="fa-solid fa-chevron-right" style="font-size: 0.65rem"></i> Searching &amp; Sorting</a>
+              </li>
+              <li>
+                <a href="Materi_AP/materi-algoritma.html" class="footer-link"><i class="fa-solid fa-chevron-right" style="font-size: 0.65rem"></i> Algoritma Pemrograman</a>
+              </li>
             </ul>
           </div>
-          <div>
-            <h4 class="text-white font-semibold text-lg mb-4">Dukungan</h4>
-            <ul class="space-y-3 text-base text-textGray">
+
+          <div class="footer-col">
+            <h4 class="footer-heading">Fitur &amp; Dukungan</h4>
+            <ul class="footer-links">
               <li>
-                <a href="leaderboard.html" class="hover:text-brandGreen transition"><i class="fa-solid fa-ranking-star mr-2"></i> Leaderboard</a>
+                <a href="leaderboard.html" class="footer-link"><i class="fa-solid fa-trophy" style="color: var(--amber)"></i> Leaderboard Kelas</a>
               </li>
               <li>
-                <a href="forum.html" class="hover:text-brandGreen transition"><i class="fa-solid fa-comments mr-2"></i> Forum Diskusi</a>
+                <a href="forum.html" class="footer-link"><i class="fa-solid fa-comments" style="color: var(--blue)"></i> Forum Diskusi</a>
               </li>
               <li>
-                <a href="https://wa.me/6285282386260?text=Halo%20Pak%20Ilyas%2C%20saya%20ingin%20bertanya%20tentang%20materi%20Informatika." target="_blank" class="hover:text-brandGreen transition">
-                  <i class="fa-solid fa-chalkboard-user mr-2"></i> Hubungi Guru</a
-                >
+                <a href="https://wa.me/6285282386260?text=Halo%20Pak%20Ilyas%2C%20saya%20ingin%20bertanya%20tentang%20materi%20Informatika." target="_blank" class="footer-link">
+                  <i class="fa-solid fa-chalkboard-user" style="color: var(--green)"></i> Hubungi Pak Ilyas
+                </a>
               </li>
             </ul>
           </div>
         </div>
-        <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-base text-textGray">
-          <p>&copy; 2026 RuangInformatika. Dikembangkan oleh Pak Ilyas untuk kelas Informatika SMA Negeri 4 Yogyakarta.</p>
-          <div class="flex gap-4 text-2xl">
-            <a href="https://github.com/fandhi19" class="hover:text-brandGreen transition"><i class="fa-brands fa-github"></i></a>
-            <a href="https://e-portofolio-fandhi.vercel.app/" class="hover:text-brandGreen transition"><i class="fa-solid fa-globe"></i></a>
-            <a href="https://www.instagram.com/fandhidk17/" class="hover:text-brandGreen transition"><i class="fa-brands fa-instagram"></i></a>
+
+        <div class="footer-bottom">
+          <p class="footer-copy">&copy; 2026 RuangInformatika. Dikembangkan untuk kelas Informatika XE6 SMA Negeri 4 Yogyakarta.</p>
+          <div class="footer-socials">
+            <a href="https://github.com/fandhi19" target="_blank" class="footer-social" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+            <a href="https://e-portofolio-fandhi.vercel.app/" target="_blank" class="footer-social" aria-label="Portfolio"><i class="fa-solid fa-globe"></i></a>
+            <a href="https://www.instagram.com/fandhidk17/" target="_blank" class="footer-social" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
           </div>
         </div>
       </div>
@@ -1029,6 +1103,7 @@ A → B → C
     <script>
       VanillaTilt.init(document.querySelectorAll(".tilt-card"), { max: 6, speed: 400, glare: true, "max-glare": 0.15 });
 
+      /* ── Tab System (pill style) ── */
       function openTab(evt, tabName) {
         const tabContents = document.getElementsByClassName("tab-content");
         for (let i = 0; i < tabContents.length; i++) {
@@ -1037,13 +1112,11 @@ A → B → C
         }
         const tabBtns = document.getElementsByClassName("tab-btn");
         for (let i = 0; i < tabBtns.length; i++) {
-          tabBtns[i].classList.remove("border-brandGreen", "text-brandGreen");
-          tabBtns[i].classList.add("border-transparent", "text-textGray");
+          tabBtns[i].classList.remove("active");
         }
         document.getElementById(tabName).classList.remove("hidden");
         document.getElementById(tabName).classList.add("block");
-        evt.currentTarget.classList.remove("border-transparent", "text-textGray");
-        evt.currentTarget.classList.add("border-brandGreen", "text-brandGreen");
+        evt.currentTarget.classList.add("active");
       }
 
       let stackData = [];
@@ -1063,12 +1136,12 @@ A → B → C
           const isTop = index === stackData.length - 1;
           const el = document.createElement("div");
           el.className = `p-4 rounded-lg border text-base font-mono flex justify-between items-center transition-all duration-300 ${
-            isTop ? "bg-brandGreen/20 border-brandGreen text-white shadow-lg shadow-brandGreen/10 scale-102" : "bg-white/5 border-white/10 text-white/70"
+            isTop ? "bg-brandGreen/20 border-brandGreen text-white shadow-lg shadow-brandGreen/10" : "bg-white/5 border-white/10 text-white/70"
           }`;
           el.innerHTML = `
-            <span>${item}</span>
-            ${isTop ? '<span class="text-sm bg-brandGreen text-black font-bold px-2 py-0.5 rounded">TOP</span>' : ""}
-          `;
+          <span>${item}</span>
+          ${isTop ? '<span class="text-sm bg-brandGreen text-black font-bold px-2 py-0.5 rounded">TOP</span>' : ""}
+        `;
           container.appendChild(el);
         });
       }
@@ -1124,9 +1197,9 @@ A → B → C
           else if (isRear) label = "REAR (Masuk)";
 
           el.innerHTML = `
-            <div class="text-xs font-bold uppercase mb-2 ${isFront ? "text-red-400" : isRear ? "text-emerald-400" : "text-gray-400"}">${label}</div>
-            <div class="font-bold truncate">${item}</div>
-          `;
+          <div class="text-xs font-bold uppercase mb-2 ${isFront ? "text-red-400" : isRear ? "text-emerald-400" : "text-gray-400"}">${label}</div>
+          <div class="font-bold truncate">${item}</div>
+        `;
           container.appendChild(el);
         });
       }
@@ -1157,10 +1230,10 @@ A → B → C
         renderQueue();
       }
 
-      // Render awal saat load
       renderStack();
       renderQueue();
 
+      /* ── Quiz ── */
       function cekJawaban() {
         const kunciJawaban = {
           q1: { ans: "C", label: "C — Tumpukan buku di meja", exp: "Tumpukan buku menerapkan prinsip LIFO (Last In, First Out). Buku yang terakhir diletakkan di atas biasanya menjadi buku yang pertama diambil." },
@@ -1208,46 +1281,59 @@ A → B → C
         if (skor >= 70) {
           resultBox.className = "p-6 rounded-2xl text-base leading-relaxed border mt-6 bg-brandGreen/10 border-brandGreen/30 text-white";
           resultBox.innerHTML = `
-            <div class="flex items-center gap-3 mb-2">
-              <i class="fa-solid fa-trophy text-2xl text-brandGreen"></i>
-              <h4 class="text-xl font-bold">Hasil Latihan: ${skor} / 100</h4>
-            </div>
-            <p class="text-gray-300">Luar biasa! Kamu sudah menguasai konsep Stack (LIFO) dan Queue (FIFO) dengan sangat baik.</p>
-          `;
+          <div class="flex items-center gap-3 mb-2">
+            <i class="fa-solid fa-trophy text-2xl text-brandGreen"></i>
+            <h4 class="text-xl font-bold">Hasil Latihan: ${skor} / 100</h4>
+          </div>
+          <p class="text-gray-300">Luar biasa! Kamu sudah menguasai konsep Stack (LIFO) dan Queue (FIFO) dengan sangat baik.</p>
+        `;
         } else {
           resultBox.className = "p-6 rounded-2xl text-base leading-relaxed border mt-6 bg-yellow-500/10 border-yellow-500/30 text-white";
           resultBox.innerHTML = `
-            <div class="flex items-center gap-3 mb-2">
-              <i class="fa-solid fa-graduation-cap text-2xl text-yellow-400"></i>
-              <h4 class="text-xl font-bold">Hasil Latihan: ${skor} / 100</h4>
-            </div>
-            <p class="text-gray-300">Tetap semangat! Pelajari kembali pembahasan di tiap soal di atas untuk memperkuat pemahaman operasi Push, Pop, Dequeue, dan Peek.</p>
-          `;
+          <div class="flex items-center gap-3 mb-2">
+            <i class="fa-solid fa-graduation-cap text-2xl text-yellow-400"></i>
+            <h4 class="text-xl font-bold">Hasil Latihan: ${skor} / 100</h4>
+          </div>
+          <p class="text-gray-300">Tetap semangat! Pelajari kembali pembahasan di tiap soal di atas untuk memperkuat pemahaman operasi Push, Pop, Dequeue, dan Peek.</p>
+        `;
         }
 
         resultBox.scrollIntoView({ behavior: "smooth" });
       }
 
-      // Toggle Mobile Menu
+      /* ── Mobile Menu ── */
       const hamburgerBtn = document.getElementById("hamburgerBtn");
       const mobileMenu = document.getElementById("mobileMenu");
 
-      hamburgerBtn.addEventListener("click", function () {
-        mobileMenu.classList.toggle("hidden");
+      hamburgerBtn.addEventListener("click", () => {
+        mobileMenu.classList.toggle("open");
         const icon = hamburgerBtn.querySelector("i");
         icon.classList.toggle("fa-bars");
         icon.classList.toggle("fa-xmark");
       });
 
-      // Tutup menu saat salah satu link/button di dalamnya diklik
       mobileMenu.querySelectorAll("a, button").forEach((item) => {
         item.addEventListener("click", () => {
-          mobileMenu.classList.add("hidden");
+          mobileMenu.classList.remove("open");
           const icon = hamburgerBtn.querySelector("i");
           icon.classList.add("fa-bars");
           icon.classList.remove("fa-xmark");
         });
       });
+
+      /* ── Scroll Reveal ── */
+      const revealObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("visible");
+              revealObserver.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.1 },
+      );
+      document.querySelectorAll(".reveal").forEach((el) => revealObserver.observe(el));
     </script>
   </body>
 </html>

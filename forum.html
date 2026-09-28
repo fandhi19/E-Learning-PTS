@@ -1,265 +1,756 @@
 <!doctype html>
-<html lang="id" class="dark">
+<html lang="id">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Forum Diskusi - RuangInformatika</title>
+    <title>Forum Diskusi — RuangInformatika</title>
+    <meta name="description" content="Forum diskusi dan tanya jawab materi Informatika kelas XE6. Punya kendala belajar? Tanyakan di sini!" />
     <link rel="shortcut icon" href="images/Logo Patbhe.png" type="image/x-icon" />
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-    <!-- Google Font Inter -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
-    <script>
-      tailwind.config = {
-        darkMode: "class",
-        theme: {
-          extend: {
-            fontFamily: {
-              sans: ["Inter", "sans-serif"],
-            },
-            colors: {
-              brandDark: "#0a0a0a",
-              brandGray: "#151515",
-              brandGreen: "#00e676",
-              textGray: "#a3a3a3",
-            },
-          },
-        },
-      };
-    </script>
     <style>
-      body {
-        background-color: #0a0a0a;
-        background-image: radial-gradient(circle at 50% 0%, rgba(0, 230, 118, 0.05) 0%, transparent 60%);
+      /* ── Forum page specific ── */
+
+      /* Hidden utility */
+      .hidden {
+        display: none !important;
       }
-      .bg-grid {
-        background-size: 40px 40px;
-        background-image: linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px), linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+
+      /* Back link */
+      .back-link {
+        font-size: 0.8rem;
+        color: var(--text-faint);
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: color 0.2s;
+      }
+      .back-link:hover {
+        color: var(--green);
+      }
+
+      /* Page Hero */
+      .page-hero {
+        position: relative;
+        padding: 64px 0 48px;
+        overflow: hidden;
+      }
+      .page-hero-bg {
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(56, 189, 248, 0.05) 0%, transparent 70%);
+        pointer-events: none;
+      }
+      .page-hero-inner {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 0 24px;
+        position: relative;
+        z-index: 10;
+      }
+      .page-hero-heading {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+      .page-hero-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 14px;
+        background: rgba(56, 189, 248, 0.1);
+        border: 1px solid rgba(56, 189, 248, 0.25);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        color: var(--blue);
+      }
+      .page-hero-title {
+        font-size: 2rem;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+      }
+      .page-hero-sub {
+        font-size: 0.875rem;
+        color: var(--text-muted);
+        margin-top: 4px;
+      }
+
+      /* Forum layout */
+      .forum-layout {
+        max-width: 860px;
+        margin: 0 auto;
+        padding: 0 24px 80px;
+      }
+
+      /* Forum Hero Banner */
+      .forum-hero-card {
+        background: linear-gradient(135deg, rgba(56, 189, 248, 0.07) 0%, var(--bg-card) 60%);
+        border: 1px solid rgba(56, 189, 248, 0.2);
+        border-radius: var(--radius-xl);
+        padding: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+        margin-bottom: 24px;
+        position: relative;
+        overflow: hidden;
+      }
+      .forum-hero-card::before {
+        content: "";
+        position: absolute;
+        right: -60px;
+        top: -60px;
+        width: 220px;
+        height: 220px;
+        background: radial-gradient(circle, rgba(56, 189, 248, 0.08) 0%, transparent 70%);
+        pointer-events: none;
+      }
+      .forum-hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 5px 14px;
+        background: rgba(56, 189, 248, 0.1);
+        border: 1px solid rgba(56, 189, 248, 0.25);
+        border-radius: 100px;
+        font-size: 0.72rem;
+        font-weight: 700;
+        color: var(--blue);
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        margin-bottom: 12px;
+      }
+      .forum-hero-title {
+        font-size: 1.5rem;
+        font-weight: 800;
+        margin-bottom: 8px;
+      }
+      .forum-hero-desc {
+        font-size: 0.875rem;
+        color: var(--text-muted);
+        line-height: 1.6;
+        max-width: 440px;
+      }
+
+      /* New Question Form */
+      .form-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border-green);
+        border-radius: var(--radius-xl);
+        overflow: hidden;
+        margin-bottom: 24px;
+        animation: slideDown 0.4s ease both;
+      }
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-16px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .form-card-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px 24px;
+        background: var(--green-dim);
+        border-bottom: 1px solid var(--border-green);
+      }
+      .form-card-title {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.95rem;
+        font-weight: 700;
+      }
+      .form-card-title i {
+        color: var(--green);
+      }
+      .form-body {
+        padding: 24px;
+      }
+      .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        margin-bottom: 16px;
+      }
+      .form-group {
+        margin-bottom: 16px;
+      }
+      .form-actions {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 10px;
+        padding-top: 16px;
+        border-top: 1px solid var(--border);
+      }
+      .icon-btn {
+        background: none;
+        border: none;
+        color: var(--text-muted);
+        cursor: pointer;
+        font-size: 1rem;
+        transition: color 0.2s;
+      }
+      .icon-btn:hover {
+        color: var(--text-primary);
+      }
+
+      /* Filter Bar */
+      .filter-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 12px 16px;
+        margin-bottom: 24px;
+        flex-wrap: wrap;
+      }
+      .filter-chips {
+        display: flex;
+        gap: 8px;
+        overflow-x: auto;
+      }
+      .filter-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 7px 14px;
+        border-radius: 100px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition-fast);
+        border: 1px solid var(--border);
+        background: transparent;
+        color: var(--text-muted);
+        font-family: var(--font-sans);
+        white-space: nowrap;
+      }
+      .filter-chip:hover {
+        border-color: var(--border-green);
+        color: var(--text-primary);
+      }
+      .filter-chip.active {
+        background: var(--green-dim);
+        border-color: var(--border-green);
+        color: var(--green);
+      }
+
+      .search-wrap {
+        position: relative;
+        flex-shrink: 0;
+      }
+      .search-wrap i {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-faint);
+        font-size: 0.8rem;
+      }
+      .search-input {
+        padding: 8px 12px 8px 34px;
+        background: var(--bg-secondary);
+        border: 1px solid var(--border);
+        border-radius: 100px;
+        font-family: var(--font-sans);
+        font-size: 0.8rem;
+        color: var(--text-primary);
+        width: 200px;
+        outline: none;
+        transition: var(--transition-fast);
+      }
+      .search-input::placeholder {
+        color: var(--text-faint);
+      }
+      .search-input:focus {
+        border-color: rgba(0, 230, 118, 0.4);
+        box-shadow: 0 0 0 3px rgba(0, 230, 118, 0.07);
+        width: 240px;
+      }
+
+      /* Forum Thread Card */
+      .thread-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-xl);
+        padding: 24px;
+        margin-bottom: 16px;
+        transition: var(--transition);
+        position: relative;
+        overflow: hidden;
+      }
+      .thread-card::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 3px;
+        background: var(--border);
+        border-radius: 0 3px 3px 0;
+        transition: var(--transition);
+      }
+      .thread-card:hover {
+        border-color: rgba(0, 230, 118, 0.15);
+      }
+      .thread-card:hover::before {
+        background: var(--green);
+      }
+
+      .thread-meta {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 14px;
+      }
+      .thread-author {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .author-avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        background: linear-gradient(135deg, var(--green-dim), rgba(56, 189, 248, 0.1));
+        border: 1px solid var(--border-green);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.85rem;
+        font-weight: 800;
+        color: var(--green);
+      }
+      .author-name {
+        font-size: 0.85rem;
+        font-weight: 700;
+      }
+      .author-role {
+        font-size: 0.72rem;
+        color: var(--text-faint);
+      }
+      .thread-time {
+        font-size: 0.72rem;
+        color: var(--text-faint);
+        flex-shrink: 0;
+        margin-top: 2px;
+      }
+      .thread-title {
+        font-size: 1rem;
+        font-weight: 700;
+        margin-bottom: 6px;
+        line-height: 1.4;
+      }
+      .thread-detail {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        line-height: 1.7;
+      }
+
+      /* Replies */
+      .replies-section {
+        margin-top: 16px;
+        padding-top: 16px;
+        border-top: 1px solid var(--border);
+      }
+      .reply-item {
+        border-radius: var(--radius-md);
+        padding: 14px 16px;
+        margin-bottom: 10px;
+      }
+      .reply-guru {
+        background: var(--green-dim);
+        border: 1px solid var(--border-green);
+      }
+      .reply-student {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid var(--border);
+      }
+      .reply-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 8px;
+      }
+      .reply-author {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .reply-avatar-sm {
+        width: 26px;
+        height: 26px;
+        border-radius: 7px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.7rem;
+        font-weight: 800;
+      }
+      .reply-avatar-guru {
+        background: var(--green);
+        color: #000;
+      }
+      .reply-avatar-student {
+        background: rgba(255, 255, 255, 0.1);
+        color: var(--text-primary);
+        border: 1px solid var(--border);
+      }
+      .reply-name {
+        font-size: 0.8rem;
+        font-weight: 700;
+      }
+      .reply-role-chip {
+        padding: 1px 8px;
+        border-radius: 100px;
+        font-size: 0.65rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+      }
+      .reply-role-guru {
+        background: var(--green-dim);
+        color: var(--green);
+        border: 1px solid var(--border-green);
+      }
+      .reply-role-student {
+        background: var(--bg-glass);
+        color: var(--text-faint);
+        border: 1px solid var(--border);
+      }
+      .reply-text {
+        font-size: 0.83rem;
+        color: var(--text-muted);
+        line-height: 1.7;
+      }
+      .reply-btn {
+        width: 100%;
+        margin-top: 12px;
+        padding: 10px;
+        background: transparent;
+        border: 1px dashed var(--border);
+        border-radius: var(--radius-sm);
+        color: var(--text-faint);
+        font-size: 0.8rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition-fast);
+        font-family: var(--font-sans);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+      }
+      .reply-btn:hover {
+        border-color: var(--border-green);
+        color: var(--green);
+        background: var(--green-dim);
+      }
+
+      /* Modal context box */
+      .modal-context {
+        background: rgba(56, 189, 248, 0.05);
+        border: 1px solid rgba(56, 189, 248, 0.15);
+        border-radius: var(--radius-md);
+        padding: 14px 16px;
+        margin-bottom: 20px;
+      }
+      .modal-context-label {
+        font-size: 0.7rem;
+        color: var(--text-faint);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        font-weight: 700;
+        margin-bottom: 6px;
+      }
+      .modal-context-title {
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: var(--blue);
+        line-height: 1.4;
+        margin-bottom: 6px;
+      }
+      .modal-context-detail {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        line-height: 1.6;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+
+      /* States */
+      .forum-state {
+        text-align: center;
+        padding: 60px 0;
+        color: var(--text-muted);
+      }
+      .forum-state i {
+        font-size: 2rem;
+        color: var(--border);
+        display: block;
+        margin-bottom: 12px;
+      }
+      .forum-state.error {
+        color: #f87171;
+      }
+      .forum-state.error i {
+        color: rgba(248, 113, 113, 0.5);
+      }
+
+      @media (max-width: 600px) {
+        .forum-hero-card {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+        .form-row {
+          grid-template-columns: 1fr;
+        }
+        .filter-bar {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+        .search-input {
+          width: 100%;
+        }
+        .search-input:focus {
+          width: 100%;
+        }
       }
     </style>
   </head>
-  <body class="bg-brandDark text-gray-100 font-sans antialiased min-h-screen flex flex-col">
+  <body class="bg-grid">
     <!-- Navigation -->
-    <nav class="max-w-7xl mx-auto px-6 py-6 flex items-center justify-between border-b border-white/5 relative z-50 w-full">
-      <!-- Logo -->
-      <div class="flex items-center gap-3">
-        <i class="fa-solid fa-code text-brandGreen text-xl"></i>
-        <span class="text-xl font-bold tracking-tight text-brandGreen">RuangInformatika</span>
-      </div>
-
-      <!-- Menu Desktop (md ke atas) -->
-      <div class="hidden md:flex items-center gap-8 text-sm font-medium text-gray-300">
-        <a href="index.html" class="text-white">Dashboard</a>
-        <a href="index.html#materi" class="hover:text-white transition">Daftar Materi</a>
-        <a href="leaderboard.html" class="hover:text-white transition">Leaderboard</a>
-        <a href="forum.html" class="hover:text-white transition">Forum Diskusi</a>
-      </div>
-
-      <!-- Tombol Pak Ilyas (Desktop) -->
-      <button class="hidden md:flex items-center gap-2 border border-white/10 rounded-full px-5 py-2.5 text-sm font-medium hover:bg-white/5 transition"><i class="fa-solid fa-chalkboard-user text-brandGreen"></i> XE6</button>
-
-      <!-- Tombol Hamburger (Mobile) -->
-      <button id="hamburgerBtn" class="md:hidden text-white text-2xl focus:outline-none" aria-label="Menu">
-        <i class="fa-solid fa-bars"></i>
-      </button>
-
-      <!-- Menu Mobile (Dropdown) -->
-      <div id="mobileMenu" class="hidden absolute top-full left-0 right-0 bg-brandDark border-b border-white/10 md:hidden z-[60] shadow-lg">
-        <div class="px-6 py-4 flex flex-col gap-4 text-sm font-medium text-gray-300">
-          <a href="index.html" class="text-white py-2">Dashboard</a>
-          <a href="index.html#materi" class="hover:text-white transition py-2">Daftar Materi</a>
-          <a href="leaderboard.html" class="hover:text-white transition py-2">Leaderboard</a>
-          <a href="forum.html" class="hover:text-white transition py-2">Forum Diskusi</a>
-          <button class="flex items-center gap-2 border border-white/10 rounded-full px-5 py-2.5 text-sm font-medium hover:bg-white/5 transition mt-2"><i class="fa-solid fa-chalkboard-user text-brandGreen"></i> XE6</button>
+    <nav class="navbar">
+      <div class="navbar-inner">
+        <a href="index.html" class="navbar-logo">
+          <div class="navbar-logo-icon"><i class="fa-solid fa-code"></i></div>
+          <span class="navbar-logo-text">RuangInformatika</span>
+        </a>
+        <div class="navbar-links">
+          <a href="index.html" class="nav-link">Dashboard</a>
+          <a href="index.html#materi" class="nav-link">Daftar Materi</a>
+          <a href="leaderboard.html" class="nav-link">Leaderboard</a>
+          <a href="forum.html" class="nav-link active">Forum Diskusi</a>
         </div>
+        <button class="nav-badge"><i class="fa-solid fa-chalkboard-user"></i> Kelas XE6</button>
+        <button class="hamburger-btn" id="hamburgerBtn" aria-label="Menu">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+      <div class="mobile-menu" id="mobileMenu">
+        <a href="index.html" class="mobile-nav-link"> <i class="fa-solid fa-house" style="margin-right: 10px"></i> Dashboard </a>
+        <a href="index.html#materi" class="mobile-nav-link"> <i class="fa-solid fa-book-open" style="margin-right: 10px"></i> Daftar Materi </a>
+        <a href="leaderboard.html" class="mobile-nav-link"> <i class="fa-solid fa-trophy" style="margin-right: 10px"></i> Leaderboard </a>
+        <a href="forum.html" class="mobile-nav-link" style="color: var(--green)"> <i class="fa-solid fa-comments" style="margin-right: 10px"></i> Forum Diskusi </a>
       </div>
     </nav>
 
-    <!-- Main Content -->
-    <div class="flex-grow bg-grid relative z-10">
-      <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 space-y-8">
-        <!-- Hero Section -->
-        <div class="bg-brandGray border border-white/5 rounded-3xl p-6 md:p-8 relative overflow-hidden flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-          <div class="absolute -top-20 -right-20 w-64 h-64 bg-brandGreen/5 rounded-full blur-[100px] pointer-events-none"></div>
-          <div class="space-y-2 relative z-10">
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brandGreen/10 border border-brandGreen/30 text-brandGreen text-xs font-bold uppercase tracking-wider">
-              <i class="fa-solid fa-comments"></i> Komunitas Belajar
-            </div>
-            <h2 class="text-2xl md:text-3xl font-extrabold text-white">Forum Diskusi &amp; Tanya Jawab</h2>
-            <p class="text-textGray text-xs md:text-sm max-w-xl">Punya kendala saat belajar Informatika? Tanyakan di sini! Kamu juga bisa membantu menjawab pertanyaan teman-temanmu.</p>
-          </div>
-          <button
-            onclick="toggleFormTanya()"
-            class="w-full md:w-auto bg-brandGreen text-black font-bold px-6 py-3 rounded-xl text-xs hover:bg-green-400 transition flex items-center justify-center gap-2 cursor-pointer shadow-[0_0_15px_rgba(0,230,118,0.2)] shrink-0 relative z-10"
-          >
-            <i class="fa-solid fa-plus"></i> Buat Pertanyaan Baru
-          </button>
+    <!-- Page Hero -->
+    <div class="page-hero">
+      <div class="page-hero-bg"></div>
+      <div class="page-hero-inner">
+        <div style="margin-bottom: 12px">
+          <a href="index.html" class="back-link"> <i class="fa-solid fa-arrow-left"></i> Kembali ke Dashboard </a>
         </div>
-
-        <!-- Form Buat Pertanyaan (Hidden by Default) -->
-        <div id="form-tanya-container" class="hidden bg-brandGray border border-brandGreen/30 rounded-3xl p-6 md:p-8 space-y-4 transition-all">
-          <h3 class="text-lg font-bold text-white flex items-center gap-2"><i class="fa-solid fa-pen-to-square text-brandGreen"></i> Ajukan Pertanyaan</h3>
-          <form id="form-tanya" onsubmit="tambahPertanyaan(event)" class="space-y-4">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label class="block text-xs text-textGray mb-1 font-medium">Nama Lengkap / Panggilan *</label>
-                <input type="text" id="input-nama" required placeholder="Contoh: Budi Santoso" class="w-full bg-black/40 border border-white/10 rounded-xl p-3 text-xs text-gray-200 focus:outline-none focus:border-brandGreen" />
-              </div>
-              <div>
-                <label class="block text-xs text-textGray mb-1 font-medium">Kategori Materi *</label>
-                <select id="input-kategori" required class="w-full bg-black/40 border border-white/10 rounded-xl p-3 text-xs text-gray-200 focus:outline-none focus:border-brandGreen">
-                  <option value="Berpikir Komputasional">Berpikir Komputasional</option>
-                  <option value="Searching">Searching</option>
-                  <option value="Sorting">Sorting</option>
-                  <option value="Umum">Umum / Lainnya</option>
-                </select>
-              </div>
-            </div>
-            <div>
-              <label class="block text-xs text-textGray mb-1 font-medium">Judul Pertanyaan *</label>
-              <input
-                type="text"
-                id="input-judul"
-                required
-                placeholder="Contoh: Masih bingung menentukan nilai Mid pada Binary Search"
-                class="w-full bg-black/40 border border-white/10 rounded-xl p-3 text-xs text-gray-200 focus:outline-none focus:border-brandGreen"
-              />
-            </div>
-            <div>
-              <label class="block text-xs text-textGray mb-1 font-medium">Detail Kendala *</label>
-              <textarea
-                id="input-detail"
-                rows="4"
-                required
-                placeholder="Jelaskan bagian mana dari materi yang membuatmu bingung..."
-                class="w-full bg-black/40 border border-white/10 rounded-xl p-3 text-xs text-gray-200 focus:outline-none focus:border-brandGreen"
-              ></textarea>
-            </div>
-            <div class="flex items-center justify-end gap-3 pt-2">
-              <button type="button" onclick="toggleFormTanya()" class="px-5 py-2.5 rounded-xl text-xs font-semibold text-textGray hover:text-white transition">Batal</button>
-              <button type="submit" class="bg-brandGreen text-black font-bold px-6 py-2.5 rounded-xl text-xs hover:bg-green-400 transition">Kirim Pertanyaan</button>
-            </div>
-          </form>
-        </div>
-
-        <!-- Filter & Search Bar -->
-        <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 bg-brandGray border border-white/5 p-4 rounded-2xl">
-          <div class="flex items-center gap-2 overflow-x-auto pb-2 sm:pb-0 text-xs">
-            <button onclick="filterDiskusi('semua')" class="btn-filter bg-brandGreen text-black font-bold px-4 py-2 rounded-xl transition shrink-0" data-kategori="semua">Semua Topik</button>
-            <button onclick="filterDiskusi('Berpikir Komputasional')" class="btn-filter bg-white/5 hover:bg-white/10 text-gray-300 font-medium px-4 py-2 rounded-xl transition shrink-0" data-kategori="Berpikir Komputasional">
-              Berpikir Komputasional
-            </button>
-            <button onclick="filterDiskusi('Searching')" class="btn-filter bg-white/5 hover:bg-white/10 text-gray-300 font-medium px-4 py-2 rounded-xl transition shrink-0" data-kategori="Searching">Searching</button>
-            <button onclick="filterDiskusi('Sorting')" class="btn-filter bg-white/5 hover:bg-white/10 text-gray-300 font-medium px-4 py-2 rounded-xl transition shrink-0" data-kategori="Sorting">Sorting</button>
-          </div>
-          <div class="relative">
-            <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-textGray text-xs"></i>
-            <input
-              type="text"
-              id="search-forum"
-              onkeyup="cariDiskusi()"
-              placeholder="Cari pertanyaan..."
-              class="w-full sm:w-60 bg-black/40 border border-white/10 rounded-xl pl-9 pr-3 py-2 text-xs text-gray-200 focus:outline-none focus:border-brandGreen"
-            />
+        <div class="page-hero-heading">
+          <div class="page-hero-icon"><i class="fa-solid fa-comments"></i></div>
+          <div>
+            <h1 class="page-hero-title">Forum Diskusi</h1>
+            <p class="page-hero-sub">Tanya jawab seputar materi Informatika bersama teman dan guru</p>
           </div>
         </div>
-
-        <!-- Daftar Diskusi -->
-        <div id="forum-list" class="space-y-4">
-          <div class="text-center py-10 text-brandGreen font-medium animate-pulse"><i class="fa-solid fa-circle-notch fa-spin mr-2"></i>Memuat diskusi dari database...</div>
-        </div>
-      </main>
+      </div>
     </div>
 
-    <!-- Footer Area (Identik dengan index.html) -->
-    <footer class="border-t border-white/5 bg-[#080808] pt-12 pb-8 relative z-10 w-full mt-auto">
-      <div class="max-w-7xl mx-auto px-6">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-          <div class="md:col-span-2">
-            <div class="flex items-center gap-3 mb-4">
-              <i class="fa-solid fa-code text-brandGreen text-2xl"></i>
-              <span class="text-2xl font-bold tracking-tight text-brandGreen">RuangInformatika</span>
-            </div>
-            <p class="text-textGray text-base leading-relaxed max-w-sm">
-              Platform e-learning interaktif modern yang dirancang khusus untuk memfasilitasi gaya belajar visual dan praktik, memastikan pemahaman mendalam untuk menaklukkan soal-soal PTS.
-            </p>
+    <!-- Main -->
+    <main style="flex: 1; padding-top: 32px">
+      <div class="forum-layout">
+        <!-- Forum Hero Banner -->
+        <div class="forum-hero-card reveal">
+          <div style="position: relative; z-index: 1">
+            <div class="forum-hero-badge"><i class="fa-solid fa-comments"></i> Komunitas Belajar</div>
+            <h2 class="forum-hero-title">Forum Diskusi &amp; Tanya Jawab</h2>
+            <p class="forum-hero-desc">Punya kendala saat belajar Informatika? Tanyakan di sini! Kamu juga bisa membantu menjawab pertanyaan teman-temanmu.</p>
           </div>
-          <div>
-            <h4 class="text-white font-semibold text-lg mb-4">Pintasan Modul</h4>
-            <ul class="space-y-3 text-base text-textGray">
-              <li><a href="kisi.html" class="hover:text-brandGreen transition">Bedah Kisi-Kisi</a></li>
-              <li><a href="materi-bk.html" class="hover:text-brandGreen transition">Berpikir Komputasional</a></li>
-              <li><a href="materi-stack-queue.html" class="hover:text-brandGreen transition">Stack & Queue</a></li>
-              <li><a href="materi-search-sort.html" class="hover:text-brandGreen transition">Searching & Sorting</a></li>
+          <button onclick="toggleFormTanya()" id="newQuestionBtn" class="btn-primary" style="flex-shrink: 0; position: relative; z-index: 1"><i class="fa-solid fa-plus"></i> Buat Pertanyaan</button>
+        </div>
+
+        <!-- New Question Form -->
+        <div id="form-tanya-container" class="form-card hidden">
+          <div class="form-card-header">
+            <div class="form-card-title"><i class="fa-solid fa-pen-to-square"></i> Ajukan Pertanyaan Baru</div>
+            <button type="button" onclick="toggleFormTanya()" class="icon-btn">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+          <div class="form-body">
+            <form id="form-tanya" onsubmit="tambahPertanyaan(event)">
+              <div class="form-row">
+                <div class="form-group" style="margin-bottom: 0">
+                  <label class="input-label">Nama Lengkap / Panggilan *</label>
+                  <input type="text" id="input-nama" required placeholder="Contoh: Budi Santoso" class="input" />
+                </div>
+                <div class="form-group" style="margin-bottom: 0">
+                  <label class="input-label">Kategori Materi *</label>
+                  <select id="input-kategori" required class="input select">
+                    <option value="Berpikir Komputasional">Berpikir Komputasional</option>
+                    <option value="Searching">Searching</option>
+                    <option value="Sorting">Sorting</option>
+                    <option value="Umum">Umum / Lainnya</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="input-label">Judul Pertanyaan *</label>
+                <input type="text" id="input-judul" required placeholder="Contoh: Masih bingung menentukan nilai Mid pada Binary Search" class="input" />
+              </div>
+              <div class="form-group">
+                <label class="input-label">Detail Kendala *</label>
+                <textarea id="input-detail" rows="4" required placeholder="Jelaskan bagian mana dari materi yang membuatmu bingung..." class="input textarea"></textarea>
+              </div>
+              <div class="form-actions">
+                <button type="button" onclick="toggleFormTanya()" class="btn-ghost btn-sm">Batal</button>
+                <button type="submit" class="btn-primary btn-sm"><i class="fa-solid fa-paper-plane"></i> Kirim Pertanyaan</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Filter Bar -->
+        <div class="filter-bar reveal delay-100">
+          <div class="filter-chips">
+            <button onclick="filterDiskusi('semua')" class="filter-chip active" data-kategori="semua"><i class="fa-solid fa-border-all"></i> Semua Topik</button>
+            <button onclick="filterDiskusi('Berpikir Komputasional')" class="filter-chip" data-kategori="Berpikir Komputasional"><i class="fa-solid fa-brain"></i> Berpikir Komputasional</button>
+            <button onclick="filterDiskusi('Searching')" class="filter-chip" data-kategori="Searching"><i class="fa-solid fa-magnifying-glass"></i> Searching</button>
+            <button onclick="filterDiskusi('Sorting')" class="filter-chip" data-kategori="Sorting"><i class="fa-solid fa-sort"></i> Sorting</button>
+          </div>
+          <div class="search-wrap">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="search-forum" onkeyup="cariDiskusi()" placeholder="Cari pertanyaan..." class="search-input" />
+          </div>
+        </div>
+
+        <!-- Forum List -->
+        <div id="forum-list" class="reveal delay-200">
+          <div class="forum-state">
+            <i class="fa-solid fa-circle-notch fa-spin" style="color: var(--green)"></i>
+            Memuat diskusi dari database...
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container" style="max-width: 1280px; margin: 0 auto; padding: 0 24px">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <div class="footer-logo">
+              <div class="footer-logo-icon"><i class="fa-solid fa-code"></i></div>
+              <span class="footer-logo-text">RuangInformatika</span>
+            </div>
+            <p class="footer-desc">Platform e-learning interaktif modern yang dirancang khusus untuk memfasilitasi gaya belajar visual dan praktik, memastikan pemahaman mendalam untuk menaklukkan soal-soal PTS.</p>
+          </div>
+
+          <div class="footer-col">
+            <h4 class="footer-heading">Pintasan Modul</h4>
+            <ul class="footer-links">
+              <li>
+                <a href="kisi.html" class="footer-link"><i class="fa-solid fa-chevron-right" style="font-size: 0.65rem"></i> Bedah Kisi-Kisi</a>
+              </li>
+              <li>
+                <a href="materi-bk.html" class="footer-link"><i class="fa-solid fa-chevron-right" style="font-size: 0.65rem"></i> Berpikir Komputasional</a>
+              </li>
+              <li>
+                <a href="materi-stack-queue.html" class="footer-link"><i class="fa-solid fa-chevron-right" style="font-size: 0.65rem"></i> Stack &amp; Queue</a>
+              </li>
+              <li>
+                <a href="materi-search-sort.html" class="footer-link"><i class="fa-solid fa-chevron-right" style="font-size: 0.65rem"></i> Searching &amp; Sorting</a>
+              </li>
+              <li>
+                <a href="Materi_AP/materi-algoritma.html" class="footer-link"><i class="fa-solid fa-chevron-right" style="font-size: 0.65rem"></i> Algoritma Pemrograman</a>
+              </li>
             </ul>
           </div>
-          <div>
-            <h4 class="text-white font-semibold text-lg mb-4">Dukungan</h4>
-            <ul class="space-y-3 text-base text-textGray">
+
+          <div class="footer-col">
+            <h4 class="footer-heading">Fitur &amp; Dukungan</h4>
+            <ul class="footer-links">
               <li>
-                <a href="leaderboard.html" class="hover:text-brandGreen transition"><i class="fa-solid fa-ranking-star mr-2"></i> Leaderboard</a>
+                <a href="leaderboard.html" class="footer-link"><i class="fa-solid fa-trophy" style="color: var(--amber)"></i> Leaderboard Kelas</a>
               </li>
               <li>
-                <a href="forum.html" class="hover:text-brandGreen transition"><i class="fa-solid fa-comments mr-2"></i> Forum Diskusi</a>
+                <a href="forum.html" class="footer-link"><i class="fa-solid fa-comments" style="color: var(--blue)"></i> Forum Diskusi</a>
               </li>
               <li>
-                <a href="https://wa.me/6285282386260?text=Halo%20Pak%20Ilyas%2C%20saya%20ingin%20bertanya%20tentang%20materi%20Informatika." target="_blank" class="hover:text-brandGreen transition">
-                  <i class="fa-solid fa-chalkboard-user mr-2"></i> Hubungi Guru</a
-                >
+                <a href="https://wa.me/6285282386260?text=Halo%20Pak%20Ilyas%2C%20saya%20ingin%20bertanya%20tentang%20materi%20Informatika." target="_blank" class="footer-link">
+                  <i class="fa-solid fa-chalkboard-user" style="color: var(--green)"></i> Hubungi Pak Ilyas
+                </a>
               </li>
             </ul>
           </div>
         </div>
-        <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-base text-textGray">
-          <p>&copy; 2026 RuangInformatika. Dikembangkan oleh Pak Ilyas untuk kelas Informatika SMA Negeri 4 Yogyakarta.</p>
-          <div class="flex gap-4 text-2xl">
-            <a href="https://github.com/fandhi19" class="hover:text-brandGreen transition"><i class="fa-brands fa-github"></i></a>
-            <a href="https://e-portofolio-fandhi.vercel.app/" class="hover:text-brandGreen transition"><i class="fa-solid fa-globe"></i></a>
-            <a href="https://www.instagram.com/fandhidk17/" class="hover:text-brandGreen transition"><i class="fa-brands fa-instagram"></i></a>
+
+        <div class="footer-bottom">
+          <p class="footer-copy">&copy; 2026 RuangInformatika. Dikembangkan untuk kelas Informatika XE6 SMA Negeri 4 Yogyakarta.</p>
+          <div class="footer-socials">
+            <a href="https://github.com/fandhi19" target="_blank" class="footer-social" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+            <a href="https://e-portofolio-fandhi.vercel.app/" target="_blank" class="footer-social" aria-label="Portfolio"><i class="fa-solid fa-globe"></i></a>
+            <a href="https://www.instagram.com/fandhidk17/" target="_blank" class="footer-social" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
           </div>
         </div>
       </div>
     </footer>
 
-    <!-- ================== MODAL BALASAN ================== -->
-    <div id="modal-balas" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300">
-      <div id="modal-balas-content" class="bg-brandGray border border-brandGreen/30 rounded-3xl p-6 md:p-8 w-full max-w-lg mx-4 transform scale-95 transition-transform duration-300">
-        <h3 class="text-lg font-bold text-white mb-4 border-b border-white/10 pb-3 flex items-center gap-2"><i class="fa-solid fa-reply text-brandGreen"></i> Balas Pertanyaan</h3>
-
-        <!-- Konteks Pertanyaan (Judul & Detail) -->
-        <div class="bg-white/5 p-4 rounded-xl mb-4 border border-white/5 space-y-1">
-          <p class="text-[10px] text-textGray uppercase tracking-wider font-semibold">Menjawab Pertanyaan:</p>
-          <h4 id="modal-pertanyaan-judul" class="text-sm font-bold text-brandGreen leading-snug">Judul Pertanyaan</h4>
-          <p id="modal-pertanyaan-detail" class="text-xs text-gray-300 line-clamp-3 leading-relaxed pt-1 border-t border-white/5 mt-2">Detail kendala...</p>
+    <!-- Modal Balas -->
+    <div id="modal-balas" class="modal-overlay">
+      <div class="modal-box">
+        <div class="modal-header">
+          <div class="modal-title"><i class="fa-solid fa-reply"></i> Balas Pertanyaan</div>
+          <button class="modal-close" onclick="tutupModalBalas()"><i class="fa-solid fa-xmark"></i></button>
         </div>
 
-        <!-- Form Modal -->
-        <form id="form-modal-balas" onsubmit="submitBalasan(event)" class="space-y-4">
-          <div>
-            <label class="block text-xs text-textGray mb-1 font-medium">Nama Anda *</label>
-            <input type="text" id="modal-input-nama" required placeholder="Contoh: Budi Santoso" class="w-full bg-black/40 border border-white/10 rounded-xl p-3 text-xs text-gray-200 focus:outline-none focus:border-brandGreen" />
+        <!-- Context -->
+        <div class="modal-context">
+          <p class="modal-context-label">Menjawab Pertanyaan:</p>
+          <h4 id="modal-pertanyaan-judul" class="modal-context-title"></h4>
+          <p id="modal-pertanyaan-detail" class="modal-context-detail"></p>
+        </div>
+
+        <form id="form-modal-balas" onsubmit="submitBalasan(event)">
+          <div class="form-group">
+            <label class="input-label">Nama Anda *</label>
+            <input type="text" id="modal-input-nama" required placeholder="Contoh: Budi Santoso" class="input" />
           </div>
-          <div>
-            <label class="block text-xs text-textGray mb-1 font-medium">Isi Balasan *</label>
-            <textarea
-              id="modal-input-balasan"
-              rows="4"
-              required
-              placeholder="Tuliskan jawaban atau tanggapanmu di sini..."
-              class="w-full bg-black/40 border border-white/10 rounded-xl p-3 text-xs text-gray-200 focus:outline-none focus:border-brandGreen"
-            ></textarea>
+          <div class="form-group">
+            <label class="input-label">Isi Balasan *</label>
+            <textarea id="modal-input-balasan" rows="4" required placeholder="Tuliskan jawaban atau tanggapanmu di sini..." class="input textarea"></textarea>
           </div>
-          <div class="flex items-center justify-end gap-3 pt-4 border-t border-white/10">
-            <button type="button" onclick="tutupModalBalas()" class="px-5 py-2.5 rounded-xl text-xs font-semibold text-textGray hover:text-white transition">Batal</button>
-            <button type="submit" class="bg-brandGreen text-black font-bold px-6 py-2.5 rounded-xl text-xs hover:bg-green-400 transition shadow-[0_0_15px_rgba(0,230,118,0.2)]">Kirim Balasan</button>
+          <div class="form-actions">
+            <button type="button" onclick="tutupModalBalas()" class="btn-ghost btn-sm">Batal</button>
+            <button type="submit" class="btn-primary btn-sm"><i class="fa-solid fa-paper-plane"></i> Kirim Balasan</button>
           </div>
         </form>
       </div>
     </div>
 
-    <!-- Script Interaktif Forum -->
     <script>
       const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwZSkOaFR9scvs23fjFp4zpYml-a0LMN_gerMKbbX7bYLMEUgij4H2J2-jOk5yHu55XOQ/exec";
 
@@ -271,108 +762,84 @@
           const response = await fetch(SCRIPT_URL);
           const data = await response.json();
           forumList.innerHTML = "";
-
           if (data.length === 0) {
-            forumList.innerHTML = `<div class="text-center py-10 text-textGray">Belum ada diskusi. Jadilah yang pertama bertanya!</div>`;
+            forumList.innerHTML = `<div class="forum-state"><i class="fa-solid fa-comments"></i>Belum ada diskusi. Jadilah yang pertama bertanya!</div>`;
             return;
           }
-
-          data.forEach((thread) => {
-            forumList.appendChild(createThreadElement(thread));
-          });
+          data.forEach((thread) => forumList.appendChild(createThreadElement(thread)));
         } catch (error) {
-          console.error("Error loading data:", error);
-          forumList.innerHTML = `<div class="text-center py-10 text-red-400">Gagal memuat data. Periksa koneksi internet Anda.</div>`;
+          document.getElementById("forum-list").innerHTML = `<div class="forum-state error"><i class="fa-solid fa-triangle-exclamation"></i>Gagal memuat data. Periksa koneksi internet Anda.</div>`;
         }
       }
 
       function createThreadElement(thread) {
         const div = document.createElement("div");
-        div.className = "forum-item bg-brandGray border border-white/10 rounded-3xl p-6 space-y-4 transition";
+        div.className = "thread-card forum-item";
         div.setAttribute("data-kategori", thread.kategori);
-
         const inisial = thread.nama.charAt(0).toUpperCase();
-        let balasanHTML = "";
 
+        let balasanHTML = "";
         if (thread.balasan && thread.balasan.length > 0) {
           thread.balasan.forEach((b) => {
-            const inisialBalasan = b.nama.charAt(0).toUpperCase();
-            if (b.role === "Guru") {
-              balasanHTML += `
-                <div class="bg-brandGreen/5 border border-brandGreen/20 rounded-2xl p-4 space-y-2 mb-3">
-                  <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-2">
-                      <span class="w-6 h-6 rounded-full bg-brandGreen text-black font-bold flex items-center justify-center text-[10px]"><i class="fa-solid fa-user-tie"></i></span>
-                      <span class="text-xs font-bold text-brandGreen">${b.nama} <span class="text-[9px] bg-brandGreen/20 text-brandGreen px-2 py-0.5 rounded-full border border-brandGreen/30 ml-1">Guru</span></span>
+            const isGuru = b.role === "Guru";
+            balasanHTML += `
+              <div class="reply-item ${isGuru ? "reply-guru" : "reply-student"}">
+                <div class="reply-header">
+                  <div class="reply-author">
+                    <div class="reply-avatar-sm ${isGuru ? "reply-avatar-guru" : "reply-avatar-student"}">
+                      ${isGuru ? '<i class="fa-solid fa-user-tie" style="font-size:0.6rem"></i>' : b.nama.charAt(0).toUpperCase()}
                     </div>
-                    <span class="text-[10px] text-textGray">${b.waktu}</span>
+                    <span class="reply-name">${b.nama}</span>
+                    <span class="reply-role-chip ${isGuru ? "reply-role-guru" : "reply-role-student"}">${b.role}</span>
                   </div>
-                  <p class="text-xs text-gray-300 leading-relaxed">${b.isi}</p>
+                  <span style="font-size:0.7rem;color:var(--text-faint)">${b.waktu}</span>
                 </div>
-              `;
-            } else {
-              balasanHTML += `
-                <div class="bg-white/5 border border-white/5 rounded-2xl p-4 space-y-2 mb-3">
-                  <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-2">
-                      <span class="w-6 h-6 rounded-full bg-white/20 text-white font-bold flex items-center justify-center text-[10px] border border-white/10">${inisialBalasan}</span>
-                      <span class="text-xs font-bold text-white">${b.nama} <span class="text-[9px] text-textGray font-normal ml-1">Siswa</span></span>
-                    </div>
-                    <span class="text-[10px] text-textGray">${b.waktu}</span>
-                  </div>
-                  <p class="text-xs text-gray-300 leading-relaxed">${b.isi}</p>
-                </div>
-              `;
-            }
+                <p class="reply-text">${b.isi}</p>
+              </div>
+            `;
           });
         }
 
-        // Simpan data judul & detail menggunakan atribut data-* agar mudah ditarik ke modal
+        const catColor =
+          {
+            "Berpikir Komputasional": "badge-green",
+            Searching: "badge-blue",
+            Sorting: "badge-purple",
+            Umum: "badge-amber",
+          }[thread.kategori] || "badge-green";
+
         div.innerHTML = `
-          <div class="flex items-start justify-between gap-4">
-            <div class="flex items-center gap-3">
-              <div class="w-9 h-9 rounded-full bg-brandGreen/20 text-brandGreen font-bold flex items-center justify-center text-xs border border-brandGreen/30">
-                ${inisial}
-              </div>
+          <div class="thread-meta">
+            <div class="thread-author">
+              <div class="author-avatar">${inisial}</div>
               <div>
-                <h4 class="text-xs font-bold text-white">${thread.nama} <span class="text-[10px] text-textGray font-normal">・ Siswa</span></h4>
-                <span class="text-[10px] text-textGray">${thread.waktu}</span>
+                <div class="author-name">${thread.nama} <span style="font-size:0.7rem;color:var(--text-faint);font-weight:400">· Siswa</span></div>
+                <div class="author-role">${thread.waktu}</div>
               </div>
             </div>
-            <div class="flex items-center gap-2">
-              <span class="bg-brandGreen/10 text-brandGreen border border-brandGreen/20 text-[10px] font-bold px-3 py-1 rounded-full">${thread.kategori}</span>
-            </div>
+            <span class="badge ${catColor}" style="flex-shrink:0">${thread.kategori}</span>
           </div>
-          
-          <div>
-            <h3 class="forum-judul text-base font-bold text-white mb-1">${thread.judul}</h3>
-            <p class="forum-detail text-xs text-gray-300 leading-relaxed">${thread.detail}</p>
-          </div>
-          
-          <div class="balasan-list pt-3 border-t border-white/5 ${thread.balasan.length > 0 ? "" : "hidden"}">
-            ${balasanHTML}
-          </div>
-          
-          <div class="pt-2">
-            <button onclick="bukaModalBalas(this, '${thread.id}')" class="w-full bg-white/5 hover:bg-white/10 text-white font-medium px-4 py-2.5 rounded-xl text-xs transition border border-white/10 flex items-center justify-center gap-2">
-              <i class="fa-solid fa-reply"></i> Tambahkan Balasan
-            </button>
-          </div>
+          <h3 class="forum-judul thread-title">${thread.judul}</h3>
+          <p class="forum-detail thread-detail">${thread.detail}</p>
+          ${balasanHTML ? `<div class="replies-section">${balasanHTML}</div>` : ""}
+          <button onclick="bukaModalBalas(this, '${thread.id}')" class="reply-btn">
+            <i class="fa-solid fa-reply"></i> Tambahkan Balasan (${thread.balasan ? thread.balasan.length : 0})
+          </button>
         `;
         return div;
       }
 
       function toggleFormTanya() {
-        document.getElementById("form-tanya-container").classList.toggle("hidden");
+        const container = document.getElementById("form-tanya-container");
+        container.classList.toggle("hidden");
       }
 
       async function tambahPertanyaan(event) {
         event.preventDefault();
-        const btnSubmit = event.target.querySelector('button[type="submit"]');
-        const originalText = btnSubmit.innerHTML;
-        btnSubmit.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> Mengirim...`;
-        btnSubmit.disabled = true;
-
+        const btn = event.target.querySelector('button[type="submit"]');
+        const orig = btn.innerHTML;
+        btn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> Mengirim...`;
+        btn.disabled = true;
         const data = new URLSearchParams({
           action: "tambahPertanyaan",
           nama: document.getElementById("input-nama").value,
@@ -380,67 +847,46 @@
           judul: document.getElementById("input-judul").value,
           detail: document.getElementById("input-detail").value,
         });
-
         try {
           await fetch(SCRIPT_URL, { method: "POST", body: data });
           document.getElementById("form-tanya").reset();
           toggleFormTanya();
-          document.getElementById("forum-list").innerHTML = `<div class="text-center py-10 text-brandGreen font-medium animate-pulse"><i class="fa-solid fa-circle-notch fa-spin mr-2"></i>Memuat ulang diskusi...</div>`;
+          document.getElementById("forum-list").innerHTML = `<div class="forum-state"><i class="fa-solid fa-circle-notch fa-spin" style="color:var(--green)"></i> Memuat ulang diskusi...</div>`;
           loadForumData();
-        } catch (error) {
+        } catch {
           alert("Gagal mengirim pertanyaan. Coba lagi.");
         } finally {
-          btnSubmit.innerHTML = originalText;
-          btnSubmit.disabled = false;
+          btn.innerHTML = orig;
+          btn.disabled = false;
         }
       }
 
       let activeQuestionId = null;
 
-      function bukaModalBalas(btnElement, idPertanyaan) {
-        const threadElement = btnElement.closest(".forum-item");
+      function bukaModalBalas(btnEl, idPertanyaan) {
+        const threadEl = btnEl.closest(".thread-card");
         activeQuestionId = idPertanyaan;
-
-        // Ambil Judul dan Detail dari card forum untuk ditampilkan di modal
-        const judul = threadElement.querySelector(".forum-judul").innerText;
-        const detail = threadElement.querySelector(".forum-detail").innerText;
-
-        document.getElementById("modal-pertanyaan-judul").innerText = judul;
-        document.getElementById("modal-pertanyaan-detail").innerText = detail;
-
-        const modal = document.getElementById("modal-balas");
-        const modalContent = document.getElementById("modal-balas-content");
-
-        modal.classList.remove("hidden");
-        setTimeout(() => {
-          modal.classList.remove("opacity-0");
-          modalContent.classList.remove("scale-95");
-          modalContent.classList.add("scale-100");
-        }, 10);
+        document.getElementById("modal-pertanyaan-judul").innerText = threadEl.querySelector(".forum-judul").innerText;
+        document.getElementById("modal-pertanyaan-detail").innerText = threadEl.querySelector(".forum-detail").innerText;
+        document.getElementById("modal-balas").classList.add("open");
       }
 
       function tutupModalBalas() {
-        const modal = document.getElementById("modal-balas");
-        const modalContent = document.getElementById("modal-balas-content");
-
-        modal.classList.add("opacity-0");
-        modalContent.classList.remove("scale-100");
-        modalContent.classList.add("scale-95");
-
-        setTimeout(() => {
-          modal.classList.add("hidden");
-          document.getElementById("form-modal-balas").reset();
-          activeQuestionId = null;
-        }, 300);
+        document.getElementById("modal-balas").classList.remove("open");
+        document.getElementById("form-modal-balas").reset();
+        activeQuestionId = null;
       }
+
+      document.getElementById("modal-balas").addEventListener("click", (e) => {
+        if (e.target === e.currentTarget) tutupModalBalas();
+      });
 
       async function submitBalasan(event) {
         event.preventDefault();
-        const btnSubmit = event.target.querySelector('button[type="submit"]');
-        const originalText = btnSubmit.innerHTML;
-        btnSubmit.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> Mengirim...`;
-        btnSubmit.disabled = true;
-
+        const btn = event.target.querySelector('button[type="submit"]');
+        const orig = btn.innerHTML;
+        btn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> Mengirim...`;
+        btn.disabled = true;
         const data = new URLSearchParams({
           action: "tambahBalasan",
           idPertanyaan: activeQuestionId,
@@ -448,72 +894,62 @@
           role: "Siswa",
           balasan: document.getElementById("modal-input-balasan").value,
         });
-
         try {
           await fetch(SCRIPT_URL, { method: "POST", body: data });
           tutupModalBalas();
-          document.getElementById("forum-list").innerHTML = `<div class="text-center py-10 text-brandGreen font-medium animate-pulse"><i class="fa-solid fa-circle-notch fa-spin mr-2"></i>Memuat ulang diskusi...</div>`;
+          document.getElementById("forum-list").innerHTML = `<div class="forum-state"><i class="fa-solid fa-circle-notch fa-spin" style="color:var(--green)"></i> Memuat ulang diskusi...</div>`;
           loadForumData();
-        } catch (error) {
+        } catch {
           alert("Gagal mengirim balasan. Pastikan koneksi internet stabil.");
         } finally {
-          btnSubmit.innerHTML = originalText;
-          btnSubmit.disabled = false;
+          btn.innerHTML = orig;
+          btn.disabled = false;
         }
       }
 
       function filterDiskusi(kategori) {
-        const items = document.querySelectorAll(".forum-item");
-        const buttons = document.querySelectorAll(".btn-filter");
-
-        buttons.forEach((btn) => {
-          if (btn.getAttribute("data-kategori") === kategori) {
-            btn.className = "btn-filter bg-brandGreen text-black font-bold px-4 py-2 rounded-xl transition shrink-0";
-          } else {
-            btn.className = "btn-filter bg-white/5 hover:bg-white/10 text-gray-300 font-medium px-4 py-2 rounded-xl transition shrink-0";
-          }
+        document.querySelectorAll(".filter-chip").forEach((btn) => {
+          btn.classList.toggle("active", btn.getAttribute("data-kategori") === kategori);
         });
-
-        items.forEach((item) => {
-          if (kategori === "semua" || item.getAttribute("data-kategori") === kategori) {
-            item.style.display = "block";
-          } else {
-            item.style.display = "none";
-          }
+        document.querySelectorAll(".forum-item").forEach((item) => {
+          item.style.display = kategori === "semua" || item.getAttribute("data-kategori") === kategori ? "block" : "none";
         });
       }
 
       function cariDiskusi() {
-        const keyword = document.getElementById("search-forum").value.toLowerCase();
-        const items = document.querySelectorAll(".forum-item");
-
-        items.forEach((item) => {
-          if (item.innerText.toLowerCase().includes(keyword)) {
-            item.style.display = "block";
-          } else {
-            item.style.display = "none";
-          }
+        const kw = document.getElementById("search-forum").value.toLowerCase();
+        document.querySelectorAll(".forum-item").forEach((item) => {
+          item.style.display = item.innerText.toLowerCase().includes(kw) ? "block" : "none";
         });
       }
 
-      // Toggle Mobile Menu
+      /* Scroll Reveal */
+      const revealObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              e.target.classList.add("visible");
+              revealObserver.unobserve(e.target);
+            }
+          });
+        },
+        { threshold: 0.1 },
+      );
+      document.querySelectorAll(".reveal").forEach((el) => revealObserver.observe(el));
+
+      /* Hamburger */
       const hamburgerBtn = document.getElementById("hamburgerBtn");
       const mobileMenu = document.getElementById("mobileMenu");
-
-      hamburgerBtn.addEventListener("click", function () {
-        mobileMenu.classList.toggle("hidden");
+      hamburgerBtn.addEventListener("click", () => {
+        mobileMenu.classList.toggle("open");
         const icon = hamburgerBtn.querySelector("i");
         icon.classList.toggle("fa-bars");
         icon.classList.toggle("fa-xmark");
       });
-
-      // Tutup menu saat salah satu link/button di dalamnya diklik
-      mobileMenu.querySelectorAll("a, button").forEach((item) => {
-        item.addEventListener("click", () => {
-          mobileMenu.classList.add("hidden");
-          const icon = hamburgerBtn.querySelector("i");
-          icon.classList.add("fa-bars");
-          icon.classList.remove("fa-xmark");
+      mobileMenu.querySelectorAll("a").forEach((a) => {
+        a.addEventListener("click", () => {
+          mobileMenu.classList.remove("open");
+          hamburgerBtn.querySelector("i").classList.replace("fa-xmark", "fa-bars");
         });
       });
     </script>
