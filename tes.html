@@ -3,9 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Generator PDF Lampiran LKPD - Patbhe Mart | RuangInformatika</title>
+    <title>Generator PDF LKPD - Pseudocode & Bahasa Pemrograman | RuangInformatika</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
@@ -14,14 +14,14 @@
         theme: {
           extend: {
             fontFamily: {
-              sans: ["Inter", "sans-serif"],
-              mono: ["Fira Code", "ui-monospace", "Consolas", "monospace"],
+              sans: ["Plus Jakarta Sans", "sans-serif"],
+              mono: ["JetBrains Mono", "ui-monospace", "monospace"],
             },
             colors: {
-              brandDark: "#0a0a0a",
-              brandGray: "#151515",
+              brandDark: "#080c10",
+              brandGray: "#111820",
               brandGreen: "#00e676",
-              textGray: "#d1d5db",
+              textGray: "#8896a7",
             },
           },
         },
@@ -31,7 +31,7 @@
     <style>
       .bg-grid {
         background-size: 40px 40px;
-        background-image: linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+        background-image: linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px), linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
       }
       @keyframes fadeInUp {
         from {
@@ -76,10 +76,11 @@
           </div>
           <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight mb-4 leading-tight">
             Generator PDF<br />
-            <span class="text-brandGreen">LKPD Sistem Diskon "Patbhe Mart"</span>
+            <span class="text-brandGreen">LKPD Pseudocode & Bahasa Pemrograman</span>
           </h1>
           <p class="text-textGray text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
-            Menghasilkan lembar kerja kosong (siap diisi siswa) dengan tampilan identik seperti LKPD digital di web. Cocok dilampirkan pada modul ajar sebagai <strong class="text-white">Lampiran 1</strong>.
+            Menghasilkan lembar kerja <strong class="text-white">kosong siap diisi siswa</strong> untuk studi kasus <strong class="text-white">Kriteria Kelulusan "Patbhe Test"</strong>. Cocok dilampirkan pada modul ajar sebagai
+            <strong class="text-white">Lampiran 1</strong>.
           </p>
         </div>
 
@@ -89,11 +90,11 @@
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
             <div class="flex items-start gap-2.5 text-textGray"><i class="fa-solid fa-circle-check text-brandGreen mt-1 shrink-0"></i><span>Header banner + kartu info (TP, waktu, formasi)</span></div>
             <div class="flex items-start gap-2.5 text-textGray"><i class="fa-solid fa-circle-check text-brandGreen mt-1 shrink-0"></i><span>Petunjuk Penggunaan &amp; K3</span></div>
-            <div class="flex items-start gap-2.5 text-textGray"><i class="fa-solid fa-circle-check text-brandGreen mt-1 shrink-0"></i><span>Studi Kasus Patbhe Mart (2 kotak kondisi)</span></div>
-            <div class="flex items-start gap-2.5 text-textGray"><i class="fa-solid fa-circle-check text-brandGreen mt-1 shrink-0"></i><span>Kolom Identitas Kelompok (titik-titik)</span></div>
-            <div class="flex items-start gap-2.5 text-textGray"><i class="fa-solid fa-circle-check text-brandGreen mt-1 shrink-0"></i><span>Tugas 1: Analisis Input – Proses – Output</span></div>
-            <div class="flex items-start gap-2.5 text-textGray"><i class="fa-solid fa-circle-check text-brandGreen mt-1 shrink-0"></i><span>Tugas 2: Lanjutan Algoritma Naratif</span></div>
-            <div class="flex items-start gap-2.5 text-textGray"><i class="fa-solid fa-circle-check text-brandGreen mt-1 shrink-0"></i><span>Tugas 3: Kanvas Flowchart berpetak + deskripsi</span></div>
+            <div class="flex items-start gap-2.5 text-textGray"><i class="fa-solid fa-circle-check text-brandGreen mt-1 shrink-0"></i><span>Studi Kasus "Patbhe Test" (2 aturan logika)</span></div>
+            <div class="flex items-start gap-2.5 text-textGray"><i class="fa-solid fa-circle-check text-brandGreen mt-1 shrink-0"></i><span>Kolom Identitas Kelompok (2 anggota + kelas)</span></div>
+            <div class="flex items-start gap-2.5 text-textGray"><i class="fa-solid fa-circle-check text-brandGreen mt-1 shrink-0"></i><span>Tugas 1: Template Pseudocode isian titik-titik</span></div>
+            <div class="flex items-start gap-2.5 text-textGray"><i class="fa-solid fa-circle-check text-brandGreen mt-1 shrink-0"></i><span>Tugas 2: Tabel fungsi 5 kata kunci pseudocode</span></div>
+            <div class="flex items-start gap-2.5 text-textGray"><i class="fa-solid fa-circle-check text-brandGreen mt-1 shrink-0"></i><span>Tugas 3: Tabel tipe data dasar C++ (4 tipe)</span></div>
             <div class="flex items-start gap-2.5 text-textGray"><i class="fa-solid fa-circle-check text-brandGreen mt-1 shrink-0"></i><span>Footer + nomor halaman otomatis</span></div>
           </div>
         </div>
@@ -138,13 +139,13 @@
 
         <p class="text-center text-xs text-textGray mt-8">
           <i class="fa-solid fa-circle-info text-brandGreen mr-1"></i>
-          Nama file otomatis: <code class="font-mono text-amber-300 bg-black/40 px-2 py-0.5 rounded">LKPD_Patbhe_Mart_Lampiran_Modul_Ajar.pdf</code>
+          Nama file otomatis: <code class="font-mono text-amber-300 bg-black/40 px-2 py-0.5 rounded">LKPD_Pseudocode_Lampiran_Modul_Ajar_(Gelap|Cetak).pdf</code>
         </p>
       </main>
     </div>
 
     <!-- FOOTER -->
-    <footer class="border-t border-white/5 bg-[#080808] py-6 relative z-10 w-full mt-auto">
+    <footer class="border-t border-white/5 bg-[#060a0d] py-6 relative z-10 w-full mt-auto">
       <div class="max-w-6xl mx-auto px-6 text-center text-sm text-textGray">
         <p>&copy; 2026 RuangInformatika. Dikembangkan oleh Pak Ilyas untuk kelas Informatika SMA Negeri 4 Yogyakarta.</p>
       </div>
@@ -184,20 +185,16 @@
           skyBrd: [40, 100, 130],
           amberBrd: [120, 90, 20],
           purpleBrd: [90, 60, 140],
+          roseBrd: [120, 45, 55],
           codeBg: [13, 17, 23],
           codeBorder: [60, 80, 100],
           codeText: [180, 210, 230],
-          inputBg: [15, 30, 45],
-          inputBorder: [40, 100, 130],
-          processBg: [40, 30, 8],
-          processBorder: [140, 100, 30],
-          outputBg: [30, 20, 45],
-          outputBorder: [90, 60, 140],
           greenBoxBg: [10, 30, 20],
           greenBoxBrd: [30, 100, 60],
           roseBoxBg: [35, 15, 20],
           roseBoxBrd: [120, 45, 55],
-          canvasBg: [14, 14, 14],
+          tableHeader: [30, 30, 30],
+          tableLine: [45, 45, 45],
         },
         light: {
           bg: [255, 255, 255],
@@ -219,20 +216,16 @@
           skyBrd: [150, 200, 230],
           amberBrd: [228, 195, 140],
           purpleBrd: [205, 180, 240],
+          roseBrd: [238, 175, 190],
           codeBg: [246, 248, 251],
           codeBorder: [205, 214, 224],
           codeText: [30, 62, 92],
-          inputBg: [240, 248, 255],
-          inputBorder: [150, 200, 230],
-          processBg: [255, 251, 236],
-          processBorder: [225, 195, 130],
-          outputBg: [251, 246, 255],
-          outputBorder: [205, 180, 240],
           greenBoxBg: [240, 255, 248],
           greenBoxBrd: [150, 215, 180],
           roseBoxBg: [255, 245, 247],
           roseBoxBrd: [238, 175, 190],
-          canvasBg: [253, 253, 253],
+          tableHeader: [238, 242, 246],
+          tableLine: [220, 224, 228],
         },
       };
 
@@ -242,6 +235,7 @@
       function buildLKPD(themeKey) {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+        const measureDoc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
         const T = THEMES[themeKey] || THEMES.dark;
 
         const pageW = doc.internal.pageSize.getWidth();
@@ -285,16 +279,17 @@
         }
 
         function measure(text, size, style, w, font = "helvetica") {
-          doc.setFont(font, style);
-          doc.setFontSize(size);
+          measureDoc.setFont(font, style);
+          measureDoc.setFontSize(size);
           const s = String(text ?? "")
             .replace(/[\u2212\u2013\u2014]/g, "-")
             .replace(/\u2265/g, ">=")
             .replace(/\u2264/g, "<=")
+            .replace(/\u2190/g, "<-")
             .replace(/\u2026/g, "...")
             .replace(/[\u2018\u2019]/g, "'")
             .replace(/[\u201C\u201D]/g, '"');
-          return doc.splitTextToSize(s.trim() || "-", w);
+          return measureDoc.splitTextToSize(s.trim() || "-", w);
         }
 
         function writeLines(lines, x, yy, size, color, lineH, font = "helvetica", style = "normal") {
@@ -329,11 +324,11 @@
           doc.setFont("helvetica", "bold");
           doc.setFontSize(14.5);
           doc.text("LKPD DIGITAL  ·  INFORMATIKA", pageW / 2, y + 9.5, { align: "center" });
-          doc.setFontSize(11.5);
-          doc.text('Sistem Diskon Belanja "Patbhe Mart"', pageW / 2, y + 17, { align: "center" });
+          doc.setFontSize(11);
+          doc.text("Pseudocode & Pengenalan Bahasa Pemrograman", pageW / 2, y + 16.5, { align: "center" });
           doc.setFont("helvetica", "normal");
           doc.setFontSize(8.5);
-          doc.text("Algoritma & Flowchart Percabangan  ·  Fase E / Kelas X", pageW / 2, y + 23, { align: "center" });
+          doc.text('Studi Kasus: Kriteria Kelulusan "Patbhe Test"  ·  Fase E / Kelas X', pageW / 2, y + 22.5, { align: "center" });
           y += bannerH + 5;
         }
 
@@ -343,7 +338,7 @@
         {
           const items = [
             { label: "TARGET PEMBELAJARAN", value: "TP 1 & TP 2", color: T.green },
-            { label: "ALOKASI WAKTU", value: "30 Menit", color: T.sky },
+            { label: "ALOKASI WAKTU", value: "30 - 45 Menit", color: T.sky },
             { label: "FORMASI", value: "Berpasangan (2 Orang)", color: T.purple },
           ];
           const gap = 3;
@@ -426,54 +421,49 @@
           const bodyLh = lh(bodySize);
           const innerW = contentW - padX * 2 - 4;
 
-          const desc = "Kasir toko Patbhe Mart membutuhkan program otomatis untuk menghitung diskon belanja pelanggan. Berikut ketentuannya:";
+          const desc = "Sistem penilaian sekolah membutuhkan program otomatis untuk menentukan status kelulusan siswa pada mata pelajaran Informatika. Program hanya menerima satu masukan (input), yaitu nilai_ujian siswa.";
           const descLines = measure(desc, bodySize, "normal", innerW);
 
-          const boxGap = 3;
-          const boxW = (innerW - boxGap) / 2;
-          const boxTitleH = 7;
-          const boxBodySize = 8.3;
-          const boxLh = lh(boxBodySize);
-
-          const box1Items = ["· Pelanggan mendapat diskon 10%", '· Tampilkan: "Selamat, Anda Mendapat Diskon 10%!"', "· Total_Bayar = Total_Belanja - Diskon"];
-          const box2Items = ["· Pelanggan tidak mendapat diskon", '· Tampilkan: "Terima Kasih Telah Berbelanja!"', "· Total_Bayar = Total_Belanja"];
-
-          const box1Lines = box1Items.flatMap((t) => measure(t, boxBodySize, "normal", boxW - 10));
-          const box2Lines = box2Items.flatMap((t) => measure(t, boxBodySize, "normal", boxW - 10));
-          const boxMaxLines = Math.max(box1Lines.length, box2Lines.length);
-          const boxH = boxTitleH + boxMaxLines * boxLh + 4;
+          const aturan1 = 'JIKA nilai_ujian >= 75, maka sistem akan menampilkan pesan "Selamat, Anda Dinyatakan LULUS!" ke layar.';
+          const aturan2 = 'JIKA TIDAK (yaitu nilai_ujian < 75), sistem akan menampilkan pesan "Maaf, Anda Harus Mengikuti Remedial!"';
+          const a1Lines = measure(aturan1, bodySize, "normal", innerW - 12);
+          const a2Lines = measure(aturan2, bodySize, "normal", innerW - 12);
 
           const titleH = 8;
-          const cardH = titleH + descLines.length * bodyLh + 4 + boxH + 4;
+          const boxTitleH = 5.5;
+          const box1H = boxTitleH + a1Lines.length * bodyLh + 4;
+          const box2H = boxTitleH + a2Lines.length * bodyLh + 4;
+          const gap = 2;
+          const cardH = titleH + descLines.length * bodyLh + 3 + box1H + gap + box2H + 4;
 
           ensureSpace(cardH + 5);
-          drawCard(margin, y, contentW, cardH, { accent: T.green, borderColor: T.greenBrd });
+          drawCard(margin, y, contentW, cardH, { accent: T.purple, borderColor: T.purpleBrd });
 
-          setText(T.green);
+          setText(T.purple);
           doc.setFont("helvetica", "bold");
           doc.setFontSize(10.5);
-          doc.text('STUDI KASUS: SISTEM DISKON "PATBHE MART"', margin + padX + 2, y + 6);
+          doc.text('STUDI KASUS: KRITERIA KELULUSAN UJIAN "PATBHE TEST"', margin + padX + 2, y + 6);
 
-          let cy = y + titleH + 3.5;
-          cy = writeLines(descLines, margin + padX + 2, cy, bodySize, T.text, bodyLh);
+          let cy = y + titleH + 1;
+          cy = writeLines(descLines, margin + padX + 2, cy + 3, bodySize, T.text, bodyLh);
           cy += 2;
 
           const box1X = margin + padX + 2;
-          const box2X = box1X + boxW + boxGap;
-
-          drawCard(box1X, cy, boxW, boxH, { fill: T.greenBoxBg, borderColor: T.greenBoxBrd });
+          drawCard(box1X, cy, innerW, box1H, { fill: T.greenBoxBg, borderColor: T.greenBoxBrd });
           setText(T.green);
           doc.setFont("helvetica", "bold");
-          doc.setFontSize(8.3);
-          doc.text("JIKA Total_Belanja >= Rp100.000", box1X + 4, cy + 5);
-          writeLines(box1Lines, box1X + 4, cy + boxTitleH + 2.5, boxBodySize, T.text, boxLh);
+          doc.setFontSize(7.8);
+          doc.text("ATURAN LOGIKA 1", box1X + 4, cy + 4.5);
+          writeLines(a1Lines, box1X + 4, cy + boxTitleH + 2.5, bodySize, T.text, bodyLh);
 
-          drawCard(box2X, cy, boxW, boxH, { fill: T.roseBoxBg, borderColor: T.roseBoxBrd });
+          cy += box1H + gap;
+
+          drawCard(box1X, cy, innerW, box2H, { fill: T.roseBoxBg, borderColor: T.roseBoxBrd });
           setText(T.rose);
           doc.setFont("helvetica", "bold");
-          doc.setFontSize(8.3);
-          doc.text("JIKA Total_Belanja < Rp100.000", box2X + 4, cy + 5);
-          writeLines(box2Lines, box2X + 4, cy + boxTitleH + 2.5, boxBodySize, T.text, boxLh);
+          doc.setFontSize(7.8);
+          doc.text("ATURAN LOGIKA 2", box1X + 4, cy + 4.5);
+          writeLines(a2Lines, box1X + 4, cy + boxTitleH + 2.5, bodySize, T.text, bodyLh);
 
           y += cardH + 5;
         }
@@ -516,9 +506,6 @@
             dottedLine(innerX, cy + 12, innerX + innerW * 0.6, T.line);
 
             const ax = innerX + innerW * 0.68;
-            setText(T.dim);
-            doc.setFont("helvetica", "normal");
-            doc.setFontSize(6.5);
             doc.text("No. Absen", ax, cy + 8);
             dottedLine(ax, cy + 12, innerX + innerW, T.line);
 
@@ -535,152 +522,43 @@
         }
 
         /* ============================================================
-           TUGAS 1 : INPUT - PROSES - OUTPUT (KOSONG)
+           TUGAS 1 : TEMPLATE PSEUDOCODE (KOSONG)
         ============================================================ */
         {
           const padX = 6;
           const innerX = margin + padX + 2;
           const innerW = contentW - padX * 2 - 4;
 
-          const blocks = [
-            { label: "INPUT (MASUKAN)", hint: "Sebutkan variabel/data yang perlu di-input oleh kasir.", color: T.sky, bg: T.inputBg, border: T.inputBorder },
-            { label: "PROSES (KONDISI PERCABANGAN)", hint: "Jelaskan proses/kondisi logika percabangan yang terjadi.", color: T.amber, bg: T.processBg, border: T.processBorder },
-            { label: "OUTPUT (KELUARAN)", hint: "Sebutkan hasil/output yang ditampilkan ke layar.", color: T.purple, bg: T.outputBg, border: T.outputBorder },
+          const instr = "Lengkapi template pseudocode di bawah ini. Isi bagian bertitik-titik agar algoritma penentuan kelulusan Patbhe Test menjadi lengkap dan benar. Perhatikan indentasi pada baris di dalam blok IF dan ELSE.";
+          const instrSize = 9;
+          const instrLh = lh(instrSize);
+          const instrLines = measure(instr, instrSize, "italic", innerW);
+
+          const titleH = 8;
+          const codeSize = 9.5;
+          const codeLh = 5;
+          const codeLines = [
+            { text: "// Judul Algoritma", type: "cmt" },
+            { text: "Input : .........................", type: "cmt" },
+            { text: "", type: "blank" },
+            { text: "// Deklarasi Algoritma", type: "cmt" },
+            { text: "Input : .........................", type: "cmt" },
+            { text: "Output : .........................", type: "cmt" },
+            { text: "", type: "blank" },
+            { text: "// Algoritma", type: "cmt" },
+            { text: "input : .........................................................", type: "kw" },
+            { text: "", type: "blank" },
+            { text: "if .................................................... then", type: "kw" },
+            { text: "    // Tuliskan Output", type: "cmt" },
+            { text: '    print "..................................................."', type: "kw" },
+            { text: "else", type: "kw" },
+            { text: "    // Tuliskan Output", type: "cmt" },
+            { text: '    print "..................................................."', type: "kw" },
+            { text: "endif", type: "kw" },
           ];
+          const codeBoxH = codeLines.length * codeLh + 10;
 
-          const lineGap = 7.5;
-          const linesPerBlock = 3;
-          const blockH = 7 + 5 + linesPerBlock * lineGap + 2;
-          const gap = 3;
-          const titleH = 8;
-          const cardH = titleH + blocks.length * blockH + (blocks.length - 1) * gap + 4;
-
-          ensureSpace(cardH + 5);
-          drawCard(margin, y, contentW, cardH, { accent: T.green, borderColor: T.greenBrd });
-
-          setText(T.green);
-          doc.setFont("helvetica", "bold");
-          doc.setFontSize(10.5);
-          doc.text("TUGAS 1 : ANALISIS INPUT - PROSES - OUTPUT", innerX, y + 6);
-
-          let cy = y + titleH + 2;
-          blocks.forEach((b) => {
-            drawCard(innerX, cy, innerW, blockH, { fill: b.bg, borderColor: b.border });
-
-            setText(b.color);
-            doc.setFont("helvetica", "bold");
-            doc.setFontSize(8);
-            doc.text(b.label, innerX + 4, cy + 5.5);
-
-            setText(T.dim);
-            doc.setFont("helvetica", "italic");
-            doc.setFontSize(6.8);
-            doc.text(b.hint, innerX + 4, cy + 10);
-
-            let ly = cy + 7 + 5 + lineGap;
-            for (let i = 0; i < linesPerBlock; i++) {
-              dottedLine(innerX + 4, ly, innerX + innerW - 4, T.line);
-              ly += lineGap;
-            }
-
-            cy += blockH + gap;
-          });
-
-          y += cardH + 5;
-        }
-
-        /* ============================================================
-           TUGAS 2 : LANJUTAN ALGORITMA NARATIF
-        ============================================================ */
-        {
-          const padX = 6;
-          const innerX = margin + padX + 2;
-          const innerW = contentW - padX * 2 - 4;
-
-          const instr = "Lanjutkan langkah-langkah algoritma di bawah ini mulai dari langkah 3 sampai selesai. Perhatikan aturan diskon pada studi kasus Patbhe Mart, termasuk percabangan kondisi (Jika Ya / Jika Tidak).";
-          const instrSize = 9;
-          const instrLh = lh(instrSize);
-          const instrLines = measure(instr, instrSize, "italic", innerW);
-
-          // Kotak contoh
-          const exTitleH = 6.5;
-          const exSize = 8.8;
-          const exLh = 4.6;
-          const exItems = ["1.   Mulai (Start)", "2.   Inputkan nilai Total_Belanja"];
-          const exH = exTitleH + exItems.length * exLh + 4;
-
-          // Kotak tulis
-          const wStepLh = 8;
-          const wSteps = 10;
-          const wH = wSteps * wStepLh + 6;
-
-          const titleH = 8;
-          const cardH = titleH + instrLines.length * instrLh + 3 + exH + 3 + wH + 4;
-
-          ensureSpace(cardH + 5);
-          drawCard(margin, y, contentW, cardH, { accent: T.sky, borderColor: T.skyBrd });
-
-          setText(T.sky);
-          doc.setFont("helvetica", "bold");
-          doc.setFontSize(10.5);
-          doc.text("TUGAS 2 : PENYUSUNAN ALGORITMA NARATIF", innerX, y + 6);
-
-          let cy = y + titleH + 3;
-          cy = writeLines(instrLines, innerX, cy, instrSize, T.dim, instrLh, "helvetica", "italic");
-          cy += 1;
-
-          // Kotak contoh
-          drawCard(innerX, cy, innerW, exH, { fill: T.codeBg, borderColor: T.codeBorder });
-          setText(T.dim);
-          doc.setFont("helvetica", "bold");
-          doc.setFontSize(6.8);
-          doc.text("// CONTOH 2 LANGKAH PERTAMA", innerX + 4, cy + 5);
-
-          doc.setFont("courier", "normal");
-          doc.setFontSize(exSize);
-          setText(T.codeText);
-          let ey = cy + exTitleH + 2.5;
-          exItems.forEach((t) => {
-            doc.text(t, innerX + 4, ey);
-            ey += exLh;
-          });
-          cy += exH + 3;
-
-          // Kotak tulis bernomor
-          drawCard(innerX, cy, innerW, wH, { fill: T.codeBg, borderColor: T.codeBorder });
-          let ly = cy + 8;
-          for (let i = 0; i < wSteps; i++) {
-            const n = i + 3;
-            doc.setFont("courier", "normal");
-            doc.setFontSize(8.8);
-            setText(T.codeText);
-            doc.text(String(n) + ".", innerX + 4, ly);
-            dottedLine(innerX + 12, ly + 0.8, innerX + innerW - 4, T.line);
-            ly += wStepLh;
-          }
-
-          y += cardH + 5;
-        }
-
-        /* ============================================================
-           TUGAS 3 : KANVAS FLOWCHART + DESKRIPSI
-        ============================================================ */
-        {
-          const padX = 6;
-          const innerX = margin + padX + 2;
-          const innerW = contentW - padX * 2 - 4;
-
-          const instr = "Rangkai diagram alir penyelesaian studi kasus Patbhe Mart pada kotak berpetak di bawah ini. Gunakan simbol yang sesuai (Terminator, Input/Output, Proses, Keputusan) dan beri label Ya / Tidak pada cabang keputusan.";
-          const instrSize = 9;
-          const instrLh = lh(instrSize);
-          const instrLines = measure(instr, instrSize, "italic", innerW);
-
-          const canvasH = 148;
-          const descGap = 8;
-          const descCount = 4;
-          const titleH = 8;
-
-          const cardH = titleH + instrLines.length * instrLh + 3 + canvasH + 5 + 6 + descCount * descGap + 10 + 6;
+          const cardH = titleH + instrLines.length * instrLh + 3 + codeBoxH + 4;
 
           ensureSpace(cardH + 5);
           drawCard(margin, y, contentW, cardH, { accent: T.purple, borderColor: T.purpleBrd });
@@ -688,55 +566,164 @@
           setText(T.purple);
           doc.setFont("helvetica", "bold");
           doc.setFontSize(10.5);
-          doc.text("TUGAS 3 : PERANCANGAN DIAGRAM ALIR (FLOWCHART)", innerX, y + 6);
+          doc.text("TUGAS 1 : MERANCANG PSEUDOCODE", innerX, y + 6);
 
           let cy = y + titleH + 3;
           cy = writeLines(instrLines, innerX, cy, instrSize, T.dim, instrLh, "helvetica", "italic");
           cy += 2;
 
-          // Kanvas berpetak
-          drawCard(innerX, cy, innerW, canvasH, { fill: T.canvasBg, borderColor: T.border });
+          drawCard(innerX, cy, innerW, codeBoxH, { fill: T.codeBg, borderColor: T.codeBorder });
 
-          setFill(T.dot);
-          for (let gy = cy + 6; gy < cy + canvasH - 3; gy += 7) {
-            for (let gx = innerX + 6; gx < innerX + innerW - 3; gx += 7) {
-              doc.circle(gx, gy, 0.18, "F");
+          let ly = cy + 7;
+          doc.setFont("courier", "normal");
+          doc.setFontSize(codeSize);
+          codeLines.forEach((ln) => {
+            if (ln.type === "blank") {
+              ly += codeLh * 0.6;
+              return;
             }
-          }
+            if (ln.type === "cmt") setText(T.dim);
+            else setText(T.codeText);
+            doc.text(ln.text, innerX + 4, ly);
+            ly += codeLh;
+          });
+
+          y += cardH + 5;
+        }
+
+        /* ============================================================
+           TUGAS 2 : TABEL ISTILAH PSEUDOCODE
+        ============================================================ */
+        {
+          const padX = 6;
+          const innerX = margin + padX + 2;
+          const innerW = contentW - padX * 2 - 4;
+
+          const rows = [
+            { no: 1, kunci: "INPUT / READ" },
+            { no: 2, kunci: "PRINT / OUTPUT" },
+            { no: 3, kunci: "SET / <-" },
+            { no: 4, kunci: "IF - ELSE" },
+            { no: 5, kunci: "WHILE / FOR" },
+          ];
+
+          const titleH = 8;
+          const headerH = 7;
+          const rowH = 13;
+          const cardH = titleH + headerH + rows.length * rowH + 4;
+
+          ensureSpace(cardH + 5);
+          drawCard(margin, y, contentW, cardH, { accent: T.amber, borderColor: T.amberBrd });
+
+          setText(T.amber);
+          doc.setFont("helvetica", "bold");
+          doc.setFontSize(10.5);
+          doc.text("TUGAS 2 : ISTILAH PERINTAH UMUM DALAM PSEUDOCODE", innerX, y + 6);
+
+          let cy = y + titleH;
+          setFill(T.tableHeader);
+          doc.rect(innerX, cy, innerW, headerH, "F");
+
+          const colNo = innerX + 2;
+          const colKunci = innerX + 12;
+          const colFungsi = innerX + 60;
 
           setText(T.dim);
           doc.setFont("helvetica", "bold");
-          doc.setFontSize(6.5);
-          doc.text("AREA MENGGAMBAR FLOWCHART", innerX + 4, cy + canvasH - 3);
+          doc.setFontSize(7.5);
+          doc.text("No", colNo, cy + 4.5);
+          doc.text("KATA KUNCI", colKunci, cy + 4.5);
+          doc.text("FUNGSI", colFungsi, cy + 4.5);
 
-          cy += canvasH + 6;
+          cy += headerH;
 
-          // Deskripsi
-          setText(T.purple);
+          rows.forEach((r) => {
+            setDraw(T.tableLine);
+            doc.setLineWidth(0.15);
+            doc.line(innerX, cy + rowH, innerX + innerW, cy + rowH);
+
+            const midY = cy + rowH / 2 + 1;
+
+            setText(T.amber);
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(9.5);
+            doc.text(String(r.no), colNo, midY);
+
+            setText(T.purple);
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(9);
+            doc.text(r.kunci, colKunci, midY);
+
+            dottedLine(colFungsi, midY - 0.5, innerX + innerW - 4, T.line);
+
+            cy += rowH;
+          });
+
+          y += cardH + 5;
+        }
+
+        /* ============================================================
+           TUGAS 3 : TABEL TIPE DATA DASAR
+        ============================================================ */
+        {
+          const padX = 6;
+          const innerX = margin + padX + 2;
+          const innerW = contentW - padX * 2 - 4;
+
+          const rows = ["int", "float / double", "char", "string"];
+
+          const titleH = 8;
+          const headerH = 7;
+          const rowH = 15;
+          const cardH = titleH + headerH + rows.length * rowH + 4;
+
+          ensureSpace(cardH + 5);
+          drawCard(margin, y, contentW, cardH, { accent: T.sky, borderColor: T.skyBrd });
+
+          setText(T.sky);
           doc.setFont("helvetica", "bold");
-          doc.setFontSize(8.5);
-          doc.text("DESKRIPSI FLOWCHART YANG DIRANCANG", innerX, cy);
-          cy += 5;
+          doc.setFontSize(10.5);
+          doc.text("TUGAS 3 : TABEL TIPE DATA DASAR", innerX, y + 6);
 
-          for (let i = 0; i < descCount; i++) {
-            doc.setFont("helvetica", "normal");
-            doc.setFontSize(8);
-            setText(T.dim);
-            doc.text(String(i + 1) + ".", innerX, cy + 0.5);
-            dottedLine(innerX + 6, cy + 1, innerX + innerW, T.line);
-            cy += descGap;
-          }
+          let cy = y + titleH;
+          setFill(T.tableHeader);
+          doc.rect(innerX, cy, innerW, headerH, "F");
 
-          cy += 1;
+          const colNo = innerX + 2;
+          const colTipe = innerX + 12;
+          const colKet = innerX + 55;
+          const colContoh = innerX + innerW * 0.7;
 
-          // Checkbox konfirmasi
-          setDraw(T.border);
-          doc.setLineWidth(0.35);
-          doc.rect(innerX, cy, 4.5, 4.5, "S");
-          doc.setFont("helvetica", "normal");
-          doc.setFontSize(8.3);
-          setText(T.text);
-          doc.text("Konfirmasi: Saya sudah merangkai flowchart sesuai studi kasus Patbhe Mart.", innerX + 7, cy + 3.3);
+          setText(T.dim);
+          doc.setFont("helvetica", "bold");
+          doc.setFontSize(7.5);
+          doc.text("No", colNo, cy + 4.5);
+          doc.text("TIPE DATA", colTipe, cy + 4.5);
+          doc.text("KETERANGAN", colKet, cy + 4.5);
+          doc.text("CONTOH", colContoh, cy + 4.5);
+
+          cy += headerH;
+
+          rows.forEach((t, i) => {
+            setDraw(T.tableLine);
+            doc.setLineWidth(0.15);
+            doc.line(innerX, cy + rowH, innerX + innerW, cy + rowH);
+
+            const midY = cy + rowH / 2 + 1;
+
+            setText(T.sky);
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(9.5);
+            doc.text(String(i + 1), colNo, midY);
+
+            doc.setFontSize(9);
+            doc.text(t, colTipe, midY);
+
+            dottedLine(colKet, midY - 0.5, colContoh - 3, T.line);
+            dottedLine(colContoh, midY - 0.5, innerX + innerW - 4, T.line);
+
+            cy += rowH;
+          });
 
           y += cardH + 5;
         }
@@ -770,7 +757,7 @@
         try {
           const doc = buildLKPD(themeKey);
           const suffix = themeKey === "light" ? "Cetak" : "Gelap";
-          doc.save("LKPD_Patbhe_Mart_Lampiran_Modul_Ajar_" + suffix + ".pdf");
+          doc.save("LKPD_Pseudocode_Lampiran_Modul_Ajar_" + suffix + ".pdf");
         } catch (err) {
           console.error(err);
           alert("Gagal membuat PDF: " + err.message);

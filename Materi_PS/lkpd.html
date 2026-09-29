@@ -378,7 +378,7 @@
               <div class="w-11 h-11 rounded-xl bg-brandGreen/10 border border-brandGreen/25 flex items-center justify-center text-brandGreen text-lg shrink-0"><i class="fa-solid fa-bullseye"></i></div>
               <div>
                 <p class="text-xs text-textGray uppercase tracking-wider font-bold">Target Pembelajaran</p>
-                <p class="text-white font-bold text-sm">TP 3 &amp; TP 4</p>
+                <p class="text-white font-bold text-sm">TP 1 &amp; TP 2</p>
               </div>
             </div>
             <div class="flex items-center gap-3">
@@ -507,7 +507,6 @@
             <div class="flex items-start gap-3 border-b border-white/10 pb-4">
               <div class="w-11 h-11 rounded-xl bg-purple-500/15 border border-purple-500/30 flex items-center justify-center text-purple-400 font-bold text-lg shrink-0">1</div>
               <div class="flex-1">
-                <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-purple-500/10 border border-purple-500/25 text-[10px] font-bold text-purple-400 uppercase tracking-wider mb-1">TP 3</div>
                 <h3 class="text-lg md:text-xl font-bold text-white">Merancang Pseudocode</h3>
                 <p class="text-sm text-textGray mt-1">
                   Tuliskan rancangan algoritma untuk studi kasus <strong class="text-white">Kriteria Kelulusan "Patbhe Test"</strong> menggunakan format <strong class="text-purple-300">pseudocode</strong>! Gunakan struktur notasi yang
@@ -526,22 +525,21 @@
             <div class="bg-[#0d1117] border border-white/10 rounded-2xl p-4 md:p-5 overflow-x-auto">
               <div class="text-xs text-textGray uppercase font-bold tracking-wider mb-3 flex items-center gap-2"><i class="fa-solid fa-file-code text-purple-400"></i> Template Pseudocode</div>
               <div class="pseudo-block">
-                <div><span class="lbl">Algoritma</span> <span class="kw">CekKelulusan_PatbheTest</span></div>
+                <div class="pl-4"><span class="cmt">// Judul Algoritma</span></div>
+                <div class="pl-4">Input : <span class="cmt">.........................</span></div>
                 <br />
-                <div><span class="lbl">DEKLARASI:</span></div>
-                <div class="pl-4"><span class="cmt">// Tuliskan nama variabel yang digunakan di sini:</span></div>
-                <div class="pl-4">nilai_ujian : <span class="cmt">.........................</span></div>
+                <div class="pl-4"><span class="cmt">// Deklarasi Algoritma</span></div>
+                <div class="pl-4">Input : <span class="cmt">.........................</span></div>
+                <div class="pl-4">Output : <span class="cmt">.........................</span></div>
                 <br />
-                <div><span class="lbl">ALGORITMA:</span></div>
-                <div class="pl-4"><span class="cmt">// 1. Baca / Input data masukan</span></div>
-                <div class="pl-4"><span class="kw">input</span> <span class="cmt">.........................................................</span></div>
+                <div class="pl-4"><span class="cmt">// Algoritma</span></div>
+                <div class="pl-4"><span class="kw">input :</span> <span class="str">.........................................................</span></div>
                 <br />
-                <div class="pl-4"><span class="cmt">// 2. Evaluasi Kondisi Percabangan (Gunakan IF - ELSE)</span></div>
-                <div class="pl-4"><span class="kw">if</span> <span class="cmt">....................................................</span> <span class="kw">then</span></div>
-                <div class="pl-8"><span class="cmt">// Tuliskan cetak pesan jika LULUS</span></div>
+                <div class="pl-4"><span class="kw">if</span> <span class="str">....................................................</span> <span class="kw">then</span></div>
+                <div class="pl-8"><span class="cmt">// Tuliskan Output</span></div>
                 <div class="pl-8"><span class="kw">print</span> <span class="str">"..................................................."</span></div>
                 <div class="pl-4"><span class="kw">else</span></div>
-                <div class="pl-8"><span class="cmt">// Tuliskan cetak pesan jika TIDAK LULUS</span></div>
+                <div class="pl-8"><span class="cmt">// Tuliskan Output</span></div>
                 <div class="pl-8"><span class="kw">print</span> <span class="str">"..................................................."</span></div>
                 <div class="pl-4"><span class="kw">endif</span></div>
               </div>
@@ -554,7 +552,7 @@
                 id="task1-pseudocode"
                 class="form-textarea mono"
                 style="min-height: 380px"
-                placeholder='Algoritma CekKelulusan_PatbheTest&#10;&#10;DEKLARASI:&#10;    nilai_ujian : integer&#10;&#10;ALGORITMA:&#10;    // 1. Baca / Input data masukan&#10;    input nilai_ujian&#10;&#10;    // 2. Evaluasi Kondisi Percabangan (Gunakan IF - ELSE)&#10;    if nilai_ujian >= 75 then&#10;        print "Selamat, Anda Dinyatakan LULUS!"&#10;    else&#10;        print "Maaf, Anda Harus Mengikuti Remedial!"&#10;    endif'
+                placeholder='// Judul Algoritma&#10;Input : .........................&#10;&#10;// Deklarasi Algoritma&#10;Input : .........................&#10;Output : .........................&#10;&#10;// Algoritma&#10;input : .........................................................&#10;&#10;if .................................................... then&#10;    // Tuliskan Output&#10;    print "..................................................."&#10;else&#10;    // Tuliskan Output&#10;    print "..................................................."&#10;endif'
               ></textarea>
             </div>
           </div>
@@ -564,119 +562,82 @@
             <div class="flex items-start gap-3 border-b border-white/10 pb-4">
               <div class="w-11 h-11 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 font-bold text-lg shrink-0">2</div>
               <div class="flex-1">
-                <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/25 text-[10px] font-bold text-amber-400 uppercase tracking-wider mb-1">TP 4</div>
-                <h3 class="text-lg md:text-xl font-bold text-white">Pengertian Pseudocode</h3>
-                <p class="text-sm text-textGray mt-1">Jawablah pertanyaan konseptual berikut berdasarkan pemahaman kelompok kalian mengenai pseudocode!</p>
+                <h3 class="text-lg md:text-xl font-bold text-white">Istilah Perintah Umum dalam Pseudocode</h3>
+                <p class="text-sm text-textGray mt-1">Lengkapi tabel istilah perintah umum dalam pseudocode berikut dengan menuliskan <strong class="text-white">fungsi</strong> dari setiap kata kunci.</p>
               </div>
             </div>
 
-            <div class="space-y-4">
-              <div class="bg-amber-500/5 border border-amber-500/25 rounded-xl p-4 space-y-3">
-                <div class="flex items-center gap-3">
-                  <div class="w-9 h-9 rounded-lg bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 text-sm shrink-0"><i class="fa-solid fa-question"></i></div>
-                  <p class="text-sm md:text-base font-bold text-white">Apa yang dimaksud dengan pseudocode (kode semu)?</p>
+            <div class="bg-amber-500/5 border border-amber-500/25 rounded-xl p-4">
+              <p class="text-xs text-amber-300 flex items-start gap-2">
+                <i class="fa-solid fa-lightbulb mt-0.5"></i>
+                <span><strong>Petunjuk:</strong> Tuliskan fungsi dari setiap kata kunci pseudocode pada kolom yang tersedia. Gunakan bahasa sendiri yang mudah dipahami.</span>
+              </p>
+            </div>
+
+            <div class="space-y-3 pt-1">
+              <div class="bg-white/5 border border-white/5 rounded-xl p-4 grid grid-cols-1 md:grid-cols-12 gap-3 items-start md:items-center">
+                <div class="md:col-span-1 flex items-center gap-2"><span class="w-7 h-7 rounded-lg bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 text-xs font-bold">1</span></div>
+                <div class="md:col-span-4">
+                  <p class="text-xs text-textGray uppercase font-bold mb-1 md:hidden">Kata Kunci</p>
+                  <code class="text-sm text-purple-300 font-mono font-bold">INPUT / READ</code>
                 </div>
-                <textarea id="task3-pengertian" class="form-textarea" style="min-height: 100px" placeholder="Pseudocode adalah..."></textarea>
+                <div class="md:col-span-7">
+                  <p class="text-xs text-textGray uppercase font-bold mb-1 md:hidden">Fungsi</p>
+                  <input type="text" id="task3-fungsi1" class="form-input" placeholder="Menerima..." />
+                </div>
               </div>
-
-              <div class="bg-amber-500/5 border border-amber-500/25 rounded-xl p-4 space-y-3">
-                <div class="flex items-center gap-3">
-                  <div class="w-9 h-9 rounded-lg bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 text-sm shrink-0"><i class="fa-solid fa-terminal"></i></div>
-                  <div>
-                    <p class="text-sm md:text-base font-bold text-white">Lengkapi tabel istilah perintah umum dalam pseudocode berikut!</p>
-                    <p class="text-xs text-textGray mt-0.5">Tuliskan fungsi dari setiap kata kunci pseudocode pada kolom yang tersedia.</p>
-                  </div>
+              <div class="bg-white/5 border border-white/5 rounded-xl p-4 grid grid-cols-1 md:grid-cols-12 gap-3 items-start md:items-center">
+                <div class="md:col-span-1 flex items-center gap-2"><span class="w-7 h-7 rounded-lg bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 text-xs font-bold">2</span></div>
+                <div class="md:col-span-4">
+                  <p class="text-xs text-textGray uppercase font-bold mb-1 md:hidden">Kata Kunci</p>
+                  <code class="text-sm text-purple-300 font-mono font-bold">PRINT / OUTPUT</code>
                 </div>
-
-                <div class="space-y-3 pt-1">
-                  <div class="bg-white/5 border border-white/5 rounded-xl p-4 grid grid-cols-1 md:grid-cols-12 gap-3 items-start md:items-center">
-                    <div class="md:col-span-1 flex items-center gap-2"><span class="w-7 h-7 rounded-lg bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 text-xs font-bold">1</span></div>
-                    <div class="md:col-span-4">
-                      <p class="text-xs text-textGray uppercase font-bold mb-1 md:hidden">Kata Kunci</p>
-                      <code class="text-sm text-purple-300 font-mono font-bold">INPUT / READ</code>
-                    </div>
-                    <div class="md:col-span-7">
-                      <p class="text-xs text-textGray uppercase font-bold mb-1 md:hidden">Fungsi</p>
-                      <input type="text" id="task3-fungsi1" class="form-input" placeholder="Menerima..." />
-                    </div>
-                  </div>
-                  <div class="bg-white/5 border border-white/5 rounded-xl p-4 grid grid-cols-1 md:grid-cols-12 gap-3 items-start md:items-center">
-                    <div class="md:col-span-1 flex items-center gap-2"><span class="w-7 h-7 rounded-lg bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 text-xs font-bold">2</span></div>
-                    <div class="md:col-span-4">
-                      <p class="text-xs text-textGray uppercase font-bold mb-1 md:hidden">Kata Kunci</p>
-                      <code class="text-sm text-purple-300 font-mono font-bold">PRINT / OUTPUT</code>
-                    </div>
-                    <div class="md:col-span-7">
-                      <p class="text-xs text-textGray uppercase font-bold mb-1 md:hidden">Fungsi</p>
-                      <input type="text" id="task3-fungsi2" class="form-input" placeholder="Menampilkan..." />
-                    </div>
-                  </div>
-                  <div class="bg-white/5 border border-white/5 rounded-xl p-4 grid grid-cols-1 md:grid-cols-12 gap-3 items-start md:items-center">
-                    <div class="md:col-span-1 flex items-center gap-2"><span class="w-7 h-7 rounded-lg bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 text-xs font-bold">3</span></div>
-                    <div class="md:col-span-4">
-                      <p class="text-xs text-textGray uppercase font-bold mb-1 md:hidden">Kata Kunci</p>
-                      <code class="text-sm text-purple-300 font-mono font-bold">SET / &larr;</code>
-                    </div>
-                    <div class="md:col-span-7">
-                      <p class="text-xs text-textGray uppercase font-bold mb-1 md:hidden">Fungsi</p>
-                      <input type="text" id="task3-fungsi3" class="form-input" placeholder="Mengisi..." />
-                    </div>
-                  </div>
-                  <div class="bg-white/5 border border-white/5 rounded-xl p-4 grid grid-cols-1 md:grid-cols-12 gap-3 items-start md:items-center">
-                    <div class="md:col-span-1 flex items-center gap-2"><span class="w-7 h-7 rounded-lg bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 text-xs font-bold">4</span></div>
-                    <div class="md:col-span-4">
-                      <p class="text-xs text-textGray uppercase font-bold mb-1 md:hidden">Kata Kunci</p>
-                      <code class="text-sm text-purple-300 font-mono font-bold">IF – ELSE</code>
-                    </div>
-                    <div class="md:col-span-7">
-                      <p class="text-xs text-textGray uppercase font-bold mb-1 md:hidden">Fungsi</p>
-                      <input type="text" id="task3-fungsi4" class="form-input" placeholder="Mengambil..." />
-                    </div>
-                  </div>
-                  <div class="bg-white/5 border border-white/5 rounded-xl p-4 grid grid-cols-1 md:grid-cols-12 gap-3 items-start md:items-center">
-                    <div class="md:col-span-1 flex items-center gap-2"><span class="w-7 h-7 rounded-lg bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 text-xs font-bold">5</span></div>
-                    <div class="md:col-span-4">
-                      <p class="text-xs text-textGray uppercase font-bold mb-1 md:hidden">Kata Kunci</p>
-                      <code class="text-sm text-purple-300 font-mono font-bold">WHILE / FOR</code>
-                    </div>
-                    <div class="md:col-span-7">
-                      <p class="text-xs text-textGray uppercase font-bold mb-1 md:hidden">Fungsi</p>
-                      <input type="text" id="task3-fungsi5" class="form-input" placeholder="Melakukan..." />
-                    </div>
-                  </div>
+                <div class="md:col-span-7">
+                  <p class="text-xs text-textGray uppercase font-bold mb-1 md:hidden">Fungsi</p>
+                  <input type="text" id="task3-fungsi2" class="form-input" placeholder="Menampilkan..." />
+                </div>
+              </div>
+              <div class="bg-white/5 border border-white/5 rounded-xl p-4 grid grid-cols-1 md:grid-cols-12 gap-3 items-start md:items-center">
+                <div class="md:col-span-1 flex items-center gap-2"><span class="w-7 h-7 rounded-lg bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 text-xs font-bold">3</span></div>
+                <div class="md:col-span-4">
+                  <p class="text-xs text-textGray uppercase font-bold mb-1 md:hidden">Kata Kunci</p>
+                  <code class="text-sm text-purple-300 font-mono font-bold">SET / &larr;</code>
+                </div>
+                <div class="md:col-span-7">
+                  <p class="text-xs text-textGray uppercase font-bold mb-1 md:hidden">Fungsi</p>
+                  <input type="text" id="task3-fungsi3" class="form-input" placeholder="Mengisi..." />
+                </div>
+              </div>
+              <div class="bg-white/5 border border-white/5 rounded-xl p-4 grid grid-cols-1 md:grid-cols-12 gap-3 items-start md:items-center">
+                <div class="md:col-span-1 flex items-center gap-2"><span class="w-7 h-7 rounded-lg bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 text-xs font-bold">4</span></div>
+                <div class="md:col-span-4">
+                  <p class="text-xs text-textGray uppercase font-bold mb-1 md:hidden">Kata Kunci</p>
+                  <code class="text-sm text-purple-300 font-mono font-bold">IF – ELSE</code>
+                </div>
+                <div class="md:col-span-7">
+                  <p class="text-xs text-textGray uppercase font-bold mb-1 md:hidden">Fungsi</p>
+                  <input type="text" id="task3-fungsi4" class="form-input" placeholder="Mengambil..." />
+                </div>
+              </div>
+              <div class="bg-white/5 border border-white/5 rounded-xl p-4 grid grid-cols-1 md:grid-cols-12 gap-3 items-start md:items-center">
+                <div class="md:col-span-1 flex items-center gap-2"><span class="w-7 h-7 rounded-lg bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 text-xs font-bold">5</span></div>
+                <div class="md:col-span-4">
+                  <p class="text-xs text-textGray uppercase font-bold mb-1 md:hidden">Kata Kunci</p>
+                  <code class="text-sm text-purple-300 font-mono font-bold">WHILE / FOR</code>
+                </div>
+                <div class="md:col-span-7">
+                  <p class="text-xs text-textGray uppercase font-bold mb-1 md:hidden">Fungsi</p>
+                  <input type="text" id="task3-fungsi5" class="form-input" placeholder="Melakukan..." />
                 </div>
               </div>
             </div>
           </div>
 
           <!-- TUGAS 3 -->
-          <div class="task-card bg-brandGray border border-white/5 rounded-3xl p-5 md:p-6 space-y-4" id="task-4-card">
-            <div class="flex items-start gap-3 border-b border-white/10 pb-4">
-              <div class="w-11 h-11 rounded-xl bg-orange-500/15 border border-orange-500/30 flex items-center justify-center text-orange-400 font-bold text-lg shrink-0">3</div>
-              <div class="flex-1">
-                <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-orange-500/10 border border-orange-500/25 text-[10px] font-bold text-orange-400 uppercase tracking-wider mb-1">TP 4</div>
-                <h3 class="text-lg md:text-xl font-bold text-white">Apa Itu Variabel?</h3>
-                <p class="text-sm text-textGray mt-1">Pahami konsep dasar variabel dalam pemrograman.</p>
-              </div>
-            </div>
-
-            <div class="space-y-4">
-              <div class="bg-orange-500/5 border border-orange-500/25 rounded-xl p-4 space-y-3">
-                <div class="flex items-center gap-3">
-                  <div class="w-9 h-9 rounded-lg bg-orange-500/15 border border-orange-500/30 flex items-center justify-center text-orange-400 text-sm shrink-0"><i class="fa-solid fa-box"></i></div>
-                  <p class="text-sm md:text-base font-bold text-white">Jelaskan apa yang dimaksud dengan <strong class="text-orange-300">variabel</strong> dalam bahasa pemrograman komputer!</p>
-                </div>
-                <textarea id="task4-variabel" class="form-textarea" style="min-height: 100px" placeholder="Variabel adalah..."></textarea>
-              </div>
-            </div>
-          </div>
-
-          <!-- TUGAS 4 -->
           <div class="task-card bg-brandGray border border-white/5 rounded-3xl p-5 md:p-6 space-y-4" id="task-5-card">
             <div class="flex items-start gap-3 border-b border-white/10 pb-4">
-              <div class="w-11 h-11 rounded-xl bg-sky-500/15 border border-sky-500/30 flex items-center justify-center text-sky-400 font-bold text-lg shrink-0">4</div>
+              <div class="w-11 h-11 rounded-xl bg-sky-500/15 border border-sky-500/30 flex items-center justify-center text-sky-400 font-bold text-lg shrink-0">3</div>
               <div class="flex-1">
-                <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-sky-500/10 border border-sky-500/25 text-[10px] font-bold text-sky-400 uppercase tracking-wider mb-1">TP 4</div>
                 <h3 class="text-lg md:text-xl font-bold text-white">Tabel Tipe Data Dasar</h3>
                 <p class="text-sm text-textGray mt-1">Lengkapi tabel berikut dengan menuliskan <strong class="text-white">Keterangan</strong> dan <strong class="text-white">Contoh</strong> dari setiap tipe data dasar dalam bahasa C++.</p>
               </div>
@@ -763,7 +724,7 @@
         <div id="progress-section" class="bg-brandGray border border-brandGreen/30 rounded-3xl p-5 md:p-6 mb-6 space-y-4">
           <div class="flex items-center justify-between">
             <span class="text-sm font-bold text-white flex items-center gap-2"> <i class="fa-solid fa-chart-simple text-brandGreen"></i> Progress Pengisian LKPD </span>
-            <span class="text-sm font-bold"> <span id="progress-text" class="text-brandGreen">0</span><span class="text-textGray">/ 5 bagian</span> </span>
+            <span class="text-sm font-bold"> <span id="progress-text" class="text-brandGreen">0</span><span class="text-textGray">/ 4 bagian</span> </span>
           </div>
           <div class="w-full h-2 bg-black/50 rounded-full overflow-hidden">
             <div id="progress-bar" class="progress-bar-fill h-full bg-gradient-to-r from-brandGreen to-emerald-400" style="width: 0%"></div>
@@ -943,13 +904,11 @@
           "lkpd-anggota2-absen",
           "lkpd-kelas",
           "task1-pseudocode",
-          "task3-pengertian",
           "task3-fungsi1",
           "task3-fungsi2",
           "task3-fungsi3",
           "task3-fungsi4",
           "task3-fungsi5",
-          "task4-variabel",
           "task5-ket1",
           "task5-contoh1",
           "task5-ket2",
@@ -976,21 +935,17 @@
         const tugas1Ok = document.getElementById("task1-pseudocode").value.trim() !== "";
         if (tugas1Ok) completed++;
 
-        const tugas3Ok = ["task3-pengertian", "task3-fungsi1", "task3-fungsi2", "task3-fungsi3", "task3-fungsi4", "task3-fungsi5"].every((id) => document.getElementById(id).value.trim() !== "");
+        const tugas3Ok = ["task3-fungsi1", "task3-fungsi2", "task3-fungsi3", "task3-fungsi4", "task3-fungsi5"].every((id) => document.getElementById(id).value.trim() !== "");
         if (tugas3Ok) completed++;
-
-        const tugas4Ok = document.getElementById("task4-variabel").value.trim() !== "";
-        if (tugas4Ok) completed++;
 
         const tugas5Ok = ["task5-ket1", "task5-contoh1", "task5-ket2", "task5-contoh2", "task5-ket3", "task5-contoh3", "task5-ket4", "task5-contoh4"].every((id) => document.getElementById(id).value.trim() !== "");
         if (tugas5Ok) completed++;
 
         document.getElementById("progress-text").textContent = completed;
-        document.getElementById("progress-bar").style.width = (completed / 5) * 100 + "%";
+        document.getElementById("progress-bar").style.width = (completed / 4) * 100 + "%";
 
         document.getElementById("task-1-card").classList.toggle("filled", tugas1Ok);
         document.getElementById("task-3-card").classList.toggle("filled", tugas3Ok);
-        document.getElementById("task-4-card").classList.toggle("filled", tugas4Ok);
         document.getElementById("task-5-card").classList.toggle("filled", tugas5Ok);
       }
 
@@ -1014,18 +969,15 @@
 
         if (!document.getElementById("task1-pseudocode").value.trim()) errors.push("Tugas 1 — Pseudocode belum diisi");
 
-        if (!document.getElementById("task3-pengertian").value.trim()) errors.push("Tugas 2 — Pengertian pseudocode belum diisi");
         const istilahLabels = ["INPUT / READ", "PRINT / OUTPUT", "SET / ←", "IF – ELSE", "WHILE / FOR"];
         for (let i = 1; i <= 5; i++) {
           if (!document.getElementById(`task3-fungsi${i}`).value.trim()) errors.push(`Tugas 2 — Fungsi "${istilahLabels[i - 1]}" belum diisi`);
         }
 
-        if (!document.getElementById("task4-variabel").value.trim()) errors.push("Tugas 3 — Pengertian variabel belum diisi");
-
         const tipeDataLabels = ["int", "float / double", "char", "string"];
         for (let i = 1; i <= 4; i++) {
-          if (!document.getElementById(`task5-ket${i}`).value.trim()) errors.push(`Tugas 4 — Keterangan "${tipeDataLabels[i - 1]}" belum diisi`);
-          if (!document.getElementById(`task5-contoh${i}`).value.trim()) errors.push(`Tugas 4 — Contoh "${tipeDataLabels[i - 1]}" belum diisi`);
+          if (!document.getElementById(`task5-ket${i}`).value.trim()) errors.push(`Tugas 3 — Keterangan "${tipeDataLabels[i - 1]}" belum diisi`);
+          if (!document.getElementById(`task5-contoh${i}`).value.trim()) errors.push(`Tugas 3 — Contoh "${tipeDataLabels[i - 1]}" belum diisi`);
         }
 
         return errors;
@@ -1108,13 +1060,11 @@
           a2a: document.getElementById("lkpd-anggota2-absen").value,
           kelas: document.getElementById("lkpd-kelas").value,
           task1: document.getElementById("task1-pseudocode").value,
-          task3Pengertian: document.getElementById("task3-pengertian").value,
           task3Fungsi1: document.getElementById("task3-fungsi1").value,
           task3Fungsi2: document.getElementById("task3-fungsi2").value,
           task3Fungsi3: document.getElementById("task3-fungsi3").value,
           task3Fungsi4: document.getElementById("task3-fungsi4").value,
           task3Fungsi5: document.getElementById("task3-fungsi5").value,
-          task4Variabel: document.getElementById("task4-variabel").value,
           task5Ket1: document.getElementById("task5-ket1").value,
           task5Contoh1: document.getElementById("task5-contoh1").value,
           task5Ket2: document.getElementById("task5-ket2").value,
@@ -1142,13 +1092,11 @@
             document.getElementById("lkpd-anggota2-absen").value = draft.a2a || "";
             document.getElementById("lkpd-kelas").value = draft.kelas || "";
             document.getElementById("task1-pseudocode").value = draft.task1 || "";
-            document.getElementById("task3-pengertian").value = draft.task3Pengertian || "";
             document.getElementById("task3-fungsi1").value = draft.task3Fungsi1 || "";
             document.getElementById("task3-fungsi2").value = draft.task3Fungsi2 || "";
             document.getElementById("task3-fungsi3").value = draft.task3Fungsi3 || "";
             document.getElementById("task3-fungsi4").value = draft.task3Fungsi4 || "";
             document.getElementById("task3-fungsi5").value = draft.task3Fungsi5 || "";
-            document.getElementById("task4-variabel").value = draft.task4Variabel || "";
             document.getElementById("task5-ket1").value = draft.task5Ket1 || "";
             document.getElementById("task5-contoh1").value = draft.task5Contoh1 || "";
             document.getElementById("task5-ket2").value = draft.task5Ket2 || "";
@@ -1266,13 +1214,11 @@
           a2a: document.getElementById("lkpd-anggota2-absen").value.trim() || "-",
           kelas: document.getElementById("lkpd-kelas").value.trim() || "-",
           task1: document.getElementById("task1-pseudocode").value.trim() || "-",
-          task3Pengertian: document.getElementById("task3-pengertian").value.trim() || "-",
           task3Fungsi1: document.getElementById("task3-fungsi1").value.trim() || "-",
           task3Fungsi2: document.getElementById("task3-fungsi2").value.trim() || "-",
           task3Fungsi3: document.getElementById("task3-fungsi3").value.trim() || "-",
           task3Fungsi4: document.getElementById("task3-fungsi4").value.trim() || "-",
           task3Fungsi5: document.getElementById("task3-fungsi5").value.trim() || "-",
-          task4Variabel: document.getElementById("task4-variabel").value.trim() || "-",
           task5Ket1: document.getElementById("task5-ket1").value.trim() || "-",
           task5Contoh1: document.getElementById("task5-contoh1").value.trim() || "-",
           task5Ket2: document.getElementById("task5-ket2").value.trim() || "-",
@@ -1394,9 +1340,8 @@
         }
 
         renderTextBlock("TUGAS 1: MERANCANG PSEUDOCODE", data.task1, C.purple, [90, 60, 140]);
-        renderTextBlock("TUGAS 2.1: PENGERTIAN PSEUDOCODE", data.task3Pengertian, C.amber, [120, 90, 20]);
 
-        // ===== TUGAS 2.2 =====
+        // ===== TUGAS 2 — Tabel Istilah =====
         {
           const padX = 6;
           const innerW = contentW - padX * 2 - 4;
@@ -1425,7 +1370,7 @@
           ensureSpace(cardH + 5);
           drawCard(margin, y, contentW, cardH, { accent: C.amber, borderColor: [120, 90, 20] });
           setFont("bold", 10.5, C.amber);
-          doc.text("TUGAS 2.2: ISTILAH PERINTAH UMUM PSEUDOCODE", margin + padX + 2, y + 6);
+          doc.text("TUGAS 2: ISTILAH PERINTAH UMUM PSEUDOCODE", margin + padX + 2, y + 6);
           let cy = y + titleH;
           setFill([30, 30, 30]);
           doc.rect(colNo, cy, innerW, headerH, "F");
@@ -1454,9 +1399,7 @@
           y += cardH + 5;
         }
 
-        renderTextBlock("TUGAS 3: PENGERTIAN VARIABEL", data.task4Variabel, C.orange, [150, 80, 30]);
-
-        // ===== TUGAS 4 — Tabel Tipe Data =====
+        // ===== TUGAS 3 — Tabel Tipe Data =====
         {
           const padX = 6;
           const innerW = contentW - padX * 2 - 4;
@@ -1487,7 +1430,7 @@
           ensureSpace(cardH + 5);
           drawCard(margin, y, contentW, cardH, { accent: C.sky, borderColor: [40, 100, 130] });
           setFont("bold", 10.5, C.sky);
-          doc.text("TUGAS 4: TABEL TIPE DATA DASAR", margin + padX + 2, y + 6);
+          doc.text("TUGAS 3: TABEL TIPE DATA DASAR", margin + padX + 2, y + 6);
           let cy = y + titleH;
           setFill([30, 30, 30]);
           doc.rect(colNo, cy, innerW, headerH, "F");

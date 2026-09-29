@@ -460,6 +460,39 @@
         min-width: 58px;
       }
 
+      /* ===== REVISI: Animasi transisi antar soal ===== */
+      @keyframes slideInQ {
+        from {
+          opacity: 0;
+          transform: translateX(40px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+      .question-slide {
+        animation: slideInQ 0.35s ease forwards;
+      }
+
+      /* ===== REVISI 2: Animasi highlight saat jawaban dipilih ===== */
+      @keyframes pickFlash {
+        0% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.02);
+          background: rgba(0, 230, 118, 0.18);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+      .option-label.picked {
+        animation: pickFlash 0.4s ease forwards;
+        pointer-events: none;
+      }
+
       @media (max-width: 640px) {
         body {
           font-size: 1rem;
@@ -617,6 +650,7 @@
             </div>
           </div>
 
+          <!-- ===== Quiz Section ===== -->
           <div id="pretest-quiz-section" class="hidden space-y-6">
             <div class="bg-brandGray border border-white/10 rounded-2xl p-4 md:p-5 flex items-center justify-between flex-wrap gap-3">
               <div class="flex items-center gap-3">
@@ -640,18 +674,27 @@
               </div>
             </div>
 
+            <!-- Progress bar -->
             <div class="bg-brandGray/90 backdrop-blur-md border border-white/10 rounded-2xl p-4 sticky top-2 z-40">
               <div class="flex items-center justify-between mb-2">
                 <span class="text-sm font-bold text-white flex items-center gap-2"><i class="fa-solid fa-chart-simple text-brandGreen"></i> Progress Pengerjaan</span>
                 <span class="text-sm font-bold"><span id="answered-count" class="text-brandGreen">0</span><span class="text-textGray">/ 10</span></span>
               </div>
               <div class="w-full h-2 bg-black/50 rounded-full overflow-hidden"><div id="progress-fill" class="progress-bar-fill h-full bg-gradient-to-r from-brandGreen to-emerald-400" style="width: 0%"></div></div>
+              <!-- ===== REVISI 2: Dot hanya sebagai indikator, TIDAK bisa diklik ===== -->
+              <div class="flex items-center justify-center gap-1.5 mt-3 flex-wrap" id="question-dots"></div>
             </div>
 
-            <div id="questions-container" class="space-y-6"></div>
+            <!-- Container soal satu per satu -->
+            <div id="single-question-container" class="space-y-5"></div>
 
-            <div class="bg-brandGray border border-brandGreen/30 rounded-2xl p-6 text-center space-y-4">
-              <p class="text-textGray text-sm">Sudah yakin dengan semua jawabanmu? Pastikan tidak ada soal yang terlewat sebelum mengumpulkan.</p>
+            <!-- ===== REVISI 2: Submit Section (muncul di soal terakhir) ===== -->
+            <div id="submit-section" class="hidden bg-brandGray border border-brandGreen/30 rounded-2xl p-6 text-center space-y-4">
+              <div class="w-16 h-16 mx-auto rounded-full bg-brandGreen/15 border-2 border-brandGreen/40 flex items-center justify-center">
+                <i class="fa-solid fa-flag-checkered text-brandGreen text-2xl"></i>
+              </div>
+              <p class="text-white font-bold text-lg">Semua soal sudah kamu jawab! 🎉</p>
+              <p class="text-textGray text-sm">Klik tombol di bawah untuk mengumpulkan jawaban dan melihat hasilmu.</p>
               <button onclick="submitQuiz()" class="inline-flex items-center gap-3 px-8 py-3.5 bg-brandGreen text-black font-bold rounded-xl hover:bg-green-400 transition shadow-lg shadow-brandGreen/20">
                 <i class="fa-solid fa-paper-plane"></i> Kumpulkan Jawaban
               </button>
@@ -685,12 +728,19 @@
                 <p class="text-sm text-textGray"><strong class="text-white">Semua menu sudah terbuka kembali!</strong> Kamu sekarang bisa bebas menjelajahi Materi, Simulasi, Video, dan Lembar Kerja. 🎉</p>
               </div>
             </div>
+
+            <div class="bg-brandGray border border-white/10 rounded-2xl overflow-hidden">
+              <button onclick="toggleReview()" class="w-full flex items-center justify-between p-5 hover:bg-white/5 transition">
+                <span class="flex items-center gap-3 font-bold text-white text-base"><i class="fa-solid fa-list-check text-sky-400"></i> Lihat Review Jawaban</span>
+                <i id="review-chevron" class="fa-solid fa-chevron-down text-textGray transition-transform"></i>
+              </button>
+              <div id="review-body" class="hidden border-t border-white/10 p-5 space-y-4"></div>
+            </div>
           </div>
         </div>
 
         <!-- ========== TAB 1: MATERI ========== -->
         <div id="materi" class="tab-content hidden space-y-12">
-          <!-- BAGIAN 1: PSEUDOCODE -->
           <section class="bg-brandGray border border-white/5 rounded-3xl p-6 md:p-8 space-y-6">
             <div class="flex items-center gap-4 border-b border-white/10 pb-4">
               <div class="w-12 h-12 rounded-2xl bg-purple-500/10 flex items-center justify-center text-purple-400 text-2xl font-bold border border-purple-500/20 shrink-0"><i class="fa-solid fa-file-code"></i></div>
@@ -816,7 +866,6 @@
             <div class="space-y-4 pt-2">
               <h3 class="text-xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-circle-dot text-purple-400 text-sm"></i> 5. Contoh-Contoh Pseudocode</h3>
 
-              <!-- Contoh A -->
               <div class="bg-black/30 border border-purple-500/20 rounded-2xl p-5 space-y-3">
                 <div class="flex items-center gap-2 text-purple-300 font-bold"><span class="w-7 h-7 rounded-lg bg-purple-500/20 border border-purple-500/40 flex items-center justify-center text-sm">A</span>Menghitung Luas Persegi</div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -842,7 +891,6 @@
                 </div>
               </div>
 
-              <!-- Contoh B -->
               <div class="bg-black/30 border border-purple-500/20 rounded-2xl p-5 space-y-3">
                 <div class="flex items-center gap-2 text-purple-300 font-bold">
                   <span class="w-7 h-7 rounded-lg bg-purple-500/20 border border-purple-500/40 flex items-center justify-center text-sm">B</span>Membagi Bilangan (dengan IF-ELSE)
@@ -873,7 +921,6 @@
                 </div>
               </div>
 
-              <!-- Contoh C -->
               <div class="bg-black/30 border border-purple-500/20 rounded-2xl p-5 space-y-3">
                 <div class="flex items-center gap-2 text-purple-300 font-bold">
                   <span class="w-7 h-7 rounded-lg bg-purple-500/20 border border-purple-500/40 flex items-center justify-center text-sm">C</span>Menghitung Mundur dari N hingga 1
@@ -902,7 +949,6 @@
                 </div>
               </div>
 
-              <!-- Contoh D -->
               <div class="bg-black/30 border border-purple-500/20 rounded-2xl p-5 space-y-3">
                 <div class="flex items-center gap-2 text-purple-300 font-bold">
                   <span class="w-7 h-7 rounded-lg bg-purple-500/20 border border-purple-500/40 flex items-center justify-center text-sm">D</span>Menghitung Luas Permukaan Kubus
@@ -930,7 +976,6 @@
                 </div>
               </div>
 
-              <!-- Contoh E -->
               <div class="bg-black/30 border border-purple-500/20 rounded-2xl p-5 space-y-3">
                 <div class="flex items-center gap-2 text-purple-300 font-bold"><span class="w-7 h-7 rounded-lg bg-purple-500/20 border border-purple-500/40 flex items-center justify-center text-sm">E</span>Mencari Bilangan Terbesar</div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -970,7 +1015,6 @@
             </div>
           </section>
 
-          <!-- BAGIAN 4: PENGENALAN BAHASA PEMROGRAMAN -->
           <section class="bg-brandGray border border-sky-500/30 rounded-3xl p-6 md:p-8 space-y-6">
             <div class="flex items-center gap-4 border-b border-white/10 pb-4">
               <div class="w-12 h-12 rounded-2xl bg-sky-500/10 flex items-center justify-center text-sky-400 text-2xl font-bold border border-sky-500/20 shrink-0"><i class="fa-solid fa-cubes"></i></div>
@@ -1066,7 +1110,6 @@
             </div>
           </section>
 
-          <!-- BAGIAN 5: ALUR PEMBUATAN PROGRAM -->
           <section class="bg-brandGray border border-brandGreen/30 rounded-3xl p-6 md:p-8 space-y-6">
             <div class="flex items-center gap-4 border-b border-white/10 pb-4">
               <div class="w-12 h-12 rounded-2xl bg-brandGreen/10 flex items-center justify-center text-brandGreen text-2xl font-bold border border-brandGreen/20 shrink-0"><i class="fa-solid fa-route"></i></div>
@@ -1122,7 +1165,6 @@
             </div>
           </section>
 
-          <!-- BAGIAN 6: BAHASA PEMROGRAMAN PROSEDURAL -->
           <section class="bg-brandGray border border-sky-500/30 rounded-3xl p-6 md:p-8 space-y-6">
             <div class="flex items-center gap-4 border-b border-white/10 pb-4">
               <div class="w-12 h-12 rounded-2xl bg-sky-500/10 flex items-center justify-center text-sky-400 text-2xl font-bold border border-sky-500/20 shrink-0"><i class="fa-solid fa-diagram-project"></i></div>
@@ -1170,7 +1212,6 @@
             </div>
           </section>
 
-          <!-- BAGIAN 7: BAHASA PEMROGRAMAN C++ -->
           <section class="bg-brandGray border border-brandGreen/20 rounded-3xl p-6 md:p-8 space-y-6">
             <div class="flex items-center gap-4 border-b border-white/10 pb-4">
               <div class="w-12 h-12 rounded-2xl bg-[#00599C]/20 flex items-center justify-center text-[#5eb3e4] text-2xl font-bold border border-[#00599C]/40 shrink-0"><i class="fa-solid fa-plus"></i></div>
@@ -1226,7 +1267,6 @@
             </div>
           </section>
 
-          <!-- BAGIAN 8: MEMBUAT PROGRAM PERTAMA DENGAN C++ -->
           <section class="bg-brandGray border border-sky-500/30 rounded-3xl p-6 md:p-8 space-y-6">
             <div class="flex items-center gap-4 border-b border-white/10 pb-4">
               <div class="w-12 h-12 rounded-2xl bg-sky-500/10 flex items-center justify-center text-sky-400 text-2xl font-bold border border-sky-500/20 shrink-0"><i class="fa-solid fa-gears"></i></div>
@@ -1321,7 +1361,6 @@
             </div>
           </div>
 
-          <!-- SUB-TAB 1: STEP-BY-STEP -->
           <div id="sim-step" class="sim-sub-content space-y-6">
             <div class="bg-brandGray border border-purple-500/30 rounded-3xl p-6 md:p-8 space-y-6 shadow-2xl">
               <div class="flex items-center gap-3 border-b border-white/10 pb-4">
@@ -1393,7 +1432,6 @@
             </div>
           </div>
 
-          <!-- SUB-TAB 2: PUZZLE -->
           <div id="sim-puzzle" class="sim-sub-content hidden space-y-6">
             <div class="bg-brandGray border border-amber-500/30 rounded-3xl p-6 md:p-8 space-y-6">
               <div class="flex items-center gap-3 border-b border-white/10 pb-4">
@@ -1425,7 +1463,6 @@
             </div>
           </div>
 
-          <!-- SUB-TAB 3: ROLEPLAY -->
           <div id="sim-roleplay" class="sim-sub-content hidden space-y-6">
             <div class="bg-brandGray border border-sky-500/30 rounded-3xl p-6 md:p-8 space-y-6">
               <div class="flex items-center gap-3 border-b border-white/10 pb-4">
@@ -1479,7 +1516,6 @@
             </div>
           </div>
 
-          <!-- SUB-TAB 4: TRACE TABLE -->
           <div id="sim-trace" class="sim-sub-content hidden space-y-6">
             <div class="bg-brandGray border border-purple-500/30 rounded-3xl p-6 md:p-8 space-y-6">
               <div class="flex items-center gap-3 border-b border-white/10 pb-4">
@@ -1552,6 +1588,90 @@
                 <span class="text-xs text-textGray bg-white/5 border border-white/10 px-3 py-1.5 rounded-full" id="chapter-count">5 Bab</span>
               </div>
               <div id="chapters-list" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
+            </div>
+
+            <!-- ===== RINGKASAN TOPIK VIDEO ===== -->
+            <div class="border-t border-white/10 pt-6 space-y-4">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-500 text-lg shrink-0"><i class="fa-solid fa-book-open-reader"></i></div>
+                <div>
+                  <h3 class="text-xl font-bold text-white">Ringkasan Topik Video</h3>
+                  <p class="text-xs text-textGray">Topik-topik utama yang dijelaskan secara berurutan dalam video <em>"👉 Pseudocode Ini Bikin Informatika Jadi Gampang!"</em></p>
+                </div>
+              </div>
+
+              <div class="space-y-3">
+                <!-- Topik 1 -->
+                <div class="bg-white/5 border border-white/10 rounded-2xl p-5 space-y-3">
+                  <div class="flex items-start gap-3">
+                    <div class="w-9 h-9 rounded-lg bg-red-500/15 border border-red-500/30 flex items-center justify-center text-red-400 font-bold text-sm shrink-0">1</div>
+                    <h4 class="font-bold text-white text-base pt-1.5">Pentingnya Perencanaan dan Analogi Robot</h4>
+                  </div>
+                  <ul class="text-sm text-textGray space-y-2 pl-12 list-disc list-outside marker:text-red-400/60">
+                    <li>Sebelum mulai menulis kode, pemrogram perlu membuat <strong class="text-white">rencana logika</strong> terlebih dahulu.</li>
+                    <li>Video memberi contoh perumpamaan mengajari robot membuat minuman, di mana robot mengartikan instruksi <strong class="text-white">100% secara harfiah (<em>literal</em>)</strong> tanpa asumsi maupun interpretasi.</li>
+                  </ul>
+                </div>
+
+                <!-- Topik 2 -->
+                <div class="bg-white/5 border border-white/10 rounded-2xl p-5 space-y-3">
+                  <div class="flex items-start gap-3">
+                    <div class="w-9 h-9 rounded-lg bg-red-500/15 border border-red-500/30 flex items-center justify-center text-red-400 font-bold text-sm shrink-0">2</div>
+                    <h4 class="font-bold text-white text-base pt-1.5">Pengertian dan Manfaat Pseudocode</h4>
+                  </div>
+                  <ul class="text-sm text-textGray space-y-2 pl-12 list-disc list-outside marker:text-red-400/60">
+                    <li><strong class="text-white">Pseudocode</strong> adalah kerangka atau cetak biru (<em>blueprint</em>) program yang ditulis menggunakan bahasa manusia biasa ditambah kata kunci dasar.</li>
+                    <li>
+                      Pseudocode <strong class="text-white">bukan bahasa pemrograman resmi</strong> sehingga tidak bisa langsung dijalankan oleh komputer, melainkan alat bantu bagi manusia untuk merancang dan memahami alur logika program.
+                    </li>
+                    <li>Manfaat utamanya meliputi: menemukan potensi kesalahan sejak awal, menghemat waktu <em>debugging</em>, dan mempermudah penyampaian ide program kepada orang lain.</li>
+                  </ul>
+                </div>
+
+                <!-- Topik 3 -->
+                <div class="bg-white/5 border border-white/10 rounded-2xl p-5 space-y-3">
+                  <div class="flex items-start gap-3">
+                    <div class="w-9 h-9 rounded-lg bg-red-500/15 border border-red-500/30 flex items-center justify-center text-red-400 font-bold text-sm shrink-0">3</div>
+                    <h4 class="font-bold text-white text-base pt-1.5">Logika Pemrograman dalam Kehidupan Sehari-hari</h4>
+                  </div>
+                  <ul class="text-sm text-textGray space-y-2 pl-12 list-disc list-outside marker:text-red-400/60">
+                    <li>Konsep logika pemrograman sebenarnya diterapkan dalam aktivitas sehari-hari, seperti alur mengambil gelas dan mengecek apakah gelas tersebut kosong sebelum menuangkan minuman.</li>
+                  </ul>
+                </div>
+
+                <!-- Topik 4 -->
+                <div class="bg-white/5 border border-white/10 rounded-2xl p-5 space-y-3">
+                  <div class="flex items-start gap-3">
+                    <div class="w-9 h-9 rounded-lg bg-red-500/15 border border-red-500/30 flex items-center justify-center text-red-400 font-bold text-sm shrink-0">4</div>
+                    <h4 class="font-bold text-white text-base pt-1.5">Struktur Dasar Penulisan Pseudocode</h4>
+                  </div>
+                  <ul class="text-sm text-textGray space-y-2 pl-12 list-disc list-outside marker:text-red-400/60">
+                    <li>
+                      <strong class="text-white">Awal dan Perintah Spesifik (<code class="text-amber-300 font-mono">start</code> &amp; <code class="text-amber-300 font-mono">get</code>):</strong> Menandai awal instruksi, seperti instruksi
+                      <code class="text-amber-300 font-mono">get cup</code>.
+                    </li>
+                    <li>
+                      <strong class="text-white">Pengambilan Keputusan (<code class="text-amber-300 font-mono">if - then</code>):</strong> Struktur kondisi logis yang menjadi fondasi pemrograman, seperti
+                      <code class="text-amber-300 font-mono">if cup is empty then pour drink</code>.
+                    </li>
+                    <li>
+                      <strong class="text-white">Akhiran (<code class="text-amber-300 font-mono">end</code>):</strong> Kata kunci untuk memberi sinyal yang jelas bahwa seluruh alur instruksi telah selesai.
+                    </li>
+                  </ul>
+                </div>
+
+                <!-- Topik 5 -->
+                <div class="bg-white/5 border border-white/10 rounded-2xl p-5 space-y-3">
+                  <div class="flex items-start gap-3">
+                    <div class="w-9 h-9 rounded-lg bg-red-500/15 border border-red-500/30 flex items-center justify-center text-red-400 font-bold text-sm shrink-0">5</div>
+                    <h4 class="font-bold text-white text-base pt-1.5">Kesimpulan dan Ajakan Praktik</h4>
+                  </div>
+                  <ul class="text-sm text-textGray space-y-2 pl-12 list-disc list-outside marker:text-red-400/60">
+                    <li>Ditegaskan prinsip penting: <strong class="text-white">beberapa menit perencanaan bisa menghemat berjam-jam waktu ngoding</strong>.</li>
+                    <li>Penonton diajak berlatih membuat pseudocode sederhana dari aktivitas harian, seperti langkah membuat kopi pagi atau menyalakan laptop.</li>
+                  </ul>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -1668,7 +1788,6 @@
       </div>
     </footer>
 
-    <!-- YouTube IFrame Player API -->
     <script src="https://www.youtube.com/iframe_api"></script>
 
     <script>
@@ -1782,9 +1901,13 @@
         });
       }
 
-      /* PRE-TEST QUIZ */
+      /* ============================================================
+         PRE-TEST: One-by-one + Auto-advance + No skip + Random
+         ============================================================ */
+
       const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyz2BdjKk0OHiBHqwz_AlZBswgAFSRcANk7JcVVUVuOV0QVM4onEPQAwPeEGnG9dDPcCQ/exec";
-      const QUESTIONS = [
+
+      const QUESTIONS_BANK = [
         {
           q: "Sebelum membuat sebuah program, seorang programmer biasanya membuat rancangan langkah-langkah penyelesaian masalah terlebih dahulu menggunakan bahasa yang sederhana. Rancangan tersebut disebut ....",
           options: ["Variabel", "Pseudocode", "Compiler", "Database"],
@@ -1828,10 +1951,37 @@
           answer: 3,
         },
       ];
-      const LETTERS = ["A", "B", "C", "D"];
-      let answers = new Array(QUESTIONS.length).fill(null);
+
+      let quizQuestions = [];
+      let answers = [];
+      let currentQuestionIdx = 0;
       let isSubmitted = false;
       let studentData = { nama: "", absen: "" };
+      let isLocked = false; /* ===== REVISI 2: Lock sementara saat transisi ===== */
+
+      function shuffleArray(arr) {
+        const a = [...arr];
+        for (let i = a.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+      }
+
+      function buildShuffledQuiz() {
+        const shuffledQuestions = shuffleArray(QUESTIONS_BANK);
+        return shuffledQuestions.map((q) => {
+          const indexedOptions = q.options.map((opt, idx) => ({ opt, originalIdx: idx }));
+          const shuffledOptions = shuffleArray(indexedOptions);
+          const newAnswerIdx = shuffledOptions.findIndex((o) => o.originalIdx === q.answer);
+          return {
+            q: q.q,
+            options: shuffledOptions.map((o) => o.opt),
+            answer: newAnswerIdx,
+            originalAnswer: q.answer,
+          };
+        });
+      }
 
       function startPretest() {
         const namaInput = document.getElementById("pretest-nama");
@@ -1867,64 +2017,167 @@
         document.getElementById("pretest-form-section").classList.add("hidden");
         document.getElementById("pretest-quiz-section").classList.remove("hidden");
         document.getElementById("pretest-result-section").classList.add("hidden");
-        answers = new Array(QUESTIONS.length).fill(null);
+
+        quizQuestions = buildShuffledQuiz();
+        answers = new Array(quizQuestions.length).fill(null);
+        currentQuestionIdx = 0;
         isSubmitted = false;
+        isLocked = false;
+
+        // Reset submit section
+        document.getElementById("submit-section").classList.add("hidden");
+
         lockOtherTabs();
-        renderQuestions();
+        renderQuestionDots();
+        renderSingleQuestion();
         updateProgress();
         window.scrollTo({ top: 0, behavior: "smooth" });
       }
+
       function cancelPretest() {
         if (!confirm("Yakin ingin ganti identitas? Jawabanmu akan hilang.")) return;
         document.getElementById("pretest-form-section").classList.remove("hidden");
         document.getElementById("pretest-quiz-section").classList.add("hidden");
         document.getElementById("pretest-result-section").classList.add("hidden");
-        answers = new Array(QUESTIONS.length).fill(null);
+        answers = [];
+        quizQuestions = [];
+        currentQuestionIdx = 0;
         isSubmitted = false;
+        isLocked = false;
         unlockAllTabs();
       }
-      function renderQuestions() {
-        const container = document.getElementById("questions-container");
-        container.innerHTML = "";
-        QUESTIONS.forEach((item, idx) => {
-          const card = document.createElement("div");
-          card.className = "question-card bg-brandGray border border-white/10 rounded-2xl p-5 md:p-6 space-y-4";
-          card.id = "q-card-" + idx;
-          const header = document.createElement("div");
-          header.className = "flex items-start gap-3";
-          header.innerHTML = `<div class="w-9 h-9 rounded-xl bg-brandGreen/10 border border-brandGreen/25 flex items-center justify-center text-brandGreen font-bold text-sm shrink-0">${idx + 1}</div><div class="flex-1"><p class="font-semibold text-white text-base md:text-lg leading-relaxed">${item.q}</p></div>`;
-          card.appendChild(header);
-          const optionsWrap = document.createElement("div");
-          optionsWrap.className = "space-y-2.5 pl-0 md:pl-12";
-          item.options.forEach((opt, optIdx) => {
-            const label = document.createElement("label");
-            label.className = "option-label";
-            label.innerHTML = `<input type="radio" name="q-${idx}" value="${optIdx}" /><span class="option-marker">${LETTERS[optIdx]}</span><span class="flex-1 text-sm md:text-base text-gray-200 leading-snug">${opt}</span>`;
-            const input = label.querySelector("input");
-            input.addEventListener("change", () => {
-              if (isSubmitted) return;
-              answers[idx] = optIdx;
-              updateSelection(idx, optIdx);
-              updateProgress();
-            });
-            optionsWrap.appendChild(label);
+
+      /* ===== REVISI 2: Dot hanya indikator, tidak bisa diklik ===== */
+      function renderQuestionDots() {
+        const wrap = document.getElementById("question-dots");
+        if (!wrap) return;
+        wrap.innerHTML = "";
+        quizQuestions.forEach((_, i) => {
+          const dot = document.createElement("div");
+          dot.dataset.idx = i;
+          dot.className = "dot-ind w-7 h-7 rounded-full text-[11px] font-bold transition border flex items-center justify-center";
+          wrap.appendChild(dot);
+        });
+        updateDots();
+      }
+
+      function updateDots() {
+        const dots = document.querySelectorAll(".dot-ind");
+        dots.forEach((dot, i) => {
+          dot.classList.remove(
+            "bg-brandGreen",
+            "text-black",
+            "border-brandGreen",
+            "bg-white/5",
+            "text-gray-400",
+            "border-white/20",
+            "ring-2",
+            "ring-brandGreen/50",
+            "bg-brandGreen/20",
+            "text-brandGreen",
+            "border-brandGreen/40",
+            "bg-amber-500/20",
+            "text-amber-400",
+            "border-amber-500/40",
+          );
+          if (i === currentQuestionIdx) {
+            dot.classList.add("bg-amber-500/20", "text-amber-400", "border-amber-500/40", "ring-2", "ring-amber-500/50");
+          } else if (answers[i] !== null) {
+            dot.classList.add("bg-brandGreen/20", "text-brandGreen", "border-brandGreen/40");
+          } else {
+            dot.classList.add("bg-white/5", "text-gray-400", "border-white/20");
+          }
+          dot.textContent = i + 1;
+        });
+      }
+
+      /* ===== REVISI 2: Render SATU soal + auto advance saat dijawab ===== */
+      function renderSingleQuestion() {
+        const container = document.getElementById("single-question-container");
+        if (!container) return;
+        const idx = currentQuestionIdx;
+        const item = quizQuestions[idx];
+        const LETTERS = ["A", "B", "C", "D"];
+        const isLast = idx === quizQuestions.length - 1;
+
+        container.innerHTML = `
+          <div class="question-card bg-brandGray border border-white/10 rounded-2xl p-5 md:p-7 space-y-5 question-slide" id="q-card-current">
+            <div class="flex items-start justify-between gap-3 flex-wrap">
+              <div class="flex items-start gap-3 flex-1 min-w-0">
+                <div class="w-11 h-11 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 font-bold text-base shrink-0">${idx + 1}</div>
+                <div class="flex-1">
+                  <p class="text-xs text-textGray uppercase tracking-wider font-bold mb-1">Soal ${idx + 1} dari ${quizQuestions.length}</p>
+                  <p class="font-semibold text-white text-base md:text-lg leading-relaxed">${item.q}</p>
+                </div>
+              </div>
+            </div>
+            <div class="space-y-2.5 pl-0 md:pl-14" id="options-wrap"></div>
+            <div class="pl-0 md:pl-14 pt-1">
+              <p class="text-xs text-textGray italic flex items-center gap-1.5"><i class="fa-solid fa-circle-info text-amber-400"></i> Pilih satu jawaban — otomatis lanjut ke soal berikutnya.</p>
+            </div>
+          </div>
+        `;
+
+        const optionsWrap = document.getElementById("options-wrap");
+        item.options.forEach((opt, optIdx) => {
+          const label = document.createElement("label");
+          label.className = "option-label";
+          label.innerHTML = `<input type="radio" name="q-current" value="${optIdx}" /><span class="option-marker">${LETTERS[optIdx]}</span><span class="flex-1 text-sm md:text-base text-gray-200 leading-snug">${opt}</span>`;
+          const input = label.querySelector("input");
+          input.addEventListener("change", () => {
+            if (isSubmitted || isLocked) return;
+            handleAnswer(idx, optIdx, label);
           });
-          card.appendChild(optionsWrap);
-          container.appendChild(card);
+          optionsWrap.appendChild(label);
         });
+
+        // Auto scroll ke atas soal
+        const card = document.getElementById("q-card-current");
+        if (card) card.scrollIntoView({ behavior: "smooth", block: "start" });
       }
-      function updateSelection(qIdx, optIdx) {
-        const card = document.getElementById("q-card-" + qIdx);
-        card.querySelectorAll(".option-label").forEach((lbl, i) => {
-          lbl.classList.toggle("selected", i === optIdx);
+
+      /* ===== REVISI 2: Handler jawaban → auto lanjut ===== */
+      function handleAnswer(idx, optIdx, labelEl) {
+        isLocked = true;
+
+        // Simpan jawaban
+        answers[idx] = optIdx;
+
+        // Visual feedback
+        labelEl.classList.add("selected", "picked");
+        const allLabels = labelEl.parentElement.querySelectorAll(".option-label");
+        allLabels.forEach((l) => {
+          if (l !== labelEl) l.classList.add("disabled");
         });
+
+        updateProgress();
+        updateDots();
+
+        // Auto advance setelah delay singkat
+        setTimeout(() => {
+          isLocked = false;
+          const isLast = idx === quizQuestions.length - 1;
+          if (isLast) {
+            // Soal terakhir: tampilkan tombol Kumpulkan
+            document.getElementById("single-question-container").innerHTML = "";
+            document.getElementById("submit-section").classList.remove("hidden");
+            document.getElementById("submit-section").scrollIntoView({ behavior: "smooth", block: "center" });
+          } else {
+            currentQuestionIdx++;
+            renderSingleQuestion();
+            updateDots();
+          }
+        }, 450);
       }
+
       function updateProgress() {
         const answered = answers.filter((a) => a !== null).length;
         document.getElementById("answered-count").textContent = answered;
-        document.getElementById("progress-fill").style.width = (answered / QUESTIONS.length) * 100 + "%";
+        document.getElementById("progress-fill").style.width = (answered / quizQuestions.length) * 100 + "%";
       }
+
       function submitQuiz() {
+        if (isSubmitted) return;
         const unanswered = answers.filter((a) => a === null).length;
         if (unanswered > 0) {
           const warning = document.getElementById("submit-warning");
@@ -1932,19 +2185,20 @@
           warningText.textContent = `Masih ada ${unanswered} soal yang belum dijawab.`;
           warning.classList.remove("hidden");
           setTimeout(() => warning.classList.add("hidden"), 4000);
-          const firstEmpty = answers.findIndex((a) => a === null);
-          if (firstEmpty !== -1) document.getElementById("q-card-" + firstEmpty).scrollIntoView({ behavior: "smooth", block: "center" });
           return;
         }
         isSubmitted = true;
+
         let correct = 0;
         answers.forEach((ans, idx) => {
-          if (ans === QUESTIONS[idx].answer) correct++;
+          if (ans === quizQuestions[idx].answer) correct++;
         });
         const score = correct * 10;
+
         document.getElementById("final-score").textContent = score;
         document.getElementById("correct-count").textContent = correct;
-        document.getElementById("wrong-count").textContent = QUESTIONS.length - correct;
+        document.getElementById("wrong-count").textContent = quizQuestions.length - correct;
+
         let title = "",
           message = "";
         if (score >= 80) {
@@ -1962,28 +2216,63 @@
         }
         document.getElementById("score-title").textContent = title;
         document.getElementById("score-message").textContent = message;
-        document.querySelectorAll(".option-label").forEach((lbl) => lbl.classList.add("disabled"));
-        QUESTIONS.forEach((item, idx) => {
-          const card = document.getElementById("q-card-" + idx);
-          const labels = card.querySelectorAll(".option-label");
-          const userAns = answers[idx];
-          const correctAns = item.answer;
-          labels[correctAns].classList.add("review-correct");
-          if (userAns !== correctAns) {
-            labels[userAns].classList.add("review-wrong");
-            card.classList.add("wrong");
-          } else {
-            card.classList.add("correct");
-          }
-        });
+
         document.getElementById("pretest-quiz-section").classList.add("hidden");
         document.getElementById("pretest-result-section").classList.remove("hidden");
         unlockAllTabs();
-        sendToGoogleSheets(correct, QUESTIONS.length - correct, score);
+        renderReview();
+        sendToGoogleSheets(correct, quizQuestions.length - correct, score);
         setTimeout(() => {
           document.getElementById("pretest-result-section").scrollIntoView({ behavior: "smooth", block: "start" });
         }, 200);
       }
+
+      function toggleReview() {
+        const body = document.getElementById("review-body");
+        const chevron = document.getElementById("review-chevron");
+        body.classList.toggle("hidden");
+        chevron.style.transform = body.classList.contains("hidden") ? "rotate(0deg)" : "rotate(180deg)";
+      }
+
+      function renderReview() {
+        const LETTERS = ["A", "B", "C", "D"];
+        const body = document.getElementById("review-body");
+        if (!body) return;
+        body.innerHTML = "";
+        quizQuestions.forEach((item, idx) => {
+          const userAns = answers[idx];
+          const correctAns = item.answer;
+          const isCorrect = userAns === correctAns;
+          const card = document.createElement("div");
+          card.className = "bg-black/30 border border-white/10 rounded-xl p-4 space-y-3";
+          card.innerHTML = `
+            <div class="flex items-start gap-3">
+              <div class="w-8 h-8 rounded-lg ${isCorrect ? "bg-brandGreen/15 border-brandGreen/30 text-brandGreen" : "bg-rose-500/15 border-rose-500/30 text-rose-400"} border flex items-center justify-center font-bold text-xs shrink-0">
+                ${isCorrect ? '<i class="fa-solid fa-check"></i>' : '<i class="fa-solid fa-xmark"></i>'}
+              </div>
+              <p class="text-sm text-white font-semibold flex-1">${idx + 1}. ${item.q}</p>
+            </div>
+            <div class="space-y-1.5 pl-11">
+              ${item.options
+                .map((opt, oi) => {
+                  let cls = "text-gray-400";
+                  let icon = "";
+                  if (oi === correctAns) {
+                    cls = "text-brandGreen font-bold";
+                    icon = '<i class="fa-solid fa-circle-check text-brandGreen mr-2"></i>';
+                  } else if (oi === userAns) {
+                    cls = "text-rose-400 font-bold";
+                    icon = '<i class="fa-solid fa-circle-xmark text-rose-400 mr-2"></i>';
+                  }
+                  return `<div class="text-xs ${cls} flex items-start gap-1">${icon}<span><strong>${LETTERS[oi]}.</strong> ${opt}</span></div>`;
+                })
+                .join("")}
+            </div>
+          `;
+          body.appendChild(card);
+        });
+      }
+
       async function sendToGoogleSheets(benar, salah, skor) {
         const statusEl = document.getElementById("save-status");
         const statusText = document.getElementById("save-status-text");
@@ -1999,8 +2288,9 @@
           formData.append("skor", skor);
           formData.append("benar", benar);
           formData.append("salah", salah);
+          const LETTERS = ["A", "B", "C", "D"];
           formData.append("jawaban", answers.map((a) => LETTERS[a] || "?").join(","));
-          formData.append("kunci", QUESTIONS.map((q) => LETTERS[q.answer]).join(","));
+          formData.append("kunci", quizQuestions.map((q) => LETTERS[q.answer]).join(","));
           await fetch(APPS_SCRIPT_URL, { method: "POST", mode: "no-cors", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body: formData.toString() });
           statusEl.className = "mt-5 inline-flex items-center gap-2 text-sm font-semibold px-4 py-2 rounded-full bg-brandGreen/15 border border-brandGreen/30 text-brandGreen";
           statusText.innerHTML = '<i class="fa-solid fa-circle-check mr-1"></i> Hasil berhasil dikirim!';
@@ -2010,7 +2300,9 @@
         }
       }
 
-      /* SIMULATOR */
+      /* ============================================================
+         SIMULATOR, PUZZLE, ROLEPLAY, TRACE, VIDEO (TIDAK DIUBAH)
+         ============================================================ */
       let currentStep = -1;
       let userInputValue = null;
       function resetSimulation() {
@@ -2120,7 +2412,6 @@
         btnNext.className = "w-full py-3.5 bg-gray-600 text-gray-400 font-bold rounded-xl cursor-not-allowed flex items-center justify-center gap-2";
       }
 
-      /* SUB-TAB NAVIGATION */
       function switchSimTab(evt, tabId) {
         document.querySelectorAll(".sim-sub-content").forEach((el) => el.classList.add("hidden"));
         document.querySelectorAll(".sim-tab-btn").forEach((btn) => {
@@ -2132,7 +2423,6 @@
         evt.currentTarget.classList.remove("text-gray-300", "hover:bg-white/5");
       }
 
-      /* PUZZLE */
       const PUZZLE_LINES = [
         { id: "p1", code: `<span class="kw">input</span> total_bayar, uang_dibayar`, indent: 0 },
         { id: "p2", code: `<span class="kw">if</span> uang_dibayar <span class="op">&gt;=</span> total_bayar <span class="kw">then</span>`, indent: 0 },
@@ -2144,14 +2434,6 @@
       ];
       const PUZZLE_CORRECT_ORDER = ["p1", "p2", "p3", "p4", "p5", "p6", "p7"];
       let puzzleCurrentOrder = [];
-      function shuffleArray(arr) {
-        const a = [...arr];
-        for (let i = a.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [a[i], a[j]] = [a[j], a[i]];
-        }
-        return a;
-      }
       function initPuzzle() {
         do {
           puzzleCurrentOrder = shuffleArray(PUZZLE_CORRECT_ORDER);
@@ -2233,7 +2515,6 @@
         initPuzzle();
       }
 
-      /* ROLEPLAY */
       const ROLEPLAY_STATES = [
         { line: -1, programmer: "— Menunggu mulai —", computer: "Menunggu instruksi...", screen: "> _", vars: {} },
         { line: 0, programmer: "input nilai", computer: "Membaca input user...", screen: "> User mengetik: 80", vars: {} },
@@ -2283,7 +2564,6 @@
         renderRoleplay();
       }
 
-      /* TRACE TABLE */
       const TRACE_ROWS = [
         { line: 0, lineText: "input nilai", nilai: 80, kondisi: "—", output: "—" },
         { line: 1, lineText: "if nilai >= 75", nilai: 80, kondisi: "TRUE", output: "—" },
@@ -2338,7 +2618,6 @@
         renderTrace();
       }
 
-      /* YOUTUBE CHAPTERS */
       const VIDEO_ID = "s3MAhgExPUc";
       const CHAPTERS = [
         { time: 15, label: "00:15", title: "Pentingnya Perencanaan & Analogi Robot", desc: "Pentingnya membuat rencana logika sebelum mengetik kode" },
@@ -2411,7 +2690,6 @@
       }
       window.onYouTubeIframeAPIReady = onYouTubeIframeAPIReady;
 
-      /* SCROLL REVEAL */
       const revealObserver = new IntersectionObserver(
         (entries) => {
           entries.forEach((entry) => {
@@ -2425,7 +2703,6 @@
       );
       document.querySelectorAll(".reveal").forEach((el) => revealObserver.observe(el));
 
-      /* INIT */
       document.addEventListener("DOMContentLoaded", () => {
         initPuzzle();
         renderRoleplay();
