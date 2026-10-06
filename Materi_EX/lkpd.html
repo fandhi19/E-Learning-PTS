@@ -1,0 +1,1596 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LKPD Praktik: Microsoft Excel — RuangInformatika</title>
+    <link rel="shortcut icon" href="../images/Logo Patbhe.png" type="image/x-icon" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: { sans: ["Plus Jakarta Sans", "sans-serif"], mono: ["JetBrains Mono", "ui-monospace", "monospace"] },
+            colors: { brandDark: "#080c10", brandGray: "#111820", brandGreen: "#00e676", textGray: "#8896a7" },
+          },
+        },
+      };
+    </script>
+
+    <link rel="stylesheet" href="../style.css" />
+
+    <style>
+      main {
+        background: transparent;
+      }
+      #readProgress {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #00e676, #38bdf8);
+        z-index: 999;
+        transition: width 0.1s ease-out;
+        width: 0%;
+        box-shadow: 0 0 12px rgba(0, 230, 118, 0.5);
+      }
+      .page-hero {
+        position: relative;
+        padding: 64px 0 40px;
+        overflow: hidden;
+      }
+      .page-hero-glow {
+        position: absolute;
+        top: -100px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 800px;
+        height: 400px;
+        background: radial-gradient(ellipse, rgba(16, 185, 129, 0.1) 0%, rgba(56, 189, 248, 0.05) 40%, transparent 70%);
+        filter: blur(40px);
+        pointer-events: none;
+      }
+      .page-hero-inner {
+        max-width: 1024px;
+        margin: 0 auto;
+        padding: 0 24px;
+        position: relative;
+        z-index: 10;
+      }
+      .page-hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 14px;
+        border-radius: 999px;
+        background: rgba(16, 185, 129, 0.08);
+        border: 1px solid rgba(16, 185, 129, 0.3);
+        font-size: 0.78rem;
+        font-weight: 700;
+        color: #34d399;
+        margin-bottom: 18px;
+        backdrop-filter: blur(8px);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
+      .page-hero-title {
+        font-size: clamp(2rem, 4.5vw, 3rem);
+        font-weight: 800;
+        line-height: 1.15;
+        letter-spacing: -0.03em;
+        margin-bottom: 16px;
+      }
+      .page-hero-title .gradient-text {
+        background: linear-gradient(135deg, #00e676 0%, #38bdf8 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .page-hero-desc {
+        font-size: 1rem;
+        line-height: 1.7;
+        color: #8896a7;
+        max-width: 640px;
+      }
+
+      .form-input {
+        width: 100%;
+        background: rgba(0, 0, 0, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 12px;
+        padding: 12px 16px;
+        color: white;
+        font-size: 15px;
+        font-family: inherit;
+        transition: all 0.2s;
+      }
+      .form-input:focus {
+        outline: none;
+        border-color: #00e676;
+        box-shadow: 0 0 0 3px rgba(0, 230, 118, 0.15);
+      }
+      .form-input::placeholder {
+        color: rgba(136, 150, 167, 0.5);
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(15px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .fade-in-up {
+        animation: fadeInUp 0.5s ease forwards;
+      }
+      @keyframes scorePulse {
+        0% {
+          transform: scale(0.8);
+          opacity: 0;
+        }
+        50% {
+          transform: scale(1.05);
+        }
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+      @keyframes spin {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      .step-card {
+        position: relative;
+        transition: all 0.3s ease;
+      }
+      .step-card.done {
+        border-color: rgba(0, 230, 118, 0.5) !important;
+        background: linear-gradient(135deg, rgba(0, 230, 118, 0.05) 0%, transparent 60%) !important;
+      }
+      .step-num {
+        width: 52px;
+        height: 52px;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        font-weight: 800;
+        flex-shrink: 0;
+        transition: all 0.3s ease;
+      }
+      .step-num.done {
+        background: #00e676 !important;
+        color: #080c10 !important;
+        border-color: #00e676 !important;
+        box-shadow: 0 0 20px rgba(0, 230, 118, 0.4);
+      }
+
+      .checklist-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 12px 14px;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: rgba(255, 255, 255, 0.02);
+        cursor: pointer;
+        transition: all 0.2s;
+        user-select: none;
+      }
+      .checklist-item:hover {
+        background: rgba(0, 230, 118, 0.05);
+        border-color: rgba(0, 230, 118, 0.3);
+      }
+      .checklist-item.checked {
+        background: rgba(0, 230, 118, 0.1);
+        border-color: rgba(0, 230, 118, 0.5);
+      }
+      .checklist-box {
+        width: 22px;
+        height: 22px;
+        border-radius: 6px;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        margin-top: 1px;
+        transition: all 0.2s;
+        color: transparent;
+        font-size: 12px;
+      }
+      .checklist-item.checked .checklist-box {
+        background: #00e676;
+        border-color: #00e676;
+        color: #080c10;
+      }
+
+      .sheet-mock {
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 14px;
+        overflow: hidden;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 13px;
+        background: #0d1117;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      }
+      .sheet-mock table {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: auto;
+      }
+      .sheet-mock th,
+      .sheet-mock td {
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 8px 10px;
+        text-align: left;
+        font-size: 13px;
+        line-height: 1.5;
+      }
+      .sheet-mock th {
+        background: rgba(0, 230, 118, 0.15);
+        color: #00e676;
+        font-weight: 700;
+        text-align: center;
+        font-size: 11px;
+        letter-spacing: 0.05em;
+        padding: 8px 6px;
+      }
+      .sheet-mock .row-header {
+        background: rgba(255, 255, 255, 0.05);
+        color: #8896a7;
+        font-weight: 700;
+        text-align: center;
+        width: 40px;
+        min-width: 40px;
+        font-size: 11px;
+      }
+      .sheet-mock .data-cell {
+        text-align: center;
+        color: #d1d5db;
+      }
+      .sheet-mock .formula-cell {
+        color: #38bdf8;
+        font-weight: 700;
+        text-align: center;
+      }
+      .sheet-mock .empty-cell {
+        color: #fbbf24;
+        font-weight: 700;
+        background: rgba(251, 191, 36, 0.1);
+        text-align: center;
+        font-size: 13px;
+      }
+      .sheet-mock .empty-cell-header {
+        background: rgba(251, 191, 36, 0.15);
+        color: #fbbf24;
+        font-weight: 700;
+      }
+      .sheet-mock .stat-max {
+        color: #38bdf8;
+        font-weight: 700;
+        background: rgba(56, 189, 248, 0.08);
+        text-align: center;
+      }
+      .sheet-mock .stat-min {
+        color: #f43f5e;
+        font-weight: 700;
+        background: rgba(244, 63, 94, 0.08);
+        text-align: center;
+      }
+      .sheet-mock .stat-label-max {
+        text-align: left;
+        padding-left: 12px;
+        font-weight: 700;
+        color: #38bdf8;
+        background: rgba(56, 189, 248, 0.08);
+        border-left: 3px solid #38bdf8;
+      }
+      .sheet-mock .stat-label-min {
+        text-align: left;
+        padding-left: 12px;
+        font-weight: 700;
+        color: #f43f5e;
+        background: rgba(244, 63, 94, 0.08);
+        border-left: 3px solid #f43f5e;
+      }
+      .sheet-mock .stat-lulus {
+        text-align: center;
+        font-weight: 700;
+        color: #34d399;
+        background: rgba(52, 211, 153, 0.12);
+        padding-left: 8px;
+      }
+      .sheet-mock .stat-remidi {
+        text-align: center;
+        font-weight: 700;
+        color: #fb7185;
+        background: rgba(251, 113, 133, 0.12);
+        padding-left: 8px;
+      }
+      .sheet-mock .row-sep td {
+        padding: 0 !important;
+        height: 4px;
+        background: #0d1117;
+        border: none;
+      }
+
+      .code-inline {
+        display: inline-block;
+        padding: 2px 8px;
+        background: rgba(0, 0, 0, 0.4);
+        border-radius: 6px;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.82em;
+        color: #fbbf24;
+        font-weight: 600;
+      }
+
+      .btn-upload {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        padding: 18px 36px;
+        border-radius: 16px;
+        background: linear-gradient(135deg, #00e676 0%, #00c853 55%, #00b848 100%);
+        color: #052e16;
+        font-weight: 800;
+        font-size: 1.05rem;
+        letter-spacing: -0.01em;
+        box-shadow:
+          0 4px 24px rgba(0, 230, 118, 0.4),
+          0 0 60px rgba(0, 230, 118, 0.15),
+          inset 0 1px 0 rgba(255, 255, 255, 0.4);
+        text-decoration: none;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s;
+        cursor: pointer;
+        border: none;
+      }
+      .btn-upload::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -120%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+        transform: skewX(-20deg);
+        transition: left 0.7s ease;
+      }
+      .btn-upload:hover:not(:disabled)::before {
+        left: 120%;
+      }
+      .btn-upload:hover:not(:disabled) {
+        transform: translateY(-3px);
+        box-shadow:
+          0 10px 40px rgba(0, 230, 118, 0.55),
+          0 0 80px rgba(0, 230, 118, 0.3);
+      }
+      .btn-upload:active:not(:disabled) {
+        transform: translateY(-1px);
+      }
+      .btn-upload i {
+        transition: transform 0.3s;
+      }
+      .btn-upload:hover:not(:disabled) i {
+        transform: scale(1.15) rotate(-5deg);
+      }
+
+      .btn-upload:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        filter: grayscale(0.5);
+      }
+      .btn-upload:disabled:hover {
+        transform: none;
+        box-shadow: 0 4px 24px rgba(0, 230, 118, 0.2);
+      }
+      .btn-upload:disabled::before {
+        display: none;
+      }
+
+      .progress-info-bar {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 16px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+      }
+
+      .upload-zone {
+        border: 2px dashed rgba(0, 230, 118, 0.4);
+        border-radius: 16px;
+        padding: 32px 24px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s;
+        background: rgba(0, 230, 118, 0.03);
+      }
+      .upload-zone:hover,
+      .upload-zone.dragover {
+        border-color: #00e676;
+        background: rgba(0, 230, 118, 0.08);
+        transform: translateY(-2px);
+      }
+      .upload-zone.has-file {
+        border-style: solid;
+        border-color: #00e676;
+        background: rgba(0, 230, 118, 0.1);
+        padding: 18px 20px;
+      }
+      .upload-zone .upload-icon {
+        font-size: 2.5rem;
+        color: #00e676;
+        margin-bottom: 12px;
+        transition: transform 0.3s;
+      }
+      .upload-zone:hover .upload-icon {
+        transform: scale(1.1) translateY(-4px);
+      }
+      .upload-zone .upload-title {
+        font-weight: 700;
+        font-size: 1rem;
+        margin-bottom: 4px;
+      }
+      .upload-zone .upload-subtitle {
+        font-size: 0.82rem;
+        color: #8896a7;
+      }
+
+      .file-preview {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        text-align: left;
+      }
+      .file-preview .file-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        background: rgba(0, 230, 118, 0.15);
+        border: 1px solid rgba(0, 230, 118, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #00e676;
+        font-size: 1.4rem;
+        flex-shrink: 0;
+      }
+      .file-preview .file-info {
+        flex: 1;
+        min-width: 0;
+      }
+      .file-preview .file-name {
+        font-weight: 700;
+        color: white;
+        font-size: 0.9rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .file-preview .file-size {
+        font-size: 0.75rem;
+        color: #8896a7;
+        margin-top: 2px;
+      }
+      .file-preview .file-remove {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        background: rgba(244, 63, 94, 0.15);
+        border: 1px solid rgba(244, 63, 94, 0.3);
+        color: #f43f5e;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+        flex-shrink: 0;
+      }
+      .file-preview .file-remove:hover {
+        background: rgba(244, 63, 94, 0.3);
+        transform: scale(1.1);
+      }
+
+      .upload-status {
+        margin-top: 16px;
+        padding: 14px 18px;
+        border-radius: 12px;
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        font-size: 0.88rem;
+        line-height: 1.5;
+        text-align: left;
+      }
+      .upload-status.success {
+        background: rgba(0, 230, 118, 0.1);
+        border: 1px solid rgba(0, 230, 118, 0.4);
+        color: #00e676;
+      }
+      .upload-status.error {
+        background: rgba(244, 63, 94, 0.1);
+        border: 1px solid rgba(244, 63, 94, 0.4);
+        color: #f43f5e;
+      }
+      .upload-status.loading {
+        background: rgba(56, 189, 248, 0.1);
+        border: 1px solid rgba(56, 189, 248, 0.4);
+        color: #38bdf8;
+      }
+      .upload-status i {
+        margin-top: 1px;
+        flex-shrink: 0;
+      }
+      .upload-status.success i {
+        animation: scorePulse 0.6s ease;
+      }
+      .upload-status.loading i {
+        animation: spin 1s linear infinite;
+      }
+
+      @media (max-width: 640px) {
+        body {
+          font-size: 1rem;
+        }
+        h1 {
+          font-size: 1.75rem !important;
+          line-height: 1.2 !important;
+        }
+        h2 {
+          font-size: 1.35rem !important;
+        }
+        .btn-upload {
+          padding: 16px 24px;
+          font-size: 0.95rem;
+          width: 100%;
+        }
+        .sheet-mock {
+          font-size: 11px;
+        }
+        .sheet-mock th,
+        .sheet-mock td {
+          padding: 5px 6px;
+          font-size: 11px;
+        }
+        .sheet-mock th {
+          font-size: 10px;
+          padding: 5px 4px;
+        }
+        .sheet-mock .row-header {
+          width: 28px;
+          min-width: 28px;
+          font-size: 10px;
+        }
+        .upload-zone {
+          padding: 24px 16px;
+        }
+      }
+    </style>
+  </head>
+
+  <body class="bg-grid text-white font-sans antialiased overflow-x-hidden flex flex-col min-h-screen">
+    <div id="readProgress"></div>
+
+    <nav class="navbar">
+      <div class="navbar-inner">
+        <a href="../materi-excel.html" class="navbar-logo">
+          <div class="navbar-logo-icon"><i class="fa-solid fa-code"></i></div>
+          <span class="navbar-logo-text">RuangInformatika</span>
+        </a>
+        <div class="navbar-links">
+          <a href="../index.html" class="nav-link">Dashboard</a>
+          <a href="../index.html#materi" class="nav-link">Daftar Modul</a>
+          <a href="../leaderboard.html" class="nav-link">Leaderboard</a>
+          <a href="../forum.html" class="nav-link">Forum Diskusi</a>
+        </div>
+        <button class="nav-badge"><i class="fa-solid fa-chalkboard-user"></i> Kelas XE6</button>
+        <button class="hamburger-btn" id="hamburgerBtn" aria-label="Menu"><i class="fa-solid fa-bars"></i></button>
+      </div>
+      <div class="mobile-menu" id="mobileMenu">
+        <a href="../index.html" class="mobile-nav-link"><i class="fa-solid fa-house" style="margin-right: 10px"></i> Dashboard</a>
+        <a href="../index.html#materi" class="mobile-nav-link"><i class="fa-solid fa-book-open" style="margin-right: 10px"></i> Daftar Modul</a>
+        <a href="../leaderboard.html" class="mobile-nav-link"><i class="fa-solid fa-trophy" style="margin-right: 10px"></i> Leaderboard</a>
+        <a href="../forum.html" class="mobile-nav-link"><i class="fa-solid fa-comments" style="margin-right: 10px"></i> Forum Diskusi</a>
+        <div style="padding: 12px 16px">
+          <a href="../materi-excel.html" class="nav-badge" style="width: 100%; justify-content: center; text-decoration: none"><i class="fa-solid fa-arrow-left"></i> Kembali ke Materi</a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="flex-grow relative">
+      <header class="page-hero">
+        <div class="page-hero-glow"></div>
+        <div class="page-hero-inner">
+          <div class="reveal fade-in-up">
+            <div class="page-hero-badge"><i class="fa-solid fa-clipboard-list"></i> LKPD Praktik • Materi Excel</div>
+            <h1 class="page-hero-title">LKPD Praktik:<br /><span class="gradient-text">Microsoft Excel</span></h1>
+            <p class="page-hero-desc">
+              Kerjakan tugas ini di <strong class="text-white">aplikasi Microsoft Excel</strong> di komputer kamu. Halaman ini adalah <strong class="text-brandGreen">panduan langkah-langkah</strong> dan
+              <strong class="text-brandGreen">studi kasus</strong> yang harus kamu selesaikan.
+            </p>
+            <div class="mt-5 flex flex-wrap gap-3">
+              <a href="../materi-excel.html" class="inline-flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-xl text-sm font-semibold hover:bg-white/10 transition">
+                <i class="fa-solid fa-arrow-left text-brandGreen"></i> Kembali ke Materi
+              </a>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main class="max-w-4xl mx-auto px-6 pb-12 relative z-10">
+        <!-- Info Cards -->
+        <div class="bg-brandGray border border-white/5 rounded-3xl p-5 md:p-6 mb-6 fade-in-up">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div class="flex items-center gap-3">
+              <div class="w-11 h-11 rounded-xl bg-brandGreen/10 border border-brandGreen/25 flex items-center justify-center text-brandGreen text-lg shrink-0"><i class="fa-solid fa-bullseye"></i></div>
+              <div>
+                <p class="text-xs text-textGray uppercase tracking-wider font-bold">Target</p>
+                <p class="text-white font-bold text-sm">Rumus &amp; Grafik Excel</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="w-11 h-11 rounded-xl bg-sky-500/10 border border-sky-500/25 flex items-center justify-center text-sky-400 text-lg shrink-0"><i class="fa-solid fa-clock"></i></div>
+              <div>
+                <p class="text-xs text-textGray uppercase tracking-wider font-bold">Waktu</p>
+                <p class="text-white font-bold text-sm">45–60 Menit</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="w-11 h-11 rounded-xl bg-purple-500/10 border border-purple-500/25 flex items-center justify-center text-purple-400 text-lg shrink-0"><i class="fa-solid fa-user"></i></div>
+              <div>
+                <p class="text-xs text-textGray uppercase tracking-wider font-bold">Formasi</p>
+                <p class="text-white font-bold text-sm">Individu</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-5 pt-5 border-t border-white/10 space-y-3">
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-brandGreen shadow-[0_0_0_3px_rgba(0,230,118,0.15)]"></span>
+              <p class="text-xs text-brandGreen uppercase tracking-widest font-bold">Target Pembelajaran</p>
+            </div>
+            <div class="flex items-start gap-3">
+              <span class="w-6 h-6 rounded-md bg-brandGreen/15 border border-brandGreen/30 text-brandGreen flex items-center justify-center text-xs font-mono font-bold shrink-0 mt-0.5">1</span>
+              <p class="text-sm text-textGray leading-relaxed">
+                Melalui pemberian studi kasus, murid mampu menerapkan rumus dasar Excel <strong class="text-white">(SUM, AVERAGE, MAX, MIN, IF, dan COUNTIF)</strong> untuk memecahkan permasalahan secara tepat.
+              </p>
+            </div>
+            <div class="flex items-start gap-3">
+              <span class="w-6 h-6 rounded-md bg-brandGreen/15 border border-brandGreen/30 text-brandGreen flex items-center justify-center text-xs font-mono font-bold shrink-0 mt-0.5">2</span>
+              <p class="text-sm text-textGray leading-relaxed">
+                Berdasarkan hasil pengolahan data studi kasus, murid mampu membuat <strong class="text-white">grafik (Bar Chart, Line Chart, dan Pie Chart)</strong> sesuai ketentuan yang diberikan secara tepat.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- ALUR KERJA -->
+        <div class="bg-gradient-to-br from-amber-500/10 via-brandGray to-brandGray border border-amber-500/30 rounded-3xl p-5 md:p-6 mb-6 fade-in-up">
+          <div class="flex items-center gap-3 border-b border-white/10 pb-4 mb-4">
+            <div class="w-11 h-11 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 text-lg shrink-0"><i class="fa-solid fa-route"></i></div>
+            <div>
+              <h3 class="text-lg md:text-xl font-bold text-white">Alur Kerja LKPD</h3>
+              <p class="text-xs text-textGray">Baca dulu supaya tidak bingung</p>
+            </div>
+          </div>
+          <ol class="space-y-3 text-sm">
+            <li class="flex items-start gap-3">
+              <span class="w-7 h-7 rounded-lg bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-300 text-xs font-bold shrink-0 mt-0.5">1</span>
+              <span class="text-gray-300">Baca <strong class="text-white">studi kasus</strong> di halaman ini (data Hasil Nilai TKA SMAN 4 Yogyakarta — 5 siswa)</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="w-7 h-7 rounded-lg bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-300 text-xs font-bold shrink-0 mt-0.5">2</span>
+              <span class="text-gray-300">Buka <strong class="text-white">Microsoft Excel</strong> di komputer &amp; kerjakan sesuai <strong class="text-white">3 langkah</strong> di bawah</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="w-7 h-7 rounded-lg bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-300 text-xs font-bold shrink-0 mt-0.5">3</span>
+              <span class="text-gray-300">Simpan file Excel dengan format nama: <span class="code-inline">Tugas_Excel_NamaKelas.xlsx</span></span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="w-7 h-7 rounded-lg bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-300 text-xs font-bold shrink-0 mt-0.5">4</span>
+              <span class="text-gray-300">Klik tombol <strong class="text-brandGreen">"Kumpulkan Tugas"</strong> di bawah untuk upload ke Google Drive Pak Ilyas</span>
+            </li>
+          </ol>
+        </div>
+
+        <!-- IDENTITAS -->
+        <div class="bg-brandGray border border-brandGreen/30 rounded-3xl p-6 md:p-8 mb-6 space-y-5 fade-in-up">
+          <div class="flex items-center gap-3 border-b border-white/10 pb-4">
+            <div class="w-11 h-11 rounded-xl bg-brandGreen/10 border border-brandGreen/25 flex items-center justify-center text-brandGreen text-lg shrink-0"><i class="fa-solid fa-user-pen"></i></div>
+            <div>
+              <h3 class="text-lg md:text-xl font-bold text-white">Identitas Siswa</h3>
+              <p class="text-xs md:text-sm text-textGray">Isi dengan data kamu sendiri</p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-textGray uppercase mb-2">Nama Lengkap <span class="text-rose-400">*</span></label>
+              <input type="text" id="nama" placeholder="Contoh: Budi Santoso" class="form-input" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-textGray uppercase mb-2">No Absen <span class="text-rose-400">*</span></label>
+              <input type="number" id="noabsen" placeholder="Contoh: 15" min="1" max="50" class="form-input" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-textGray uppercase mb-2">Kelas <span class="text-rose-400">*</span></label>
+              <input type="text" id="kelas" placeholder="Contoh: XE6" class="form-input" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-textGray uppercase mb-2">Tanggal Pengerjaan</label>
+              <input type="date" id="tanggal" class="form-input" />
+            </div>
+          </div>
+
+          <div class="bg-white/5 border border-white/10 rounded-xl p-3 flex items-start gap-2">
+            <i class="fa-solid fa-circle-info text-sky-400 mt-0.5 shrink-0"></i>
+            <p class="text-xs text-textGray leading-relaxed">Identitas ini akan dipakai untuk <strong class="text-white">nama file upload</strong>. Pastikan diisi dengan benar sebelum mengumpulkan tugas.</p>
+          </div>
+        </div>
+
+        <!-- STUDI KASUS -->
+        <div class="bg-gradient-to-br from-emerald-500/10 via-brandGray to-brandGray border border-emerald-500/30 rounded-3xl p-5 md:p-7 mb-6 fade-in-up">
+          <div class="flex items-center gap-3 border-b border-white/10 pb-4 mb-5">
+            <div class="w-11 h-11 rounded-xl bg-emerald-500/15 border border-emerald-500/40 flex items-center justify-center text-emerald-400 text-lg shrink-0"><i class="fa-solid fa-table"></i></div>
+            <div>
+              <h3 class="text-lg md:text-xl font-bold text-white">📋 Studi Kasus: Hasil Nilai TKA SMAN 4 Yogyakarta</h3>
+              <p class="text-xs text-textGray">Data yang harus kamu susun di Excel</p>
+            </div>
+          </div>
+
+          <p class="text-sm md:text-base text-textGray mb-6 leading-relaxed">
+            Pak Ilyas meminta bantuanmu untuk merekap <strong class="text-white">Hasil Nilai TKA SMAN 4 Yogyakarta</strong> dari <strong class="text-white">5 siswa</strong> pada 3 mata pelajaran:
+            <strong class="text-emerald-300">Informatika</strong>, <strong class="text-emerald-300">Fisika</strong>, dan <strong class="text-emerald-300">Kimia</strong>. Data mentahnya sebagai berikut:
+          </p>
+
+          <div class="sheet-mock mb-5">
+            <table>
+              <thead>
+                <tr>
+                  <th>A</th>
+                  <th>B</th>
+                  <th>C</th>
+                  <th>D</th>
+                  <th>E</th>
+                  <th>F</th>
+                  <th>G</th>
+                  <th>H</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="row-header">1</td>
+                  <td style="font-weight: 700; color: #00e676; text-align: center">No</td>
+                  <td style="font-weight: 700; color: #00e676">Nama Murid</td>
+                  <td style="font-weight: 700; color: #00e676; text-align: center">Informatika</td>
+                  <td style="font-weight: 700; color: #00e676; text-align: center">Fisika</td>
+                  <td style="font-weight: 700; color: #00e676; text-align: center">Kimia</td>
+                  <td class="empty-cell-header">Total Nilai</td>
+                  <td class="empty-cell-header">Rata-Rata</td>
+                  <td class="empty-cell-header">Keterangan</td>
+                </tr>
+                <tr>
+                  <td class="row-header">2</td>
+                  <td class="data-cell">1</td>
+                  <td>Ahmad</td>
+                  <td class="data-cell">87</td>
+                  <td class="data-cell">80</td>
+                  <td class="data-cell">90</td>
+                  <td class="empty-cell">?</td>
+                  <td class="empty-cell">?</td>
+                  <td class="empty-cell">?</td>
+                </tr>
+                <tr>
+                  <td class="row-header">3</td>
+                  <td class="data-cell">2</td>
+                  <td>Ridho</td>
+                  <td class="data-cell">88</td>
+                  <td class="data-cell">90</td>
+                  <td class="data-cell">87</td>
+                  <td class="empty-cell">?</td>
+                  <td class="empty-cell">?</td>
+                  <td class="empty-cell">?</td>
+                </tr>
+                <tr>
+                  <td class="row-header">4</td>
+                  <td class="data-cell">3</td>
+                  <td>Fandhi</td>
+                  <td class="data-cell">76</td>
+                  <td class="data-cell">80</td>
+                  <td class="data-cell">67</td>
+                  <td class="empty-cell">?</td>
+                  <td class="empty-cell">?</td>
+                  <td class="empty-cell">?</td>
+                </tr>
+                <tr>
+                  <td class="row-header">5</td>
+                  <td class="data-cell">4</td>
+                  <td>Rama</td>
+                  <td class="data-cell">90</td>
+                  <td class="data-cell">76</td>
+                  <td class="data-cell">56</td>
+                  <td class="empty-cell">?</td>
+                  <td class="empty-cell">?</td>
+                  <td class="empty-cell">?</td>
+                </tr>
+                <tr>
+                  <td class="row-header">6</td>
+                  <td class="data-cell">5</td>
+                  <td>Kiki</td>
+                  <td class="data-cell">78</td>
+                  <td class="data-cell">89</td>
+                  <td class="data-cell">77</td>
+                  <td class="empty-cell">?</td>
+                  <td class="empty-cell">?</td>
+                  <td class="empty-cell">?</td>
+                </tr>
+                <tr class="row-sep">
+                  <td colspan="8"></td>
+                </tr>
+                <tr>
+                  <td class="row-header">7</td>
+                  <td colspan="2" class="stat-label-max">▲ Nilai Tertinggi</td>
+                  <td class="empty-cell">?</td>
+                  <td class="empty-cell">?</td>
+                  <td class="empty-cell">?</td>
+                  <td colspan="2" class="stat-lulus">Jumlah Lulus</td>
+                  <td class="empty-cell">?</td>
+                </tr>
+                <tr>
+                  <td class="row-header">8</td>
+                  <td colspan="2" class="stat-label-min">▼ Nilai Terendah</td>
+                  <td class="empty-cell">?</td>
+                  <td class="empty-cell">?</td>
+                  <td class="empty-cell">?</td>
+                  <td colspan="2" class="stat-remidi">Jumlah Remedial</td>
+                  <td class="empty-cell">?</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="bg-sky-500/5 border-l-4 border-sky-500 rounded-r-lg p-4 space-y-3">
+            <p class="text-sm text-textGray leading-relaxed"><strong class="text-white">📌 Catatan:</strong> Data di atas adalah <em>mentah</em> — kamu perlu menghitung kolom &amp; baris berikut sendiri di Excel:</p>
+            <ul class="text-sm text-textGray space-y-1.5 pl-4 list-disc">
+              <li>Kolom <strong class="text-amber-400">Total Nilai (F)</strong> → rumus <span class="code-inline">=SUM(C2:E2)</span> di F2, auto-copy sampai F6</li>
+              <li>Kolom <strong class="text-amber-400">Rata-Rata (G)</strong> → rumus <span class="code-inline">=AVERAGE(C2:E2)</span> di G2, auto-copy sampai G6</li>
+              <li>Kolom <strong class="text-purple-400">Keterangan (H)</strong> → rumus <span class="code-inline">=IF(G2&gt;=75,"Lulus","Remedial")</span> di H2, auto-copy sampai H6</li>
+              <li>Baris <strong class="text-sky-400">Nilai Tertinggi</strong> (baris 7) → gunakan <span class="code-inline">=MAX(C2:C6)</span> untuk tiap kolom C, D, E, F, G</li>
+              <li>Baris <strong class="text-rose-400">Nilai Terendah</strong> (baris 8) → gunakan <span class="code-inline">=MIN(C2:C6)</span> untuk tiap kolom C, D, E, F, G</li>
+              <li><strong class="text-emerald-400">Jumlah Lulus</strong> → <span class="code-inline">=COUNTIF(H2:H6,"Lulus")</span></li>
+              <li><strong class="text-rose-400">Jumlah Remedial</strong> → <span class="code-inline">=COUNTIF(H2:H6,"Remedial")</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- LANGKAH-LANGKAH -->
+        <div class="mb-6">
+          <div class="flex items-center gap-3 mb-5">
+            <div class="w-10 h-10 rounded-xl bg-brandGreen/15 border border-brandGreen/30 flex items-center justify-center text-brandGreen text-lg">
+              <i class="fa-solid fa-list-check"></i>
+            </div>
+            <div>
+              <h2 class="text-xl md:text-2xl font-bold text-white">Langkah-Langkah Pengerjaan</h2>
+              <p class="text-xs text-textGray">Kerjakan berurutan di aplikasi Microsoft Excel</p>
+            </div>
+          </div>
+
+          <!-- LANGKAH 1 -->
+          <div id="step1-card" class="step-card bg-brandGray border border-white/10 rounded-3xl p-5 md:p-6 mb-4">
+            <div class="flex items-start gap-4 border-b border-white/10 pb-4 mb-5">
+              <div id="step1-num" class="step-num bg-emerald-500/15 border border-emerald-500/30 text-emerald-400">1</div>
+              <div class="flex-1">
+                <h3 class="text-lg md:text-xl font-bold text-white">Membuat Tabel dari Nol</h3>
+                <p class="text-sm text-textGray mt-1">Bangun struktur tabel di Excel mulai dari baris kosong.</p>
+              </div>
+            </div>
+
+            <div class="space-y-3">
+              <div class="bg-white/5 border border-white/10 rounded-2xl p-4">
+                <p class="text-xs font-bold text-emerald-400 uppercase tracking-wider mb-2">Yang harus kamu lakukan:</p>
+                <ol class="text-sm text-textGray space-y-1.5 list-decimal list-inside leading-relaxed">
+                  <li>Buka <strong class="text-white">Microsoft Excel</strong> → pilih <em>Blank Workbook</em></li>
+                  <li>
+                    Ketik header kolom di baris 1: <span class="code-inline">No</span> <span class="code-inline">Nama Murid</span> <span class="code-inline">Informatika</span> <span class="code-inline">Fisika</span>
+                    <span class="code-inline">Kimia</span> <span class="code-inline">Total Nilai</span> <span class="code-inline">Rata-Rata</span>
+                    <span class="code-inline">Keterangan</span>
+                  </li>
+                  <li>Isi data <strong class="text-white">5 siswa</strong> (Ahmad, Ridho, Fandhi, Rama, Kiki) beserta nilainya — sesuai studi kasus di atas</li>
+                  <li>Beri <strong class="text-white">border</strong> pada tabel &amp; <strong class="text-white">bold</strong> pada baris header</li>
+                </ol>
+              </div>
+
+              <p class="text-xs font-bold text-textGray uppercase tracking-wider mt-4 mb-2">Checklist:</p>
+              <div class="space-y-2">
+                <label class="checklist-item" data-step="1">
+                  <span class="checklist-box"><i class="fa-solid fa-check"></i></span>
+                  <span class="text-sm text-gray-300 flex-1">Header kolom lengkap (No, Nama Murid, Informatika, Fisika, Kimia, Total Nilai, Rata-Rata, Keterangan)</span>
+                </label>
+                <label class="checklist-item" data-step="1">
+                  <span class="checklist-box"><i class="fa-solid fa-check"></i></span>
+                  <span class="text-sm text-gray-300 flex-1">Data 5 siswa sudah diisi dengan benar</span>
+                </label>
+                <label class="checklist-item" data-step="1">
+                  <span class="checklist-box"><i class="fa-solid fa-check"></i></span>
+                  <span class="text-sm text-gray-300 flex-1">Border &amp; bold header sudah diterapkan</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- LANGKAH 2 -->
+          <div id="step2-card" class="step-card bg-brandGray border border-white/10 rounded-3xl p-5 md:p-6 mb-4">
+            <div class="flex items-start gap-4 border-b border-white/10 pb-4 mb-5">
+              <div id="step2-num" class="step-num bg-brandGreen/15 border border-brandGreen/30 text-brandGreen">2</div>
+              <div class="flex-1">
+                <h3 class="text-lg md:text-xl font-bold text-white">Mengisi Total, Rata-Rata, Keterangan &amp; Statistik</h3>
+                <p class="text-sm text-textGray mt-1">Gunakan rumus SUM, AVERAGE, IF, MAX, MIN, dan COUNTIF.</p>
+              </div>
+            </div>
+
+            <div class="space-y-3">
+              <div class="bg-white/5 border border-white/10 rounded-2xl p-4 space-y-3">
+                <p class="text-xs font-bold text-brandGreen uppercase tracking-wider">Kolom Total Nilai (F) — gunakan SUM</p>
+                <p class="text-sm text-textGray">Di sel <span class="code-inline">F2</span>, ketik rumus berikut lalu tekan Enter:</p>
+                <div class="bg-black/50 border border-white/10 rounded-lg p-3 font-mono text-sm text-amber-300">=SUM(C2:E2)</div>
+                <p class="text-xs text-textGray">
+                  <i class="fa-solid fa-lightbulb text-amber-400 mr-1"></i> <strong class="text-white">Tips:</strong> Gunakan <em>fill handle</em> (kotak kecil hijau di pojok kanan-bawah sel F2) → seret ke bawah sampai F6 untuk auto-copy
+                  rumus ke semua baris!
+                </p>
+              </div>
+
+              <div class="bg-white/5 border border-white/10 rounded-2xl p-4 space-y-3">
+                <p class="text-xs font-bold text-brandGreen uppercase tracking-wider">Kolom Rata-Rata (G) — gunakan AVERAGE</p>
+                <p class="text-sm text-textGray">Di sel <span class="code-inline">G2</span>, ketik rumus berikut lalu tekan Enter:</p>
+                <div class="bg-black/50 border border-white/10 rounded-lg p-3 font-mono text-sm text-amber-300">=AVERAGE(C2:E2)</div>
+                <p class="text-xs text-textGray"><i class="fa-solid fa-lightbulb text-amber-400 mr-1"></i> <strong class="text-white">Tips:</strong> Fill handle juga bisa dipakai untuk kolom G.</p>
+              </div>
+
+              <div class="bg-purple-500/5 border border-purple-500/20 rounded-2xl p-4 space-y-3">
+                <p class="text-xs font-bold text-purple-400 uppercase tracking-wider">Kolom Keterangan (H) — gunakan IF</p>
+                <p class="text-sm text-textGray">Di sel <span class="code-inline">H2</span>, ketik rumus berikut. Siswa dianggap <strong class="text-emerald-300">Lulus</strong> jika Rata-Rata ≥ 75:</p>
+                <div class="bg-black/50 border border-white/10 rounded-lg p-3 font-mono text-sm text-amber-300">=IF(G2&gt;=75, "Lulus", "Remedial")</div>
+                <p class="text-xs text-textGray"><i class="fa-solid fa-lightbulb text-amber-400 mr-1"></i> <strong class="text-white">Tips:</strong> Auto-copy sampai H6.</p>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div class="bg-sky-500/5 border border-sky-500/20 rounded-2xl p-4 space-y-2">
+                  <p class="text-xs font-bold text-sky-400 uppercase tracking-wider">Baris Nilai Tertinggi (7) — MAX</p>
+                  <p class="text-xs text-textGray leading-relaxed">Di sel <span class="code-inline">C7</span>, ketik:</p>
+                  <div class="bg-black/50 border border-white/10 rounded-lg p-2.5 font-mono text-xs text-amber-300">=MAX(C2:C6)</div>
+                  <p class="text-[11px] text-textGray italic">Setelah selesai, copy ke kanan (D7, E7, F7, G7).</p>
+                </div>
+                <div class="bg-rose-500/5 border border-rose-500/20 rounded-2xl p-4 space-y-2">
+                  <p class="text-xs font-bold text-rose-400 uppercase tracking-wider">Baris Nilai Terendah (8) — MIN</p>
+                  <p class="text-xs text-textGray leading-relaxed">Di sel <span class="code-inline">C8</span>, ketik:</p>
+                  <div class="bg-black/50 border border-white/10 rounded-lg p-2.5 font-mono text-xs text-amber-300">=MIN(C2:C6)</div>
+                  <p class="text-[11px] text-textGray italic">Setelah selesai, copy ke kanan (D8, E8, F8, G8).</p>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div class="bg-emerald-500/5 border border-emerald-500/20 rounded-2xl p-4 space-y-2">
+                  <p class="text-xs font-bold text-emerald-400 uppercase tracking-wider">Jumlah Lulus</p>
+                  <p class="text-xs text-textGray leading-relaxed">Di sel <span class="code-inline">H7</span>, ketik:</p>
+                  <div class="bg-black/50 border border-white/10 rounded-lg p-2.5 font-mono text-xs text-amber-300">=COUNTIF(H2:H6, "Lulus")</div>
+                </div>
+                <div class="bg-rose-500/5 border border-rose-500/20 rounded-2xl p-4 space-y-2">
+                  <p class="text-xs font-bold text-rose-400 uppercase tracking-wider">Jumlah Remedial</p>
+                  <p class="text-xs text-textGray leading-relaxed">Di sel <span class="code-inline">H8</span>, ketik:</p>
+                  <div class="bg-black/50 border border-white/10 rounded-lg p-2.5 font-mono text-xs text-amber-300">=COUNTIF(H2:H6, "Remedial")</div>
+                </div>
+              </div>
+
+              <p class="text-xs font-bold text-textGray uppercase tracking-wider mt-4 mb-2">Checklist:</p>
+              <div class="space-y-2">
+                <label class="checklist-item" data-step="2">
+                  <span class="checklist-box"><i class="fa-solid fa-check"></i></span>
+                  <span class="text-sm text-gray-300 flex-1">Kolom <strong class="text-white">Total Nilai</strong> sudah diisi rumus <span class="code-inline">=SUM</span></span>
+                </label>
+                <label class="checklist-item" data-step="2">
+                  <span class="checklist-box"><i class="fa-solid fa-check"></i></span>
+                  <span class="text-sm text-gray-300 flex-1">Kolom <strong class="text-white">Rata-Rata</strong> sudah diisi rumus <span class="code-inline">=AVERAGE</span></span>
+                </label>
+                <label class="checklist-item" data-step="2">
+                  <span class="checklist-box"><i class="fa-solid fa-check"></i></span>
+                  <span class="text-sm text-gray-300 flex-1">Kolom <strong class="text-white">Keterangan</strong> sudah diisi rumus <span class="code-inline">=IF</span></span>
+                </label>
+                <label class="checklist-item" data-step="2">
+                  <span class="checklist-box"><i class="fa-solid fa-check"></i></span>
+                  <span class="text-sm text-gray-300 flex-1">Baris Nilai Tertinggi &amp; Terendah sudah diisi rumus <span class="code-inline">=MAX</span> &amp; <span class="code-inline">=MIN</span></span>
+                </label>
+                <label class="checklist-item" data-step="2">
+                  <span class="checklist-box"><i class="fa-solid fa-check"></i></span>
+                  <span class="text-sm text-gray-300 flex-1">Jumlah Lulus &amp; Jumlah Remedial sudah diisi rumus <span class="code-inline">=COUNTIF</span></span>
+                </label>
+                <label class="checklist-item" data-step="2">
+                  <span class="checklist-box"><i class="fa-solid fa-check"></i></span>
+                  <span class="text-sm text-gray-300 flex-1">Semua rumus sudah di-copy ke seluruh kolom yang sesuai</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- LANGKAH 3 -->
+          <div id="step3-card" class="step-card bg-brandGray border border-white/10 rounded-3xl p-5 md:p-6 mb-4">
+            <div class="flex items-start gap-4 border-b border-white/10 pb-4 mb-5">
+              <div id="step3-num" class="step-num bg-sky-500/15 border border-sky-500/30 text-sky-400">3</div>
+              <div class="flex-1">
+                <h3 class="text-lg md:text-xl font-bold text-white">Membuat Grafik Nilai Siswa</h3>
+                <p class="text-sm text-textGray mt-1">Visualisasikan data dalam bentuk chart.</p>
+              </div>
+            </div>
+
+            <div class="space-y-3">
+              <div class="bg-white/5 border border-white/10 rounded-2xl p-4 space-y-3">
+                <p class="text-xs font-bold text-sky-400 uppercase tracking-wider">Yang harus kamu lakukan:</p>
+                <ol class="text-sm text-textGray space-y-1.5 list-decimal list-inside leading-relaxed">
+                  <li>Blok range <span class="code-inline">B1:E6</span> — dari header Nama Murid sampai nilai terakhir Kimia</li>
+                  <li>Klik tab <strong class="text-white">Insert</strong> → pilih <strong class="text-white">Column Chart</strong> → <em>Clustered Column</em></li>
+                  <li>Grafik akan muncul — <strong class="text-white">drag</strong> ke area kosong di sebelah kanan tabel</li>
+                  <li>Klik grafik → ikon <strong class="text-white">+</strong> → centang <em>Chart Title</em> &amp; <em>Legend</em></li>
+                  <li>Beri judul grafik: <span class="code-inline">Hasil Nilai TKA SMAN 4 Yogyakarta</span></li>
+                </ol>
+              </div>
+
+              <div class="bg-purple-500/5 border border-purple-500/20 rounded-2xl p-4 space-y-2">
+                <p class="text-xs font-bold text-purple-400 uppercase tracking-wider mb-1">🎯 Yang harus muncul di grafik:</p>
+                <ul class="text-xs text-textGray space-y-1 list-disc list-inside">
+                  <li>Sumbu X (horizontal): nama siswa — <strong class="text-white">Ahmad, Ridho, Fandhi, Rama, Kiki</strong></li>
+                  <li>Sumbu Y (vertikal): nilai 0–100</li>
+                  <li>3 warna batang: <strong class="text-sky-300">Informatika</strong>, <strong class="text-orange-300">Fisika</strong>, <strong class="text-gray-300">Kimia</strong></li>
+                </ul>
+              </div>
+
+              <p class="text-xs font-bold text-textGray uppercase tracking-wider mt-4 mb-2">Checklist:</p>
+              <div class="space-y-2">
+                <label class="checklist-item" data-step="3">
+                  <span class="checklist-box"><i class="fa-solid fa-check"></i></span>
+                  <span class="text-sm text-gray-300 flex-1">Chart sudah dibuat dan menampilkan 5 nama siswa + 3 nilai mapel</span>
+                </label>
+                <label class="checklist-item" data-step="3">
+                  <span class="checklist-box"><i class="fa-solid fa-check"></i></span>
+                  <span class="text-sm text-gray-300 flex-1">Chart punya judul &amp; legend warna</span>
+                </label>
+                <label class="checklist-item" data-step="3">
+                  <span class="checklist-box"><i class="fa-solid fa-check"></i></span>
+                  <span class="text-sm text-gray-300 flex-1">File Excel sudah disimpan dengan format <span class="code-inline">Tugas_Excel_NamaKelas.xlsx</span></span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PROGRESS + UPLOAD -->
+        <div class="bg-gradient-to-br from-brandGreen/10 via-brandGray to-brandGray border-2 border-brandGreen/40 rounded-3xl p-6 md:p-8 mb-6 fade-in-up">
+          <div class="text-center mb-5">
+            <div class="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-brandGreen/15 border border-brandGreen/30 mb-3">
+              <i class="fa-solid fa-clipboard-check text-brandGreen"></i>
+              <span class="text-sm font-bold text-brandGreen">Progress Checklist</span>
+            </div>
+            <div class="progress-info-bar justify-center max-w-md mx-auto">
+              <span class="text-sm font-bold text-white">Sudah selesai:</span>
+              <span class="text-lg font-bold text-brandGreen"><span id="check-count">0</span>/12</span>
+              <div class="flex-1 h-2 bg-black/50 rounded-full overflow-hidden">
+                <div id="check-progress" class="h-full bg-gradient-to-r from-brandGreen to-emerald-400 transition-all duration-500" style="width: 0%"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="space-y-4">
+            <div class="text-sm text-textGray max-w-lg mx-auto leading-relaxed text-center">
+              <i class="fa-solid fa-triangle-exclamation text-amber-400 mr-1"></i>
+              Pastikan <strong class="text-white">semua checklist sudah tercentang</strong> dan file Excel sudah disimpan dengan nama <span class="code-inline">Tugas_Excel_NamaKelas.xlsx</span>.
+            </div>
+
+            <!-- Upload Zone -->
+            <div id="upload-zone" class="upload-zone max-w-xl mx-auto">
+              <input type="file" id="file-input" accept=".xlsx,.xls,.csv" style="display: none" />
+              <div id="upload-prompt">
+                <div class="upload-icon"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+                <p class="upload-title">Klik atau seret file Excel ke sini</p>
+                <p class="upload-subtitle">Format: <strong class="text-white">.xlsx, .xls, .csv</strong> — Maks. 25 MB</p>
+              </div>
+              <div id="file-preview" class="file-preview" style="display: none">
+                <div class="file-icon"><i class="fa-solid fa-file-excel"></i></div>
+                <div class="file-info">
+                  <p class="file-name" id="file-name">-</p>
+                  <p class="file-size" id="file-size">-</p>
+                </div>
+                <button type="button" class="file-remove" onclick="removeFile(event)" title="Hapus file">
+                  <i class="fa-solid fa-xmark"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Tombol Upload -->
+            <div class="text-center">
+              <button id="btn-upload" class="btn-upload" onclick="uploadFile()" disabled>
+                <i class="fa-solid fa-cloud-arrow-up text-2xl"></i>
+                <span id="btn-upload-text">Pilih File Dulu</span>
+                <i class="fa-solid fa-arrow-right text-sm opacity-80"></i>
+              </button>
+            </div>
+
+            <!-- Status message -->
+            <div id="upload-status" class="upload-status max-w-xl mx-auto" style="display: none"></div>
+
+            <p class="text-xs text-textGray text-center">
+              <i class="fa-solid fa-circle-info mr-1"></i>
+              File akan <strong class="text-white">otomatis terkirim ke folder Google Drive Pak Ilyas</strong>. Kamu tidak perlu login atau upload manual.
+            </p>
+          </div>
+        </div>
+
+        <!-- TIPS TAMBAHAN -->
+        <div class="bg-brandGray border border-amber-500/30 rounded-3xl p-5 md:p-6 mb-6 fade-in-up">
+          <div class="flex items-center gap-3 border-b border-white/10 pb-4 mb-4">
+            <div class="w-11 h-11 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 text-lg shrink-0"><i class="fa-solid fa-lightbulb"></i></div>
+            <div>
+              <h3 class="text-lg font-bold text-white">Tips &amp; Trik Selama Mengerjakan</h3>
+              <p class="text-xs text-textGray">Supaya hasilnya rapi &amp; cepat selesai</p>
+            </div>
+          </div>
+          <ul class="space-y-2.5 text-sm text-textGray">
+            <li class="flex items-start gap-2.5">
+              <i class="fa-solid fa-circle-check text-amber-400 mt-1 shrink-0 text-xs"></i
+              ><span><kbd class="text-white bg-black/40 px-1.5 rounded text-xs">Ctrl</kbd>+<kbd class="text-white bg-black/40 px-1.5 rounded text-xs">S</kbd> setiap 5 menit — biar tidak kehilangan pekerjaan kalau listrik mati.</span>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <i class="fa-solid fa-circle-check text-amber-400 mt-1 shrink-0 text-xs"></i
+              ><span>Pakai <kbd class="text-white bg-black/40 px-1.5 rounded text-xs">Tab</kbd> untuk pindah kolom ke kanan, <kbd class="text-white bg-black/40 px-1.5 rounded text-xs">Enter</kbd> untuk pindah ke bawah.</span>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <i class="fa-solid fa-circle-check text-amber-400 mt-1 shrink-0 text-xs"></i
+              ><span
+                >Kalau rumus error (<span class="code-inline">#NAME?</span>, <span class="code-inline">#VALUE!</span>), cek apakah range sel sudah benar (mis. <code class="text-amber-300">C2:E2</code> bukan
+                <code class="text-red-400">C2;E2</code>).</span
+              >
+            </li>
+            <li class="flex items-start gap-2.5">
+              <i class="fa-solid fa-circle-check text-amber-400 mt-1 shrink-0 text-xs"></i><span>Butuh referensi cepat rumus? Buka tab <strong class="text-white">Materi</strong> di halaman materi-excel.html.</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- CTA BALIK -->
+        <div class="flex flex-wrap gap-3 justify-center mb-6">
+          <a href="../materi-excel.html" class="inline-flex items-center gap-2 px-6 py-3 bg-white/5 border border-white/10 rounded-xl font-semibold hover:bg-white/10 transition">
+            <i class="fa-solid fa-arrow-left text-brandGreen"></i> Kembali ke Materi Excel
+          </a>
+        </div>
+      </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container" style="max-width: 1280px; margin: 0 auto; padding: 0 24px">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <div class="footer-logo">
+              <div class="footer-logo-icon"><i class="fa-solid fa-code"></i></div>
+              <span class="footer-logo-text">RuangInformatika</span>
+            </div>
+            <p class="footer-desc">Platform e-learning interaktif modern yang dirancang untuk memfasilitasi gaya belajar visual dan praktik murid SMA Negeri 4 Yogyakarta.</p>
+          </div>
+          <div class="footer-col">
+            <h4 class="footer-heading">Pintasan Modul</h4>
+            <ul class="footer-links">
+              <li>
+                <a href="../kisi.html" class="footer-link"><i class="fa-solid fa-chevron-right" style="font-size: 0.65rem"></i> Bedah Kisi-Kisi</a>
+              </li>
+              <li>
+                <a href="../materi-bk.html" class="footer-link"><i class="fa-solid fa-chevron-right" style="font-size: 0.65rem"></i> Berpikir Komputasional</a>
+              </li>
+              <li>
+                <a href="../materi-stack-queue.html" class="footer-link"><i class="fa-solid fa-chevron-right" style="font-size: 0.65rem"></i> Stack &amp; Queue</a>
+              </li>
+              <li>
+                <a href="../materi-search-sort.html" class="footer-link"><i class="fa-solid fa-chevron-right" style="font-size: 0.65rem"></i> Searching &amp; Sorting</a>
+              </li>
+              <li>
+                <a href="../materi-excel.html" class="footer-link"><i class="fa-solid fa-chevron-right" style="font-size: 0.65rem"></i> Microsoft Excel</a>
+              </li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h4 class="footer-heading">Fitur &amp; Dukungan</h4>
+            <ul class="footer-links">
+              <li>
+                <a href="../leaderboard.html" class="footer-link"><i class="fa-solid fa-trophy" style="color: var(--amber)"></i> Leaderboard Kelas</a>
+              </li>
+              <li>
+                <a href="../forum.html" class="footer-link"><i class="fa-solid fa-comments" style="color: var(--blue)"></i> Forum Diskusi</a>
+              </li>
+              <li>
+                <a href="https://wa.me/6285282386260?text=Halo%20Pak%20Ilyas%2C%20saya%20ingin%20bertanya%20tentang%20materi%20Informatika." target="_blank" class="footer-link"
+                  ><i class="fa-solid fa-chalkboard-user" style="color: var(--green)"></i> Hubungi Pak Ilyas</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p class="footer-copy">&copy; 2026 RuangInformatika. Dikembangkan untuk kelas Informatika XE6 SMA Negeri 4 Yogyakarta.</p>
+          <div class="footer-socials">
+            <a href="https://github.com/fandhi19" target="_blank" class="footer-social" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+            <a href="https://e-portofolio-fandhi.vercel.app/" target="_blank" class="footer-social" aria-label="Portfolio"><i class="fa-solid fa-globe"></i></a>
+            <a href="https://www.instagram.com/fandhidk17/" target="_blank" class="footer-social" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      /* Reading Progress */
+      window.addEventListener("scroll", () => {
+        const w = document.body.scrollTop || document.documentElement.scrollTop;
+        const h = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const p = document.getElementById("readProgress");
+        if (p) p.style.width = (w / h) * 100 + "%";
+      });
+
+      /* Mobile Menu */
+      const hamburgerBtn = document.getElementById("hamburgerBtn");
+      const mobileMenu = document.getElementById("mobileMenu");
+      if (hamburgerBtn && mobileMenu) {
+        hamburgerBtn.addEventListener("click", () => {
+          mobileMenu.classList.toggle("open");
+          const icon = hamburgerBtn.querySelector("i");
+          icon.classList.toggle("fa-bars");
+          icon.classList.toggle("fa-xmark");
+        });
+        mobileMenu.querySelectorAll("a, button").forEach((item) => {
+          item.addEventListener("click", () => {
+            mobileMenu.classList.remove("open");
+            const icon = hamburgerBtn.querySelector("i");
+            icon.classList.add("fa-bars");
+            icon.classList.remove("fa-xmark");
+          });
+        });
+      }
+
+      /* Reveal on scroll */
+      const revealObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              e.target.classList.add("visible");
+              revealObserver.unobserve(e.target);
+            }
+          });
+        },
+        { threshold: 0.1 },
+      );
+      document.querySelectorAll(".reveal").forEach((el) => revealObserver.observe(el));
+
+      /* CHECKLIST LOGIC */
+      const CHECK_STORAGE_KEY = "lkpd_excel_checklist_v4";
+
+      function loadChecklist() {
+        try {
+          const saved = JSON.parse(localStorage.getItem(CHECK_STORAGE_KEY) || "[]");
+          saved.forEach((idx) => {
+            const items = document.querySelectorAll(".checklist-item");
+            if (items[idx]) items[idx].classList.add("checked");
+          });
+          updateCheckProgress();
+        } catch (e) {
+          console.error(e);
+        }
+      }
+
+      function saveChecklist() {
+        const items = document.querySelectorAll(".checklist-item");
+        const checked = [];
+        items.forEach((item, idx) => {
+          if (item.classList.contains("checked")) checked.push(idx);
+        });
+        localStorage.setItem(CHECK_STORAGE_KEY, JSON.stringify(checked));
+      }
+
+      function updateCheckProgress() {
+        const items = document.querySelectorAll(".checklist-item");
+        const total = items.length;
+        const checked = document.querySelectorAll(".checklist-item.checked").length;
+        document.getElementById("check-count").textContent = checked;
+        document.getElementById("check-progress").style.width = (checked / total) * 100 + "%";
+
+        [1, 2, 3].forEach((step) => {
+          const stepItems = document.querySelectorAll(`.checklist-item[data-step="${step}"]`);
+          const stepChecked = document.querySelectorAll(`.checklist-item[data-step="${step}"].checked`).length;
+          const allDone = stepChecked === stepItems.length && stepItems.length > 0;
+          document.getElementById("step" + step + "-card").classList.toggle("done", allDone);
+          document.getElementById("step" + step + "-num").classList.toggle("done", allDone);
+        });
+
+        const btnUpload = document.getElementById("btn-upload");
+        if (btnUpload && !btnUpload.disabled && checked === total) {
+          btnUpload.style.animation = "scorePulse 0.6s ease";
+        }
+      }
+
+      document.querySelectorAll(".checklist-item").forEach((item) => {
+        item.addEventListener("click", () => {
+          item.classList.toggle("checked");
+          saveChecklist();
+          updateCheckProgress();
+        });
+      });
+
+      /* IDENTITAS PERSISTENCE */
+      function loadIdentity() {
+        const fields = ["nama", "noabsen", "kelas", "tanggal"];
+        fields.forEach((id) => {
+          const saved = localStorage.getItem("lkpd_excel_" + id);
+          if (saved) document.getElementById(id).value = saved;
+        });
+        const savedNama = localStorage.getItem("siswa_nama");
+        const savedAbsen = localStorage.getItem("siswa_absen");
+        if (savedNama && !document.getElementById("nama").value) {
+          document.getElementById("nama").value = savedNama;
+        }
+        if (savedAbsen && !document.getElementById("noabsen").value) {
+          document.getElementById("noabsen").value = savedAbsen;
+        }
+      }
+
+      function saveIdentity() {
+        const fields = ["nama", "noabsen", "kelas", "tanggal"];
+        fields.forEach((id) => {
+          localStorage.setItem("lkpd_excel_" + id, document.getElementById(id).value);
+        });
+      }
+
+      ["nama", "noabsen", "kelas", "tanggal"].forEach((id) => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.addEventListener("input", saveIdentity);
+          el.addEventListener("change", saveIdentity);
+        }
+      });
+
+      /* ============================================================
+         UPLOAD FILE KE APPS SCRIPT (mode: no-cors)
+         ============================================================ */
+
+      // ⚠️ GANTI dengan URL deployment Apps Script kamu
+      const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzjU4YyZ8ScP9xsXuqpfVFKChn_rrR_fBm1PfRdp8i8UaQ5LrdCiGSI8BmTOMB1K9o/exec";
+
+      const MAX_FILE_SIZE_MB = 25;
+      let selectedFile = null;
+
+      function initUploadZone() {
+        const zone = document.getElementById("upload-zone");
+        const input = document.getElementById("file-input");
+        if (!zone || !input) return;
+
+        zone.addEventListener("click", (e) => {
+          if (e.target.closest(".file-remove")) return;
+          if (selectedFile) return;
+          input.click();
+        });
+
+        input.addEventListener("change", (e) => {
+          const file = e.target.files[0];
+          if (file) handleFile(file);
+          input.value = "";
+        });
+
+        zone.addEventListener("dragover", (e) => {
+          e.preventDefault();
+          if (!selectedFile) zone.classList.add("dragover");
+        });
+        zone.addEventListener("dragleave", () => {
+          zone.classList.remove("dragover");
+        });
+        zone.addEventListener("drop", (e) => {
+          e.preventDefault();
+          zone.classList.remove("dragover");
+          if (selectedFile) return;
+          const file = e.dataTransfer.files[0];
+          if (file) handleFile(file);
+        });
+      }
+
+      function handleFile(file) {
+        const ext = file.name.split(".").pop().toLowerCase();
+        if (!["xlsx", "xls", "csv"].includes(ext)) {
+          showUploadStatus("error", "Format file harus .xlsx, .xls, atau .csv. File kamu: ." + ext);
+          return;
+        }
+
+        const sizeMB = file.size / (1024 * 1024);
+        if (sizeMB > MAX_FILE_SIZE_MB) {
+          showUploadStatus("error", `File terlalu besar (${sizeMB.toFixed(1)} MB). Maksimal ${MAX_FILE_SIZE_MB} MB.`);
+          return;
+        }
+
+        selectedFile = file;
+        hideUploadStatus();
+
+        const zone = document.getElementById("upload-zone");
+        const prompt = document.getElementById("upload-prompt");
+        const preview = document.getElementById("file-preview");
+        zone.classList.add("has-file");
+        prompt.style.display = "none";
+        preview.style.display = "flex";
+
+        document.getElementById("file-name").textContent = file.name;
+        document.getElementById("file-size").textContent = formatFileSize(file.size);
+
+        const btn = document.getElementById("btn-upload");
+        btn.disabled = false;
+        document.getElementById("btn-upload-text").textContent = "Kumpulkan Tugas Sekarang";
+
+        btn.scrollIntoView({ behavior: "smooth", block: "center" });
+        updateCheckProgress();
+      }
+
+      function removeFile(e) {
+        if (e) e.stopPropagation();
+        selectedFile = null;
+        const zone = document.getElementById("upload-zone");
+        const prompt = document.getElementById("upload-prompt");
+        const preview = document.getElementById("file-preview");
+        if (zone) zone.classList.remove("has-file");
+        if (prompt) prompt.style.display = "block";
+        if (preview) preview.style.display = "none";
+
+        const btn = document.getElementById("btn-upload");
+        if (btn) {
+          btn.disabled = true;
+          document.getElementById("btn-upload-text").textContent = "Pilih File Dulu";
+          btn.style.animation = "";
+        }
+        hideUploadStatus();
+      }
+
+      function fileToBase64(file) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => {
+            const result = reader.result;
+            const base64 = result.split(",")[1] || "";
+            resolve(base64);
+          };
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+      }
+
+      function formatFileSize(bytes) {
+        if (bytes < 1024) return bytes + " B";
+        if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
+        return (bytes / 1024 / 1024).toFixed(2) + " MB";
+      }
+
+      async function uploadFile() {
+        if (!selectedFile) {
+          showUploadStatus("error", "Pilih file dulu sebelum kumpulkan.");
+          return;
+        }
+
+        if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL.indexOf("PASTE_URL") !== -1) {
+          showUploadStatus("error", "⚠️ Konfigurasi server belum di-set. Hubungi Pak Ilyas.");
+          return;
+        }
+
+        const nama = (document.getElementById("nama")?.value || "").trim();
+        const noabsen = (document.getElementById("noabsen")?.value || "").trim();
+        const kelas = (document.getElementById("kelas")?.value || "").trim();
+
+        if (!nama || nama.length < 3) {
+          showUploadStatus("error", "Nama belum diisi atau terlalu pendek (minimal 3 karakter).");
+          document.getElementById("nama")?.scrollIntoView({ behavior: "smooth", block: "center" });
+          return;
+        }
+        if (!noabsen || parseInt(noabsen) < 1 || parseInt(noabsen) > 50) {
+          showUploadStatus("error", "No Absen harus diisi dengan angka 1-50.");
+          document.getElementById("noabsen")?.scrollIntoView({ behavior: "smooth", block: "center" });
+          return;
+        }
+        if (!kelas) {
+          showUploadStatus("error", "Kelas belum diisi.");
+          document.getElementById("kelas")?.scrollIntoView({ behavior: "smooth", block: "center" });
+          return;
+        }
+
+        const items = document.querySelectorAll(".checklist-item");
+        const total = items.length;
+        const checked = document.querySelectorAll(".checklist-item.checked").length;
+        if (checked < total) {
+          const lanjut = confirm(`Checklist belum selesai (${checked}/${total}).\n\nYakin mau kumpulkan sekarang?\nPastikan file Excel kamu sudah benar-benar selesai ya.`);
+          if (!lanjut) return;
+        }
+
+        const btn = document.getElementById("btn-upload");
+        btn.disabled = true;
+        document.getElementById("btn-upload-text").textContent = "Mengirim...";
+        showUploadStatus("loading", "Mengupload file ke Google Drive... Mohon tunggu, jangan tutup halaman.");
+
+        try {
+          const base64 = await fileToBase64(selectedFile);
+
+          const ext = selectedFile.name.split(".").pop().toLowerCase();
+          const safeName = (s) => s.replace(/[^\w\d]+/g, "_").replace(/^_+|_+$/g, "");
+          const finalFileName = `${safeName(kelas)}_${safeName(noabsen)}_${safeName(nama)}.${ext}`;
+
+          const fd = new FormData();
+          fd.append("fileName", finalFileName);
+          fd.append("fileBase64", base64);
+          fd.append("mimeType", selectedFile.type || "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+          fd.append("nama", nama);
+          fd.append("noabsen", noabsen);
+          fd.append("kelas", kelas);
+
+          await fetch(APPS_SCRIPT_URL, {
+            method: "POST",
+            body: fd,
+            mode: "no-cors",
+          });
+
+          await new Promise((r) => setTimeout(r, 2000));
+
+          showUploadStatus("success", `✅ Berhasil! File <strong>${finalFileName}</strong> sudah terkirim ke Google Drive Pak Ilyas.<br><br>Kalau ingin memastikan, tanya Pak Ilyas apakah file sudah masuk.`);
+          document.getElementById("btn-upload-text").textContent = "✅ Terkirim";
+          const zone = document.getElementById("upload-zone");
+          zone.style.opacity = "0.5";
+          zone.style.pointerEvents = "none";
+
+          document.getElementById("upload-status").scrollIntoView({ behavior: "smooth", block: "center" });
+        } catch (err) {
+          console.error("Upload error:", err);
+          showUploadStatus("error", `❌ Gagal mengirim. Kemungkinan koneksi internet terputus.<br><br>Coba klik <strong>Kumpulkan Tugas</strong> lagi. Kalau tetap gagal, hubungi Pak Ilyas.`);
+          btn.disabled = false;
+          document.getElementById("btn-upload-text").textContent = "Coba Kirim Ulang";
+        }
+      }
+
+      function showUploadStatus(type, message) {
+        const el = document.getElementById("upload-status");
+        if (!el) return;
+        el.style.display = "flex";
+        el.className = "upload-status max-w-xl mx-auto " + type;
+        const icon = type === "success" ? "fa-circle-check" : type === "error" ? "fa-circle-exclamation" : "fa-spinner";
+        el.innerHTML = `<i class="fa-solid ${icon}"></i><div>${message}</div>`;
+      }
+
+      function hideUploadStatus() {
+        const el = document.getElementById("upload-status");
+        if (el) el.style.display = "none";
+      }
+
+      window.addEventListener("DOMContentLoaded", () => {
+        const tanggal = document.getElementById("tanggal");
+        if (tanggal && !tanggal.value) {
+          const today = new Date().toISOString().split("T")[0];
+          tanggal.value = today;
+        }
+        loadIdentity();
+        loadChecklist();
+        initUploadZone();
+      });
+    </script>
+  </body>
+</html>

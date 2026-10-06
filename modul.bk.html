@@ -1,0 +1,2330 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Modul Berpikir Komputasional — RuangInformatika</title>
+    <meta name="description" content="Modul pembelajaran Berpikir Komputasional untuk kelas X SMA. Pelajari pengertian, tujuan, 4 pilar, dan penerapannya dalam kehidupan sehari-hari." />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet" />
+
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <style>
+      /* =========================================================
+           DESIGN TOKENS — SAMA DENGAN index.html
+           ========================================================= */
+      :root {
+        --primary: #8b5cf6;
+        --primary-hover: #7c3aed;
+        --secondary: #06b6d4;
+        --accent: #f43f5e;
+
+        --bg-dark: #0f172a;
+        --bg-darker: #020617;
+        --text-dark-main: #f8fafc;
+        --text-dark-muted: #94a3b8;
+        --border-dark: rgba(255, 255, 255, 0.1);
+
+        --bg-light: #f8fafc;
+        --bg-white: #ffffff;
+        --text-light-main: #1e293b;
+        --text-light-muted: #64748b;
+        --border-light: #e2e8f0;
+
+        --radius-xl: 1.5rem;
+        --radius-lg: 1rem;
+        --radius-md: 0.75rem;
+        --radius-sm: 0.5rem;
+        --container: 1200px;
+
+        --shadow-card: 0 10px 40px -10px rgba(0, 0, 0, 0.08);
+        --shadow-hover: 0 20px 40px -10px rgba(139, 92, 246, 0.15);
+        --shadow-glow: 0 0 20px rgba(139, 92, 246, 0.4);
+
+        --font-sans: "Poppins", sans-serif;
+        --font-mono: "Fira Code", monospace;
+
+        --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        font-family: var(--font-sans);
+        background-color: var(--bg-light);
+        color: var(--text-light-main);
+        line-height: 1.6;
+        overflow-x: hidden;
+      }
+
+      a {
+        text-decoration: none;
+        color: inherit;
+      }
+      ul {
+        list-style: none;
+      }
+      img {
+        max-width: 100%;
+        display: block;
+      }
+
+      .container {
+        max-width: var(--container);
+        margin: 0 auto;
+        padding: 0 24px;
+      }
+
+      .gradient-text {
+        background: linear-gradient(135deg, var(--secondary), var(--primary));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      /* =========================================================
+           BUTTONS
+           ========================================================= */
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 12px 24px;
+        border-radius: 99px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        transition: var(--transition);
+        cursor: pointer;
+        border: none;
+        font-family: inherit;
+      }
+      .btn-primary {
+        background: var(--primary);
+        color: white;
+        box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+      }
+      .btn-primary:hover {
+        background: var(--primary-hover);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
+      }
+      .btn-outline {
+        background: transparent;
+        color: var(--text-dark-main);
+        border: 2px solid var(--border-dark);
+        backdrop-filter: blur(10px);
+      }
+      .bg-white .btn-outline,
+      .btn-outline.dark {
+        color: var(--text-light-main);
+        border-color: var(--border-light);
+      }
+      .btn-outline:hover {
+        border-color: var(--primary);
+        color: var(--primary);
+        background: rgba(139, 92, 246, 0.05);
+      }
+      .btn-lg {
+        padding: 14px 32px;
+        font-size: 1rem;
+      }
+
+      /* =========================================================
+           NAVBAR
+           ========================================================= */
+      .navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1000;
+        background: rgba(15, 23, 42, 0.8);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--border-dark);
+        transition: var(--transition);
+      }
+      .navbar.scrolled {
+        background: rgba(255, 255, 255, 0.9);
+        border-bottom: 1px solid var(--border-light);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      }
+      .navbar.scrolled .nav-logo,
+      .navbar.scrolled .nav-link,
+      .navbar.scrolled .nav-badge,
+      .navbar.scrolled .hamburger {
+        color: var(--text-light-main);
+      }
+      .navbar.scrolled .nav-badge {
+        background: rgba(15, 23, 42, 0.05);
+        border-color: var(--border-light);
+      }
+
+      .navbar-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 80px;
+      }
+      .nav-logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--text-dark-main);
+      }
+      .nav-logo-icon {
+        width: 36px;
+        height: 36px;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1rem;
+      }
+      .nav-links {
+        display: flex;
+        gap: 32px;
+      }
+      .nav-link {
+        color: var(--text-dark-muted);
+        font-weight: 500;
+        font-size: 0.95rem;
+        transition: var(--transition);
+        position: relative;
+      }
+      .nav-link:hover,
+      .nav-link.active {
+        color: var(--primary);
+      }
+      .nav-link.active::after {
+        content: "";
+        position: absolute;
+        bottom: -6px;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: var(--primary);
+        border-radius: 2px;
+      }
+      .nav-actions {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+      .nav-badge {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 16px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--border-dark);
+        border-radius: 99px;
+        color: var(--text-dark-main);
+        font-size: 0.85rem;
+        font-weight: 600;
+        transition: var(--transition);
+      }
+      .hamburger {
+        display: none;
+        background: none;
+        border: none;
+        color: var(--text-dark-main);
+        font-size: 1.5rem;
+        cursor: pointer;
+      }
+      @media (max-width: 992px) {
+        .nav-links,
+        .nav-badge {
+          display: none;
+        }
+        .hamburger {
+          display: block;
+        }
+      }
+
+      /* Mobile Menu */
+      .mobile-menu {
+        position: fixed;
+        top: 80px;
+        left: -100%;
+        width: 100%;
+        height: calc(100vh - 80px);
+        background: var(--bg-dark);
+        padding: 40px 24px;
+        transition: var(--transition);
+        z-index: 999;
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+      }
+      .mobile-menu.active {
+        left: 0;
+      }
+      .mobile-link {
+        font-size: 1.2rem;
+        color: var(--text-dark-main);
+        font-weight: 600;
+        padding-bottom: 16px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      }
+
+      /* =========================================================
+           HERO MODULE
+           ========================================================= */
+      .hero {
+        background: var(--bg-dark);
+        position: relative;
+        padding: 160px 0 100px;
+        overflow: hidden;
+      }
+      .bg-glow {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(80px);
+        z-index: 0;
+        opacity: 0.5;
+        pointer-events: none;
+      }
+      .glow-1 {
+        top: 10%;
+        left: -10%;
+        width: 500px;
+        height: 500px;
+        background: rgba(139, 92, 246, 0.3);
+      }
+      .glow-2 {
+        bottom: -10%;
+        right: -10%;
+        width: 600px;
+        height: 600px;
+        background: rgba(6, 182, 212, 0.2);
+      }
+      .hero-grid {
+        display: grid;
+        grid-template-columns: 1.15fr 0.85fr;
+        gap: 60px;
+        align-items: center;
+        position: relative;
+        z-index: 10;
+      }
+      @media (max-width: 992px) {
+        .hero-grid {
+          grid-template-columns: 1fr;
+          text-align: center;
+          gap: 50px;
+        }
+        .hero-content {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+        .hero-desc {
+          max-width: 100% !important;
+        }
+        .hero-actions {
+          justify-content: center;
+        }
+      }
+
+      .breadcrumb {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.85rem;
+        color: var(--text-dark-muted);
+        margin-bottom: 20px;
+      }
+      .breadcrumb a:hover {
+        color: var(--primary);
+      }
+      .breadcrumb i {
+        font-size: 0.7rem;
+        opacity: 0.6;
+      }
+
+      .student-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 16px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 99px;
+        color: var(--text-dark-main);
+        font-size: 0.8rem;
+        font-weight: 600;
+        letter-spacing: 1px;
+        margin-bottom: 20px;
+        backdrop-filter: blur(10px);
+        text-transform: uppercase;
+      }
+      .student-badge i {
+        color: var(--secondary);
+      }
+
+      .hero-title {
+        font-size: clamp(2.2rem, 4.5vw, 3.5rem);
+        font-weight: 800;
+        line-height: 1.1;
+        color: var(--text-dark-main);
+        margin-bottom: 20px;
+        letter-spacing: -1px;
+      }
+      .hero-desc {
+        font-size: 1.05rem;
+        color: var(--text-dark-muted);
+        margin-bottom: 28px;
+        max-width: 540px;
+        line-height: 1.75;
+      }
+      .hero-actions {
+        display: flex;
+        gap: 14px;
+        flex-wrap: wrap;
+      }
+
+      /* Hero Visual — mini pillars */
+      .hero-visual {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .floating-card {
+        background: rgba(20, 30, 50, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(20px);
+        border-radius: var(--radius-xl);
+        padding: 28px;
+        width: 100%;
+        max-width: 420px;
+        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+        animation: float 6s ease-in-out infinite;
+        position: relative;
+        z-index: 2;
+      }
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-14px);
+        }
+      }
+      .float-badge {
+        position: absolute;
+        padding: 10px 15px;
+        border-radius: var(--radius-md);
+        font-weight: 600;
+        font-size: 0.85rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        z-index: 3;
+      }
+      .badge-1 {
+        top: -18px;
+        right: -18px;
+        background: var(--primary);
+        color: white;
+        box-shadow: var(--shadow-glow);
+        animation: float 5s ease-in-out infinite reverse;
+      }
+      .badge-2 {
+        bottom: 20px;
+        left: -30px;
+        background: var(--bg-white);
+        color: var(--text-light-main);
+        animation: float 7s ease-in-out infinite 1s;
+      }
+      @media (max-width: 992px) {
+        .badge-1 {
+          right: 0;
+        }
+        .badge-2 {
+          left: 0;
+        }
+      }
+      @media (max-width: 480px) {
+        .float-badge {
+          font-size: 0.75rem;
+          padding: 8px 12px;
+        }
+        .badge-1 {
+          top: -14px;
+          right: 4px;
+        }
+        .badge-2 {
+          bottom: -10px;
+          left: 4px;
+        }
+      }
+
+      .pillars-mini {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+      .pillar-mini {
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: var(--radius-md);
+        padding: 16px 14px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        transition: var(--transition);
+      }
+      .pillar-mini:hover {
+        background: rgba(139, 92, 246, 0.12);
+        border-color: rgba(139, 92, 246, 0.4);
+        transform: translateY(-3px);
+      }
+      .pillar-mini i {
+        width: 34px;
+        height: 34px;
+        border-radius: 9px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.95rem;
+        color: white;
+      }
+      .pillar-mini span {
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: var(--text-dark-main);
+      }
+      .pillar-mini small {
+        font-size: 0.7rem;
+        color: var(--text-dark-muted);
+        line-height: 1.35;
+      }
+      .pm-1 i {
+        background: linear-gradient(135deg, #ec4899, #8b5cf6);
+      }
+      .pm-2 i {
+        background: linear-gradient(135deg, #8b5cf6, #6366f1);
+      }
+      .pm-3 i {
+        background: linear-gradient(135deg, #06b6d4, #3b82f6);
+      }
+      .pm-4 i {
+        background: linear-gradient(135deg, #10b981, #06b6d4);
+      }
+
+      /* =========================================================
+           SUBMENU TABS (Sticky)
+           ========================================================= */
+      .submenu-wrap {
+        background: var(--bg-white);
+        border-bottom: 1px solid var(--border-light);
+        position: sticky;
+        top: 80px;
+        z-index: 900;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+      }
+      .submenu {
+        display: flex;
+        gap: 8px;
+        overflow-x: auto;
+        padding: 14px 0;
+        scrollbar-width: none;
+      }
+      .submenu::-webkit-scrollbar {
+        display: none;
+      }
+      .submenu-tab {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 20px;
+        border-radius: 99px;
+        background: var(--bg-light);
+        border: 1px solid var(--border-light);
+        font-family: inherit;
+        font-weight: 600;
+        font-size: 0.9rem;
+        color: var(--text-light-muted);
+        cursor: pointer;
+        transition: var(--transition);
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+      .submenu-tab i {
+        font-size: 0.9rem;
+      }
+      .submenu-tab:hover {
+        color: var(--primary);
+        border-color: rgba(139, 92, 246, 0.3);
+        background: rgba(139, 92, 246, 0.05);
+      }
+      .submenu-tab.active {
+        background: var(--primary);
+        color: white;
+        border-color: var(--primary);
+        box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+      }
+
+      /* =========================================================
+           PROGRESS MODUL
+           ========================================================= */
+      .progress-box {
+        margin-top: 20px;
+        background: var(--bg-light);
+        border: 1px solid var(--border-light);
+        border-radius: var(--radius-lg);
+        padding: 16px 20px;
+      }
+      .progress-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+        font-size: 0.85rem;
+        font-weight: 600;
+      }
+      .progress-head span:last-child {
+        color: var(--primary);
+      }
+      .progress-bar {
+        height: 8px;
+        background: var(--border-light);
+        border-radius: 99px;
+        overflow: hidden;
+      }
+      .progress-fill {
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(90deg, var(--secondary), var(--primary));
+        border-radius: 99px;
+        transition: width 0.5s ease;
+      }
+
+      /* =========================================================
+           SECTION GENERALS
+           ========================================================= */
+      .section {
+        padding: 80px 0;
+      }
+      .section.white {
+        background: var(--bg-white);
+      }
+      .section.light {
+        background: var(--bg-light);
+      }
+
+      .section-head {
+        text-align: center;
+        margin-bottom: 50px;
+      }
+      .section-subtitle {
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: var(--primary);
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        margin-bottom: 12px;
+        display: block;
+      }
+      .section-title {
+        font-size: clamp(1.7rem, 3vw, 2.4rem);
+        font-weight: 800;
+        color: var(--text-light-main);
+        letter-spacing: -0.5px;
+        margin-bottom: 12px;
+      }
+      .section-desc {
+        color: var(--text-light-muted);
+        max-width: 640px;
+        margin: 0 auto;
+        font-size: 0.98rem;
+      }
+
+      /* =========================================================
+           MATERIAL / ARTIKEL
+           ========================================================= */
+      .article {
+        max-width: 900px;
+        margin: 0 auto;
+      }
+      .article h3 {
+        font-size: 1.4rem;
+        font-weight: 700;
+        margin: 40px 0 16px;
+        color: var(--text-light-main);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .article h3 .num {
+        display: inline-flex;
+        width: 34px;
+        height: 34px;
+        align-items: center;
+        justify-content: center;
+        background: rgba(139, 92, 246, 0.1);
+        color: var(--primary);
+        border-radius: 10px;
+        font-size: 0.95rem;
+        font-weight: 700;
+        flex-shrink: 0;
+      }
+      .article h4 {
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin: 24px 0 10px;
+      }
+      .article p {
+        color: var(--text-light-main);
+        margin-bottom: 14px;
+        line-height: 1.85;
+      }
+      .article ul.bullet {
+        margin: 0 0 16px 0;
+        padding-left: 0;
+      }
+      .article ul.bullet li {
+        position: relative;
+        padding-left: 26px;
+        margin-bottom: 10px;
+        color: var(--text-light-main);
+        line-height: 1.75;
+      }
+      .article ul.bullet li::before {
+        content: "\f00c";
+        font-family: "Font Awesome 6 Free";
+        font-weight: 900;
+        position: absolute;
+        left: 0;
+        top: 3px;
+        font-size: 0.75rem;
+        color: var(--secondary);
+        background: rgba(6, 182, 212, 0.12);
+        width: 18px;
+        height: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+      }
+
+      /* Intro card */
+      .callout {
+        background: linear-gradient(135deg, rgba(139, 92, 246, 0.06), rgba(6, 182, 212, 0.06));
+        border-left: 4px solid var(--primary);
+        padding: 20px 24px;
+        border-radius: var(--radius-md);
+        margin-bottom: 20px;
+        font-size: 0.98rem;
+        line-height: 1.75;
+        color: var(--text-light-main);
+      }
+      .callout strong {
+        color: var(--primary);
+      }
+
+      .callout-tip {
+        background: rgba(245, 158, 11, 0.08);
+        border-left: 4px solid #f59e0b;
+        padding: 18px 22px;
+        border-radius: var(--radius-md);
+        margin: 24px 0;
+        font-size: 0.93rem;
+        line-height: 1.7;
+      }
+      .callout-tip .ct-title {
+        font-weight: 700;
+        color: #b45309;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 6px;
+        font-size: 0.88rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      /* Pillars grid */
+      .pillars-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+        margin: 24px 0 12px;
+      }
+      @media (max-width: 700px) {
+        .pillars-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .pillar-card {
+        background: var(--bg-white);
+        border: 1px solid var(--border-light);
+        border-radius: var(--radius-lg);
+        padding: 22px;
+        transition: var(--transition);
+        position: relative;
+        overflow: hidden;
+      }
+      .pillar-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: var(--primary);
+      }
+      .pillar-card.pc-1::before {
+        background: linear-gradient(90deg, #ec4899, #8b5cf6);
+      }
+      .pillar-card.pc-2::before {
+        background: linear-gradient(90deg, #8b5cf6, #6366f1);
+      }
+      .pillar-card.pc-3::before {
+        background: linear-gradient(90deg, #06b6d4, #3b82f6);
+      }
+      .pillar-card.pc-4::before {
+        background: linear-gradient(90deg, #10b981, #06b6d4);
+      }
+      .pillar-card:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-hover);
+        border-color: rgba(139, 92, 246, 0.25);
+      }
+      .pillar-head {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 12px;
+      }
+      .pillar-icon {
+        width: 46px;
+        height: 46px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.1rem;
+        flex-shrink: 0;
+      }
+      .pc-1 .pillar-icon {
+        background: linear-gradient(135deg, #ec4899, #8b5cf6);
+      }
+      .pc-2 .pillar-icon {
+        background: linear-gradient(135deg, #8b5cf6, #6366f1);
+      }
+      .pc-3 .pillar-icon {
+        background: linear-gradient(135deg, #06b6d4, #3b82f6);
+      }
+      .pc-4 .pillar-icon {
+        background: linear-gradient(135deg, #10b981, #06b6d4);
+      }
+      .pillar-head h4 {
+        font-size: 1.05rem;
+        font-weight: 700;
+        margin: 0;
+        color: var(--text-light-main);
+      }
+      .pillar-head small {
+        font-size: 0.75rem;
+        color: var(--text-light-muted);
+        font-weight: 500;
+      }
+      .pillar-card p {
+        font-size: 0.9rem;
+        color: var(--text-light-muted);
+        line-height: 1.7;
+        margin-bottom: 12px;
+      }
+      .pillar-example {
+        background: var(--bg-light);
+        border-radius: var(--radius-sm);
+        padding: 10px 14px;
+        font-size: 0.83rem;
+        color: var(--text-light-main);
+        border: 1px dashed var(--border-light);
+      }
+      .pillar-example strong {
+        color: var(--primary);
+      }
+
+      /* Summary / Ringkasan */
+      .summary-card {
+        background: linear-gradient(135deg, var(--bg-dark), var(--bg-darker));
+        border-radius: var(--radius-xl);
+        padding: 36px 32px;
+        color: var(--text-dark-main);
+        position: relative;
+        overflow: hidden;
+        margin-top: 30px;
+        box-shadow: 0 20px 40px rgba(15, 23, 42, 0.2);
+      }
+      .summary-card::before {
+        content: "";
+        position: absolute;
+        top: -60%;
+        right: -10%;
+        width: 300px;
+        height: 300px;
+        background: var(--primary);
+        filter: blur(100px);
+        opacity: 0.3;
+        pointer-events: none;
+      }
+      .summary-head {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 20px;
+        position: relative;
+        z-index: 2;
+      }
+      .summary-head i {
+        width: 40px;
+        height: 40px;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1rem;
+      }
+      .summary-head h3 {
+        margin: 0;
+        font-size: 1.25rem;
+        color: white;
+        font-weight: 700;
+      }
+      .summary-list {
+        position: relative;
+        z-index: 2;
+        display: grid;
+        gap: 12px;
+      }
+      .summary-list li {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        font-size: 0.92rem;
+        color: var(--text-dark-muted);
+        line-height: 1.6;
+      }
+      .summary-list li i {
+        color: var(--secondary);
+        margin-top: 4px;
+        flex-shrink: 0;
+      }
+      .summary-list li strong {
+        color: var(--text-dark-main);
+      }
+
+      /* =========================================================
+           VIDEO SECTION
+           ========================================================= */
+      .video-grid {
+        display: grid;
+        grid-template-columns: 1.6fr 1fr;
+        gap: 30px;
+        align-items: start;
+      }
+      @media (max-width: 992px) {
+        .video-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .video-frame {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        border-radius: var(--radius-xl);
+        overflow: hidden;
+        border: 1px solid var(--border-light);
+        box-shadow: var(--shadow-card);
+        background: #000;
+      }
+      .video-frame iframe {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        border: 0;
+      }
+
+      .video-side {
+        background: var(--bg-white);
+        border: 1px solid var(--border-light);
+        border-radius: var(--radius-xl);
+        padding: 26px;
+        box-shadow: var(--shadow-card);
+      }
+      .video-side h3 {
+        font-size: 1.15rem;
+        font-weight: 700;
+        margin-bottom: 14px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .video-side h3 i {
+        width: 34px;
+        height: 34px;
+        border-radius: 10px;
+        background: rgba(139, 92, 246, 0.1);
+        color: var(--primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.95rem;
+      }
+      .video-side p {
+        font-size: 0.9rem;
+        color: var(--text-light-muted);
+        line-height: 1.7;
+        margin-bottom: 14px;
+      }
+      .video-side .divider {
+        height: 1px;
+        background: var(--border-light);
+        margin: 20px 0;
+      }
+      .video-side ol {
+        padding-left: 20px;
+        font-size: 0.9rem;
+        color: var(--text-light-main);
+      }
+      .video-side ol li {
+        margin-bottom: 10px;
+        line-height: 1.6;
+        padding-left: 6px;
+      }
+      .video-side ol li::marker {
+        color: var(--primary);
+        font-weight: 700;
+      }
+
+      /* =========================================================
+           QUIZ / LATIHAN SOAL
+           ========================================================= */
+      .quiz-wrap {
+        max-width: 820px;
+        margin: 0 auto;
+      }
+
+      .question {
+        background: var(--bg-white);
+        border: 1px solid var(--border-light);
+        border-radius: var(--radius-lg);
+        padding: 22px 24px;
+        margin-bottom: 18px;
+        transition: var(--transition);
+      }
+      .question.correct {
+        border-color: #10b981;
+        background: rgba(16, 185, 129, 0.04);
+      }
+      .question.wrong {
+        border-color: var(--accent);
+        background: rgba(244, 63, 94, 0.04);
+      }
+
+      .q-head {
+        display: flex;
+        align-items: flex-start;
+        gap: 14px;
+        margin-bottom: 16px;
+      }
+      .q-num {
+        width: 34px;
+        height: 34px;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        color: white;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 0.9rem;
+        flex-shrink: 0;
+      }
+      .q-text {
+        font-weight: 600;
+        font-size: 0.98rem;
+        line-height: 1.6;
+        color: var(--text-light-main);
+        padding-top: 4px;
+      }
+
+      .options {
+        display: grid;
+        gap: 10px;
+        margin-left: 48px;
+      }
+      @media (max-width: 560px) {
+        .options {
+          margin-left: 0;
+        }
+      }
+
+      .option {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 12px 16px;
+        background: var(--bg-light);
+        border: 1.5px solid var(--border-light);
+        border-radius: var(--radius-md);
+        cursor: pointer;
+        transition: var(--transition);
+        font-size: 0.92rem;
+        line-height: 1.55;
+        color: var(--text-light-main);
+      }
+      .option:hover {
+        border-color: var(--primary);
+        background: rgba(139, 92, 246, 0.04);
+      }
+      .option input {
+        display: none;
+      }
+      .option .letter {
+        width: 26px;
+        height: 26px;
+        border-radius: 8px;
+        background: var(--bg-white);
+        border: 1.5px solid var(--border-light);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 0.8rem;
+        color: var(--text-light-muted);
+        flex-shrink: 0;
+        transition: var(--transition);
+      }
+      .option input:checked ~ .letter {
+        background: var(--primary);
+        border-color: var(--primary);
+        color: white;
+      }
+      .option input:checked ~ .opt-text {
+        font-weight: 600;
+      }
+      .option.selected {
+        border-color: var(--primary);
+        background: rgba(139, 92, 246, 0.06);
+      }
+      /* Setelah dinilai */
+      .option.locked {
+        pointer-events: none;
+        cursor: default;
+      }
+      .option.answer-correct {
+        border-color: #10b981;
+        background: rgba(16, 185, 129, 0.08);
+      }
+      .option.answer-correct .letter {
+        background: #10b981;
+        border-color: #10b981;
+        color: white;
+      }
+      .option.answer-picked-wrong {
+        border-color: var(--accent);
+        background: rgba(244, 63, 94, 0.08);
+      }
+      .option.answer-picked-wrong .letter {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: white;
+      }
+
+      .explain {
+        margin-top: 14px;
+        margin-left: 48px;
+        padding: 14px 16px;
+        border-radius: var(--radius-md);
+        font-size: 0.88rem;
+        line-height: 1.7;
+        display: none;
+      }
+      @media (max-width: 560px) {
+        .explain {
+          margin-left: 0;
+        }
+      }
+      .explain.show {
+        display: block;
+        animation: fadeIn 0.4s ease;
+      }
+      .explain.ok {
+        background: rgba(16, 185, 129, 0.08);
+        border-left: 3px solid #10b981;
+      }
+      .explain.no {
+        background: rgba(244, 63, 94, 0.08);
+        border-left: 3px solid var(--accent);
+      }
+      .explain .verdict {
+        font-weight: 700;
+        margin-bottom: 6px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .explain.ok .verdict {
+        color: #059669;
+      }
+      .explain.no .verdict {
+        color: var(--accent);
+      }
+      .explain .correct-ans {
+        font-weight: 600;
+        margin-bottom: 4px;
+      }
+      .explain .correct-ans span {
+        color: var(--primary);
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(-6px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Quiz actions */
+      .quiz-actions {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: 30px;
+      }
+
+      /* Result panel */
+      .result-panel {
+        display: none;
+        margin-top: 30px;
+        background: var(--bg-white);
+        border: 1px solid var(--border-light);
+        border-radius: var(--radius-xl);
+        padding: 32px;
+        text-align: center;
+        box-shadow: var(--shadow-card);
+        animation: fadeIn 0.5s ease;
+      }
+      .result-panel.show {
+        display: block;
+      }
+
+      .result-score {
+        font-size: 3.2rem;
+        font-weight: 800;
+        line-height: 1;
+        background: linear-gradient(135deg, var(--secondary), var(--primary));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 6px;
+      }
+      .result-label {
+        font-size: 0.85rem;
+        color: var(--text-light-muted);
+        font-weight: 600;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        margin-bottom: 16px;
+      }
+      .result-stats {
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+        margin: 20px 0;
+        flex-wrap: wrap;
+      }
+      .result-stat {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.9rem;
+        font-weight: 600;
+      }
+      .result-stat i.ok {
+        color: #10b981;
+      }
+      .result-stat i.no {
+        color: var(--accent);
+      }
+
+      .result-msg {
+        max-width: 560px;
+        margin: 20px auto 24px;
+        font-size: 0.95rem;
+        line-height: 1.75;
+        color: var(--text-light-main);
+        padding: 18px 22px;
+        background: var(--bg-light);
+        border-radius: var(--radius-md);
+        border-left: 4px solid var(--primary);
+      }
+      .result-msg.great {
+        border-left-color: #10b981;
+      }
+      .result-msg.good {
+        border-left-color: var(--secondary);
+      }
+      .result-msg.fair {
+        border-left-color: #f59e0b;
+      }
+      .result-msg.low {
+        border-left-color: var(--accent);
+      }
+
+      /* =========================================================
+           BACK TO TOP
+           ========================================================= */
+      .back-top {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: var(--primary);
+        color: white;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
+        opacity: 0;
+        transform: translateY(20px);
+        pointer-events: none;
+        transition: var(--transition);
+        z-index: 800;
+      }
+      .back-top.show {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
+      }
+      .back-top:hover {
+        background: var(--primary-hover);
+        transform: translateY(-3px);
+      }
+
+      /* =========================================================
+           REVEAL ANIMATION
+           ========================================================= */
+      .reveal {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 0.8s ease-out;
+      }
+      .reveal.active {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .reveal {
+          opacity: 1;
+          transform: none;
+          transition: none;
+        }
+        html {
+          scroll-behavior: auto;
+        }
+        * {
+          animation-duration: 0.01ms !important;
+        }
+      }
+
+      /* =========================================================
+           FOOTER (sama dengan index.html)
+           ========================================================= */
+      footer {
+        background: var(--bg-darker);
+        color: var(--text-dark-muted);
+        padding: 80px 0 30px;
+        border-top: 1px solid var(--border-dark);
+      }
+      .footer-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr;
+        gap: 60px;
+        margin-bottom: 60px;
+      }
+      @media (max-width: 768px) {
+        .footer-grid {
+          grid-template-columns: 1fr;
+          gap: 40px;
+        }
+      }
+      .footer-brand h2 {
+        color: var(--text-dark-main);
+        font-size: 1.5rem;
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .footer-brand p {
+        font-size: 0.9rem;
+        max-width: 400px;
+        margin-bottom: 24px;
+      }
+      .footer-title {
+        color: var(--text-dark-main);
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 20px;
+      }
+      .footer-links li {
+        margin-bottom: 12px;
+      }
+      .footer-links a {
+        font-size: 0.9rem;
+        transition: var(--transition);
+      }
+      .footer-links a:hover {
+        color: var(--primary);
+        padding-left: 5px;
+      }
+      .footer-bottom {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 30px;
+        border-top: 1px solid var(--border-dark);
+        font-size: 0.85rem;
+      }
+      .social-links {
+        display: flex;
+        gap: 16px;
+      }
+      .social-links a {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.05);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: var(--transition);
+        color: white;
+      }
+      .social-links a:hover {
+        background: var(--primary);
+        transform: translateY(-3px);
+      }
+      @media (max-width: 768px) {
+        .footer-bottom {
+          flex-direction: column;
+          gap: 20px;
+          text-align: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- =========================================================
+         NAVBAR
+         ========================================================= -->
+    <nav class="navbar" id="navbar">
+      <div class="container navbar-inner">
+        <a href="index.html" class="nav-logo">
+          <div class="nav-logo-icon"><i class="fa-solid fa-code"></i></div>
+          RuangInformatika
+        </a>
+
+        <div class="nav-links">
+          <a href="index.html" class="nav-link">Beranda</a>
+          <a href="modul.bk.html" class="nav-link active">Modul</a>
+          <a href="index.html#fitur" class="nav-link">Fitur</a>
+          <a href="leaderboard.html" class="nav-link">Leaderboard</a>
+        </div>
+
+        <div class="nav-actions">
+          <div class="nav-badge"><i class="fa-solid fa-graduation-cap" style="color: var(--secondary)"></i> Kelas XE6</div>
+          <a href="#latihan" class="btn btn-primary" style="padding: 8px 16px; font-size: 0.85rem">Latihan Soal</a>
+          <button class="hamburger" id="hamburger" aria-label="Buka menu" aria-expanded="false" aria-controls="mobile-menu">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobile-menu">
+      <a href="index.html" class="mobile-link">Beranda</a>
+      <a href="modul.bk.html" class="mobile-link">Modul</a>
+      <a href="index.html#fitur" class="mobile-link">Fitur Platform</a>
+      <a href="leaderboard.html" class="mobile-link">Leaderboard Kelas</a>
+      <a href="forum.html" class="mobile-link">Forum Diskusi</a>
+    </div>
+
+    <!-- =========================================================
+         HERO MODULE
+         ========================================================= -->
+    <header class="hero">
+      <div class="bg-glow glow-1"></div>
+      <div class="bg-glow glow-2"></div>
+
+      <div class="container hero-grid">
+        <div class="hero-content reveal">
+          <div class="breadcrumb">
+            <a href="index.html">Beranda</a>
+            <i class="fa-solid fa-chevron-right"></i>
+            <a href="index.html#modul">Modul</a>
+            <i class="fa-solid fa-chevron-right"></i>
+            <span style="color: var(--text-dark-main)">Berpikir Komputasional</span>
+          </div>
+
+          <div class="student-badge"><i class="fa-solid fa-layer-group"></i> Modul Informatika • Kelas X</div>
+
+          <h1 class="hero-title">Berpikir <span class="gradient-text">Komputasional</span></h1>
+
+          <p class="hero-desc">Belajar cara berpikir sistematis untuk memecahkan masalah dengan konsep-konsep dasar berpikir komputasional. Yuk mulai dari pengertian, empat pilar, sampai penerapannya di kehidupan sehari-hari!</p>
+
+          <div class="hero-actions">
+            <a href="#materi" class="btn btn-primary"> Mulai Baca Materi <i class="fa-solid fa-arrow-right"></i> </a>
+            <a href="#latihan" class="btn btn-outline"> <i class="fa-regular fa-circle-check"></i> Langsung Latihan </a>
+          </div>
+
+          <!-- Progress Modul -->
+          <div class="progress-box">
+            <div class="progress-head">
+              <span><i class="fa-solid fa-chart-simple" style="color: var(--primary); margin-right: 6px"></i>Progress Modul</span>
+              <span id="progress-text">0%</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" id="progress-fill"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Visual: 4 pilar mini -->
+        <div class="hero-visual reveal">
+          <div class="float-badge badge-1"><i class="fa-solid fa-brain"></i> Computational Thinking</div>
+          <div class="float-badge badge-2"><i class="fa-solid fa-check-double" style="color: #10b981"></i> 4 Pilar Utama</div>
+
+          <div class="floating-card">
+            <div class="pillars-mini">
+              <div class="pillar-mini pm-1">
+                <i class="fa-solid fa-puzzle-piece"></i>
+                <span>Dekomposisi</span>
+                <small>Pecah masalah jadi kecil</small>
+              </div>
+              <div class="pillar-mini pm-2">
+                <i class="fa-solid fa-shapes"></i>
+                <span>Pola</span>
+                <small>Kenali kesamaan</small>
+              </div>
+              <div class="pillar-mini pm-3">
+                <i class="fa-solid fa-filter"></i>
+                <span>Abstraksi</span>
+                <small>Ambil inti saja</small>
+              </div>
+              <div class="pillar-mini pm-4">
+                <i class="fa-solid fa-list-ol"></i>
+                <span>Algoritma</span>
+                <small>Susun langkah</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- =========================================================
+         SUBMENU TABS (Sticky)
+         ========================================================= -->
+    <div class="submenu-wrap">
+      <div class="container">
+        <div class="submenu" role="tablist">
+          <button class="submenu-tab active" data-target="materi" role="tab"><i class="fa-solid fa-book-open"></i> Materi Baca</button>
+          <button class="submenu-tab" data-target="video" role="tab"><i class="fa-solid fa-circle-play"></i> Video Penjelasan</button>
+          <button class="submenu-tab" data-target="latihan" role="tab"><i class="fa-solid fa-pen-to-square"></i> Latihan Soal</button>
+        </div>
+      </div>
+    </div>
+
+    <main>
+      <!-- =========================================================
+             SECTION: MATERI BACA
+             ========================================================= -->
+      <section id="materi" class="section white">
+        <div class="container">
+          <div class="section-head reveal">
+            <span class="section-subtitle">Bagian 1</span>
+            <h2 class="section-title">Materi Baca — Berpikir Komputasional</h2>
+            <p class="section-desc">Bacalah materi berikut dengan santai. Tidak perlu dihafal, cukup dipahami alurnya karena konsep ini akan sering kamu gunakan.</p>
+          </div>
+
+          <article class="article">
+            <!-- A. Pengertian -->
+            <div class="reveal">
+              <h3><span class="num">A</span> Pengertian Berpikir Komputasional</h3>
+              <div class="callout">
+                <strong>Berpikir komputasional (Computational Thinking)</strong> adalah cara berpikir sistematis untuk memecahkan masalah dengan mengadopsi cara kerja komputer — yaitu memecah masalah, mencari pola, mengambil inti
+                permasalahan, lalu menyusun langkah penyelesaian.
+              </div>
+              <p>Berpikir komputasional <strong>bukan berarti kamu harus bisa membuat program</strong>. Ini lebih ke cara berpikir. Komputer hanya alat bantu; yang utama adalah logika dan struktur cara kamu memecahkan masalah.</p>
+              <p>
+                Contoh sederhana: saat kamu menyiapkan bekal sekolah di pagi hari, tanpa sadar kamu sudah menerapkan berpikir komputasional — kamu memecah pekerjaan (memasak, memasukkan ke kotak, memasukkan ke tas), mencari urutan paling
+                efisien, dan menyusun langkah agar tidak ada yang terlewat.
+              </p>
+            </div>
+
+            <!-- B. Tujuan -->
+            <div class="reveal">
+              <h3><span class="num">B</span> Tujuan Berpikir Komputasional</h3>
+              <p>Berpikir komputasional penting karena membantumu:</p>
+              <ul class="bullet">
+                <li><strong>Menyelesaikan masalah kompleks</strong> dengan memecahnya menjadi bagian-bagian kecil yang lebih mudah dikelola.</li>
+                <li><strong>Berpikir lebih terstruktur</strong>, tidak melompat-lompat, dan tahu langkah mana yang harus diambil lebih dulu.</li>
+                <li><strong>Menemukan solusi yang efisien</strong> — bukan hanya asal selesai, tapi juga hemat waktu dan tenaga.</li>
+                <li><strong>Memahami cara kerja teknologi</strong> di sekitar kita: aplikasi, game, mesin pencari, dan lain-lain.</li>
+                <li><strong>Meningkatkan kemampuan belajar</strong> di mata pelajaran lain karena terbiasa berpikir logis dan runtut.</li>
+              </ul>
+            </div>
+
+            <!-- C. 4 Pilar -->
+            <div class="reveal">
+              <h3><span class="num">C</span> Empat Pilar Berpikir Komputasional</h3>
+              <p>Ada empat pilar utama yang menjadi pondasi berpikir komputasional. Keempatnya saling berkaitan dan biasanya dipakai bersamaan.</p>
+
+              <div class="pillars-grid">
+                <!-- 1. Dekomposisi -->
+                <div class="pillar-card pc-1">
+                  <div class="pillar-head">
+                    <div class="pillar-icon"><i class="fa-solid fa-puzzle-piece"></i></div>
+                    <div>
+                      <h4>1. Dekomposisi</h4>
+                      <small>Memecah masalah</small>
+                    </div>
+                  </div>
+                  <p><strong>Pengertian:</strong> Memecah masalah besar yang kompleks menjadi bagian-bagian kecil yang lebih sederhana sehingga mudah diselesaikan satu per satu.</p>
+                  <p><strong>Cara kerja:</strong> Lihat masalah utuh → identifikasi bagian-bagiannya → selesaikan tiap bagian → gabungkan hasilnya.</p>
+                  <div class="pillar-example"><strong>Contoh:</strong> Membuat website portofolio dipecah menjadi: membuat halaman profil, halaman proyek, dan halaman kontak.</div>
+                </div>
+
+                <!-- 2. Pattern Recognition -->
+                <div class="pillar-card pc-2">
+                  <div class="pillar-head">
+                    <div class="pillar-icon"><i class="fa-solid fa-shapes"></i></div>
+                    <div>
+                      <h4>2. Pengenalan Pola</h4>
+                      <small>Pattern Recognition</small>
+                    </div>
+                  </div>
+                  <p><strong>Pengertian:</strong> Mencari kesamaan, keteraturan, atau pola dari masalah-masalah yang pernah dihadapi sebelumnya.</p>
+                  <p><strong>Cara kerja:</strong> Amati data/masalah → cari kesamaan → gunakan solusi yang sudah terbukti untuk masalah serupa.</p>
+                  <div class="pillar-example"><strong>Contoh:</strong> Saat belajar matematika, kamu sadar bahwa soal "menghitung luas" selalu punya pola: identifikasi bentuk → pakai rumus.</div>
+                </div>
+
+                <!-- 3. Abstraksi -->
+                <div class="pillar-card pc-3">
+                  <div class="pillar-head">
+                    <div class="pillar-icon"><i class="fa-solid fa-filter"></i></div>
+                    <div>
+                      <h4>3. Abstraksi</h4>
+                      <small>Ambil intinya</small>
+                    </div>
+                  </div>
+                  <p><strong>Pengertian:</strong> Menyaring informasi penting dan mengabaikan detail yang tidak perlu, sehingga fokus pada hal yang benar-benar relevan.</p>
+                  <p><strong>Cara kerja:</strong> Tentukan tujuan → pilih informasi yang penting → buang detail yang tidak memengaruhi solusi.</p>
+                  <div class="pillar-example"><strong>Contoh:</strong> Membuat peta perjalanan ke sekolah hanya butuh rute dan nama jalan — tidak perlu warna aspal atau jenis pohon di pinggir jalan.</div>
+                </div>
+
+                <!-- 4. Algoritma -->
+                <div class="pillar-card pc-4">
+                  <div class="pillar-head">
+                    <div class="pillar-icon"><i class="fa-solid fa-list-ol"></i></div>
+                    <div>
+                      <h4>4. Algoritma</h4>
+                      <small>Langkah penyelesaian</small>
+                    </div>
+                  </div>
+                  <p><strong>Pengertian:</strong> Rangkaian langkah-langkah yang urut, jelas, dan logis untuk menyelesaikan masalah.</p>
+                  <p><strong>Cara kerja:</strong> Tuliskan langkah dari awal sampai akhir → pastikan tiap langkah bisa dikerjakan → pastikan ada titik berhenti (hasil akhir).</p>
+                  <div class="pillar-example"><strong>Contoh:</strong> Resep mie instan: didihkan air → masukkan mie → rebus 3 menit → tiriskan → tambahkan bumbu → sajikan.</div>
+                </div>
+              </div>
+
+              <div class="callout-tip">
+                <div class="ct-title"><i class="fa-solid fa-lightbulb"></i> Tahukah Kamu?</div>
+                Empat pilar ini biasanya dipakai <strong>berurutan</strong>: kamu dekomposisi dulu, lalu cari pola, lalu abstraksi hal pentingnya, dan terakhir menyusun algoritma penyelesaiannya.
+              </div>
+            </div>
+
+            <!-- D. Contoh sehari-hari -->
+            <div class="reveal">
+              <h3><span class="num">D</span> Contoh dalam Kehidupan Sehari-hari</h3>
+              <p>Supaya lebih terasa, berikut beberapa contoh bagaimana keempat pilar berpikir komputasional muncul di kegiatan sehari-hari.</p>
+
+              <h4>1. Membuat Mie Instan</h4>
+              <ul class="bullet">
+                <li><strong>Dekomposisi:</strong> Memecah proses menjadi: menyiapkan air, merebus, meniriskan, memberi bumbu, menyajikan.</li>
+                <li><strong>Pola:</strong> Instruksi mie instan hampir selalu sama — pakai pola langkah itu untuk semua merek.</li>
+                <li><strong>Abstraksi:</strong> Tidak perlu memperhatikan warna kemasan atau merek panci; yang penting waktu rebus dan takaran air.</li>
+                <li><strong>Algoritma:</strong> Urutan langkah yang harus kamu ikuti agar mie matang dengan sempurna.</li>
+              </ul>
+
+              <h4>2. Mencari Buku di Perpustakaan</h4>
+              <ul class="bullet">
+                <li><strong>Dekomposisi:</strong> Cari kategori → cari rak → cari judul.</li>
+                <li><strong>Pola:</strong> Buku disusun berdasarkan kategori dan abjad, jadi kamu tahu harus mencari di mana.</li>
+                <li><strong>Abstraksi:</strong> Kamu tidak perlu tahu warna rak atau nomor inventaris; cukup kategori dan judul.</li>
+                <li><strong>Algoritma:</strong> Langkah: cek katalog → temukan kode rak → ambil buku di rak tersebut.</li>
+              </ul>
+
+              <h4>3. Menentukan Rute Perjalanan</h4>
+              <ul class="bullet">
+                <li><strong>Dekomposisi:</strong> Tentukan titik awal, titik akhir, dan jalan yang mungkin.</li>
+                <li><strong>Pola:</strong> Jam macet biasanya di jam tertentu — kamu bisa memprediksi dan menghindarinya.</li>
+                <li><strong>Abstraksi:</strong> Cukup lihat rute dan waktu tempuh, tidak perlu tahu nama setiap gang.</li>
+                <li><strong>Algoritma:</strong> Susun urutan: dari rumah → jalan A → belok kiri → jalan B → sampai.</li>
+              </ul>
+
+              <h4>4. Mengatur Jadwal Belajar</h4>
+              <ul class="bullet">
+                <li><strong>Dekomposisi:</strong> Bagi materi jadi beberapa bagian kecil, misalnya per bab.</li>
+                <li><strong>Pola:</strong> Kamu tahu kapan biasanya kamu paling fokus — pakai pola itu untuk belajar.</li>
+                <li><strong>Abstraksi:</strong> Fokus ke materi yang paling sulit, tidak perlu mengulang yang sudah kamu kuasai.</li>
+                <li><strong>Algoritma:</strong> Buat jadwal: Senin bab 1, Selasa bab 2, Rabu latihan soal, dan seterusnya.</li>
+              </ul>
+
+              <h4>5. Mencari Nama dalam Daftar Siswa</h4>
+              <ul class="bullet">
+                <li><strong>Dekomposisi:</strong> Bagi daftar jadi bagian atas, tengah, dan bawah.</li>
+                <li><strong>Pola:</strong> Nama disusun alfabetis, jadi kamu tahu harus bergerak ke atas atau ke bawah.</li>
+                <li><strong>Abstraksi:</strong> Fokus ke huruf awal nama, tidak perlu baca nama satu per satu.</li>
+                <li><strong>Algoritma:</strong> Buka bagian tengah → bandingkan → persempit ke setengah → ulangi sampai ketemu.</li>
+              </ul>
+            </div>
+
+            <!-- E. Kaitan dengan Informatika -->
+            <div class="reveal">
+              <h3><span class="num">E</span> Berpikir Komputasional dalam Informatika</h3>
+              <p>Berpikir komputasional adalah <strong>fondasi</strong> dari hampir semua bidang informatika. Berikut kaitannya dengan topik-topik yang akan kamu pelajari:</p>
+              <ul class="bullet">
+                <li><strong>Algoritma:</strong> Algoritma adalah hasil konkret dari berpikir komputasional. Setiap algoritma lahir dari proses dekomposisi, pengenalan pola, dan abstraksi.</li>
+                <li><strong>Pemrograman:</strong> Saat menulis kode, kamu menerjemahkan algoritma yang sudah kamu susun menjadi instruksi yang bisa dijalankan komputer.</li>
+                <li><strong>Struktur data:</strong> Stack dan Queue (yang akan kamu pelajari di modul berikutnya) adalah cara mengorganisir data — hasil dari berpikir tentang pola penyimpanan yang efisien.</li>
+                <li><strong>Penyelesaian masalah dengan komputer:</strong> Komputer hanya menjalankan perintah. Yang menentukan solusinya bagus atau tidak adalah cara berpikirmu.</li>
+              </ul>
+              <p>Jadi, kalau kamu ingin jago di bidang informatika, langkah pertama bukan menghafal bahasa pemrograman, tapi <strong>melatih cara berpikir komputasional</strong>.</p>
+            </div>
+
+            <!-- F. Ringkasan -->
+            <div class="summary-card reveal">
+              <div class="summary-head">
+                <i class="fa-solid fa-star"></i>
+                <h3>Inti yang Perlu Diingat</h3>
+              </div>
+              <ul class="summary-list">
+                <li>
+                  <i class="fa-solid fa-check"></i> <span><strong>Berpikir komputasional</strong> adalah cara berpikir sistematis untuk memecahkan masalah, bukan sekadar bisa coding.</span>
+                </li>
+                <li>
+                  <i class="fa-solid fa-check"></i> <span>Ada <strong>4 pilar utama</strong>: Dekomposisi, Pengenalan Pola, Abstraksi, dan Algoritma.</span>
+                </li>
+                <li>
+                  <i class="fa-solid fa-check"></i> <span><strong>Dekomposisi</strong> = pecah masalah besar menjadi bagian kecil.</span>
+                </li>
+                <li>
+                  <i class="fa-solid fa-check"></i> <span><strong>Pengenalan Pola</strong> = cari kesamaan dengan masalah yang pernah dihadapi.</span>
+                </li>
+                <li>
+                  <i class="fa-solid fa-check"></i> <span><strong>Abstraksi</strong> = ambil informasi penting, buang yang tidak perlu.</span>
+                </li>
+                <li>
+                  <i class="fa-solid fa-check"></i> <span><strong>Algoritma</strong> = susun langkah-langkah penyelesaian yang urut dan logis.</span>
+                </li>
+                <li>
+                  <i class="fa-solid fa-check"></i> <span>Konsep ini adalah <strong>fondasi Informatika</strong>: algoritma, pemrograman, dan struktur data.</span>
+                </li>
+              </ul>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- =========================================================
+             SECTION: VIDEO
+             ========================================================= -->
+      <section id="video" class="section light">
+        <div class="container">
+          <div class="section-head reveal">
+            <span class="section-subtitle">Bagian 2</span>
+            <h2 class="section-title">Video Penjelasan</h2>
+            <p class="section-desc">Tonton video berikut untuk memperkuat pemahamanmu tentang konsep berpikir komputasional.</p>
+          </div>
+
+          <div class="video-grid">
+            <!-- Ganti VIDEO_ID dengan ID video YouTube pilihanmu -->
+            <div class="video-frame reveal">
+              <iframe
+                src="https://www.youtube.com/embed/VIDEO_ID"
+                title="Video Penjelasan Berpikir Komputasional"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerpolicy="strict-origin-when-cross-origin"
+                allowfullscreen
+              >
+              </iframe>
+            </div>
+
+            <aside class="video-side reveal">
+              <h3><i class="fa-solid fa-circle-info"></i> Tentang Video</h3>
+              <p>
+                Video ini membahas konsep dasar <strong>Berpikir Komputasional</strong>, mulai dari pengertian hingga penerapannya dalam kehidupan sehari-hari. Kamu juga akan melihat contoh nyata bagaimana empat pilar berpikir komputasional
+                dipakai untuk memecahkan masalah.
+              </p>
+              <p>Konsep yang perlu diperhatikan: <em>pengertian berpikir komputasional, dekomposisi, pengenalan pola, abstraksi, dan algoritma</em>.</p>
+              <p>Setelah menonton, kamu diharapkan mampu menjelaskan keempat pilar dengan bahasa sendiri, dan mengaitkannya dengan kegiatan sehari-hari.</p>
+
+              <div class="divider"></div>
+
+              <h3 style="font-size: 1rem"><i class="fa-solid fa-brain"></i> Setelah Menonton Video, Coba Pikirkan:</h3>
+              <ol>
+                <li>Apa yang dimaksud dengan berpikir komputasional?</li>
+                <li>Apa saja empat pilarnya?</li>
+                <li>Bagaimana penerapannya dalam kehidupan sehari-hari?</li>
+              </ol>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================
+             SECTION: LATIHAN
+             ========================================================= -->
+      <section id="latihan" class="section white">
+        <div class="container">
+          <div class="section-head reveal">
+            <span class="section-subtitle">Bagian 3</span>
+            <h2 class="section-title">Latihan Soal</h2>
+            <p class="section-desc">Uji pemahamanmu dengan 10 soal pilihan ganda berikut. Pilih satu jawaban yang paling tepat, lalu tekan <em>Periksa Jawaban</em>.</p>
+          </div>
+
+          <div class="quiz-wrap">
+            <!-- Soal akan dirender otomatis oleh JavaScript -->
+            <div id="quiz-container"></div>
+
+            <div class="quiz-actions">
+              <button class="btn btn-primary btn-lg" id="btn-check"><i class="fa-solid fa-clipboard-check"></i> Periksa Jawaban</button>
+              <button class="btn btn-outline dark btn-lg" id="btn-reset" style="display: none"><i class="fa-solid fa-rotate-right"></i> Coba Lagi</button>
+            </div>
+
+            <!-- Panel Hasil -->
+            <div class="result-panel" id="result-panel">
+              <div class="result-label">Nilai Akhir</div>
+              <div class="result-score" id="result-score">0</div>
+              <div class="result-stats">
+                <div class="result-stat">
+                  <i class="fa-solid fa-circle-check ok"></i>
+                  <span>Benar: <span id="stat-correct">0</span>/10</span>
+                </div>
+                <div class="result-stat">
+                  <i class="fa-solid fa-circle-xmark no"></i>
+                  <span>Salah: <span id="stat-wrong">0</span>/10</span>
+                </div>
+              </div>
+              <div class="result-msg" id="result-msg"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- =========================================================
+         FOOTER
+         ========================================================= -->
+    <footer>
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <h2>
+              <div class="nav-logo-icon" style="width: 30px; height: 30px; font-size: 0.8rem"><i class="fa-solid fa-code"></i></div>
+              RuangInformatika
+            </h2>
+            <p>Platform e-learning interaktif modern kelas XE6 SMA Negeri 4 Yogyakarta. Dibangun untuk mempermudah pemahaman logika komputasi.</p>
+          </div>
+
+          <div>
+            <h3 class="footer-title">Akses Cepat</h3>
+            <ul class="footer-links">
+              <li><a href="kisi.html">Bedah Kisi-Kisi</a></li>
+              <li><a href="modul.bk.html">Berpikir Komputasional</a></li>
+              <li><a href="materi-stack-queue.html">Stack &amp; Queue</a></li>
+              <li><a href="materi-search-sort.html">Searching &amp; Sorting</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 class="footer-title">Hubungi Kami</h3>
+            <ul class="footer-links">
+              <li>
+                <a href="forum.html"><i class="fa-solid fa-comments"></i> Forum Diskusi</a>
+              </li>
+              <li>
+                <a href="leaderboard.html"><i class="fa-solid fa-trophy"></i> Leaderboard</a>
+              </li>
+              <li>
+                <a href="https://wa.me/6285282386260" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-whatsapp"></i> Chat Pak Ilyas</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="footer-bottom">
+          <p>&copy; 2026 RuangInformatika - Kelas XE6 SMAN 4 YK.</p>
+          <div class="social-links">
+            <a href="https://github.com/fandhi19" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+            <a href="https://www.instagram.com/fandhidk17/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+            <a href="https://e-portofolio-fandhi.vercel.app/" target="_blank" rel="noopener noreferrer" aria-label="Website"><i class="fa-solid fa-globe"></i></a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Back to top -->
+    <button class="back-top" id="back-top" aria-label="Kembali ke atas">
+      <i class="fa-solid fa-arrow-up"></i>
+    </button>
+
+    <!-- =========================================================
+         SCRIPT
+         ========================================================= -->
+    <script>
+      /* =========================================================
+           1) NAVBAR SCROLL EFFECT
+           ========================================================= */
+      const navbar = document.getElementById("navbar");
+      window.addEventListener("scroll", () => {
+        if (window.scrollY > 50) navbar.classList.add("scrolled");
+        else navbar.classList.remove("scrolled");
+      });
+
+      /* =========================================================
+           2) MOBILE MENU TOGGLE
+           ========================================================= */
+      const hamburger = document.getElementById("hamburger");
+      const mobileMenu = document.getElementById("mobile-menu");
+      const mobileLinks = document.querySelectorAll(".mobile-link");
+
+      hamburger.addEventListener("click", () => {
+        const isActive = mobileMenu.classList.toggle("active");
+        hamburger.setAttribute("aria-expanded", isActive);
+        const icon = hamburger.querySelector("i");
+        icon.classList.toggle("fa-bars", !isActive);
+        icon.classList.toggle("fa-xmark", isActive);
+      });
+
+      mobileLinks.forEach((link) => {
+        link.addEventListener("click", () => {
+          mobileMenu.classList.remove("active");
+          hamburger.setAttribute("aria-expanded", "false");
+          const icon = hamburger.querySelector("i");
+          icon.classList.add("fa-bars");
+          icon.classList.remove("fa-xmark");
+        });
+      });
+
+      /* =========================================================
+           3) REVEAL ANIMATION
+           ========================================================= */
+      function reveal() {
+        const reveals = document.querySelectorAll(".reveal");
+        const windowHeight = window.innerHeight;
+        reveals.forEach((el) => {
+          const top = el.getBoundingClientRect().top;
+          if (top < windowHeight - 80) el.classList.add("active");
+        });
+      }
+      window.addEventListener("scroll", reveal);
+      window.addEventListener("load", reveal);
+
+      /* =========================================================
+           4) BACK TO TOP
+           ========================================================= */
+      const backTop = document.getElementById("back-top");
+      window.addEventListener("scroll", () => {
+        if (window.scrollY > 400) backTop.classList.add("show");
+        else backTop.classList.remove("show");
+      });
+      backTop.addEventListener("click", () => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+
+      /* =========================================================
+           5) SUBMENU TABS + SMOOTH SCROLL + PROGRESS
+           ========================================================= */
+      const submenuTabs = document.querySelectorAll(".submenu-tab");
+      const PROGRESS_KEY = "bk_progress_v1";
+
+      // Ambil progress dari localStorage
+      function getProgress() {
+        try {
+          return JSON.parse(localStorage.getItem(PROGRESS_KEY)) || {};
+        } catch (e) {
+          return {};
+        }
+      }
+      function setProgress(p) {
+        try {
+          localStorage.setItem(PROGRESS_KEY, JSON.stringify(p));
+        } catch (e) {}
+      }
+
+      function updateProgressUI() {
+        const p = getProgress();
+        const total = 3;
+        let done = 0;
+        if (p.materi) done++;
+        if (p.video) done++;
+        if (p.latihan) done++;
+        const percent = Math.round((done / total) * 100);
+        document.getElementById("progress-fill").style.width = percent + "%";
+        document.getElementById("progress-text").textContent = percent + "%";
+      }
+
+      // Klik tab -> scroll smooth + tandai progress
+      submenuTabs.forEach((tab) => {
+        tab.addEventListener("click", () => {
+          const targetId = tab.dataset.target;
+          const target = document.getElementById(targetId);
+          if (!target) return;
+
+          // Sesuaikan offset dengan navbar + submenu
+          const yOffset = -140;
+          const y = target.getBoundingClientRect().top + window.pageYOffset + yOffset;
+          window.scrollTo({ top: y, behavior: "smooth" });
+
+          // Tandai section yang dikunjungi
+          const p = getProgress();
+          p[targetId] = true;
+          setProgress(p);
+          updateProgressUI();
+        });
+      });
+
+      // Update tab aktif mengikuti scroll (menggunakan IntersectionObserver)
+      const sections = ["materi", "video", "latihan"].map((id) => document.getElementById(id));
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              const id = entry.target.id;
+              submenuTabs.forEach((t) => t.classList.toggle("active", t.dataset.target === id));
+              // Tandai progress juga saat section terlihat
+              const p = getProgress();
+              if (!p[id]) {
+                p[id] = true;
+                setProgress(p);
+                updateProgressUI();
+              }
+            }
+          });
+        },
+        { rootMargin: "-40% 0px -55% 0px", threshold: 0 },
+      );
+      sections.forEach((s) => s && observer.observe(s));
+
+      // Init
+      updateProgressUI();
+
+      /* =========================================================
+           6) DATA SOAL
+           =========================================================
+           - answer: index jawaban benar (0=A, 1=B, 2=C, 3=D)
+           - explanation: pembahasan yang muncul setelah diperiksa
+           ========================================================= */
+      const questions = [
+        {
+          q: "Apa yang dimaksud dengan berpikir komputasional?",
+          options: [
+            "Kemampuan menggunakan komputer dengan cepat dan mahir",
+            "Cara berpikir sistematis untuk memecahkan masalah seperti cara kerja komputer",
+            "Kemampuan menghafal semua rumus dalam pelajaran Informatika",
+            "Kemampuan membuat program dengan bahasa pemrograman tertentu",
+          ],
+          answer: 1,
+          explanation: "Berpikir komputasional adalah cara berpikir sistematis untuk memecahkan masalah dengan mengadopsi cara kerja komputer, bukan sekadar kemampuan menggunakan komputer atau menghafal rumus.",
+        },
+        {
+          q: "Mengapa berpikir komputasional penting bagi pelajar?",
+          options: [
+            "Agar bisa membeli komputer dengan harga mahal",
+            "Agar dapat menyelesaikan masalah kompleks secara terstruktur dan efisien",
+            "Agar nilai matematika otomatis naik tanpa belajar",
+            "Agar tidak perlu belajar lagi karena sudah bisa berpikir",
+          ],
+          answer: 1,
+          explanation: "Tujuan utama berpikir komputasional adalah melatih pelajar menyelesaikan masalah kompleks secara terstruktur, logis, dan efisien.",
+        },
+        {
+          q: 'Saat kamu memecah tugas "membuat aplikasi kasir" menjadi bagian-bagian kecil seperti membuat tampilan, menghitung total, dan mencetak struk, kamu sedang menerapkan pilar...',
+          options: ["Abstraksi", "Dekomposisi", "Pengenalan Pola", "Algoritma"],
+          answer: 1,
+          explanation: "Dekomposisi adalah proses memecah masalah besar menjadi bagian-bagian kecil yang lebih mudah diselesaikan satu per satu.",
+        },
+        {
+          q: "Kamu memperhatikan bahwa setiap Senin selalu ada upacara, dan setiap Selasa selalu ada olahraga. Kegiatan mengenali keteraturan ini termasuk pilar...",
+          options: ["Dekomposisi", "Pengenalan Pola", "Abstraksi", "Algoritma"],
+          answer: 1,
+          explanation: "Pengenalan pola adalah kemampuan melihat kesamaan atau keteraturan dari kejadian/ masalah yang berulang.",
+        },
+        {
+          q: "Ketika kamu membuat peta perjalanan ke sekolah dan hanya menampilkan rute serta nama jalan (tanpa warna aspal atau jenis pohon), kamu sedang menerapkan...",
+          options: ["Abstraksi", "Dekomposisi", "Pengenalan Pola", "Algoritma"],
+          answer: 0,
+          explanation: "Abstraksi berarti menyaring informasi penting dan mengabaikan detail yang tidak relevan agar fokus pada inti masalah.",
+        },
+        {
+          q: "Urutan langkah-langkah yang jelas, urut, dan logis untuk menyelesaikan masalah disebut...",
+          options: ["Dekomposisi", "Abstraksi", "Algoritma", "Pengenalan Pola"],
+          answer: 2,
+          explanation: "Algoritma adalah rangkaian langkah penyelesaian masalah yang urut, jelas, dan memiliki titik berhenti (hasil akhir).",
+        },
+        {
+          q: "Rina ingin memasak mie instan. Ia membagi proses menjadi: merebus air, membuka bungkus mie, memasukkan mie, menambahkan bumbu, dan menyajikan. Kegiatan membagi proses ini adalah contoh dari...",
+          options: ["Algoritma", "Abstraksi", "Dekomposisi", "Pengenalan Pola"],
+          answer: 2,
+          explanation: "Memecah kegiatan besar menjadi langkah-langkah kecil yang lebih mudah dikelola adalah ciri khas dekomposisi.",
+        },
+        {
+          q: "Saat mencari nama dalam daftar siswa yang tersusun alfabetis, kamu membuka bagian tengah dan mempersempit pencarian ke separuh daftar. Strategi ini paling dekat dengan...",
+          options: ["Algoritma pencarian biner (Binary Search)", "Dekomposisi", "Abstraksi", "Pemrograman berorientasi objek"],
+          answer: 0,
+          explanation: "Strategi mempersempit ruang pencarian dengan membuka bagian tengah adalah ciri algoritma Binary Search — salah satu contoh penerapan berpikir komputasional.",
+        },
+        {
+          q: "Manakah pernyataan yang paling tepat mengenai hubungan berpikir komputasional dengan pemrograman?",
+          options: [
+            "Berpikir komputasional hanya berguna bagi orang yang bekerja sebagai programmer",
+            "Pemrograman adalah salah satu cara menerapkan hasil berpikir komputasional ke dalam komputer",
+            "Pemrograman menggantikan peran berpikir komputasional",
+            "Keduanya tidak memiliki hubungan sama sekali",
+          ],
+          answer: 1,
+          explanation: "Pemrograman adalah alat untuk menuangkan hasil berpikir komputasional ke komputer. Berpikir komputasional sendiri berguna di banyak bidang, tidak hanya programming.",
+        },
+        {
+          q: "Manakah urutan yang paling tepat dalam menerapkan berpikir komputasional untuk menyelesaikan masalah?",
+          options: ["Algoritma → Abstraksi → Pola → Dekomposisi", "Dekomposisi → Pengenalan Pola → Abstraksi → Algoritma", "Abstraksi → Algoritma → Dekomposisi → Pola", "Pola → Algoritma → Abstraksi → Dekomposisi"],
+          answer: 1,
+          explanation: "Urutan umumnya: pecah masalah (dekomposisi) → cari pola → saring informasi penting (abstraksi) → susun langkah penyelesaian (algoritma).",
+        },
+      ];
+
+      /* =========================================================
+           7) RENDER SOAL
+           ========================================================= */
+      const quizContainer = document.getElementById("quiz-container");
+      const LETTERS = ["A", "B", "C", "D"];
+
+      function renderQuiz() {
+        quizContainer.innerHTML = "";
+        questions.forEach((item, idx) => {
+          const qEl = document.createElement("div");
+          qEl.className = "question";
+          qEl.dataset.index = idx;
+
+          let optionsHtml = "";
+          item.options.forEach((opt, i) => {
+            optionsHtml += `
+                        <label class="option" data-q="${idx}" data-i="${i}">
+                            <input type="radio" name="q${idx}" value="${i}">
+                            <span class="letter">${LETTERS[i]}</span>
+                            <span class="opt-text">${opt}</span>
+                        </label>
+                    `;
+          });
+
+          qEl.innerHTML = `
+                    <div class="q-head">
+                        <div class="q-num">${idx + 1}</div>
+                        <div class="q-text">${item.q}</div>
+                    </div>
+                    <div class="options">${optionsHtml}</div>
+                    <div class="explain" id="explain-${idx}"></div>
+                `;
+          quizContainer.appendChild(qEl);
+        });
+
+        // Event: highlight pilihan
+        document.querySelectorAll(".option").forEach((label) => {
+          label.addEventListener("click", () => {
+            if (label.classList.contains("locked")) return;
+            const name = label.querySelector("input").name;
+            document.querySelectorAll(`input[name="${name}"]`).forEach((inp) => {
+              inp.closest(".option").classList.remove("selected");
+            });
+            label.classList.add("selected");
+          });
+        });
+      }
+      renderQuiz();
+
+      /* =========================================================
+           8) PERIKSA JAWABAN
+           ========================================================= */
+      const btnCheck = document.getElementById("btn-check");
+      const btnReset = document.getElementById("btn-reset");
+      const resultPanel = document.getElementById("result-panel");
+
+      btnCheck.addEventListener("click", () => {
+        let correctCount = 0;
+        let answeredCount = 0;
+
+        questions.forEach((item, idx) => {
+          const selected = document.querySelector(`input[name="q${idx}"]:checked`);
+          const qEl = document.querySelector(`.question[data-index="${idx}"]`);
+          const explainEl = document.getElementById(`explain-${idx}`);
+          const options = document.querySelectorAll(`.option[data-q="${idx}"]`);
+
+          // Kunci semua opsi agar tidak bisa diklik ulang
+          options.forEach((o) => o.classList.add("locked"));
+
+          const correctLetter = LETTERS[item.answer];
+
+          if (selected) answeredCount++;
+          const picked = selected ? parseInt(selected.value, 10) : null;
+
+          // Tandai opsi benar & salah
+          options.forEach((o) => {
+            const i = parseInt(o.dataset.i, 10);
+            if (i === item.answer) o.classList.add("answer-correct");
+            if (picked === i && i !== item.answer) o.classList.add("answer-picked-wrong");
+          });
+
+          // Tandai kartu soal
+          const isCorrect = picked === item.answer;
+          if (isCorrect) {
+            qEl.classList.add("correct");
+            correctCount++;
+            explainEl.className = "explain ok show";
+            explainEl.innerHTML = `
+                        <div class="verdict"><i class="fa-solid fa-circle-check"></i> Jawaban kamu benar!</div>
+                        <div class="correct-ans">Jawaban benar: <span>${correctLetter}. ${item.options[item.answer]}</span></div>
+                        <div><strong>Penjelasan:</strong> ${item.explanation}</div>
+                    `;
+          } else {
+            qEl.classList.add("wrong");
+            explainEl.className = "explain no show";
+            const pickedText = picked !== null ? `Kamu memilih: <strong>${LETTERS[picked]}. ${item.options[picked]}</strong><br>` : `Kamu belum memilih jawaban untuk soal ini.<br>`;
+            explainEl.innerHTML = `
+                        <div class="verdict"><i class="fa-solid fa-circle-xmark"></i> Jawaban kamu belum tepat.</div>
+                        <div class="correct-ans">${pickedText}Jawaban yang benar: <span>${correctLetter}. ${item.options[item.answer]}</span></div>
+                        <div><strong>Penjelasan:</strong> ${item.explanation}</div>
+                    `;
+          }
+        });
+
+        // Hitung nilai
+        const score = correctCount * 10;
+        const wrongCount = questions.length - correctCount;
+
+        document.getElementById("result-score").textContent = score;
+        document.getElementById("stat-correct").textContent = correctCount;
+        document.getElementById("stat-wrong").textContent = wrongCount;
+
+        // Feedback berdasarkan nilai
+        const msgEl = document.getElementById("result-msg");
+        let msgClass = "result-msg";
+        let msgText = "";
+
+        if (score >= 90) {
+          msgClass += " great";
+          msgText = `🎉 <strong>Sangat baik!</strong> Kamu sudah memahami konsep berpikir komputasional dengan sangat baik. Pertahankan ya!`;
+        } else if (score >= 80) {
+          msgClass += " good";
+          msgText = `👏 <strong>Bagus!</strong> Pemahamanmu sudah cukup kuat. Pelajari kembali bagian yang masih salah agar makin mantap.`;
+        } else if (score >= 70) {
+          msgClass += " fair";
+          msgText = `📘 <strong>Cukup baik.</strong> Coba pelajari kembali beberapa konsep yang masih kurang, lalu ulangi latihannya.`;
+        } else {
+          msgClass += " low";
+          msgText = `💪 <strong>Jangan menyerah!</strong> Baca kembali materi di atas dengan santai, lalu coba latihan sekali lagi. Kamu pasti bisa!`;
+        }
+        msgEl.className = msgClass;
+        msgEl.innerHTML = msgText;
+
+        // Info tambahan kalau ada soal yang belum dijawab
+        if (answeredCount < questions.length) {
+          msgEl.innerHTML += `<br><br><small style="color: var(--text-light-muted);"><i class="fa-solid fa-circle-info"></i> Kamu baru menjawab ${answeredCount} dari ${questions.length} soal.</small>`;
+        }
+
+        resultPanel.classList.add("show");
+        btnReset.style.display = "inline-flex";
+
+        // Tandai progress latihan selesai
+        const p = getProgress();
+        p.latihan = true;
+        setProgress(p);
+        updateProgressUI();
+
+        // Scroll ke panel hasil
+        setTimeout(() => {
+          resultPanel.scrollIntoView({ behavior: "smooth", block: "center" });
+        }, 100);
+      });
+
+      /* =========================================================
+           9) COBA LAGI
+           ========================================================= */
+      btnReset.addEventListener("click", () => {
+        // Reset semua state soal
+        document.querySelectorAll(".question").forEach((q) => {
+          q.classList.remove("correct", "wrong");
+        });
+        document.querySelectorAll(".option").forEach((o) => {
+          o.classList.remove("locked", "selected", "answer-correct", "answer-picked-wrong");
+          const inp = o.querySelector("input");
+          if (inp) inp.checked = false;
+        });
+        document.querySelectorAll(".explain").forEach((e) => {
+          e.className = "explain";
+          e.innerHTML = "";
+        });
+
+        // Sembunyikan panel hasil
+        resultPanel.classList.remove("show");
+        btnReset.style.display = "none";
+
+        // Scroll ke atas latihan
+        const latihan = document.getElementById("latihan");
+        const y = latihan.getBoundingClientRect().top + window.pageYOffset - 100;
+        window.scrollTo({ top: y, behavior: "smooth" });
+      });
+    </script>
+  </body>
+</html>

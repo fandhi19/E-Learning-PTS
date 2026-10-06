@@ -1,0 +1,2501 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Microsoft Excel: Tabel, Rumus & Grafik — RuangInformatika</title>
+    <meta name="description" content="Modul interaktif Microsoft Excel untuk kelas XE6 — belajar membuat folder kerja, tabel data, rumus dasar, dan grafik." />
+    <link rel="shortcut icon" href="images/Logo Patbhe.png" type="image/x-icon" />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ["Plus Jakarta Sans", "sans-serif"],
+              mono: ["JetBrains Mono", "ui-monospace", "monospace"],
+            },
+            colors: {
+              brandDark: "#080c10",
+              brandGray: "#111820",
+              brandGreen: "#00e676",
+              textGray: "#8896a7",
+            },
+          },
+        },
+      };
+    </script>
+
+    <link rel="stylesheet" href="../style.css" />
+
+    <style>
+      main {
+        background: transparent;
+      }
+
+      #readProgress {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #00e676, #38bdf8);
+        z-index: 999;
+        transition: width 0.1s ease-out;
+        width: 0%;
+        box-shadow: 0 0 12px rgba(0, 230, 118, 0.5);
+      }
+
+      .page-hero {
+        position: relative;
+        padding: 64px 0 40px;
+        overflow: hidden;
+      }
+      .page-hero-glow {
+        position: absolute;
+        top: -100px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 700px;
+        height: 400px;
+        background: radial-gradient(ellipse, rgba(0, 230, 118, 0.1) 0%, rgba(56, 189, 248, 0.05) 40%, transparent 70%);
+        filter: blur(40px);
+        pointer-events: none;
+      }
+      .page-hero-inner {
+        max-width: 1024px;
+        margin: 0 auto;
+        padding: 0 24px;
+        position: relative;
+        z-index: 10;
+      }
+      .page-hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 14px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(0, 230, 118, 0.3);
+        font-size: 0.78rem;
+        font-weight: 700;
+        color: #00e676;
+        margin-bottom: 18px;
+        backdrop-filter: blur(8px);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
+      .page-hero-title {
+        font-size: clamp(2rem, 4.5vw, 3rem);
+        font-weight: 800;
+        line-height: 1.15;
+        letter-spacing: -0.03em;
+        margin-bottom: 16px;
+      }
+      .page-hero-title .gradient-text {
+        background: linear-gradient(135deg, #00e676 0%, #38bdf8 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .page-hero-desc {
+        font-size: 1rem;
+        line-height: 1.7;
+        color: #8896a7;
+        max-width: 640px;
+      }
+
+      .tab-nav-pills {
+        display: flex;
+        gap: 8px;
+        padding: 6px;
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 12px;
+        overflow-x: auto;
+        backdrop-filter: blur(12px);
+      }
+      .tab-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 11px 20px;
+        border-radius: 10px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #8896a7;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        transition: all 0.25s ease;
+        white-space: nowrap;
+        font-family: "Plus Jakarta Sans", sans-serif;
+      }
+      .tab-btn:hover {
+        color: #fff;
+        background: rgba(255, 255, 255, 0.04);
+      }
+      .tab-btn.active {
+        color: #00e676;
+        background: rgba(0, 230, 118, 0.1);
+        box-shadow:
+          0 0 20px rgba(0, 230, 118, 0.15),
+          inset 0 0 0 1px rgba(0, 230, 118, 0.25);
+      }
+      .tab-btn.active.purple {
+        color: #c084fc;
+        background: rgba(168, 85, 247, 0.1);
+        box-shadow:
+          0 0 20px rgba(168, 85, 247, 0.15),
+          inset 0 0 0 1px rgba(168, 85, 247, 0.25);
+      }
+
+      .code-block {
+        background: #0d1117;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 1rem;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.875rem;
+        line-height: 1.7;
+        overflow-x: auto;
+      }
+      .kw {
+        color: #f472b6;
+        font-weight: 600;
+      }
+      .dt {
+        color: #38bdf8;
+      }
+      .str {
+        color: #fbbf24;
+      }
+      .cmt {
+        color: #6b7280;
+        font-style: italic;
+      }
+      .num {
+        color: #c084fc;
+      }
+      .op {
+        color: #00e676;
+      }
+      .fn {
+        color: #38bdf8;
+        font-weight: 600;
+      }
+
+      .chapter-item {
+        display: flex;
+        gap: 12px;
+        padding: 12px 14px;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: rgba(255, 255, 255, 0.02);
+        cursor: pointer;
+        transition: all 0.2s ease;
+        user-select: none;
+      }
+      .chapter-item:hover {
+        background: rgba(0, 230, 118, 0.06);
+        border-color: rgba(0, 230, 118, 0.35);
+        transform: translateX(3px);
+      }
+      .chapter-item.active {
+        background: rgba(0, 230, 118, 0.12);
+        border-color: rgba(0, 230, 118, 0.6);
+        box-shadow: 0 0 18px rgba(0, 230, 118, 0.2);
+      }
+      .chapter-item.active .chapter-time {
+        background: #00e676;
+        color: #0a0a0a;
+        font-weight: 800;
+      }
+      .chapter-item.active .chapter-title {
+        color: #00e676;
+      }
+      .chapter-time {
+        flex-shrink: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 4px 10px;
+        border-radius: 8px;
+        background: rgba(0, 230, 118, 0.12);
+        border: 1px solid rgba(0, 230, 118, 0.3);
+        color: #00e676;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 12px;
+        font-weight: 700;
+        height: fit-content;
+        min-width: 58px;
+      }
+
+      /* Mini Spreadsheet Mockup (untuk materi) */
+      .sheet-mock {
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        overflow: hidden;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 12px;
+      }
+      .sheet-mock table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      .sheet-mock th,
+      .sheet-mock td {
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        padding: 6px 10px;
+        text-align: left;
+      }
+      .sheet-mock th {
+        background: rgba(0, 230, 118, 0.15);
+        color: #00e676;
+        font-weight: 700;
+        text-align: center;
+      }
+      .sheet-mock .row-header {
+        background: rgba(255, 255, 255, 0.04);
+        color: #8896a7;
+        font-weight: 700;
+        text-align: center;
+        width: 40px;
+      }
+
+      /* ============ MINI EXCEL INTERAKTIF ============ */
+      .mini-excel-wrap {
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        overflow: hidden;
+        background: #0d1117;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 12px;
+      }
+      .mini-excel-toolbar {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        background: rgba(255, 255, 255, 0.03);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      .cell-address {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 60px;
+        padding: 7px 10px;
+        background: rgba(0, 230, 118, 0.1);
+        border: 1px solid rgba(0, 230, 118, 0.3);
+        border-radius: 6px;
+        color: #00e676;
+        font-weight: 700;
+        font-size: 12px;
+      }
+      .formula-eq {
+        color: #8896a7;
+        font-style: italic;
+        font-family: "Times New Roman", serif;
+        font-size: 14px;
+        padding: 0 4px;
+        flex-shrink: 0;
+      }
+      .formula-input {
+        flex: 1;
+        padding: 8px 12px;
+        background: rgba(0, 0, 0, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 6px;
+        color: #fff;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 12px;
+        outline: none;
+        min-width: 0;
+        transition:
+          border-color 0.2s,
+          box-shadow 0.2s;
+      }
+      .formula-input:focus {
+        border-color: #00e676;
+        box-shadow: 0 0 0 2px rgba(0, 230, 118, 0.15);
+      }
+      .formula-input.editing {
+        background: rgba(0, 230, 118, 0.05);
+        border-color: rgba(0, 230, 118, 0.5);
+      }
+      .mini-excel-grid {
+        overflow: auto;
+        max-height: 460px;
+        position: relative;
+      }
+      .mini-excel-grid .grid-inner {
+        position: relative;
+        min-width: 100%;
+      }
+      .mini-excel-grid table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        font-size: 12px;
+        user-select: none;
+      }
+      .mini-excel-grid thead th {
+        background: #1a2332;
+        color: #8896a7;
+        font-weight: 700;
+        font-size: 11px;
+        padding: 5px 8px;
+        border-right: 1px solid rgba(255, 255, 255, 0.08);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        text-align: center;
+        position: sticky;
+        top: 0;
+        z-index: 3;
+        min-width: 80px;
+      }
+      .mini-excel-grid thead th.corner {
+        background: #0f1720;
+        left: 0;
+        z-index: 4;
+        min-width: 38px;
+        width: 38px;
+      }
+      .mini-excel-grid td.row-header {
+        background: #1a2332;
+        color: #8896a7;
+        font-weight: 700;
+        font-size: 11px;
+        padding: 6px 4px;
+        border-right: 1px solid rgba(255, 255, 255, 0.08);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        text-align: center;
+        position: sticky;
+        left: 0;
+        z-index: 1;
+        width: 38px;
+        min-width: 38px;
+      }
+      .mini-excel-grid td.cell {
+        padding: 6px 10px;
+        border-right: 1px solid rgba(255, 255, 255, 0.05);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        color: #d1d5db;
+        cursor: cell;
+        background: #0d1117;
+        transition: background 0.1s;
+        min-width: 80px;
+        max-width: 160px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .mini-excel-grid td.cell:hover {
+        background: rgba(255, 255, 255, 0.03);
+      }
+      .mini-excel-grid td.cell.cell-selected {
+        outline: 2px solid #00e676;
+        outline-offset: -2px;
+        background: rgba(0, 230, 118, 0.08);
+        position: relative;
+        z-index: 2;
+        color: #fff;
+      }
+      .mini-excel-grid td.cell.cell-header {
+        color: #00e676;
+        font-weight: 700;
+        background: rgba(0, 230, 118, 0.05);
+      }
+      .mini-excel-grid td.cell.cell-error {
+        color: #f43f5e !important;
+        background: rgba(244, 63, 94, 0.12) !important;
+        font-weight: 700;
+      }
+      .mini-excel-grid td.cell.cell-formula {
+        color: #38bdf8;
+        font-weight: 600;
+      }
+
+      /* Highlight saat drag-select range untuk rumus */
+      .mini-excel-grid td.cell.cell-in-range {
+        background: rgba(56, 189, 248, 0.15) !important;
+        outline: 1px dashed rgba(56, 189, 248, 0.8);
+        outline-offset: -1px;
+        color: #e0f2fe;
+        position: relative;
+        z-index: 2;
+      }
+      /* Highlight referensi yang sudah di-insert */
+      .mini-excel-grid td.cell.cell-ref-highlight {
+        background: rgba(56, 189, 248, 0.1) !important;
+        outline: 1px solid rgba(56, 189, 248, 0.6);
+        outline-offset: -1px;
+        color: #e0f2fe;
+      }
+      /* Preview fill (saat drag handle) */
+      .mini-excel-grid td.cell.cell-fill-preview {
+        background: rgba(0, 230, 118, 0.12) !important;
+        outline: 1.5px dashed rgba(0, 230, 118, 0.75);
+        outline-offset: -2px;
+        color: #d1fae5;
+        position: relative;
+        z-index: 2;
+      }
+
+      /* Fill Handle — kotak kecil di pojok kanan bawah cell yang dipilih */
+      .fill-handle {
+        position: absolute;
+        width: 8px;
+        height: 8px;
+        background: #00e676;
+        border: 1px solid #080c10;
+        border-radius: 1px;
+        cursor: crosshair;
+        z-index: 10;
+        display: none;
+        box-shadow:
+          0 0 0 1px rgba(0, 230, 118, 0.6),
+          0 0 4px rgba(0, 230, 118, 0.4);
+        transition:
+          transform 0.12s ease,
+          box-shadow 0.12s ease;
+        touch-action: none;
+      }
+      .fill-handle.visible {
+        display: block;
+      }
+      .fill-handle:hover {
+        transform: scale(1.5);
+        box-shadow:
+          0 0 0 1.5px rgba(0, 230, 118, 0.9),
+          0 0 8px rgba(0, 230, 118, 0.8);
+      }
+
+      /* Hint badge di atas grid saat mode edit */
+      .editing-hint {
+        display: none;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 14px;
+        background: rgba(56, 189, 248, 0.1);
+        border: 1px solid rgba(56, 189, 248, 0.3);
+        border-radius: 8px;
+        color: #7dd3fc;
+        font-size: 0.78rem;
+        font-weight: 600;
+        margin-bottom: 10px;
+        animation: pulseHint 1.8s ease-in-out infinite;
+      }
+      .editing-hint.show {
+        display: inline-flex;
+      }
+      @keyframes pulseHint {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.7;
+        }
+      }
+
+      .template-card {
+        text-align: left;
+        padding: 12px;
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-family: "Plus Jakarta Sans", sans-serif;
+      }
+      .template-card:hover {
+        border-color: rgba(0, 230, 118, 0.4);
+        background: rgba(0, 230, 118, 0.06);
+        transform: translateY(-2px);
+      }
+
+      @media (max-width: 640px) {
+        body {
+          font-size: 1rem;
+        }
+        h1 {
+          font-size: 1.875rem !important;
+          line-height: 1.2 !important;
+        }
+        h2 {
+          font-size: 1.5rem !important;
+        }
+        h3 {
+          font-size: 1.25rem !important;
+        }
+        .code-block {
+          font-size: 0.75rem;
+        }
+        .mini-excel-grid thead th,
+        .mini-excel-grid td.cell {
+          min-width: 64px;
+          padding: 5px 6px;
+          font-size: 11px;
+        }
+        .mini-excel-grid thead th.corner,
+        .mini-excel-grid td.row-header {
+          min-width: 30px;
+          width: 30px;
+          padding: 5px 2px;
+        }
+      }
+    </style>
+  </head>
+
+  <body class="bg-grid text-white font-sans antialiased overflow-x-hidden flex flex-col min-h-screen">
+    <div id="readProgress"></div>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+      <div class="navbar-inner">
+        <a href="../index.html" class="navbar-logo">
+          <div class="navbar-logo-icon"><i class="fa-solid fa-code"></i></div>
+          <span class="navbar-logo-text">RuangInformatika</span>
+        </a>
+        <div class="navbar-links">
+          <a href="../index.html" class="nav-link">Dashboard</a>
+          <a href="..//index.html#materi" class="nav-link">Daftar Modul</a>
+          <a href="..//leaderboard.html" class="nav-link">Leaderboard</a>
+          <a href="..//forum.html" class="nav-link">Forum Diskusi</a>
+        </div>
+        <button class="nav-badge"><i class="fa-solid fa-chalkboard-user"></i> Kelas XE6</button>
+        <button class="hamburger-btn" id="hamburgerBtn" aria-label="Menu"><i class="fa-solid fa-bars"></i></button>
+      </div>
+      <div class="mobile-menu" id="mobileMenu">
+        <a href=".//index.html" class="mobile-nav-link"><i class="fa-solid fa-house" style="margin-right: 10px"></i> Dashboard</a>
+        <a href="..//index.html#materi" class="mobile-nav-link"><i class="fa-solid fa-book-open" style="margin-right: 10px"></i> Daftar Modul</a>
+        <a href="..//leaderboard.html" class="mobile-nav-link"><i class="fa-solid fa-trophy" style="margin-right: 10px"></i> Leaderboard</a>
+        <a href="..//forum.html" class="mobile-nav-link"><i class="fa-solid fa-comments" style="margin-right: 10px"></i> Forum Diskusi</a>
+        <div style="padding: 12px 16px">
+          <button class="nav-badge" style="width: 100%; justify-content: center"><i class="fa-solid fa-chalkboard-user"></i> Kelas XE6</button>
+        </div>
+      </div>
+    </nav>
+
+    <div class="flex-grow relative">
+      <!-- Hero -->
+      <header class="page-hero">
+        <div class="page-hero-glow"></div>
+        <div class="page-hero-inner">
+          <div class="reveal">
+            <div class="page-hero-badge"><i class="fa-solid fa-file-excel"></i> Modul 04 • Informatika SMA</div>
+            <h1 class="page-hero-title">Microsoft Excel: <span class="gradient-text">Tabel, Rumus & Grafik</span></h1>
+            <p class="page-hero-desc">
+              Pelajari cara membuat folder kerja, menyusun <strong class="text-white">tabel data terstruktur</strong>, menguasai <strong class="text-brandGreen">rumus dasar</strong> (SUM, AVERAGE, MIN, MAX, COUNT), dan menyajikan data
+              melalui <strong class="text-white">grafik yang menarik</strong>.
+            </p>
+          </div>
+        </div>
+      </header>
+
+      <main class="max-w-5xl mx-auto px-6 pb-12 relative z-10">
+        <div class="tab-nav-pills reveal mb-8">
+          <button onclick="openTab(event, 'materi')" class="tab-btn active"><i class="fa-solid fa-book-open"></i> Materi Lengkap</button>
+          <button onclick="openTab(event, 'simulasi')" class="tab-btn"><i class="fa-solid fa-gamepad"></i> Simulasi</button>
+          <button onclick="openTab(event, 'video')" class="tab-btn"><i class="fa-solid fa-play"></i> Video</button>
+          <button onclick="openTab(event, 'lembarkerja')" class="tab-btn purple"><i class="fa-solid fa-clipboard-list"></i> Lembar Kerja</button>
+        </div>
+
+        <!-- ========== TAB 1: MATERI ========== -->
+        <div id="materi" class="tab-content block space-y-12">
+          <!-- Bagian 1: Pengenalan -->
+          <section class="bg-brandGray border border-white/5 rounded-3xl p-6 md:p-8 space-y-6">
+            <div class="flex items-center gap-4 border-b border-white/10 pb-4">
+              <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 text-2xl font-bold border border-emerald-500/20 shrink-0"><i class="fa-solid fa-file-excel"></i></div>
+              <div>
+                <span class="text-xs font-bold uppercase tracking-widest text-emerald-400">BAGIAN 1</span>
+                <h2 class="text-2xl md:text-3xl font-bold text-white">Pengenalan Microsoft Excel</h2>
+              </div>
+            </div>
+
+            <div class="space-y-3">
+              <h3 class="text-xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-circle-dot text-emerald-400 text-sm"></i> 1. Apa itu Microsoft Excel?</h3>
+              <p class="text-textGray leading-relaxed">
+                <strong class="text-white">Microsoft Excel</strong> adalah program <strong class="text-emerald-300">pengolah angka (spreadsheet)</strong> yang dikembangkan oleh Microsoft. Excel digunakan untuk mengelola, menghitung,
+                menganalisis, dan menyajikan data dalam bentuk tabel maupun grafik.
+              </p>
+              <div class="bg-black/40 border border-emerald-500/20 rounded-2xl p-5 space-y-3">
+                <h4 class="font-bold text-emerald-300 flex items-center gap-2"><i class="fa-solid fa-utensils"></i> Analogi Sederhana</h4>
+                <p class="text-sm text-gray-300">
+                  Bayangkan Excel seperti <strong class="text-white">buku besar kakek-nenek zaman dulu</strong> — tapi versi digital. Setiap halaman berisi kotak-kotak (cell) yang bisa diisi angka, teks, atau rumus. Bedanya, Excel
+                  <strong class="text-white">menghitung otomatis</strong> dalam sekejap dan bisa membuat grafik dalam beberapa klik.
+                </p>
+              </div>
+
+              <div class="bg-gradient-to-br from-emerald-500/5 to-transparent border border-emerald-500/20 rounded-2xl p-5 space-y-3">
+                <h4 class="font-bold text-emerald-300 flex items-center gap-2"><i class="fa-solid fa-briefcase"></i> Dipakai di Dunia Nyata untuk Apa?</h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
+                  <div class="flex items-start gap-2">
+                    <i class="fa-solid fa-check text-emerald-400 mt-1 text-xs shrink-0"></i>
+                    <span class="text-gray-300"><strong class="text-white">Rekap nilai</strong> — guru menyimpan nilai 40 siswa sekaligus</span>
+                  </div>
+                  <div class="flex items-start gap-2">
+                    <i class="fa-solid fa-check text-emerald-400 mt-1 text-xs shrink-0"></i>
+                    <span class="text-gray-300"><strong class="text-white">Keuangan pribadi</strong> — catat pemasukan & pengeluaran bulanan</span>
+                  </div>
+                  <div class="flex items-start gap-2">
+                    <i class="fa-solid fa-check text-emerald-400 mt-1 text-xs shrink-0"></i>
+                    <span class="text-gray-300"><strong class="text-white">Data penjualan</strong> — toko melihat produk mana yang laris</span>
+                  </div>
+                  <div class="flex items-start gap-2">
+                    <i class="fa-solid fa-check text-emerald-400 mt-1 text-xs shrink-0"></i>
+                    <span class="text-gray-300"><strong class="text-white">Absensi & jadwal</strong> — HRD mengelola karyawan</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="space-y-3">
+              <h3 class="text-xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-circle-dot text-emerald-400 text-sm"></i> 2. Bagian-Bagian Antarmuka Excel</h3>
+              <p class="text-textGray text-sm">Sebelum mulai, kenali dulu "isi perut" Excel. Ada 6 bagian utama yang akan sering kamu pakai:</p>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div class="bg-white/5 border border-white/10 p-4 rounded-2xl flex items-start gap-3">
+                  <i class="fa-solid fa-ribbon text-emerald-400 mt-1 shrink-0"></i>
+                  <div>
+                    <p class="font-bold text-white text-sm">1️⃣ Ribbon / Menu</p>
+                    <p class="text-xs text-textGray mt-1">Kumpulan tab perintah di atas (Home, Insert, Formulas, Data). Ini "dapur"-nya Excel.</p>
+                  </div>
+                </div>
+                <div class="bg-white/5 border border-white/10 p-4 rounded-2xl flex items-start gap-3">
+                  <i class="fa-solid fa-table-cells text-emerald-400 mt-1 shrink-0"></i>
+                  <div>
+                    <p class="font-bold text-white text-sm">2️⃣ Cells (Sel)</p>
+                    <p class="text-xs text-textGray mt-1">Kotak pertemuan baris & kolom. Tempat kamu mengetik angka/teks/rumus.</p>
+                  </div>
+                </div>
+                <div class="bg-white/5 border border-white/10 p-4 rounded-2xl flex items-start gap-3">
+                  <i class="fa-solid fa-heading text-emerald-400 mt-1 shrink-0"></i>
+                  <div>
+                    <p class="font-bold text-white text-sm">3️⃣ Kolom & Baris</p>
+                    <p class="text-xs text-textGray mt-1">Kolom = huruf (A, B, C...). Baris = angka (1, 2, 3...). Ini yang menentukan alamat sel.</p>
+                  </div>
+                </div>
+                <div class="bg-white/5 border border-white/10 p-4 rounded-2xl flex items-start gap-3">
+                  <i class="fa-solid fa-i-cursor text-emerald-400 mt-1 shrink-0"></i>
+                  <div>
+                    <p class="font-bold text-white text-sm">4️⃣ Formula Bar (ƒx)</p>
+                    <p class="text-xs text-textGray mt-1">Menampilkan isi <strong class="text-white">asli</strong> sel. Kalau sel berisi rumus, hasil muncul di sel tapi rumusnya muncul di sini.</p>
+                  </div>
+                </div>
+                <div class="bg-white/5 border border-white/10 p-4 rounded-2xl flex items-start gap-3">
+                  <i class="fa-solid fa-bookmark text-emerald-400 mt-1 shrink-0"></i>
+                  <div>
+                    <p class="font-bold text-white text-sm">5️⃣ Sheet Tabs</p>
+                    <p class="text-xs text-textGray mt-1">Tab di bawah (Sheet1, Sheet2...). Satu file bisa punya banyak lembar kerja — seperti buku dengan banyak halaman.</p>
+                  </div>
+                </div>
+                <div class="bg-white/5 border border-white/10 p-4 rounded-2xl flex items-start gap-3">
+                  <i class="fa-solid fa-magnifying-glass text-emerald-400 mt-1 shrink-0"></i>
+                  <div>
+                    <p class="font-bold text-white text-sm">6️⃣ Name Box</p>
+                    <p class="text-xs text-textGray mt-1">Kotak kecil kiri atas yang menunjukkan alamat sel aktif (mis. A1, B5, D20).</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="bg-amber-500/5 border-l-4 border-amber-500 rounded-r-lg p-4 flex items-start gap-3">
+                <i class="fa-solid fa-lightbulb text-amber-400 text-xl mt-0.5"></i>
+                <p class="text-sm text-textGray">
+                  <strong class="text-white">Tips cepat:</strong> Kalau bingung mencari tombol, coba klik tiap tab di Ribbon dan baca nama-nama tombolnya. Excel menyusun menu sesuai "kebutuhan" — misalnya tab <em>Formulas</em> isinya semua
+                  tentang rumus.
+                </p>
+              </div>
+            </div>
+
+            <div class="space-y-3">
+              <h3 class="text-xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-circle-dot text-emerald-400 text-sm"></i> 3. Alamat Sel (Cell Reference)</h3>
+              <p class="text-textGray text-sm">Setiap sel punya <strong class="text-white">alamat unik</strong> berdasarkan pertemuan kolom dan baris. Alamat inilah yang dipakai dalam rumus.</p>
+              <div class="sheet-mock max-w-md">
+                <table>
+                  <thead>
+                    <tr>
+                      <th></th>
+                      <th>A</th>
+                      <th>B</th>
+                      <th>C</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="row-header">1</td>
+                      <td>Nama</td>
+                      <td>Nilai</td>
+                      <td>Grade</td>
+                    </tr>
+                    <tr>
+                      <td class="row-header">2</td>
+                      <td>Budi</td>
+                      <td>85</td>
+                      <td>A</td>
+                    </tr>
+                    <tr>
+                      <td class="row-header">3</td>
+                      <td>Ani</td>
+                      <td>92</td>
+                      <td>A</td>
+                    </tr>
+                    <tr>
+                      <td class="row-header">4</td>
+                      <td>Cici</td>
+                      <td>78</td>
+                      <td>B</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div class="bg-sky-500/5 border-l-4 border-sky-500 rounded-r-lg p-3 flex items-start gap-2">
+                  <i class="fa-solid fa-info-circle text-sky-400 mt-0.5"></i>
+                  <p class="text-xs text-textGray">
+                    <strong class="text-white">Cara baca:</strong> Sel <strong class="text-sky-300">B2</strong> = kolom <strong class="text-sky-300">B</strong>, baris <strong class="text-sky-300">2</strong> → berisi angka
+                    <strong class="text-sky-300">85</strong> (nilai Budi).
+                  </p>
+                </div>
+                <div class="bg-sky-500/5 border-l-4 border-sky-500 rounded-r-lg p-3 flex items-start gap-2">
+                  <i class="fa-solid fa-info-circle text-sky-400 mt-0.5"></i>
+                  <p class="text-xs text-textGray"><strong class="text-white">Cek cepat:</strong> Klik sel mana saja, lihat kotak <em>Name Box</em> kiri atas — di situ muncul alamat sel yang kamu klik.</p>
+                </div>
+              </div>
+
+              <div class="bg-gradient-to-br from-sky-500/5 to-transparent border border-sky-500/20 rounded-2xl p-4 space-y-2">
+                <h4 class="font-bold text-sky-300 flex items-center gap-2 text-sm"><i class="fa-solid fa-keyboard"></i> Cara Cepat Pindah Sel</h4>
+                <ul class="text-xs text-textGray space-y-1.5">
+                  <li><kbd class="text-white bg-black/40 px-1.5 rounded">Panah ↑↓←→</kbd> — pindah satu sel ke arah panah</li>
+                  <li><kbd class="text-white bg-black/40 px-1.5 rounded">Tab</kbd> — pindah ke kolom kanan</li>
+                  <li><kbd class="text-white bg-black/40 px-1.5 rounded">Enter</kbd> — pindah ke baris bawah (setelah selesai edit)</li>
+                  <li><kbd class="text-white bg-black/40 px-1.5 rounded">Ctrl</kbd> + <kbd class="text-white bg-black/40 px-1.5 rounded">Home</kbd> — lompat ke sel A1</li>
+                  <li><kbd class="text-white bg-black/40 px-1.5 rounded">Ctrl</kbd> + <kbd class="text-white bg-black/40 px-1.5 rounded">→</kbd> — lompat ke ujung data di kanan</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <!-- Bagian 2: Folder Kerja -->
+          <section class="bg-brandGray border border-sky-500/30 rounded-3xl p-6 md:p-8 space-y-6">
+            <div class="flex items-center gap-4 border-b border-white/10 pb-4">
+              <div class="w-12 h-12 rounded-2xl bg-sky-500/10 flex items-center justify-center text-sky-400 text-2xl font-bold border border-sky-500/20 shrink-0"><i class="fa-solid fa-folder-tree"></i></div>
+              <div>
+                <span class="text-xs font-bold uppercase tracking-widest text-sky-400">BAGIAN 2</span>
+                <h2 class="text-2xl md:text-3xl font-bold text-white">Membuat Folder Kerja</h2>
+              </div>
+            </div>
+
+            <p class="text-textGray leading-relaxed">
+              Sebelum mulai bekerja, biasakan membuat <strong class="text-white">folder khusus</strong> untuk menyimpan file. Ini supaya tugasmu tidak tercampur dengan file lain dan mudah ditemukan.
+            </p>
+
+            <div class="bg-red-500/5 border-l-4 border-red-500 rounded-r-lg p-4 flex items-start gap-3">
+              <i class="fa-solid fa-triangle-exclamation text-red-400 text-xl mt-0.5"></i>
+              <p class="text-sm text-textGray">
+                <strong class="text-white">Kenapa ini penting?</strong> Banyak siswa kehilangan file karena tersimpan di Downloads lalu terhapus, atau nama filenya "Tugas.xlsx" sehingga tertimpa file lain. Folder yang rapi = nilai yang
+                aman. 🛡️
+              </p>
+            </div>
+
+            <div class="space-y-3">
+              <h3 class="text-xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-circle-dot text-sky-400 text-sm"></i> Langkah Membuat Folder Kerja (Detail)</h3>
+              <div class="space-y-3">
+                <!-- Step 1 -->
+                <div class="bg-white/5 border border-white/10 rounded-2xl p-4 md:p-5 flex items-start gap-4">
+                  <div class="w-9 h-9 rounded-xl bg-sky-500/15 border border-sky-500/30 flex items-center justify-center text-sky-400 font-bold shrink-0">1</div>
+                  <div class="flex-1 space-y-2">
+                    <p class="font-bold text-white text-sm md:text-base">Buka File Explorer</p>
+                    <p class="text-xs text-textGray leading-relaxed">File Explorer adalah "rumah" semua file di komputermu. Ada 3 cara membukanya:</p>
+                    <ul class="text-xs text-textGray space-y-1 list-disc list-inside pl-1">
+                      <li>Tekan <kbd class="text-white bg-black/40 px-1.5 rounded">Windows</kbd> + <kbd class="text-white bg-black/40 px-1.5 rounded">E</kbd> — cara tercepat</li>
+                      <li>Klik ikon <i class="fa-solid fa-folder text-amber-400"></i> folder kuning di taskbar bawah</li>
+                      <li>Klik Start menu → ketik "File Explorer"</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="bg-white/5 border border-white/10 rounded-2xl p-4 md:p-5 flex items-start gap-4">
+                  <div class="w-9 h-9 rounded-xl bg-sky-500/15 border border-sky-500/30 flex items-center justify-center text-sky-400 font-bold shrink-0">2</div>
+                  <div class="flex-1 space-y-2">
+                    <p class="font-bold text-white text-sm md:text-base">Pilih Lokasi Penyimpanan</p>
+                    <p class="text-xs text-textGray leading-relaxed">
+                      Klik salah satu di panel kiri: <strong class="text-white">Documents</strong> (paling disarankan), <strong class="text-white">Pictures</strong>, atau <strong class="text-white">D: (kalau ada drive D)</strong>.
+                    </p>
+                    <div class="bg-black/40 rounded-lg p-3">
+                      <p class="text-xs text-gray-300 leading-relaxed">
+                        <strong class="text-amber-300">Hindari:</strong> menyimpan di <code class="text-red-400">Downloads</code>, <code class="text-red-400">Desktop</code>, atau <code class="text-red-400">C:\Windows</code> — file mudah
+                        hilang atau rusak.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="bg-white/5 border border-white/10 rounded-2xl p-4 md:p-5 flex items-start gap-4">
+                  <div class="w-9 h-9 rounded-xl bg-sky-500/15 border border-sky-500/30 flex items-center justify-center text-sky-400 font-bold shrink-0">3</div>
+                  <div class="flex-1 space-y-2">
+                    <p class="font-bold text-white text-sm md:text-base">Buat Folder Baru</p>
+                    <p class="text-xs text-textGray leading-relaxed">
+                      Klik kanan di area kosong → pilih <strong class="text-white">New</strong> → <strong class="text-white">Folder</strong>. Folder baru akan muncul dengan nama ter-highlight (siap diganti).
+                    </p>
+                    <p class="text-xs text-textGray">
+                      <strong class="text-white">Alternatif:</strong> tekan <kbd class="text-white bg-black/40 px-1.5 rounded">Ctrl</kbd> + <kbd class="text-white bg-black/40 px-1.5 rounded">Shift</kbd> +
+                      <kbd class="text-white bg-black/40 px-1.5 rounded">N</kbd> — sama hasilnya.
+                    </p>
+                  </div>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="bg-white/5 border border-white/10 rounded-2xl p-4 md:p-5 flex items-start gap-4">
+                  <div class="w-9 h-9 rounded-xl bg-sky-500/15 border border-sky-500/30 flex items-center justify-center text-sky-400 font-bold shrink-0">4</div>
+                  <div class="flex-1 space-y-2">
+                    <p class="font-bold text-white text-sm md:text-base">Beri Nama Folder dengan Format Baku</p>
+                    <p class="text-xs text-textGray leading-relaxed">Ketik nama sesuai format, lalu tekan <kbd class="text-white bg-black/40 px-1.5 rounded">Enter</kbd>.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                      <div class="bg-emerald-500/10 border border-emerald-500/30 rounded-lg p-3">
+                        <p class="text-xs font-bold text-emerald-400 mb-1"><i class="fa-solid fa-check mr-1"></i> Benar</p>
+                        <code class="text-xs text-emerald-300">Tugas_Excel_Budi_15</code>
+                        <p class="text-[10px] text-textGray mt-1">Jelas: tugas apa, punya siapa, absen berapa</p>
+                      </div>
+                      <div class="bg-red-500/10 border border-red-500/30 rounded-lg p-3">
+                        <p class="text-xs font-bold text-red-400 mb-1"><i class="fa-solid fa-xmark mr-1"></i> Salah</p>
+                        <code class="text-xs text-red-300">Tugas</code> / <code class="text-xs text-red-300">asdf</code> / <code class="text-xs text-red-300">New folder</code>
+                        <p class="text-[10px] text-textGray mt-1">Tidak jelas & mudah tertukar</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Step 5 -->
+                <div class="bg-white/5 border border-white/10 rounded-2xl p-4 md:p-5 flex items-start gap-4">
+                  <div class="w-9 h-9 rounded-xl bg-sky-500/15 border border-sky-500/30 flex items-center justify-center text-sky-400 font-bold shrink-0">5</div>
+                  <div class="flex-1 space-y-2">
+                    <p class="font-bold text-white text-sm md:text-base">Buat File Excel di Dalam Folder</p>
+                    <p class="text-xs text-textGray leading-relaxed">Ada 2 cara:</p>
+                    <ul class="text-xs text-textGray space-y-1 list-disc list-inside pl-1">
+                      <li><strong class="text-white">Dari File Explorer:</strong> klik kanan di dalam folder → New → Microsoft Excel Worksheet → beri nama</li>
+                      <li>
+                        <strong class="text-white">Dari Excel:</strong> buka Excel → File → New → Blank Workbook → <kbd class="text-white bg-black/40 px-1.5 rounded">Ctrl</kbd>+<kbd class="text-white bg-black/40 px-1.5 rounded">S</kbd> →
+                        arahkan ke folder tadi
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+
+                <!-- Step 6 -->
+                <div class="bg-white/5 border border-white/10 rounded-2xl p-4 md:p-5 flex items-start gap-4">
+                  <div class="w-9 h-9 rounded-xl bg-sky-500/15 border border-sky-500/30 flex items-center justify-center text-sky-400 font-bold shrink-0">6</div>
+                  <div class="flex-1 space-y-2">
+                    <p class="font-bold text-white text-sm md:text-base">Simpan Rutin (Kebiasaan Emas)</p>
+                    <p class="text-xs text-textGray leading-relaxed">
+                      Biasakan tekan <kbd class="text-white bg-black/40 px-1.5 rounded">Ctrl</kbd>+<kbd class="text-white bg-black/40 px-1.5 rounded">S</kbd> setiap 3-5 menit. Ini mencegah kehilangan pekerjaan kalau listrik mati atau laptop
+                      hang.
+                    </p>
+                    <p class="text-xs text-textGray"><strong class="text-white">Ekstra:</strong> Simpan juga ke Google Drive/OneDrive sebagai backup gratis — kalau laptop rusak, file tetap aman.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-amber-500/5 border-l-4 border-amber-500 rounded-r-lg p-4 flex items-start gap-3">
+              <i class="fa-solid fa-lightbulb text-amber-400 text-xl mt-0.5"></i>
+              <p class="text-sm text-textGray">
+                <strong class="text-white">Tips pro:</strong> Buat folder induk <code class="text-amber-300">"Tugas_SMA_XE6"</code> dulu, lalu di dalamnya bikin sub-folder per mata pelajaran. Semester depan tinggal buka folder yang sama —
+                semua rapi dari awal.
+              </p>
+            </div>
+          </section>
+
+          <!-- Bagian 3: Membuat Tabel -->
+          <section class="bg-brandGray border border-purple-500/30 rounded-3xl p-6 md:p-8 space-y-6">
+            <div class="flex items-center gap-4 border-b border-white/10 pb-4">
+              <div class="w-12 h-12 rounded-2xl bg-purple-500/10 flex items-center justify-center text-purple-400 text-2xl font-bold border border-purple-500/20 shrink-0"><i class="fa-solid fa-table"></i></div>
+              <div>
+                <span class="text-xs font-bold uppercase tracking-widest text-purple-400">BAGIAN 3</span>
+                <h2 class="text-2xl md:text-3xl font-bold text-white">Membuat Tabel Data</h2>
+              </div>
+            </div>
+
+            <p class="text-textGray leading-relaxed">
+              Tabel yang baik punya <strong class="text-white">baris header</strong> yang jelas dan <strong class="text-white">data terstruktur</strong>. Contoh: tabel nilai siswa dengan kolom Nama, MTK, B.Indo, B.Ing.
+            </p>
+
+            <div class="space-y-3">
+              <h3 class="text-xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-circle-dot text-purple-400 text-sm"></i> Target Akhir: Contoh Tabel</h3>
+              <p class="text-textGray text-sm">Inilah tabel yang akan kita bangun langkah demi langkah:</p>
+              <div class="sheet-mock">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>A</th>
+                      <th>B</th>
+                      <th>C</th>
+                      <th>D</th>
+                      <th>E</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="row-header">1</td>
+                      <td style="font-weight: 700; color: #00e676">Nama</td>
+                      <td style="font-weight: 700; color: #00e676">MTK</td>
+                      <td style="font-weight: 700; color: #00e676">B.Indo</td>
+                      <td style="font-weight: 700; color: #00e676">B.Ing</td>
+                    </tr>
+                    <tr>
+                      <td class="row-header">2</td>
+                      <td>Budi</td>
+                      <td>85</td>
+                      <td>80</td>
+                      <td>90</td>
+                    </tr>
+                    <tr>
+                      <td class="row-header">3</td>
+                      <td>Ani</td>
+                      <td>92</td>
+                      <td>88</td>
+                      <td>95</td>
+                    </tr>
+                    <tr>
+                      <td class="row-header">4</td>
+                      <td>Cici</td>
+                      <td>78</td>
+                      <td>85</td>
+                      <td>82</td>
+                    </tr>
+                    <tr>
+                      <td class="row-header">5</td>
+                      <td>Dodi</td>
+                      <td>90</td>
+                      <td>92</td>
+                      <td>87</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="space-y-3">
+              <h3 class="text-xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-circle-dot text-purple-400 text-sm"></i> Langkah Membuat Tabel (Detail)</h3>
+              <div class="space-y-3">
+                <!-- Step 1 -->
+                <div class="bg-white/5 border border-white/10 rounded-2xl p-4 md:p-5 flex items-start gap-4">
+                  <div class="w-9 h-9 rounded-xl bg-purple-500/15 border border-purple-500/30 flex items-center justify-center text-purple-400 font-bold shrink-0">1</div>
+                  <div class="flex-1 space-y-2">
+                    <p class="font-bold text-white text-sm md:text-base">Ketik Header (Baris Judul Kolom)</p>
+                    <p class="text-xs text-textGray leading-relaxed">
+                      Klik sel <strong class="text-white">A1</strong>, ketik <code class="text-amber-300">Nama</code>, tekan <kbd class="text-white bg-black/40 px-1.5 rounded">Tab</kbd>. Sel otomatis pindah ke B1. Lanjut ketik
+                      <code class="text-amber-300">MTK</code>, <kbd class="text-white bg-black/40 px-1.5 rounded">Tab</kbd>, dst.
+                    </p>
+                    <div class="bg-purple-500/5 border-l-2 border-purple-500 rounded-r p-2">
+                      <p class="text-xs text-textGray">
+                        <i class="fa-solid fa-lightbulb text-purple-400 mr-1"></i> <strong class="text-white">Kenapa Tab, bukan Enter?</strong> <kbd class="text-white bg-black/40 px-1.5 rounded">Tab</kbd> pindah ke <em>kanan</em> (sesuai
+                        arah mengisi kolom). <kbd class="text-white bg-black/40 px-1.5 rounded">Enter</kbd> pindah ke <em>bawah</em> — cocok untuk isi data per baris.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="bg-white/5 border border-white/10 rounded-2xl p-4 md:p-5 flex items-start gap-4">
+                  <div class="w-9 h-9 rounded-xl bg-purple-500/15 border border-purple-500/30 flex items-center justify-center text-purple-400 font-bold shrink-0">2</div>
+                  <div class="flex-1 space-y-2">
+                    <p class="font-bold text-white text-sm md:text-base">Isi Data Siswa Baris 2-5</p>
+                    <p class="text-xs text-textGray leading-relaxed">
+                      Klik sel <strong class="text-white">A2</strong>, ketik <code class="text-amber-300">Budi</code> → <kbd class="text-white bg-black/40 px-1.5 rounded">Tab</kbd> → <code class="text-amber-300">85</code> →
+                      <kbd class="text-white bg-black/40 px-1.5 rounded">Tab</kbd> → <code class="text-amber-300">80</code> → <kbd class="text-white bg-black/40 px-1.5 rounded">Tab</kbd> → <code class="text-amber-300">90</code> →
+                      <kbd class="text-white bg-black/40 px-1.5 rounded">Enter</kbd>.
+                    </p>
+                    <p class="text-xs text-textGray leading-relaxed">
+                      Coba perhatikan: setelah <kbd class="text-white bg-black/40 px-1.5 rounded">Enter</kbd> di ujung baris, Excel biasanya balik ke awal baris berikutnya. Kalau tidak, klik A3 manual.
+                    </p>
+                    <p class="text-xs text-textGray"><strong class="text-white">Lanjutkan</strong> sampai semua 4 siswa terisi (Ani, Cici, Dodi).</p>
+                  </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="bg-white/5 border border-white/10 rounded-2xl p-4 md:p-5 flex items-start gap-4">
+                  <div class="w-9 h-9 rounded-xl bg-purple-500/15 border border-purple-500/30 flex items-center justify-center text-purple-400 font-bold shrink-0">3</div>
+                  <div class="flex-1 space-y-2">
+                    <p class="font-bold text-white text-sm md:text-base">Format Header (Bold + Warna)</p>
+                    <p class="text-xs text-textGray leading-relaxed">Blok sel <strong class="text-white">A1 sampai E1</strong> (klik A1, tahan, geser ke E1, lepas). Lalu:</p>
+                    <ul class="text-xs text-textGray space-y-1 list-disc list-inside pl-1">
+                      <li>Tekan <kbd class="text-white bg-black/40 px-1.5 rounded">Ctrl</kbd>+<kbd class="text-white bg-black/40 px-1.5 rounded">B</kbd> untuk <strong class="text-white">Bold</strong> (huruf tebal)</li>
+                      <li>Klik ikon <i class="fa-solid fa-fill-drip text-amber-400"></i> Fill Color → pilih warna muda (mis. kuning pucat atau hijau pucat)</li>
+                      <li>Opsional: klik ikon <i class="fa-solid fa-align-center text-sky-400"></i> Center untuk rata tengah</li>
+                    </ul>
+                    <div class="bg-purple-500/5 border-l-2 border-purple-500 rounded-r p-2">
+                      <p class="text-xs text-textGray">
+                        <i class="fa-solid fa-lightbulb text-purple-400 mr-1"></i> <strong class="text-white">Kenapa header perlu dibedakan?</strong> Supaya mata langsung tahu mana judul kolom dan mana data — seperti buku yang punya judul
+                        bab.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="bg-white/5 border border-white/10 rounded-2xl p-4 md:p-5 flex items-start gap-4">
+                  <div class="w-9 h-9 rounded-xl bg-purple-500/15 border border-purple-500/30 flex items-center justify-center text-purple-400 font-bold shrink-0">4</div>
+                  <div class="flex-1 space-y-2">
+                    <p class="font-bold text-white text-sm md:text-base">Beri Border (Garis Tabel)</p>
+                    <p class="text-xs text-textGray leading-relaxed">Blok seluruh tabel (<strong class="text-white">A1 sampai E5</strong>). Lalu:</p>
+                    <ul class="text-xs text-textGray space-y-1 list-disc list-inside pl-1">
+                      <li>Klik ikon <i class="fa-solid fa-border-all text-gray-300"></i> Borders di toolbar Home</li>
+                      <li>Pilih <strong class="text-white">All Borders</strong> — semua sisi sel dapat garis</li>
+                    </ul>
+                    <p class="text-xs text-textGray leading-relaxed">Hasilnya: tabel jadi rapi seperti di buku tulis. Tanpa border, data tetap benar tapi terlihat "melayang" tidak beraturan.</p>
+                  </div>
+                </div>
+
+                <!-- Step 5 -->
+                <div class="bg-white/5 border border-white/10 rounded-2xl p-4 md:p-5 flex items-start gap-4">
+                  <div class="w-9 h-9 rounded-xl bg-purple-500/15 border border-purple-500/30 flex items-center justify-center text-purple-400 font-bold shrink-0">5</div>
+                  <div class="flex-1 space-y-2">
+                    <p class="font-bold text-white text-sm md:text-base">Sesuaikan Lebar Kolom (AutoFit)</p>
+                    <p class="text-xs text-textGray leading-relaxed">
+                      Kalau teks "B.Indo" terpotong jadi "B.In..." → <strong class="text-white">geser garis antar kolom header</strong> sampai lebar cukup, atau double-click garisnya untuk auto-fit.
+                    </p>
+                    <p class="text-xs text-textGray"><strong class="text-white">Cara cepat:</strong> blok semua kolom A-E → klik kanan header kolom → pilih <em>Column Width</em> → isi nilai 12-15.</p>
+                  </div>
+                </div>
+
+                <!-- Step 6 -->
+                <div class="bg-white/5 border border-white/10 rounded-2xl p-4 md:p-5 flex items-start gap-4">
+                  <div class="w-9 h-9 rounded-xl bg-purple-500/15 border border-purple-500/30 flex items-center justify-center text-purple-400 font-bold shrink-0">6</div>
+                  <div class="flex-1 space-y-2">
+                    <p class="font-bold text-white text-sm md:text-base">Simpan File</p>
+                    <p class="text-xs text-textGray leading-relaxed">
+                      Tekan <kbd class="text-white bg-black/40 px-1.5 rounded">Ctrl</kbd>+<kbd class="text-white bg-black/40 px-1.5 rounded">S</kbd> → beri nama <code class="text-amber-300">Tabel_Nilai_Budi.xlsx</code> → pastikan tersimpan
+                      di folder yang sudah kamu buat di Bagian 2.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-purple-500/5 border-l-4 border-purple-500 rounded-r-lg p-4 flex items-start gap-3">
+              <i class="fa-solid fa-star text-purple-400 text-xl mt-0.5"></i>
+              <p class="text-sm text-textGray">
+                <strong class="text-white">Cek keberhasilan:</strong> Tabel kamu sudah benar kalau: (1) header berwarna & bold, (2) semua sisi punya garis, (3) data rapi rata kiri untuk teks / rata kanan untuk angka (Excel otomatis), dan
+                (4) tidak ada sel yang terpotong.
+              </p>
+            </div>
+          </section>
+
+          <!-- Bagian 4: Rumus Dasar -->
+          <section class="bg-brandGray border border-brandGreen/30 rounded-3xl p-6 md:p-8 space-y-6">
+            <div class="flex items-center gap-4 border-b border-white/10 pb-4">
+              <div class="w-12 h-12 rounded-2xl bg-brandGreen/10 flex items-center justify-center text-brandGreen text-2xl font-bold border border-brandGreen/20 shrink-0"><i class="fa-solid fa-calculator"></i></div>
+              <div>
+                <span class="text-xs font-bold uppercase tracking-widest text-brandGreen">BAGIAN 4</span>
+                <h2 class="text-2xl md:text-3xl font-bold text-white">Rumus Dasar Excel</h2>
+              </div>
+            </div>
+
+            <p class="text-textGray leading-relaxed">
+              Semua rumus di Excel <strong class="text-white">harus diawali dengan tanda sama dengan</strong> (<code class="text-amber-300 bg-black/40 px-2 py-0.5 rounded">=</code>). Tanpa tanda ini, Excel akan menganggapnya sebagai teks
+              biasa.
+            </p>
+
+            <div class="bg-brandGreen/10 border border-brandGreen/30 rounded-2xl p-4 md:p-5 flex items-start gap-3">
+              <i class="fa-solid fa-lightbulb text-brandGreen text-xl mt-0.5 shrink-0"></i>
+              <div class="text-sm text-textGray leading-relaxed">
+                <strong class="text-white">Analogi kunci:</strong> tanda <code class="text-amber-300">=</code> itu seperti kamu bilang ke Excel, "Hei, hitung ya!" Kalau kamu ketik <code class="text-white">5+3</code> tanpa
+                <code class="text-amber-300">=</code>, Excel akan menampilkan tulisan <em>"5+3"</em> apa adanya. Tapi kalau <code class="text-amber-300">=5+3</code>, Excel hitung jadi <strong class="text-brandGreen">8</strong>.
+              </div>
+            </div>
+
+            <div class="space-y-3">
+              <h3 class="text-xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-circle-dot text-brandGreen text-sm"></i> 1. Operator Aritmatika (Hitung Dasar)</h3>
+              <p class="text-textGray text-sm">Excel bisa menggantikan kalkulator. Ini operator yang paling sering dipakai:</p>
+              <div class="overflow-x-auto border border-white/10 rounded-2xl">
+                <table class="w-full text-left text-sm text-gray-300">
+                  <thead class="bg-white/5 text-white uppercase text-xs font-bold border-b border-white/10">
+                    <tr>
+                      <th class="p-3">Operator</th>
+                      <th class="p-3">Fungsi</th>
+                      <th class="p-3">Contoh</th>
+                      <th class="p-3">Hasil</th>
+                      <th class="p-3 hidden md:table-cell">Catatan</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-white/5 font-mono text-xs md:text-sm">
+                    <tr class="hover:bg-white/[0.02]">
+                      <td class="p-3 font-bold text-brandGreen">+</td>
+                      <td class="p-3 font-sans text-gray-300">Penjumlahan</td>
+                      <td class="p-3 text-amber-300">=5+3</td>
+                      <td class="p-3 text-white">8</td>
+                      <td class="p-3 hidden md:table-cell font-sans text-xs text-textGray">Tanda plus di keyboard (Shift + =)</td>
+                    </tr>
+                    <tr class="hover:bg-white/[0.02]">
+                      <td class="p-3 font-bold text-brandGreen">-</td>
+                      <td class="p-3 font-sans text-gray-300">Pengurangan</td>
+                      <td class="p-3 text-amber-300">=10-4</td>
+                      <td class="p-3 text-white">6</td>
+                      <td class="p-3 hidden md:table-cell font-sans text-xs text-textGray">Bisa juga untuk angka negatif: =-5</td>
+                    </tr>
+                    <tr class="hover:bg-white/[0.02]">
+                      <td class="p-3 font-bold text-brandGreen">*</td>
+                      <td class="p-3 font-sans text-gray-300">Perkalian</td>
+                      <td class="p-3 text-amber-300">=6*7</td>
+                      <td class="p-3 text-white">42</td>
+                      <td class="p-3 hidden md:table-cell font-sans text-xs text-textGray">Pakai <strong class="text-white">*</strong> bukan <strong class="text-red-400">×</strong></td>
+                    </tr>
+                    <tr class="hover:bg-white/[0.02]">
+                      <td class="p-3 font-bold text-brandGreen">/</td>
+                      <td class="p-3 font-sans text-gray-300">Pembagian</td>
+                      <td class="p-3 text-amber-300">=20/4</td>
+                      <td class="p-3 text-white">5</td>
+                      <td class="p-3 hidden md:table-cell font-sans text-xs text-textGray">Pakai <strong class="text-white">/</strong> bukan <strong class="text-red-400">÷</strong></td>
+                    </tr>
+                    <tr class="hover:bg-white/[0.02]">
+                      <td class="p-3 font-bold text-brandGreen">^</td>
+                      <td class="p-3 font-sans text-gray-300">Pangkat</td>
+                      <td class="p-3 text-amber-300">=2^3</td>
+                      <td class="p-3 text-white">8</td>
+                      <td class="p-3 hidden md:table-cell font-sans text-xs text-textGray">2 pangkat 3 = 2×2×2 = 8</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="bg-amber-500/5 border-l-4 border-amber-500 rounded-r-lg p-3 flex items-start gap-2">
+                <i class="fa-solid fa-triangle-exclamation text-amber-400 mt-0.5 shrink-0"></i>
+                <p class="text-xs text-textGray">
+                  <strong class="text-white">Urutan hitung (PEMDAS):</strong> Excel mengikuti aturan matematika — <strong class="text-white">kurung dulu</strong>, lalu <strong class="text-white">pangkat</strong>, lalu
+                  <strong class="text-white">kali/bagi</strong>, terakhir <strong class="text-white">tambah/kurang</strong>. Contoh: <code class="text-amber-300">=2+3*4</code> → hasilnya <strong class="text-brandGreen">14</strong> (bukan
+                  20), karena 3*4 dihitung dulu. Kalau mau 20, tulis <code class="text-amber-300">=(2+3)*4</code>.
+                </p>
+              </div>
+            </div>
+
+            <div class="space-y-3">
+              <h3 class="text-xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-circle-dot text-brandGreen text-sm"></i> 2. Rumus dengan Referensi Sel (Kekuatan Sesungguhnya)</h3>
+              <p class="text-textGray text-sm">
+                Ini bedanya Excel dengan kalkulator biasa. Rumus bisa <strong class="text-white">merujuk ke sel lain</strong> — kalau nilai sel berubah, hasil rumus <strong class="text-white">otomatis berubah juga</strong>.
+              </p>
+              <div class="code-block p-4 text-xs space-y-1">
+                <div class="cmt">// Di cell E2, menjumlahkan nilai MTK + B.Indo + B.Ing milik Budi</div>
+                <div><span class="op">=</span>B2<span class="op">+</span>C2<span class="op">+</span>D2</div>
+                <div class="cmt mt-2">// Hasil otomatis = 85 + 80 + 90 = 255</div>
+              </div>
+              <div class="bg-brandGreen/5 border border-brandGreen/20 rounded-2xl p-4 space-y-2">
+                <p class="text-sm font-bold text-brandGreen flex items-center gap-2"><i class="fa-solid fa-wand-magic-sparkles"></i> Coba Sendiri Keajaibannya</p>
+                <ol class="text-xs text-textGray space-y-1.5 list-decimal list-inside leading-relaxed">
+                  <li>Ketik <code class="text-amber-300">=B2+C2+D2</code> di E2 → hasil muncul <strong class="text-white">255</strong></li>
+                  <li>Ubah nilai B2 dari 85 jadi <strong class="text-white">100</strong> → tekan Enter</li>
+                  <li>Lihat E2 — otomatis berubah jadi <strong class="text-brandGreen">270</strong>! 🎉</li>
+                </ol>
+                <p class="text-xs text-textGray italic">Ini yang membuat Excel sangat powerful — kamu cuma perlu ubah data, semua perhitungan ikut menyesuaikan.</p>
+              </div>
+            </div>
+
+            <div class="space-y-3">
+              <h3 class="text-xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-circle-dot text-brandGreen text-sm"></i> 3. Fungsi Dasar (Built-in Functions)</h3>
+              <p class="text-textGray text-sm">
+                Selain operator, Excel punya <strong class="text-white">fungsi bawaan</strong> yang mempermudah perhitungan banyak data sekaligus. Bayangkan kalau kamu harus mengetik <code class="text-white">=B2+B3+B4+B5+...+B100</code> —
+                panjang banget! Dengan fungsi <code class="text-amber-300">SUM</code> cukup <code class="text-amber-300">=SUM(B2:B100)</code>.
+              </p>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div class="bg-gradient-to-br from-emerald-500/5 to-transparent border border-emerald-500/30 rounded-2xl p-4 space-y-2">
+                  <div class="flex items-center justify-between">
+                    <code class="text-emerald-400 font-mono font-bold text-lg">SUM</code>
+                    <span class="text-[10px] font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-full">Paling Sering</span>
+                  </div>
+                  <p class="text-xs text-textGray"><strong class="text-white">Jumlahkan</strong> semua angka dalam range.</p>
+                  <code class="block text-xs text-amber-300 bg-black/40 p-2 rounded mt-2">=SUM(B2:D2)</code>
+                  <p class="text-[10px] text-textGray italic">Jumlahkan B2 sampai D2 → 85+80+90 = 255</p>
+                </div>
+                <div class="bg-gradient-to-br from-sky-500/5 to-transparent border border-sky-500/30 rounded-2xl p-4 space-y-2">
+                  <div class="flex items-center justify-between">
+                    <code class="text-sky-400 font-mono font-bold text-lg">AVERAGE</code>
+                    <span class="text-[10px] font-bold uppercase tracking-wider bg-sky-500/20 text-sky-300 px-2 py-0.5 rounded-full">Rata-rata</span>
+                  </div>
+                  <p class="text-xs text-textGray"><strong class="text-white">Rata-rata</strong> dari suatu range.</p>
+                  <code class="block text-xs text-amber-300 bg-black/40 p-2 rounded mt-2">=AVERAGE(B2:D2)</code>
+                  <p class="text-[10px] text-textGray italic">(85+80+90) ÷ 3 = 85</p>
+                </div>
+                <div class="bg-gradient-to-br from-amber-500/5 to-transparent border border-amber-500/30 rounded-2xl p-4 space-y-2">
+                  <div class="flex items-center justify-between">
+                    <code class="text-amber-400 font-mono font-bold text-lg">MAX</code>
+                    <span class="text-[10px] font-bold uppercase tracking-wider bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded-full">Tertinggi</span>
+                  </div>
+                  <p class="text-xs text-textGray">Cari nilai <strong class="text-white">tertinggi</strong> dalam range.</p>
+                  <code class="block text-xs text-amber-300 bg-black/40 p-2 rounded mt-2">=MAX(B2:B5)</code>
+                  <p class="text-[10px] text-textGray italic">Cari nilai MTK tertinggi dari 4 siswa</p>
+                </div>
+                <div class="bg-gradient-to-br from-rose-500/5 to-transparent border border-rose-500/30 rounded-2xl p-4 space-y-2">
+                  <div class="flex items-center justify-between">
+                    <code class="text-rose-400 font-mono font-bold text-lg">MIN</code>
+                    <span class="text-[10px] font-bold uppercase tracking-wider bg-rose-500/20 text-rose-300 px-2 py-0.5 rounded-full">Terendah</span>
+                  </div>
+                  <p class="text-xs text-textGray">Cari nilai <strong class="text-white">terendah</strong> dalam range.</p>
+                  <code class="block text-xs text-amber-300 bg-black/40 p-2 rounded mt-2">=MIN(B2:B5)</code>
+                  <p class="text-[10px] text-textGray italic">Cari nilai MTK terendah dari 4 siswa</p>
+                </div>
+                <div class="bg-gradient-to-br from-purple-500/5 to-transparent border border-purple-500/30 rounded-2xl p-4 space-y-2 md:col-span-2">
+                  <div class="flex items-center justify-between">
+                    <code class="text-purple-400 font-mono font-bold text-lg">COUNT</code>
+                    <span class="text-[10px] font-bold uppercase tracking-wider bg-purple-500/20 text-purple-300 px-2 py-0.5 rounded-full">Hitung Sel</span>
+                  </div>
+                  <p class="text-xs text-textGray">Menghitung <strong class="text-white">banyaknya sel yang berisi angka</strong> dalam suatu range. Berguna untuk memastikan semua siswa sudah mengumpulkan nilai.</p>
+                  <code class="block text-xs text-amber-300 bg-black/40 p-2 rounded mt-2">=COUNT(B2:B5)</code>
+                  <p class="text-[10px] text-textGray italic">Hasil: 4 (karena ada 4 nilai)</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="space-y-3">
+              <h3 class="text-xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-circle-dot text-brandGreen text-sm"></i> 4. Cara Mengetik Rumus (Praktik Langsung)</h3>
+              <div class="space-y-3">
+                <div class="bg-white/5 border border-white/10 rounded-2xl p-4 flex items-start gap-4">
+                  <div class="w-9 h-9 rounded-xl bg-brandGreen/15 border border-brandGreen/30 flex items-center justify-center text-brandGreen font-bold shrink-0">1</div>
+                  <div class="flex-1">
+                    <p class="font-bold text-white text-sm">Klik sel tujuan</p>
+                    <p class="text-xs text-textGray mt-1">Misal klik <strong class="text-white">E2</strong> — sel yang akan menampung hasil.</p>
+                  </div>
+                </div>
+                <div class="bg-white/5 border border-white/10 rounded-2xl p-4 flex items-start gap-4">
+                  <div class="w-9 h-9 rounded-xl bg-brandGreen/15 border border-brandGreen/30 flex items-center justify-center text-brandGreen font-bold shrink-0">2</div>
+                  <div class="flex-1">
+                    <p class="font-bold text-white text-sm">Ketik tanda <code class="text-amber-300">=</code></p>
+                    <p class="text-xs text-textGray mt-1">Begitu tanda ini diketik, Excel tahu kamu sedang menulis rumus, bukan teks.</p>
+                  </div>
+                </div>
+                <div class="bg-white/5 border border-white/10 rounded-2xl p-4 flex items-start gap-4">
+                  <div class="w-9 h-9 rounded-xl bg-brandGreen/15 border border-brandGreen/30 flex items-center justify-center text-brandGreen font-bold shrink-0">3</div>
+                  <div class="flex-1">
+                    <p class="font-bold text-white text-sm">Ketik nama fungsi + kurung buka</p>
+                    <p class="text-xs text-textGray mt-1">Misal <code class="text-amber-300">=SUM(</code>. Perhatikan: Excel menampilkan <em>tooltip</em> kecil berisi petunjuk fungsi.</p>
+                  </div>
+                </div>
+                <div class="bg-white/5 border border-white/10 rounded-2xl p-4 flex items-start gap-4">
+                  <div class="w-9 h-9 rounded-xl bg-brandGreen/15 border border-brandGreen/30 flex items-center justify-center text-brandGreen font-bold shrink-0">4</div>
+                  <div class="flex-1">
+                    <p class="font-bold text-white text-sm">Pilih range dengan mouse atau ketik manual</p>
+                    <p class="text-xs text-textGray mt-1">
+                      <strong class="text-white">Cara mouse:</strong> sambil kurung masih terbuka, klik B2 lalu seret ke D2 → otomatis terketik <code class="text-amber-300">B2:D2</code>.<br />
+                      <strong class="text-white">Cara manual:</strong> langsung ketik <code class="text-amber-300">B2:D2</code>.
+                    </p>
+                  </div>
+                </div>
+                <div class="bg-white/5 border border-white/10 rounded-2xl p-4 flex items-start gap-4">
+                  <div class="w-9 h-9 rounded-xl bg-brandGreen/15 border border-brandGreen/30 flex items-center justify-center text-brandGreen font-bold shrink-0">5</div>
+                  <div class="flex-1">
+                    <p class="font-bold text-white text-sm">Tutup kurung & tekan Enter</p>
+                    <p class="text-xs text-textGray mt-1">Ketik <code class="text-amber-300">)</code> lalu <kbd class="text-white bg-black/40 px-1.5 rounded">Enter</kbd>. Hasil muncul di E2! 🎉</p>
+                  </div>
+                </div>
+              </div>
+              <div class="bg-sky-500/5 border-l-4 border-sky-500 rounded-r-lg p-3 flex items-start gap-2">
+                <i class="fa-solid fa-circle-info text-sky-400 mt-0.5 shrink-0"></i>
+                <p class="text-xs text-textGray">
+                  <strong class="text-white">Kalau salah ketik:</strong> hasil muncul <code class="text-red-400">#NAME?</code> (nama fungsi salah) atau <code class="text-red-400">#VALUE!</code> (range salah). Jangan panik — klik sel, lihat
+                  Formula Bar, cari typo, perbaiki.
+                </p>
+              </div>
+            </div>
+
+            <div class="bg-brandGreen/5 border-l-4 border-brandGreen rounded-r-lg p-4 flex items-start gap-3">
+              <i class="fa-solid fa-lightbulb text-brandGreen text-xl mt-0.5"></i>
+              <p class="text-sm text-textGray">
+                <strong class="text-white">Intinya:</strong> Operator (<code class="text-amber-300">+ - * / ^</code>) untuk hitungan cepat 2-3 angka. Fungsi (<code class="text-amber-300">SUM</code>,
+                <code class="text-amber-300">AVERAGE</code>, dst) untuk hitungan banyak data dalam range.
+              </p>
+            </div>
+          </section>
+
+          <!-- Bagian 5: Grafik -->
+          <section class="bg-brandGray border border-sky-500/30 rounded-3xl p-6 md:p-8 space-y-6">
+            <div class="flex items-center gap-4 border-b border-white/10 pb-4">
+              <div class="w-12 h-12 rounded-2xl bg-sky-500/10 flex items-center justify-center text-sky-400 text-2xl font-bold border border-sky-500/20 shrink-0"><i class="fa-solid fa-chart-column"></i></div>
+              <div>
+                <span class="text-xs font-bold uppercase tracking-widest text-sky-400">BAGIAN 5</span>
+                <h2 class="text-2xl md:text-3xl font-bold text-white">Membuat Grafik (Chart)</h2>
+              </div>
+            </div>
+
+            <p class="text-textGray leading-relaxed">
+              Grafik mengubah <strong class="text-white">angka-angka jadi visual</strong> yang lebih mudah dipahami. Excel menyediakan berbagai jenis grafik: Column, Line, Pie, Bar, Area, dan lainnya.
+            </p>
+
+            <div class="bg-sky-500/5 border border-sky-500/20 rounded-2xl p-4 space-y-2">
+              <p class="text-sm font-bold text-sky-300 flex items-center gap-2"><i class="fa-solid fa-quote-left"></i> Kenapa Grafik Penting?</p>
+              <p class="text-xs text-textGray leading-relaxed">
+                Coba bayangkan kamu harus menjelaskan ke guru: "Nilai Ani naik-turun tapi cenderung stabil." Tanpa grafik, guru harus baca 4 angka satu-satu. Dengan grafik garis, guru <strong class="text-white">langsung lihat</strong> tren
+                naik-turun itu dalam 1 detik. Inilah kekuatan visualisasi data.
+              </p>
+            </div>
+
+            <div class="space-y-3">
+              <h3 class="text-xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-circle-dot text-sky-400 text-sm"></i> 1. Jenis-Jenis Grafik & Kapan Pakai</h3>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <div class="bg-white/5 border border-white/10 p-4 rounded-2xl space-y-2">
+                  <i class="fa-solid fa-chart-column text-sky-400 text-2xl"></i>
+                  <h4 class="font-bold text-white text-sm">Column / Bar</h4>
+                  <p class="text-xs text-textGray">Cocok untuk <strong class="text-white">membandingkan</strong> nilai antar kategori.</p>
+                  <p class="text-[10px] text-sky-300 italic mt-1">Contoh: nilai MTK Budi vs Ani vs Cici vs Dodi</p>
+                </div>
+                <div class="bg-white/5 border border-white/10 p-4 rounded-2xl space-y-2">
+                  <i class="fa-solid fa-chart-line text-brandGreen text-2xl"></i>
+                  <h4 class="font-bold text-white text-sm">Line</h4>
+                  <p class="text-xs text-textGray">Cocok untuk melihat <strong class="text-white">tren</strong> dari waktu ke waktu.</p>
+                  <p class="text-[10px] text-emerald-300 italic mt-1">Contoh: nilai Budi dari bulan Jan-Jun</p>
+                </div>
+                <div class="bg-white/5 border border-white/10 p-4 rounded-2xl space-y-2">
+                  <i class="fa-solid fa-chart-pie text-amber-400 text-2xl"></i>
+                  <h4 class="font-bold text-white text-sm">Pie</h4>
+                  <p class="text-xs text-textGray">Cocok untuk <strong class="text-white">proporsi</strong> bagian dari keseluruhan (%).</p>
+                  <p class="text-[10px] text-amber-300 italic mt-1">Contoh: 40% pilih Basket, 35% Futsal, 25% Voli</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="space-y-3">
+              <h3 class="text-xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-circle-dot text-sky-400 text-sm"></i> 2. Langkah Membuat Grafik (Detail)</h3>
+              <div class="space-y-3">
+                <!-- Step 1 -->
+                <div class="bg-white/5 border border-white/10 rounded-2xl p-4 md:p-5 flex items-start gap-4">
+                  <div class="w-9 h-9 rounded-xl bg-sky-500/15 border border-sky-500/30 flex items-center justify-center text-sky-400 font-bold shrink-0">1</div>
+                  <div class="flex-1 space-y-2">
+                    <p class="font-bold text-white text-sm md:text-base">Blok Data yang Ingin Digrafikkan</p>
+                    <p class="text-xs text-textGray leading-relaxed">
+                      Klik sel pertama data (mis. <strong class="text-white">A1</strong>) → tahan mouse → geser sampai sel terakhir (<strong class="text-white">D5</strong>) → lepas. Sekarang range
+                      <code class="text-amber-300">A1:D5</code> ter-blok (biru).
+                    </p>
+                    <div class="bg-sky-500/5 border-l-2 border-sky-500 rounded-r p-2">
+                      <p class="text-xs text-textGray">
+                        <i class="fa-solid fa-circle-info text-sky-400 mr-1"></i> <strong class="text-white">Sertakan header!</strong> Blok dari A1 (judul "Nama") supaya Excel otomatis tahu nama kategori. Kalau hanya blok A2:D5, grafik akan
+                        pakai label "Series 1, Series 2".
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="bg-white/5 border border-white/10 rounded-2xl p-4 md:p-5 flex items-start gap-4">
+                  <div class="w-9 h-9 rounded-xl bg-sky-500/15 border border-sky-500/30 flex items-center justify-center text-sky-400 font-bold shrink-0">2</div>
+                  <div class="flex-1 space-y-2">
+                    <p class="font-bold text-white text-sm md:text-base">Klik Tab Insert → Pilih Jenis Chart</p>
+                    <p class="text-xs text-textGray leading-relaxed">
+                      Pindah ke Ribbon tab <strong class="text-white">Insert</strong> → cari grup <strong class="text-white">Charts</strong> → klik ikon <i class="fa-solid fa-chart-column text-sky-400"></i>
+                      <em>Insert Column or Bar Chart</em>.
+                    </p>
+                    <p class="text-xs text-textGray leading-relaxed">Muncul dropdown berisi macam-macam bentuk grafik. Pilih <strong class="text-white">Clustered Column</strong> — grafik batang tegak yang paling umum.</p>
+                    <p class="text-xs text-textGray">
+                      <strong class="text-white">Cara cepat:</strong> setelah blok data, tekan <kbd class="text-white bg-black/40 px-1.5 rounded">Alt</kbd>+<kbd class="text-white bg-black/40 px-1.5 rounded">F1</kbd> — Excel langsung bikin
+                      grafik default. Nanti bisa ganti jenisnya.
+                    </p>
+                  </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="bg-white/5 border border-white/10 rounded-2xl p-4 md:p-5 flex items-start gap-4">
+                  <div class="w-9 h-9 rounded-xl bg-sky-500/15 border border-sky-500/30 flex items-center justify-center text-sky-400 font-bold shrink-0">3</div>
+                  <div class="flex-1 space-y-2">
+                    <p class="font-bold text-white text-sm md:text-base">Atur Posisi Grafik</p>
+                    <p class="text-xs text-textGray leading-relaxed">
+                      Grafik akan muncul <strong class="text-white">bertumpuk di atas data</strong> — menutupi tabel. Klik area kosong di grafik, tahan, geser ke area kosong di sebelah kanan tabel. Lepas.
+                    </p>
+                    <p class="text-xs text-textGray leading-relaxed">Sekarang data dan grafik bisa dilihat <strong class="text-white">berdampingan</strong> — memudahkan perbandingan.</p>
+                  </div>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="bg-white/5 border border-white/10 rounded-2xl p-4 md:p-5 flex items-start gap-4">
+                  <div class="w-9 h-9 rounded-xl bg-sky-500/15 border border-sky-500/30 flex items-center justify-center text-sky-400 font-bold shrink-0">4</div>
+                  <div class="flex-1 space-y-2">
+                    <p class="font-bold text-white text-sm md:text-base">Tambahkan Judul & Label (Biar Mudah Dibaca)</p>
+                    <p class="text-xs text-textGray leading-relaxed">Klik grafik → di sebelah kanan muncul tombol <strong class="text-white">+</strong> (Chart Elements). Klik tombol itu, lalu centang:</p>
+                    <ul class="text-xs text-textGray space-y-1 list-disc list-inside pl-1">
+                      <li><strong class="text-white">Chart Title</strong> → ketik judul, mis. "Nilai 4 Siswa"</li>
+                      <li><strong class="text-white">Axis Titles</strong> → beri nama sumbu X (Nama) dan sumbu Y (Nilai)</li>
+                      <li><strong class="text-white">Data Labels</strong> → angka muncul langsung di atas tiap batang</li>
+                      <li><strong class="text-white">Legend</strong> → keterangan warna (kalau ada banyak series)</li>
+                    </ul>
+                    <div class="bg-sky-500/5 border-l-2 border-sky-500 rounded-r p-2">
+                      <p class="text-xs text-textGray"><i class="fa-solid fa-lightbulb text-sky-400 mr-1"></i> <strong class="text-white">Grafik tanpa judul itu seperti esai tanpa topik</strong> — pembaca bingung ini data apa.</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Step 5 -->
+                <div class="bg-white/5 border border-white/10 rounded-2xl p-4 md:p-5 flex items-start gap-4">
+                  <div class="w-9 h-9 rounded-xl bg-sky-500/15 border border-sky-500/30 flex items-center justify-center text-sky-400 font-bold shrink-0">5</div>
+                  <div class="flex-1 space-y-2">
+                    <p class="font-bold text-white text-sm md:text-base">Kustomisasi Warna (Opsional)</p>
+                    <p class="text-xs text-textGray leading-relaxed">
+                      Mau grafik terlihat lebih cantik? Klik salah satu batang → klik kanan → <em>Format Data Point</em> → pilih warna. Atau klik ikon <i class="fa-solid fa-paintbrush text-amber-400"></i> <em>Chart Styles</em> untuk
+                      template warna instan.
+                    </p>
+                  </div>
+                </div>
+
+                <!-- Step 6 -->
+                <div class="bg-white/5 border border-white/10 rounded-2xl p-4 md:p-5 flex items-start gap-4">
+                  <div class="w-9 h-9 rounded-xl bg-sky-500/15 border border-sky-500/30 flex items-center justify-center text-sky-400 font-bold shrink-0">6</div>
+                  <div class="flex-1 space-y-2">
+                    <p class="font-bold text-white text-sm md:text-base">Simpan File</p>
+                    <p class="text-xs text-textGray leading-relaxed">
+                      Tekan <kbd class="text-white bg-black/40 px-1.5 rounded">Ctrl</kbd>+<kbd class="text-white bg-black/40 px-1.5 rounded">S</kbd> lagi. Grafik tersimpan bersama data dalam satu file .xlsx — tidak perlu upload terpisah.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-amber-500/5 border-l-4 border-amber-500 rounded-r-lg p-4 flex items-start gap-3">
+              <i class="fa-solid fa-lightbulb text-amber-400 text-xl mt-0.5"></i>
+              <div class="text-sm text-textGray space-y-1">
+                <p><strong class="text-white">Tips memilih grafik:</strong></p>
+                <ul class="text-xs space-y-1 list-disc list-inside">
+                  <li><strong class="text-white">Bandingkan nilai antar kategori</strong> → Column / Bar</li>
+                  <li><strong class="text-white">Lihat perubahan sepanjang waktu</strong> → Line</li>
+                  <li><strong class="text-white">Lihat proporsi dari keseluruhan</strong> → Pie</li>
+                  <li><strong class="text-white">Tunjukkan korelasi 2 data</strong> → Scatter (XY)</li>
+                </ul>
+                <p class="text-xs italic mt-2">Jangan asal pilih — sesuaikan dengan cerita datanya. Grafik yang salah bisa menyesatkan!</p>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <!-- ========== TAB 2: SIMULASI ========== -->
+        <div id="simulasi" class="tab-content hidden space-y-6">
+          <div class="bg-brandGray border border-brandGreen/30 rounded-3xl p-6 md:p-8 space-y-6">
+            <div class="flex items-center gap-3 border-b border-white/10 pb-4">
+              <div class="w-12 h-12 rounded-xl bg-brandGreen/10 flex items-center justify-center text-brandGreen text-2xl font-bold border border-brandGreen/20">
+                <i class="fa-solid fa-table-cells"></i>
+              </div>
+              <div class="flex-1">
+                <h2 class="text-2xl md:text-3xl font-bold text-white">Mini Excel — Latihan Rumus Interaktif</h2>
+                <p class="text-base text-textGray">Ketik rumus, pilih kolom, lalu <strong class="text-white">seret fill handle</strong> untuk auto-copy rumus ke bawah — persis Excel asli!</p>
+              </div>
+            </div>
+
+            <!-- Panduan cara pakai -->
+            <div class="bg-gradient-to-br from-brandGreen/10 to-sky-500/5 border border-brandGreen/30 rounded-2xl p-5 space-y-3">
+              <h3 class="font-bold text-brandGreen flex items-center gap-2 text-base"><i class="fa-solid fa-circle-play"></i> Cara Pakai (seperti Excel asli)</h3>
+              <ol class="text-sm text-textGray space-y-2 list-decimal list-inside leading-relaxed">
+                <li>Klik cell tempat kamu ingin menaruh hasil (misalnya <code class="text-amber-300 bg-black/40 px-1.5 rounded">D2</code>)</li>
+                <li>Klik kotak rumus (ƒx) di atas, lalu <strong class="text-white">ketik nama fungsinya</strong> — mis. <code class="text-amber-300 bg-black/40 px-1.5 rounded">=SUM(</code></li>
+                <li>
+                  Sambil kotak rumus masih aktif, <strong class="text-sky-300">klik dan tahan</strong> di grid, lalu <strong class="text-sky-300">seret</strong> untuk memilih range (mis. dari B2 sampai B6) → referensinya otomatis masuk ke
+                  rumus
+                </li>
+                <li>Ketik <code class="text-amber-300 bg-black/40 px-1.5 rounded">)</code>, lalu tekan <kbd class="text-white bg-black/40 px-1.5 rounded text-xs">Enter</kbd> → hasil muncul! 🎉</li>
+                <li>
+                  <strong class="text-brandGreen">Auto-copy rumus:</strong> Klik cell yang sudah berisi rumus → cari kotak kecil hijau di pojok kanan-bawah cell → <strong class="text-brandGreen">seret ke bawah</strong> → rumus otomatis
+                  ter-copy dengan penyesuaian referensi baris! ✨
+                </li>
+              </ol>
+              <p class="text-xs text-textGray italic border-t border-white/10 pt-3">💡 Bisa juga ketik semua manual di kotak rumus, mis. <code class="text-amber-300">=B2+C2</code>, lalu Enter.</p>
+            </div>
+
+            <!-- Hint editing -->
+            <div id="editing-hint" class="editing-hint">
+              <i class="fa-solid fa-hand-pointer"></i>
+              <span>Mode edit aktif — klik & seret cell di grid untuk memasukkan referensi ke rumus</span>
+            </div>
+
+            <div class="mini-excel-wrap">
+              <div class="mini-excel-toolbar">
+                <span class="cell-address" id="cell-address">A1</span>
+                <span class="formula-eq">ƒx</span>
+                <input type="text" id="formula-input" class="formula-input" placeholder="Ketik rumus, mis. =SUM(  —  lalu seret cell di grid" spellcheck="false" autocomplete="off" />
+              </div>
+              <div class="mini-excel-grid">
+                <div class="grid-inner">
+                  <table id="spreadsheet"></table>
+                  <div id="fill-handle" class="fill-handle" title="Seret untuk copy rumus ke bawah/samping"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between flex-wrap gap-3 pt-2">
+              <div id="sim-status" class="text-sm font-semibold text-brandGreen"><i class="fa-solid fa-circle-check mr-1"></i> Siap menerima rumus</div>
+              <button onclick="resetMiniExcel()" class="text-xs px-3 py-1.5 bg-white/5 border border-white/10 rounded-lg text-gray-300 hover:bg-rose-500/20 hover:text-rose-400 transition">
+                <i class="fa-solid fa-rotate-left mr-1"></i> Reset Data
+              </button>
+            </div>
+
+            <!-- Helper Cards -->
+            <div class="border-t border-white/10 pt-6 space-y-3">
+              <h3 class="text-lg font-bold text-white flex items-center gap-2"><i class="fa-solid fa-wand-magic-sparkles text-amber-400"></i> Mulai Cepat — Klik Rumus</h3>
+              <p class="text-xs text-textGray">Klik salah satu → rumus akan masuk ke kotak rumus. Lalu seret range di grid → Enter.</p>
+              <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                <button onclick="applyFormulaStart('=SUM(')" class="template-card">
+                  <div class="flex items-center gap-2 mb-1"><span class="text-emerald-400 font-mono font-bold text-sm">=SUM(</span></div>
+                  <p class="text-xs text-textGray">Jumlahkan range yang kamu seret</p>
+                </button>
+                <button onclick="applyFormulaStart('=AVERAGE(')" class="template-card">
+                  <div class="flex items-center gap-2 mb-1"><span class="text-sky-400 font-mono font-bold text-sm">=AVERAGE(</span></div>
+                  <p class="text-xs text-textGray">Rata-rata range</p>
+                </button>
+                <button onclick="applyFormulaStart('=MAX(')" class="template-card">
+                  <div class="flex items-center gap-2 mb-1"><span class="text-amber-400 font-mono font-bold text-sm">=MAX(</span></div>
+                  <p class="text-xs text-textGray">Nilai tertinggi</p>
+                </button>
+                <button onclick="applyFormulaStart('=MIN(')" class="template-card">
+                  <div class="flex items-center gap-2 mb-1"><span class="text-rose-400 font-mono font-bold text-sm">=MIN(</span></div>
+                  <p class="text-xs text-textGray">Nilai terendah</p>
+                </button>
+                <button onclick="applyFormulaStart('=COUNT(')" class="template-card">
+                  <div class="flex items-center gap-2 mb-1"><span class="text-purple-400 font-mono font-bold text-sm">=COUNT(</span></div>
+                  <p class="text-xs text-textGray">Hitung jumlah angka</p>
+                </button>
+                <button onclick="applyFormulaStart('=')" class="template-card">
+                  <div class="flex items-center gap-2 mb-1"><span class="text-brandGreen font-mono font-bold text-sm">=</span></div>
+                  <p class="text-xs text-textGray">Mulai rumus manual (mis. =B2+C2)</p>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ========== TAB 3: VIDEO ========== -->
+        <div id="video" class="tab-content hidden space-y-6">
+          <div class="bg-brandGray border border-red-500/20 rounded-3xl p-6 md:p-8 space-y-6">
+            <div class="flex items-center gap-3 border-b border-white/10 pb-4">
+              <div class="w-12 h-12 rounded-xl bg-red-500/10 flex items-center justify-center text-red-500 text-2xl font-bold border border-red-500/20 shrink-0"><i class="fa-brands fa-youtube"></i></div>
+              <div>
+                <h2 class="text-2xl md:text-3xl font-bold text-white">Belajar Excel dari Nol</h2>
+                <p class="text-base text-textGray">Klik bab di bawah untuk melompat ke menit tertentu.</p>
+              </div>
+            </div>
+
+            <div class="space-y-3">
+              <div class="aspect-video w-full rounded-2xl overflow-hidden bg-black border border-white/10 shadow-2xl relative"><div id="yt-player" class="w-full h-full"></div></div>
+              <div class="flex items-center justify-between text-xs text-textGray px-1">
+                <span class="flex items-center gap-2"><i class="fa-solid fa-circle-play text-red-500"></i><span>Sumber: YouTube</span></span>
+              </div>
+              <div class="bg-amber-500/5 border-l-4 border-amber-500 rounded-r-lg p-4 flex items-start gap-3 mt-4">
+                <i class="fa-solid fa-circle-info text-amber-400 mt-0.5"></i>
+                <p class="text-xs text-textGray">
+                  Video tutorial Excel akan ditampilkan di sini. Silakan isi <code class="text-amber-300">VIDEO_ID</code> di bagian script dengan ID video YouTube pilihan Anda. Daftar bab juga bisa disesuaikan.
+                </p>
+              </div>
+            </div>
+
+            <div class="border-t border-white/10 pt-6 space-y-4">
+              <div class="flex items-center justify-between flex-wrap gap-2">
+                <h3 class="text-xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-list-ol text-brandGreen"></i> Daftar Bab Video</h3>
+                <span class="text-xs text-textGray bg-white/5 border border-white/10 px-3 py-1.5 rounded-full" id="chapter-count">0 Bab</span>
+              </div>
+              <div id="chapters-list" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ========== TAB 4: LEMBAR KERJA ========== -->
+        <div id="lembarkerja" class="tab-content hidden space-y-6">
+          <div class="bg-gradient-to-br from-brandGreen/10 via-brandGray to-brandGray border border-brandGreen/30 rounded-3xl p-6 md:p-8">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brandGreen/15 border border-brandGreen/30 text-sm font-bold text-brandGreen mb-4">
+              <i class="fa-solid fa-clipboard-list"></i> Tahap Akhir • Lembar Kerja & Evaluasi
+            </div>
+            <h2 class="text-2xl md:text-4xl font-extrabold tracking-tight mb-3">Lembar Kerja, Evaluasi & Refleksi</h2>
+            <p class="text-textGray text-base md:text-lg max-w-3xl leading-relaxed">Selesaikan tiga tahap berikut secara berurutan untuk menutup modul ini. Kerjakan dengan jujur dan sungguh-sungguh ya! 💪</p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <a
+              href="lkpd.html"
+              class="group block bg-gradient-to-br from-amber-500/5 to-transparent border border-amber-500/30 rounded-2xl p-5 md:p-6 hover:border-amber-500/60 hover:bg-amber-500/10 transition-all duration-300 transform hover:-translate-y-1 relative overflow-hidden"
+            >
+              <div class="absolute top-4 right-4 w-9 h-9 rounded-full bg-amber-500/20 border-2 border-amber-500/50 flex items-center justify-center text-amber-400 font-bold text-sm">1</div>
+              <div class="w-14 h-14 rounded-2xl bg-amber-500/15 border border-amber-500/40 flex items-center justify-center mb-4"><i class="fa-solid fa-file-pen text-amber-400 text-2xl"></i></div>
+              <h4 class="text-lg font-bold text-white mb-2">LKPD</h4>
+              <p class="text-xs text-amber-400 font-bold uppercase tracking-wider mb-3">Lembar Kerja Peserta Didik</p>
+              <p class="text-sm text-textGray leading-relaxed mb-4">Praktik membuat tabel nilai, rumus, dan grafik.</p>
+              <div class="inline-flex items-center gap-2 text-sm font-bold text-amber-400 group-hover:gap-3 transition-all">Kerjakan LKPD <i class="fa-solid fa-arrow-right"></i></div>
+            </a>
+
+            <a
+              href="https://game-kuis-informatika.vercel.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="group block bg-gradient-to-br from-sky-500/5 to-transparent border border-sky-500/30 rounded-2xl p-5 md:p-6 hover:border-sky-500/60 hover:bg-sky-500/10 transition-all duration-300 transform hover:-translate-y-1 relative overflow-hidden"
+            >
+              <div class="absolute top-4 right-4 w-9 h-9 rounded-full bg-sky-500/20 border-2 border-sky-500/50 flex items-center justify-center text-sky-400 font-bold text-sm">2</div>
+              <div class="w-14 h-14 rounded-2xl bg-sky-500/15 border border-sky-500/40 flex items-center justify-center mb-4"><i class="fa-solid fa-gamepad text-sky-400 text-2xl"></i></div>
+              <div class="flex items-center gap-2 mb-2">
+                <h4 class="text-lg font-bold text-white">Post-Test</h4>
+                <span class="text-[10px] font-bold uppercase tracking-wider bg-brandGreen/20 text-brandGreen border border-brandGreen/40 px-2 py-0.5 rounded-full">🎮 Game</span>
+              </div>
+              <p class="text-xs text-sky-400 font-bold uppercase tracking-wider mb-3">Evaluasi Akhir Modul</p>
+              <p class="text-sm text-textGray leading-relaxed mb-4">Uji pemahamanmu dengan <strong class="text-white">kuis interaktif berbasis game</strong>.</p>
+              <div class="inline-flex items-center gap-2 text-sm font-bold text-sky-400 group-hover:gap-3 transition-all">Mulai Game Kuis <i class="fa-solid fa-arrow-right"></i></div>
+            </a>
+
+            <a
+              href="Materi_Excel/refleksi-excel.html"
+              class="group block bg-gradient-to-br from-purple-500/5 to-transparent border border-purple-500/30 rounded-2xl p-5 md:p-6 hover:border-purple-500/60 hover:bg-purple-500/10 transition-all duration-300 transform hover:-translate-y-1 relative overflow-hidden"
+            >
+              <div class="absolute top-4 right-4 w-9 h-9 rounded-full bg-purple-500/20 border-2 border-purple-500/50 flex items-center justify-center text-purple-400 font-bold text-sm">3</div>
+              <div class="w-14 h-14 rounded-2xl bg-purple-500/15 border border-purple-500/40 flex items-center justify-center mb-4"><i class="fa-solid fa-lightbulb text-purple-400 text-2xl"></i></div>
+              <h4 class="text-lg font-bold text-white mb-2">Refleksi</h4>
+              <p class="text-xs text-purple-400 font-bold uppercase tracking-widest mb-3">Refleksi Pembelajaran</p>
+              <p class="text-sm text-textGray leading-relaxed mb-4">Tuliskan kesan, kesulitan, dan hal menarik setelah mempelajari modul Excel.</p>
+              <div class="inline-flex items-center gap-2 text-sm font-bold text-purple-400 group-hover:gap-3 transition-all">Isi Refleksi <i class="fa-solid fa-arrow-right"></i></div>
+            </a>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container" style="max-width: 1280px; margin: 0 auto; padding: 0 24px">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <div class="footer-logo">
+              <div class="footer-logo-icon"><i class="fa-solid fa-code"></i></div>
+              <span class="footer-logo-text">RuangInformatika</span>
+            </div>
+            <p class="footer-desc">Platform e-learning interaktif modern yang dirancang untuk memfasilitasi gaya belajar visual dan praktik murid SMA Negeri 4 Yogyakarta.</p>
+          </div>
+          <div class="footer-col">
+            <h4 class="footer-heading">Pintasan Modul</h4>
+            <ul class="footer-links">
+              <li>
+                <a href="..//kisi.html" class="footer-link"><i class="fa-solid fa-chevron-right" style="font-size: 0.65rem"></i> Bedah Kisi-Kisi</a>
+              </li>
+              <li>
+                <a href="..//materi-bk.html" class="footer-link"><i class="fa-solid fa-chevron-right" style="font-size: 0.65rem"></i> Berpikir Komputasional</a>
+              </li>
+              <li>
+                <a href="..//materi-stack-queue.html" class="footer-link"><i class="fa-solid fa-chevron-right" style="font-size: 0.65rem"></i> Stack & Queue</a>
+              </li>
+              <li>
+                <a href="..//materi-search-sort.html" class="footer-link"><i class="fa-solid fa-chevron-right" style="font-size: 0.65rem"></i> Searching & Sorting</a>
+              </li>
+              <li>
+                <a href="materi.html" class="footer-link"><i class="fa-solid fa-chevron-right" style="font-size: 0.65rem"></i> Microsoft Excel</a>
+              </li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h4 class="footer-heading">Fitur & Dukungan</h4>
+            <ul class="footer-links">
+              <li>
+                <a href="..//leaderboard.html" class="footer-link"><i class="fa-solid fa-trophy" style="color: var(--amber)"></i> Leaderboard Kelas</a>
+              </li>
+              <li>
+                <a href="..//forum.html" class="footer-link"><i class="fa-solid fa-comments" style="color: var(--blue)"></i> Forum Diskusi</a>
+              </li>
+              <li>
+                <a href="https://wa.me/6285282386260?text=Halo%20Pak%20Ilyas%2C%20saya%20ingin%20bertanya%20tentang%20materi%20Informatika." target="_blank" class="footer-link"
+                  ><i class="fa-solid fa-chalkboard-user" style="color: var(--green)"></i> Hubungi Pak Ilyas</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p class="footer-copy">&copy; 2026 RuangInformatika. Dikembangkan untuk kelas Informatika XE6 SMA Negeri 4 Yogyakarta.</p>
+          <div class="footer-socials">
+            <a href="https://github.com/fandhi19" target="_blank" class="footer-social" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+            <a href="https://e-portofolio-fandhi.vercel.app/" target="_blank" class="footer-social" aria-label="Portfolio"><i class="fa-solid fa-globe"></i></a>
+            <a href="https://www.instagram.com/fandhidk17/" target="_blank" class="footer-social" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script src="https://www.youtube.com/iframe_api"></script>
+
+    <script>
+      /* Reading Progress */
+      window.addEventListener("scroll", () => {
+        const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrolled = (winScroll / height) * 100;
+        const p = document.getElementById("readProgress");
+        if (p) p.style.width = scrolled + "%";
+      });
+
+      /* Vanilla Tilt */
+      if (typeof VanillaTilt !== "undefined") {
+        VanillaTilt.init(document.querySelectorAll(".tilt-card"), { max: 6, speed: 400, glare: true, "max-glare": 0.15 });
+      }
+
+      /* TABS */
+      function openTab(evt, tabName) {
+        const tabContents = document.getElementsByClassName("tab-content");
+        for (let i = 0; i < tabContents.length; i++) {
+          tabContents[i].classList.add("hidden");
+          tabContents[i].classList.remove("block");
+        }
+        const tabBtns = document.getElementsByClassName("tab-btn");
+        for (let i = 0; i < tabBtns.length; i++) {
+          tabBtns[i].classList.remove("active", "purple");
+        }
+        document.getElementById(tabName).classList.remove("hidden");
+        document.getElementById(tabName).classList.add("block");
+        const activeBtn = evt ? evt.currentTarget : null;
+        if (activeBtn) {
+          activeBtn.classList.add("active");
+          if (tabName === "lembarkerja") activeBtn.classList.add("purple");
+        }
+        // Reposition fill handle when simulasi tab opens
+        if (tabName === "simulasi") setTimeout(() => positionFillHandle(), 60);
+      }
+
+      /* MOBILE MENU */
+      const hamburgerBtn = document.getElementById("hamburgerBtn");
+      const mobileMenu = document.getElementById("mobileMenu");
+      if (hamburgerBtn && mobileMenu) {
+        hamburgerBtn.addEventListener("click", function () {
+          mobileMenu.classList.toggle("open");
+          const icon = hamburgerBtn.querySelector("i");
+          icon.classList.toggle("fa-bars");
+          icon.classList.toggle("fa-xmark");
+        });
+        mobileMenu.querySelectorAll("a, button").forEach((item) => {
+          item.addEventListener("click", () => {
+            mobileMenu.classList.remove("open");
+            const icon = hamburgerBtn.querySelector("i");
+            icon.classList.add("fa-bars");
+            icon.classList.remove("fa-xmark");
+          });
+        });
+      }
+
+      /* ============================================================
+         SIMULASI: Mini Excel Interaktif
+         - Type-first, select-range
+         - Fill handle auto-copy rumus
+         ============================================================ */
+
+      const COL_LETTERS = ["A", "B", "C", "D", "E", "F", "G", "H"];
+      const NUM_COLS = 6;
+      const NUM_ROWS = 10;
+
+      let spreadsheetData = {};
+      let selectedCell = "A1";
+      let isEditingFormula = false;
+      let dragStart = null;
+      let dragEnd = null;
+      let isDragging = false;
+
+      // Fill handle state
+      let isFillDragging = false;
+      let fillDragStart = null;
+      let fillDragEnd = null;
+
+      function colLetter(idx) {
+        return COL_LETTERS[idx];
+      }
+      function cellId(colIdx, rowNum) {
+        return colLetter(colIdx) + rowNum;
+      }
+
+      function escapeHtml(s) {
+        return String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+      }
+
+      function initSpreadsheetData() {
+        spreadsheetData = {
+          A1: { raw: "Nama" },
+          B1: { raw: "MTK" },
+          C1: { raw: "B.Indo" },
+          D1: { raw: "Total" },
+          E1: { raw: "Rata-rata" },
+          A2: { raw: "Budi" },
+          B2: { raw: "85" },
+          C2: { raw: "80" },
+          A3: { raw: "Ani" },
+          B3: { raw: "92" },
+          C3: { raw: "88" },
+          A4: { raw: "Cici" },
+          B4: { raw: "78" },
+          C4: { raw: "85" },
+          A5: { raw: "Dodi" },
+          B5: { raw: "90" },
+          C5: { raw: "92" },
+          A6: { raw: "Eka" },
+          B6: { raw: "88" },
+          C6: { raw: "84" },
+        };
+      }
+
+      function parseRange(range) {
+        const m = range.match(/^([A-Z]+)(\d+):([A-Z]+)(\d+)$/);
+        if (!m) return [];
+        const sCol = COL_LETTERS.indexOf(m[1]);
+        const sRow = parseInt(m[2]);
+        const eCol = COL_LETTERS.indexOf(m[3]);
+        const eRow = parseInt(m[4]);
+        if (sCol === -1 || eCol === -1) return [];
+        const cells = [];
+        for (let r = Math.min(sRow, eRow); r <= Math.max(sRow, eRow); r++) {
+          for (let c = Math.min(sCol, eCol); c <= Math.max(sCol, eCol); c++) {
+            cells.push(cellId(c, r));
+          }
+        }
+        return cells;
+      }
+
+      function evalFormula(formula, getCellVal) {
+        let expr = formula.slice(1);
+
+        let prev;
+        let guard = 0;
+        do {
+          prev = expr;
+          expr = expr.replace(/\b(SUM|AVERAGE|MIN|MAX|COUNT)\(([A-Z]+\d+:[A-Z]+\d+)\)/gi, (match, fn, range) => {
+            const cells = parseRange(range);
+            const values = cells.map((c) => getCellVal(c)).filter((v) => typeof v === "number" && !isNaN(v));
+            const fnUp = fn.toUpperCase();
+            let result = 0;
+            if (fnUp === "SUM") result = values.reduce((a, b) => a + b, 0);
+            else if (fnUp === "AVERAGE") result = values.length ? values.reduce((a, b) => a + b, 0) / values.length : 0;
+            else if (fnUp === "MIN") result = values.length ? Math.min(...values) : 0;
+            else if (fnUp === "MAX") result = values.length ? Math.max(...values) : 0;
+            else if (fnUp === "COUNT") result = values.length;
+            return String(result);
+          });
+          guard++;
+        } while (expr !== prev && guard < 10);
+
+        expr = expr.replace(/\^/g, "**");
+
+        expr = expr.replace(/\b([A-Z]+)(\d+)\b/g, (m, col, row) => {
+          const id = col + row;
+          const v = getCellVal(id);
+          return typeof v === "number" && !isNaN(v) ? String(v) : "0";
+        });
+
+        if (!/^[\d\s+\-*/().]+$/.test(expr)) {
+          throw new Error("Rumus tidak valid");
+        }
+
+        try {
+          const fn = new Function('"use strict"; return (' + expr + ");");
+          const result = fn();
+          if (typeof result !== "number" || !isFinite(result)) throw new Error("Hasil tidak valid");
+          return result;
+        } catch (e) {
+          throw new Error("Rumus error");
+        }
+      }
+
+      function recalcAll() {
+        const memo = {};
+        const computing = new Set();
+
+        function compute(id) {
+          if (memo[id] !== undefined) return memo[id];
+          if (computing.has(id)) throw new Error("Referensi melingkar");
+          computing.add(id);
+
+          const cell = spreadsheetData[id];
+          let result = 0;
+
+          if (!cell) {
+            computing.delete(id);
+            memo[id] = 0;
+            return 0;
+          }
+
+          cell.error = null;
+
+          if (cell.raw.startsWith("=")) {
+            try {
+              result = evalFormula(cell.raw, compute);
+            } catch (e) {
+              cell.error = e.message;
+              result = 0;
+            }
+          } else {
+            const num = parseFloat(cell.raw);
+            result = isNaN(num) ? 0 : num;
+          }
+
+          computing.delete(id);
+          memo[id] = result;
+          return result;
+        }
+
+        Object.keys(spreadsheetData).forEach((id) => {
+          try {
+            const val = compute(id);
+            spreadsheetData[id].computed = val;
+          } catch (e) {
+            spreadsheetData[id].error = e.message;
+            spreadsheetData[id].computed = 0;
+          }
+        });
+      }
+
+      function getCellDisplay(id) {
+        const cell = spreadsheetData[id];
+        if (!cell) return "";
+        if (cell.error) return "#ERROR!";
+        if (cell.raw.startsWith("=")) {
+          const v = cell.computed;
+          if (typeof v === "number") {
+            return Number.isInteger(v) ? String(v) : v.toFixed(2);
+          }
+          return String(v);
+        }
+        return cell.raw;
+      }
+
+      function renderSpreadsheet() {
+        const table = document.getElementById("spreadsheet");
+        if (!table) return;
+
+        let html = '<thead><tr><th class="corner"></th>';
+        for (let c = 0; c < NUM_COLS; c++) {
+          html += `<th>${colLetter(c)}</th>`;
+        }
+        html += "</tr></thead><tbody>";
+
+        for (let r = 1; r <= NUM_ROWS; r++) {
+          html += `<tr><td class="row-header">${r}</td>`;
+          for (let c = 0; c < NUM_COLS; c++) {
+            const id = cellId(c, r);
+            const cell = spreadsheetData[id];
+            const display = getCellDisplay(id);
+            let cls = "cell";
+            if (cell && cell.error) cls += " cell-error";
+            else if (cell && cell.raw.startsWith("=")) cls += " cell-formula";
+            if (r === 1) cls += " cell-header";
+            html += `<td class="${cls}" data-cell="${id}">${escapeHtml(display)}</td>`;
+          }
+          html += "</tr>";
+        }
+        html += "</tbody>";
+        table.innerHTML = html;
+      }
+
+      function selectCell(id) {
+        selectedCell = id;
+        updateSelection();
+        updateFormulaBar();
+        positionFillHandle();
+      }
+
+      function updateSelection() {
+        document.querySelectorAll("#spreadsheet td.cell").forEach((td) => {
+          td.classList.toggle("cell-selected", td.dataset.cell === selectedCell);
+        });
+      }
+
+      function updateFormulaBar() {
+        const cell = spreadsheetData[selectedCell];
+        const addressEl = document.getElementById("cell-address");
+        if (addressEl) addressEl.textContent = selectedCell;
+        const input = document.getElementById("formula-input");
+        if (input && !isEditingFormula) input.value = cell ? cell.raw : "";
+      }
+
+      function setEditingMode(on) {
+        isEditingFormula = on;
+        const input = document.getElementById("formula-input");
+        const hint = document.getElementById("editing-hint");
+        if (input) input.classList.toggle("editing", on);
+        if (hint) hint.classList.toggle("show", on);
+        if (!on) clearRefHighlight();
+        positionFillHandle();
+      }
+
+      function setStatus(msg, type) {
+        const el = document.getElementById("sim-status");
+        if (!el) return;
+        if (type === "error") {
+          el.className = "text-sm font-semibold text-rose-400";
+          el.innerHTML = `<i class="fa-solid fa-circle-exclamation mr-1"></i> ${escapeHtml(msg)}`;
+        } else if (type === "info") {
+          el.className = "text-sm font-semibold text-gray-400";
+          el.innerHTML = `<i class="fa-solid fa-circle-info mr-1"></i> ${escapeHtml(msg)}`;
+        } else {
+          el.className = "text-sm font-semibold text-brandGreen";
+          el.innerHTML = `<i class="fa-solid fa-circle-check mr-1"></i> ${escapeHtml(msg)}`;
+        }
+      }
+
+      /* ============ RANGE SELECTION HELPERS ============ */
+
+      function getRangeCells(a, b) {
+        if (!a || !b) return [];
+        const colA = COL_LETTERS.indexOf(a.replace(/\d+$/, ""));
+        const rowA = parseInt(a.replace(/^[A-Z]+/, ""), 10);
+        const colB = COL_LETTERS.indexOf(b.replace(/\d+$/, ""));
+        const rowB = parseInt(b.replace(/^[A-Z]+/, ""), 10);
+        if (colA === -1 || colB === -1) return [];
+        const cells = [];
+        for (let r = Math.min(rowA, rowB); r <= Math.max(rowA, rowB); r++) {
+          for (let c = Math.min(colA, colB); c <= Math.max(colA, colB); c++) {
+            cells.push(cellId(c, r));
+          }
+        }
+        return cells;
+      }
+
+      function clearDragHighlight() {
+        document.querySelectorAll("#spreadsheet td.cell-in-range").forEach((el) => el.classList.remove("cell-in-range"));
+      }
+
+      function clearRefHighlight() {
+        document.querySelectorAll("#spreadsheet td.cell-ref-highlight").forEach((el) => el.classList.remove("cell-ref-highlight"));
+      }
+
+      function highlightDragRange() {
+        clearDragHighlight();
+        if (!dragStart || !dragEnd) return;
+        const cells = getRangeCells(dragStart, dragEnd);
+        cells.forEach((id) => {
+          const el = document.querySelector(`#spreadsheet td[data-cell="${id}"]`);
+          if (el) el.classList.add("cell-in-range");
+        });
+      }
+
+      function highlightRefRange(a, b) {
+        clearRefHighlight();
+        const cells = getRangeCells(a, b);
+        cells.forEach((id) => {
+          const el = document.querySelector(`#spreadsheet td[data-cell="${id}"]`);
+          if (el) el.classList.add("cell-ref-highlight");
+        });
+      }
+
+      function insertReferenceAtCursor(ref) {
+        const input = document.getElementById("formula-input");
+        if (!input) return;
+        const start = input.selectionStart ?? input.value.length;
+        const end = input.selectionEnd ?? input.value.length;
+        const val = input.value;
+        const before = val.slice(0, start);
+        const after = val.slice(end);
+        input.value = before + ref + after;
+        const newPos = start + ref.length;
+        input.setSelectionRange(newPos, newPos);
+        input.focus();
+      }
+
+      /* ============ CELL EVENTS ============ */
+
+      function attachSpreadsheetEvents() {
+        const table = document.getElementById("spreadsheet");
+        const input = document.getElementById("formula-input");
+        if (!table || !input) return;
+
+        table.addEventListener("mousedown", (e) => {
+          const td = e.target.closest("td.cell");
+          if (!td) return;
+          if (e.target.closest(".fill-handle")) return;
+
+          if (isEditingFormula) {
+            e.preventDefault();
+            isDragging = true;
+            dragStart = td.dataset.cell;
+            dragEnd = td.dataset.cell;
+            highlightDragRange();
+          } else {
+            selectCell(td.dataset.cell);
+          }
+        });
+
+        table.addEventListener("mouseover", (e) => {
+          if (!isDragging) return;
+          const td = e.target.closest("td.cell");
+          if (!td) return;
+          dragEnd = td.dataset.cell;
+          highlightDragRange();
+        });
+
+        document.addEventListener("mouseup", () => {
+          if (!isDragging) return;
+          isDragging = false;
+
+          if (dragStart && dragEnd) {
+            const ref = dragStart === dragEnd ? dragStart : dragStart + ":" + dragEnd;
+            insertReferenceAtCursor(ref);
+            clearDragHighlight();
+            highlightRefRange(dragStart, dragEnd);
+          }
+
+          dragStart = null;
+          dragEnd = null;
+        });
+
+        table.addEventListener("dblclick", (e) => {
+          const td = e.target.closest("td.cell");
+          if (!td) return;
+          selectCell(td.dataset.cell);
+          setEditingMode(true);
+          input.focus();
+          input.select();
+        });
+
+        input.addEventListener("focus", () => {
+          setEditingMode(true);
+        });
+
+        input.addEventListener("blur", () => {
+          setTimeout(() => {
+            if (!isDragging) setEditingMode(false);
+          }, 100);
+        });
+
+        input.addEventListener("keydown", (e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            commitCell();
+            setEditingMode(false);
+            moveSelection(0, 1);
+          } else if (e.key === "Tab") {
+            e.preventDefault();
+            commitCell();
+            setEditingMode(false);
+            moveSelection(1, 0);
+          } else if (e.key === "Escape") {
+            setEditingMode(false);
+            updateFormulaBar();
+            input.blur();
+          }
+        });
+
+        document.addEventListener("keydown", (e) => {
+          const active = document.activeElement;
+          if (active && active.id === "formula-input") return;
+          const simEl = document.getElementById("simulasi");
+          if (!simEl || simEl.classList.contains("hidden")) return;
+          const inSim = active && active.closest && active.closest("#simulasi");
+          if (!inSim && e.target !== document.body) return;
+
+          if (e.key === "ArrowUp") {
+            e.preventDefault();
+            moveSelection(0, -1);
+          } else if (e.key === "ArrowDown") {
+            e.preventDefault();
+            moveSelection(0, 1);
+          } else if (e.key === "ArrowLeft") {
+            e.preventDefault();
+            moveSelection(-1, 0);
+          } else if (e.key === "ArrowRight") {
+            e.preventDefault();
+            moveSelection(1, 0);
+          } else if (e.key === "Enter" && selectedCell) {
+            e.preventDefault();
+            setEditingMode(true);
+            input.focus();
+            input.select();
+          } else if (/^[a-zA-Z0-9=]$/.test(e.key)) {
+            setEditingMode(true);
+            input.focus();
+          }
+        });
+      }
+
+      function commitCell() {
+        const input = document.getElementById("formula-input");
+        if (!input) return;
+        const val = input.value.trim();
+
+        if (val === "") {
+          delete spreadsheetData[selectedCell];
+          setStatus(`Cell ${selectedCell} dikosongkan`, "info");
+        } else {
+          spreadsheetData[selectedCell] = { raw: val };
+          recalcAll();
+          const cell = spreadsheetData[selectedCell];
+          if (cell.error) {
+            setStatus(`Error di ${selectedCell}: ${cell.error}`, "error");
+          } else {
+            const display = getCellDisplay(selectedCell);
+            setStatus(`${selectedCell} = ${display}`, "success");
+          }
+        }
+
+        renderSpreadsheet();
+        updateSelection();
+        updateFormulaBar();
+        positionFillHandle();
+      }
+
+      function moveSelection(dx, dy) {
+        const colIdx = COL_LETTERS.indexOf(selectedCell.replace(/\d+$/, ""));
+        const rowNum = parseInt(selectedCell.replace(/^[A-Z]+/, ""), 10);
+        let newCol = colIdx + dx;
+        let newRow = rowNum + dy;
+        if (newCol < 0) newCol = 0;
+        if (newCol >= NUM_COLS) newCol = NUM_COLS - 1;
+        if (newRow < 1) newRow = 1;
+        if (newRow > NUM_ROWS) newRow = NUM_ROWS;
+        selectCell(cellId(newCol, newRow));
+      }
+
+      function applyFormulaStart(prefix) {
+        setEditingMode(true);
+        const input = document.getElementById("formula-input");
+        if (!input) return;
+        input.value = prefix;
+        input.focus();
+        input.setSelectionRange(prefix.length, prefix.length);
+        setStatus("Ketik rumus, lalu seret cell di grid untuk pilih range", "info");
+      }
+
+      function resetMiniExcel() {
+        if (!confirm("Reset data ke kondisi awal? Semua rumusmu akan hilang.")) return;
+        initSpreadsheetData();
+        selectedCell = "A1";
+        isEditingFormula = false;
+        recalcAll();
+        renderSpreadsheet();
+        updateSelection();
+        updateFormulaBar();
+        setEditingMode(false);
+        positionFillHandle();
+        setStatus("Data direset ke kondisi awal", "success");
+      }
+
+      /* ============================================================
+         FILL HANDLE — Auto-copy rumus dengan relative reference
+         ============================================================ */
+
+      function positionFillHandle() {
+        const handle = document.getElementById("fill-handle");
+        const inner = document.querySelector(".mini-excel-grid .grid-inner");
+        const td = document.querySelector(`#spreadsheet td[data-cell="${selectedCell}"]`);
+        if (!handle || !inner || !td) {
+          if (handle) handle.classList.remove("visible");
+          return;
+        }
+        if (isEditingFormula) {
+          handle.classList.remove("visible");
+          return;
+        }
+        const tdRect = td.getBoundingClientRect();
+        const innerRect = inner.getBoundingClientRect();
+        const size = 8;
+        handle.style.left = tdRect.right - innerRect.left - size / 2 + "px";
+        handle.style.top = tdRect.bottom - innerRect.top - size / 2 + "px";
+        handle.classList.add("visible");
+      }
+
+      function adjustFormula(formula, dx, dy) {
+        if (!formula.startsWith("=")) return formula;
+        return formula.replace(/\b([A-Z]+)(\d+)\b/g, (match, col, row) => {
+          const colIdx = COL_LETTERS.indexOf(col);
+          if (colIdx === -1) return match;
+          const rowNum = parseInt(row, 10);
+          const newColIdx = colIdx + dx;
+          const newRow = rowNum + dy;
+          if (newColIdx < 0 || newColIdx >= NUM_COLS || newRow < 1 || newRow > NUM_ROWS) return match;
+          return COL_LETTERS[newColIdx] + newRow;
+        });
+      }
+
+      function showFillPreview() {
+        document.querySelectorAll("#spreadsheet td.cell-fill-preview").forEach((el) => el.classList.remove("cell-fill-preview"));
+        if (!fillDragStart || !fillDragEnd || fillDragStart === fillDragEnd) return;
+        const cells = getRangeCells(fillDragStart, fillDragEnd);
+        cells.forEach((id) => {
+          if (id === fillDragStart) return;
+          const el = document.querySelector(`#spreadsheet td[data-cell="${id}"]`);
+          if (el) el.classList.add("cell-fill-preview");
+        });
+      }
+
+      function hideFillPreview() {
+        document.querySelectorAll("#spreadsheet td.cell-fill-preview").forEach((el) => el.classList.remove("cell-fill-preview"));
+      }
+
+      function applyFill() {
+        if (!fillDragStart || !fillDragEnd || fillDragStart === fillDragEnd) return;
+        const srcCell = spreadsheetData[fillDragStart];
+        if (!srcCell) {
+          setStatus("Cell sumber kosong — tidak ada yang bisa di-copy", "info");
+          return;
+        }
+
+        const srcColIdx = COL_LETTERS.indexOf(fillDragStart.replace(/\d+$/, ""));
+        const srcRowNum = parseInt(fillDragStart.replace(/^[A-Z]+/, ""), 10);
+
+        const cells = getRangeCells(fillDragStart, fillDragEnd);
+        let count = 0;
+
+        cells.forEach((id) => {
+          if (id === fillDragStart) return;
+          const colIdx = COL_LETTERS.indexOf(id.replace(/\d+$/, ""));
+          const rowNum = parseInt(id.replace(/^[A-Z]+/, ""), 10);
+          const dx = colIdx - srcColIdx;
+          const dy = rowNum - srcRowNum;
+
+          if (srcCell.raw.startsWith("=")) {
+            spreadsheetData[id] = { raw: adjustFormula(srcCell.raw, dx, dy) };
+          } else {
+            spreadsheetData[id] = { raw: srcCell.raw };
+          }
+          count++;
+        });
+
+        recalcAll();
+        renderSpreadsheet();
+        updateSelection();
+        positionFillHandle();
+        setStatus(`✨ Rumus di-copy otomatis ke ${count} cell!`, "success");
+      }
+
+      function initFillHandle() {
+        const handle = document.getElementById("fill-handle");
+        if (!handle) return;
+
+        handle.addEventListener("pointerdown", (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          if (!spreadsheetData[selectedCell]) {
+            setStatus("Cell kosong — tidak ada yang bisa di-copy", "info");
+            return;
+          }
+          isFillDragging = true;
+          fillDragStart = selectedCell;
+          fillDragEnd = selectedCell;
+          try {
+            handle.setPointerCapture(e.pointerId);
+          } catch (_) {}
+          setStatus("🎯 Seret ke bawah untuk copy rumus...", "info");
+        });
+
+        document.addEventListener("pointermove", (e) => {
+          if (!isFillDragging) return;
+          const el = document.elementFromPoint(e.clientX, e.clientY);
+          const td = el && el.closest && el.closest("#spreadsheet td.cell");
+          if (!td) return;
+          fillDragEnd = td.dataset.cell;
+          showFillPreview();
+        });
+
+        document.addEventListener("pointerup", () => {
+          if (!isFillDragging) return;
+          isFillDragging = false;
+          applyFill();
+          hideFillPreview();
+          fillDragStart = null;
+          fillDragEnd = null;
+        });
+
+        document.addEventListener("pointercancel", () => {
+          if (!isFillDragging) return;
+          isFillDragging = false;
+          hideFillPreview();
+          fillDragStart = null;
+          fillDragEnd = null;
+        });
+      }
+
+      function initMiniExcel() {
+        initSpreadsheetData();
+        selectedCell = "A1";
+        recalcAll();
+        renderSpreadsheet();
+        updateSelection();
+        updateFormulaBar();
+        attachSpreadsheetEvents();
+        initFillHandle();
+        setTimeout(() => positionFillHandle(), 100);
+      }
+
+      /* ============================================================
+         VIDEO PLAYER (placeholder)
+         ============================================================ */
+      const VIDEO_ID = "";
+      const CHAPTERS = [
+        { time: 0, label: "00:00", title: "Pengenalan Excel", desc: "Antarmuka dan bagian-bagian Excel" },
+        { time: 60, label: "01:00", title: "Membuat Folder & Tabel", desc: "Langkah membuat tabel data terstruktur" },
+        { time: 180, label: "03:00", title: "Rumus Dasar", desc: "Operator, SUM, AVERAGE, MIN, MAX, COUNT" },
+        { time: 300, label: "05:00", title: "Membuat Grafik", desc: "Insert Chart & kustomisasi" },
+      ];
+
+      let ytPlayer = null;
+      let activeChapterIndex = -1;
+
+      function renderChapters() {
+        const listEl = document.getElementById("chapters-list");
+        if (!listEl) return;
+        document.getElementById("chapter-count").textContent = CHAPTERS.length + " Bab";
+        listEl.innerHTML = "";
+        CHAPTERS.forEach((ch, idx) => {
+          const item = document.createElement("div");
+          item.className = "chapter-item";
+          item.onclick = () => jumpToChapter(idx);
+          item.innerHTML = `<span class="chapter-time">${ch.label}</span><div class="flex-1 min-w-0"><div class="chapter-title text-sm font-bold text-white leading-tight">${ch.title}</div><div class="text-xs text-textGray mt-1 leading-snug">${ch.desc}</div></div>`;
+          listEl.appendChild(item);
+        });
+      }
+
+      function jumpToChapter(idx) {
+        const ch = CHAPTERS[idx];
+        if (!ch || !ytPlayer || typeof ytPlayer.seekTo !== "function") return;
+        ytPlayer.seekTo(ch.time, true);
+        ytPlayer.playVideo();
+        highlightChapter(idx);
+      }
+
+      function highlightChapter(idx) {
+        document.querySelectorAll(".chapter-item").forEach((el, i) => {
+          el.classList.toggle("active", i === idx);
+        });
+        activeChapterIndex = idx;
+      }
+
+      function onYouTubeIframeAPIReady() {
+        if (!VIDEO_ID) {
+          const el = document.getElementById("yt-player");
+          if (el) el.innerHTML = '<div class="flex items-center justify-center h-full text-textGray text-sm p-8 text-center">📺 Video tutorial akan ditampilkan di sini setelah VIDEO_ID diisi di script.</div>';
+          renderChapters();
+          return;
+        }
+        ytPlayer = new YT.Player("yt-player", {
+          videoId: VIDEO_ID,
+          playerVars: { rel: 0, modestbranding: 1, playsinline: 1, origin: window.location.origin },
+          events: {
+            onReady: (event) => {
+              try {
+                event.target.setVolume(80);
+              } catch (_) {}
+              renderChapters();
+            },
+          },
+        });
+      }
+      window.onYouTubeIframeAPIReady = onYouTubeIframeAPIReady;
+
+      /* Reveal */
+      const revealObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("visible");
+              revealObserver.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.1 },
+      );
+      document.querySelectorAll(".reveal").forEach((el) => revealObserver.observe(el));
+
+      /* Init on load */
+      document.addEventListener("DOMContentLoaded", () => {
+        initMiniExcel();
+        renderChapters();
+      });
+
+      if (document.readyState === "interactive" || document.readyState === "complete") {
+        initMiniExcel();
+        renderChapters();
+      }
+
+      window.addEventListener("resize", () => {
+        if (!isEditingFormula) positionFillHandle();
+      });
+    </script>
+  </body>
+</html>

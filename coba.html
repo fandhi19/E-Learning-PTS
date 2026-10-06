@@ -1,0 +1,1401 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RuangInformatika — Platform Persiapan PTS Informatika PATBHE</title>
+    <meta name="description" content="Platform e-learning interaktif modern kelas XE6 SMA Negeri 4 Yogyakarta. Kuasai Berpikir Komputasional, Stack & Queue, serta Algoritma Searching & Sorting." />
+
+    <!-- Fonts: Poppins for modern geometric look -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet" />
+
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <style>
+      :root {
+        /* Color Palette based on reference */
+        --primary: #8b5cf6; /* Bright Purple */
+        --primary-hover: #7c3aed;
+        --secondary: #06b6d4; /* Cyan */
+        --accent: #f43f5e; /* Rose */
+
+        /* Dark Theme (Hero & Footer) */
+        --bg-dark: #0f172a; /* Slate 900 */
+        --bg-darker: #020617; /* Slate 950 */
+        --text-dark-main: #f8fafc;
+        --text-dark-muted: #94a3b8;
+        --border-dark: rgba(255, 255, 255, 0.1);
+
+        /* Light Theme (Content) */
+        --bg-light: #f8fafc; /* Slate 50 */
+        --bg-white: #ffffff;
+        --text-light-main: #1e293b; /* Slate 800 */
+        --text-light-muted: #64748b; /* Slate 500 */
+        --border-light: #e2e8f0;
+
+        /* Layout & Spacing */
+        --radius-xl: 1.5rem;
+        --radius-lg: 1rem;
+        --radius-md: 0.75rem;
+        --radius-sm: 0.5rem;
+        --container: 1200px;
+
+        /* Shadows */
+        --shadow-card: 0 10px 40px -10px rgba(0, 0, 0, 0.08);
+        --shadow-hover: 0 20px 40px -10px rgba(139, 92, 246, 0.15);
+        --shadow-glow: 0 0 20px rgba(139, 92, 246, 0.4);
+
+        /* Typography */
+        --font-sans: "Poppins", sans-serif;
+        --font-mono: "Fira Code", monospace;
+
+        /* Transitions */
+        --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        font-family: var(--font-sans);
+        background-color: var(--bg-light);
+        color: var(--text-light-main);
+        line-height: 1.6;
+        overflow-x: hidden;
+      }
+
+      a {
+        text-decoration: none;
+        color: inherit;
+      }
+
+      ul {
+        list-style: none;
+      }
+
+      .container {
+        max-width: var(--container);
+        margin: 0 auto;
+        padding: 0 24px;
+      }
+
+      /* Typography Utilities */
+      .gradient-text {
+        background: linear-gradient(135deg, var(--secondary), var(--primary));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      /* Buttons */
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 12px 24px;
+        border-radius: 99px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        transition: var(--transition);
+        cursor: pointer;
+        border: none;
+      }
+
+      .btn-primary {
+        background: var(--primary);
+        color: white;
+        box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+      }
+
+      .btn-primary:hover {
+        background: var(--primary-hover);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
+      }
+
+      .btn-outline {
+        background: transparent;
+        color: var(--text-dark-main);
+        border: 2px solid var(--border-dark);
+        backdrop-filter: blur(10px);
+      }
+
+      /* Light mode outline button */
+      .bg-white .btn-outline {
+        color: var(--text-light-main);
+        border-color: var(--border-light);
+      }
+
+      .btn-outline:hover {
+        border-color: var(--primary);
+        color: var(--primary);
+        background: rgba(139, 92, 246, 0.05);
+      }
+
+      /* Navbar */
+      .navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1000;
+        background: rgba(15, 23, 42, 0.8);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--border-dark);
+        transition: var(--transition);
+      }
+
+      .navbar.scrolled {
+        padding: 10px 0;
+        background: rgba(255, 255, 255, 0.9);
+        border-bottom: 1px solid var(--border-light);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      }
+
+      .navbar.scrolled .nav-logo,
+      .navbar.scrolled .nav-link,
+      .navbar.scrolled .nav-badge,
+      .navbar.scrolled .hamburger {
+        color: var(--text-light-main);
+      }
+
+      .navbar-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 80px;
+      }
+
+      .nav-logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--text-dark-main);
+      }
+
+      .nav-logo-icon {
+        width: 36px;
+        height: 36px;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1rem;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 32px;
+      }
+
+      .nav-link {
+        color: var(--text-dark-muted);
+        font-weight: 500;
+        font-size: 0.95rem;
+        transition: var(--transition);
+        position: relative;
+      }
+
+      .nav-link:hover,
+      .nav-link.active {
+        color: var(--primary);
+      }
+
+      .nav-link.active::after {
+        content: "";
+        position: absolute;
+        bottom: -6px;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: var(--primary);
+        border-radius: 2px;
+      }
+
+      .nav-actions {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+
+      .nav-badge {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 16px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--border-dark);
+        border-radius: 99px;
+        color: var(--text-dark-main);
+        font-size: 0.85rem;
+        font-weight: 600;
+      }
+
+      .hamburger {
+        display: none;
+        background: none;
+        border: none;
+        color: var(--text-dark-main);
+        font-size: 1.5rem;
+        cursor: pointer;
+      }
+
+      @media (max-width: 992px) {
+        .nav-links,
+        .nav-badge {
+          display: none;
+        }
+        .hamburger {
+          display: block;
+        }
+      }
+
+      /* Hero Section */
+      .hero {
+        background: var(--bg-dark);
+        position: relative;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        padding-top: 80px;
+        overflow: hidden;
+      }
+
+      /* Abstract Background Elements */
+      .bg-glow {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(80px);
+        z-index: 0;
+        opacity: 0.5;
+      }
+      .glow-1 {
+        top: 10%;
+        left: -10%;
+        width: 500px;
+        height: 500px;
+        background: rgba(139, 92, 246, 0.3); /* Purple */
+      }
+      .glow-2 {
+        bottom: -10%;
+        right: -10%;
+        width: 600px;
+        height: 600px;
+        background: rgba(6, 182, 212, 0.2); /* Cyan */
+      }
+
+      .hero-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+        align-items: center;
+        position: relative;
+        z-index: 10;
+      }
+
+      @media (max-width: 992px) {
+        .hero-grid {
+          grid-template-columns: 1fr;
+          text-align: center;
+          padding: 60px 0;
+        }
+      }
+
+      .hero-content {
+        padding-right: 20px;
+      }
+      @media (max-width: 992px) {
+        .hero-content {
+          padding-right: 0;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+      }
+
+      .student-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 16px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 99px;
+        color: var(--text-dark-main);
+        font-size: 0.85rem;
+        margin-bottom: 24px;
+        backdrop-filter: blur(10px);
+      }
+
+      .student-badge i {
+        color: var(--secondary);
+      }
+
+      .hero-title {
+        font-size: clamp(2.5rem, 5vw, 4rem);
+        font-weight: 800;
+        line-height: 1.1;
+        color: var(--text-dark-main);
+        margin-bottom: 20px;
+        letter-spacing: -1px;
+      }
+
+      .hero-desc {
+        font-size: 1.1rem;
+        color: var(--text-dark-muted);
+        margin-bottom: 32px;
+        max-width: 500px;
+        line-height: 1.7;
+      }
+
+      @media (max-width: 992px) {
+        .hero-desc {
+          max-width: 100%;
+        }
+      }
+
+      .hero-actions {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+      @media (max-width: 992px) {
+        .hero-actions {
+          justify-content: center;
+        }
+      }
+
+      /* Hero Visual / Floating Elements */
+      .hero-visual {
+        position: relative;
+        height: 500px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .floating-card {
+        background: rgba(20, 30, 50, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(20px);
+        border-radius: var(--radius-xl);
+        padding: 24px;
+        width: 100%;
+        max-width: 450px;
+        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+        animation: float 6s ease-in-out infinite;
+        position: relative;
+        z-index: 2;
+      }
+
+      .float-badge {
+        position: absolute;
+        background: var(--primary);
+        color: white;
+        padding: 10px 15px;
+        border-radius: var(--radius-md);
+        font-weight: 600;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: var(--shadow-glow);
+        z-index: 3;
+      }
+
+      .badge-1 {
+        top: -20px;
+        right: -20px;
+        animation: float 5s ease-in-out infinite reverse;
+      }
+      .badge-2 {
+        bottom: 30px;
+        left: -30px;
+        background: var(--bg-white);
+        color: var(--text-light-main);
+        animation: float 7s ease-in-out infinite 1s;
+      }
+
+      @keyframes float {
+        0% {
+          transform: translateY(0px);
+        }
+        50% {
+          transform: translateY(-20px);
+        }
+        100% {
+          transform: translateY(0px);
+        }
+      }
+
+      /* Terminal inside floating card */
+      .mini-terminal {
+        font-family: var(--font-mono);
+        font-size: 0.85rem;
+        color: #a8b2d1;
+      }
+      .mac-dots {
+        display: flex;
+        gap: 6px;
+        margin-bottom: 16px;
+      }
+      .mac-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+      }
+      .dot-r {
+        background: #ff5f56;
+      }
+      .dot-y {
+        background: #ffbd2e;
+      }
+      .dot-g {
+        background: #27c93f;
+      }
+
+      .code-line {
+        margin-bottom: 8px;
+      }
+      .c-purple {
+        color: #c678dd;
+      }
+      .c-blue {
+        color: #61afef;
+      }
+      .c-green {
+        color: #98c379;
+      }
+      .c-yellow {
+        color: #e5c07b;
+      }
+
+      /* Stats Section */
+      .stats-section {
+        background: var(--bg-white);
+        padding: 60px 0;
+        margin-top: -40px;
+        position: relative;
+        z-index: 20;
+        border-radius: 40px 40px 0 0;
+        box-shadow: 0 -20px 40px rgba(0, 0, 0, 0.05);
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 24px;
+      }
+
+      @media (max-width: 768px) {
+        .stats-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      .stat-card {
+        background: var(--bg-light);
+        border: 1px solid var(--border-light);
+        border-radius: var(--radius-lg);
+        padding: 24px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        transition: var(--transition);
+      }
+      .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-card);
+        border-color: var(--primary);
+      }
+
+      .stat-icon {
+        width: 50px;
+        height: 50px;
+        background: rgba(139, 92, 246, 0.1);
+        color: var(--primary);
+        border-radius: var(--radius-md);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+      }
+
+      .stat-info h3 {
+        font-size: 1.8rem;
+        font-weight: 800;
+        color: var(--text-light-main);
+        line-height: 1.2;
+      }
+      .stat-info p {
+        font-size: 0.85rem;
+        color: var(--text-light-muted);
+        font-weight: 500;
+      }
+
+      /* Tech Stack / Topics */
+      .topics-section {
+        background: var(--bg-white);
+        padding: 40px 0 80px;
+        text-align: center;
+      }
+      .section-subtitle {
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: var(--primary);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 12px;
+        display: block;
+      }
+      .section-title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: var(--text-light-main);
+        margin-bottom: 40px;
+      }
+
+      .topics-grid {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 16px;
+      }
+
+      .topic-pill {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        padding: 16px 24px;
+        background: var(--bg-light);
+        border: 1px solid var(--border-light);
+        border-radius: var(--radius-lg);
+        min-width: 120px;
+        transition: var(--transition);
+      }
+      .topic-pill:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-card);
+        border-color: var(--secondary);
+      }
+      .topic-pill i {
+        font-size: 2rem;
+        color: var(--text-light-main);
+      }
+      .topic-pill span {
+        font-size: 0.9rem;
+        font-weight: 600;
+      }
+
+      /* Modules Bento Grid */
+      .modules-section {
+        background: var(--bg-light);
+        padding: 100px 0;
+      }
+
+      .bento-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 30px;
+      }
+
+      @media (max-width: 1024px) {
+        .bento-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      @media (max-width: 768px) {
+        .bento-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .bento-card {
+        background: var(--bg-white);
+        border-radius: var(--radius-xl);
+        overflow: hidden;
+        border: 1px solid var(--border-light);
+        box-shadow: var(--shadow-card);
+        transition: var(--transition);
+        display: flex;
+        flex-direction: column;
+      }
+
+      .bento-card:hover {
+        transform: translateY(-8px);
+        box-shadow: var(--shadow-hover);
+      }
+
+      /* Span classes for specific grid layouts if needed */
+      .span-2 {
+        grid-column: span 2;
+      }
+      @media (max-width: 768px) {
+        .span-2 {
+          grid-column: span 1;
+        }
+      }
+
+      .card-visual {
+        height: 180px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+      }
+      .card-visual i {
+        font-size: 4rem;
+        color: rgba(255, 255, 255, 0.9);
+        z-index: 2;
+        transition: transform 0.5s ease;
+      }
+      .bento-card:hover .card-visual i {
+        transform: scale(1.1);
+      }
+
+      /* Gradients for module cards */
+      .grad-1 {
+        background: linear-gradient(135deg, #8b5cf6, #d946ef);
+      }
+      .grad-2 {
+        background: linear-gradient(135deg, #0ea5e9, #10b981);
+      }
+      .grad-3 {
+        background: linear-gradient(135deg, #f59e0b, #ef4444);
+      }
+      .grad-4 {
+        background: linear-gradient(135deg, #6366f1, #a855f7);
+      }
+      .grad-5 {
+        background: linear-gradient(135deg, #14b8a6, #3b82f6);
+      }
+      .grad-6 {
+        background: linear-gradient(135deg, #ec4899, #8b5cf6);
+      }
+
+      .card-content {
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+      }
+
+      .card-tags {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 16px;
+        flex-wrap: wrap;
+      }
+
+      .tag {
+        padding: 4px 12px;
+        border-radius: 99px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        background: var(--bg-light);
+        color: var(--text-light-muted);
+        border: 1px solid var(--border-light);
+      }
+      .tag.highlight {
+        background: rgba(139, 92, 246, 0.1);
+        color: var(--primary);
+        border-color: rgba(139, 92, 246, 0.2);
+      }
+
+      .card-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin-bottom: 12px;
+        color: var(--text-light-main);
+      }
+
+      .card-desc {
+        font-size: 0.9rem;
+        color: var(--text-light-muted);
+        margin-bottom: 24px;
+        flex-grow: 1;
+      }
+
+      .card-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-top: 1px solid var(--border-light);
+        padding-top: 16px;
+      }
+
+      .card-link {
+        color: var(--primary);
+        font-weight: 600;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        transition: gap 0.2s;
+      }
+      .bento-card:hover .card-link {
+        gap: 8px;
+      }
+
+      /* Features / Why Choose Us */
+      .features-section {
+        background: var(--bg-white);
+        padding: 100px 0;
+      }
+
+      .features-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 40px;
+        margin-top: 50px;
+      }
+
+      @media (max-width: 768px) {
+        .features-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .feature-box {
+        text-align: center;
+        padding: 40px 24px;
+        background: var(--bg-light);
+        border-radius: var(--radius-xl);
+        border: 1px solid var(--border-light);
+        transition: var(--transition);
+      }
+      .feature-box:hover {
+        background: var(--bg-white);
+        box-shadow: var(--shadow-card);
+        transform: translateY(-5px);
+      }
+
+      .feature-icon {
+        width: 70px;
+        height: 70px;
+        background: rgba(6, 182, 212, 0.1);
+        color: var(--secondary);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.8rem;
+        margin: 0 auto 20px;
+      }
+
+      .feature-box h3 {
+        font-size: 1.2rem;
+        margin-bottom: 12px;
+      }
+      .feature-box p {
+        font-size: 0.9rem;
+        color: var(--text-light-muted);
+      }
+
+      /* Call to Action Banner */
+      .cta-section {
+        padding: 0 0 100px;
+        background: var(--bg-white);
+      }
+
+      .cta-banner {
+        background: linear-gradient(135deg, var(--bg-dark), var(--bg-darker));
+        border-radius: var(--radius-xl);
+        padding: 60px 40px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 20px 40px rgba(15, 23, 42, 0.2);
+      }
+
+      .cta-banner::before {
+        content: "";
+        position: absolute;
+        top: -50%;
+        left: -10%;
+        width: 300px;
+        height: 300px;
+        background: var(--primary);
+        filter: blur(100px);
+        opacity: 0.3;
+      }
+
+      .cta-title {
+        color: white;
+        font-size: 2.2rem;
+        font-weight: 800;
+        margin-bottom: 16px;
+        position: relative;
+        z-index: 2;
+      }
+      .cta-desc {
+        color: var(--text-dark-muted);
+        margin-bottom: 32px;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+        position: relative;
+        z-index: 2;
+      }
+
+      /* Footer */
+      footer {
+        background: var(--bg-darker);
+        color: var(--text-dark-muted);
+        padding: 80px 0 30px;
+        border-top: 1px solid var(--border-dark);
+      }
+
+      .footer-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr;
+        gap: 60px;
+        margin-bottom: 60px;
+      }
+
+      @media (max-width: 768px) {
+        .footer-grid {
+          grid-template-columns: 1fr;
+          gap: 40px;
+        }
+      }
+
+      .footer-brand h2 {
+        color: var(--text-dark-main);
+        font-size: 1.5rem;
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .footer-brand p {
+        font-size: 0.9rem;
+        max-width: 400px;
+        margin-bottom: 24px;
+      }
+
+      .footer-title {
+        color: var(--text-dark-main);
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 20px;
+      }
+
+      .footer-links li {
+        margin-bottom: 12px;
+      }
+      .footer-links a {
+        font-size: 0.9rem;
+        transition: var(--transition);
+      }
+      .footer-links a:hover {
+        color: var(--primary);
+        padding-left: 5px;
+      }
+
+      .footer-bottom {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 30px;
+        border-top: 1px solid var(--border-dark);
+        font-size: 0.85rem;
+      }
+
+      .social-links {
+        display: flex;
+        gap: 16px;
+      }
+      .social-links a {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.05);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: var(--transition);
+        color: white;
+      }
+      .social-links a:hover {
+        background: var(--primary);
+        transform: translateY(-3px);
+      }
+
+      @media (max-width: 768px) {
+        .footer-bottom {
+          flex-direction: column;
+          gap: 20px;
+          text-align: center;
+        }
+      }
+
+      /* Animations */
+      .reveal {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 0.8s ease-out;
+      }
+      .reveal.active {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* Mobile Menu */
+      .mobile-menu {
+        position: fixed;
+        top: 80px;
+        left: -100%;
+        width: 100%;
+        height: calc(100vh - 80px);
+        background: var(--bg-dark);
+        padding: 40px 24px;
+        transition: var(--transition);
+        z-index: 999;
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+      }
+      .mobile-menu.active {
+        left: 0;
+      }
+      .mobile-link {
+        font-size: 1.2rem;
+        color: var(--text-dark-main);
+        font-weight: 600;
+        padding-bottom: 16px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar" id="navbar">
+      <div class="container navbar-inner">
+        <a href="index.html" class="nav-logo">
+          <div class="nav-logo-icon"><i class="fa-solid fa-code"></i></div>
+          RuangInformatika
+        </a>
+
+        <div class="nav-links">
+          <a href="#hero" class="nav-link active">Beranda</a>
+          <a href="#modul" class="nav-link">Modul</a>
+          <a href="#fitur" class="nav-link">Fitur</a>
+          <a href="leaderboard.html" class="nav-link">Leaderboard</a>
+        </div>
+
+        <div class="nav-actions">
+          <div class="nav-badge"><i class="fa-solid fa-graduation-cap" style="color: var(--secondary)"></i> Kelas XE6</div>
+          <a href="#modul" class="btn btn-primary" style="padding: 8px 16px; font-size: 0.85rem">Mulai Belajar</a>
+          <button class="hamburger" id="hamburger">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobile-menu">
+      <a href="#hero" class="mobile-link">Beranda</a>
+      <a href="#modul" class="mobile-link">Daftar Modul</a>
+      <a href="#fitur" class="mobile-link">Fitur Platform</a>
+      <a href="leaderboard.html" class="mobile-link">Leaderboard Kelas</a>
+      <a href="forum.html" class="mobile-link">Forum Diskusi</a>
+    </div>
+
+    <!-- Hero Section -->
+    <header id="hero" class="hero">
+      <div class="bg-glow glow-1"></div>
+      <div class="bg-glow glow-2"></div>
+
+      <div class="container hero-grid">
+        <!-- Left Text Content -->
+        <div class="hero-content reveal">
+          <div class="student-badge"><i class="fa-solid fa-rocket"></i> Persiapan PTS PATBHE 2026</div>
+
+          <h1 class="hero-title">
+            Hi, Saya Murid XE6<br />
+            Siap <span class="gradient-text">Taklukkan Logika</span>
+          </h1>
+
+          <p class="hero-desc">Platform e-learning modern untuk menguasai Berpikir Komputasional, struktur data Stack & Queue, serta algoritma Searching & Sorting dengan cara interaktif dan menyenangkan.</p>
+
+          <div class="hero-actions">
+            <a href="#modul" class="btn btn-primary"> Eksplorasi Modul <i class="fa-solid fa-arrow-right"></i> </a>
+            <a href="kisi.html" class="btn btn-outline"> <i class="fa-regular fa-file-lines"></i> Bedah Kisi-kisi </a>
+          </div>
+        </div>
+
+        <!-- Right Visual / Code Card -->
+        <div class="hero-visual reveal">
+          <div class="float-badge badge-1"><i class="fa-brands fa-js"></i> Logic.js</div>
+          <div class="float-badge badge-2"><i class="fa-solid fa-check-double" style="color: #10b981"></i> 100% Siap Ujian</div>
+
+          <div class="floating-card">
+            <div class="mini-terminal">
+              <div class="mac-dots">
+                <div class="mac-dot dot-r"></div>
+                <div class="mac-dot dot-y"></div>
+                <div class="mac-dot dot-g"></div>
+              </div>
+              <div class="code-line"><span class="c-purple">const</span> <span class="c-blue">student</span> = {</div>
+              <div class="code-line">&nbsp;&nbsp;class: <span class="c-green">'XE6 SMAN 4 YK'</span>,</div>
+              <div class="code-line">&nbsp;&nbsp;status: <span class="c-green">'Learning'</span>,</div>
+              <div class="code-line">&nbsp;&nbsp;skills: [<span class="c-green">'Decomp'</span>, <span class="c-green">'Pattern'</span>, <span class="c-green">'Alg'</span>]</div>
+              <div class="code-line">};</div>
+              <br />
+              <div class="code-line"><span class="c-purple">function</span> <span class="c-blue">facePTS</span>() {</div>
+              <div class="code-line">&nbsp;&nbsp;<span class="c-purple">if</span> (student.skills.length > <span class="c-yellow">2</span>) {</div>
+              <div class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="c-blue">console</span>.log(<span class="c-green">'Ready for score 100! 🚀'</span>);</div>
+              <div class="code-line">&nbsp;&nbsp;}</div>
+              <div class="code-line">}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Stats Section -->
+    <section class="stats-section">
+      <div class="container">
+        <div class="stats-grid reveal">
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fa-solid fa-folder-open"></i></div>
+            <div class="stat-info">
+              <h3>6+</h3>
+              <p>Modul Belajar</p>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background: rgba(6, 182, 212, 0.1); color: var(--secondary)"><i class="fa-solid fa-medal"></i></div>
+            <div class="stat-info">
+              <h3>100%</h3>
+              <p>Fokus Kisi-kisi</p>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background: rgba(244, 63, 94, 0.1); color: var(--accent)"><i class="fa-solid fa-desktop"></i></div>
+            <div class="stat-info">
+              <h3>24/7</h3>
+              <p>Akses Simulasi</p>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background: rgba(16, 185, 129, 0.1); color: #10b981"><i class="fa-solid fa-users"></i></div>
+            <div class="stat-info">
+              <h3>XE6</h3>
+              <p>Kelas Terintegrasi</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Technologies / Topics Section -->
+    <section class="topics-section">
+      <div class="container reveal">
+        <span class="section-subtitle">Materi Inti</span>
+        <h2 class="section-title">Topik Yang Dipelajari</h2>
+
+        <div class="topics-grid">
+          <div class="topic-pill">
+            <i class="fa-solid fa-brain" style="color: #ec4899"></i>
+            <span>Dekomposisi</span>
+          </div>
+          <div class="topic-pill">
+            <i class="fa-solid fa-shapes" style="color: #8b5cf6"></i>
+            <span>Pola Data</span>
+          </div>
+          <div class="topic-pill">
+            <i class="fa-solid fa-layer-group" style="color: #3b82f6"></i>
+            <span>Stack (LIFO)</span>
+          </div>
+          <div class="topic-pill">
+            <i class="fa-solid fa-people-arrows" style="color: #10b981"></i>
+            <span>Queue (FIFO)</span>
+          </div>
+          <div class="topic-pill">
+            <i class="fa-solid fa-magnifying-glass" style="color: #f59e0b"></i>
+            <span>Searching</span>
+          </div>
+          <div class="topic-pill">
+            <i class="fa-solid fa-sort-amount-down" style="color: #ef4444"></i>
+            <span>Sorting</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Modules / Recent Work Section -->
+    <section id="modul" class="modules-section">
+      <div class="container">
+        <div style="text-align: center; margin-bottom: 50px" class="reveal">
+          <span class="section-subtitle">Daftar Modul</span>
+          <h2 class="section-title" style="margin-bottom: 10px">Pilih Materi Belajarmu</h2>
+          <p style="color: var(--text-light-muted); max-width: 600px; margin: 0 auto">Pahami konsep teori dan praktiknya melalui simulasi interaktif yang disediakan pada setiap modul.</p>
+        </div>
+
+        <div class="bento-grid">
+          <!-- Modul 1 -->
+          <div class="bento-card reveal">
+            <div class="card-visual grad-1">
+              <i class="fa-solid fa-lightbulb"></i>
+            </div>
+            <div class="card-content">
+              <div class="card-tags">
+                <span class="tag highlight">Fondasi</span>
+                <span class="tag">Logika</span>
+              </div>
+              <h3 class="card-title">Berpikir Komputasional</h3>
+              <p class="card-desc">Kuasai 4 pilar utama penyelesaian masalah: Dekomposisi, Pengenalan Pola, Abstraksi, dan Algoritma.</p>
+              <div class="card-footer">
+                <span style="font-size: 0.8rem; color: var(--text-light-muted)"><i class="fa-regular fa-clock"></i> 20 Menit</span>
+                <a href="modul.bk.html" class="card-link">Mulai <i class="fa-solid fa-arrow-right"></i></a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Modul 2 -->
+          <div class="bento-card reveal" style="transition-delay: 100ms">
+            <div class="card-visual grad-2">
+              <i class="fa-solid fa-cubes-stacked"></i>
+            </div>
+            <div class="card-content">
+              <div class="card-tags">
+                <span class="tag highlight">Struktur Data</span>
+                <span class="tag">Visual</span>
+              </div>
+              <h3 class="card-title">Stack & Queue</h3>
+              <p class="card-desc">Pelajari perbedaan tumpukan (LIFO) dan antrean (FIFO) lengkap dengan visualisasi animasi Push & Pop.</p>
+              <div class="card-footer">
+                <span style="font-size: 0.8rem; color: var(--text-light-muted)"><i class="fa-regular fa-clock"></i> 25 Menit</span>
+                <a href="materi-stack-queue.html" class="card-link">Mulai <i class="fa-solid fa-arrow-right"></i></a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Modul 3 (Wide) -->
+          <div class="bento-card span-2 reveal" style="transition-delay: 200ms">
+            <div class="card-visual grad-3" style="height: 220px">
+              <i class="fa-solid fa-chart-bar"></i>
+            </div>
+            <div class="card-content">
+              <div class="card-tags">
+                <span class="tag highlight" style="background: rgba(245, 158, 11, 0.1); color: #d97706; border-color: rgba(245, 158, 11, 0.2)">Materi Terpenting PTS</span>
+                <span class="tag">Algoritma Standar</span>
+              </div>
+              <h3 class="card-title">Algoritma Searching & Sorting</h3>
+              <p class="card-desc">
+                Pahami Linear Search, Binary Search, Bubble Sort, hingga Insertion Sort. Dilengkapi visualizer interaktif langkah-demi-langkah sehingga kamu dapat melihat perpindahan elemen data secara langsung di layar.
+              </p>
+              <div class="card-footer">
+                <span style="font-size: 0.8rem; color: var(--text-light-muted)"><i class="fa-solid fa-star" style="color: #fbbf24"></i> Visualizer Aktif</span>
+                <a href="materi-search-sort.html" class="btn btn-primary" style="padding: 8px 20px; font-size: 0.85rem">Buka Modul</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Modul 4 -->
+          <div class="bento-card reveal">
+            <div class="card-visual grad-4">
+              <i class="fa-solid fa-diagram-project"></i>
+            </div>
+            <div class="card-content">
+              <div class="card-tags">
+                <span class="tag">Flowchart</span>
+              </div>
+              <h3 class="card-title">Algoritma Pemrograman</h3>
+              <p class="card-desc">Konstruksi algoritma terstruktur menggunakan diagram alir, simbol standar, dan kondisi percabangan.</p>
+              <div class="card-footer">
+                <span style="font-size: 0.8rem; color: var(--text-light-muted)"><i class="fa-regular fa-clock"></i> 15 Menit</span>
+                <a href="Materi_AP/materi-algoritma.html" class="card-link">Mulai <i class="fa-solid fa-arrow-right"></i></a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Modul 5 -->
+          <div class="bento-card reveal">
+            <div class="card-visual grad-5">
+              <i class="fa-solid fa-terminal"></i>
+            </div>
+            <div class="card-content">
+              <div class="card-tags">
+                <span class="tag">C++ Basic</span>
+              </div>
+              <h3 class="card-title">Pseudocode & Coding</h3>
+              <p class="card-desc">Latih menuangkan notasi algoritmik semu dan mentranslasikannya ke kode sumber C++ nyata.</p>
+              <div class="card-footer">
+                <span style="font-size: 0.8rem; color: var(--text-light-muted)"><i class="fa-regular fa-clock"></i> 20 Menit</span>
+                <a href="Materi_PS/materi.html" class="card-link">Mulai <i class="fa-solid fa-arrow-right"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Testimonial / Features -->
+    <section id="fitur" class="features-section">
+      <div class="container">
+        <div style="text-align: center" class="reveal">
+          <span class="section-subtitle">Mengapa RuangInformatika?</span>
+          <h2 class="section-title">Belajar Lebih Interaktif</h2>
+        </div>
+
+        <div class="features-grid">
+          <div class="feature-box reveal">
+            <div class="feature-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+            <h3>Visualisasi Data</h3>
+            <p>Bukan sekadar teks membosankan. Kamu bisa melihat data bergerak dan algoritma bekerja secara real-time di layar.</p>
+          </div>
+          <div class="feature-box reveal" style="transition-delay: 100ms">
+            <div class="feature-icon" style="background: rgba(139, 92, 246, 0.1); color: var(--primary)"><i class="fa-solid fa-trophy"></i></div>
+            <h3>Live Leaderboard</h3>
+            <p>Setiap keaktifan dan skor latihan langsung tercatat pada papan peringkat kelas XE6 untuk memacu semangat kompetisi.</p>
+          </div>
+          <div class="feature-box reveal" style="transition-delay: 200ms">
+            <div class="feature-icon" style="background: rgba(244, 63, 94, 0.1); color: var(--accent)"><i class="fa-solid fa-comments"></i></div>
+            <h3>Forum Diskusi</h3>
+            <p>Bingung dengan soal logika tertentu? Ajukan di Forum Diskusi dan bahas langsung bersama teman atau guru.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+      <div class="container">
+        <div class="cta-banner reveal">
+          <h2 class="cta-title">Siap Hadapi Ujian Informatika?</h2>
+          <p class="cta-desc">Jangan tunggu H-1! Mulai latihan dari modul Berpikir Komputasional sekarang dan pastikan kamu meraih nilai maksimal di PTS PATBHE.</p>
+          <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap">
+            <a href="materi-bk.html" class="btn btn-primary" style="background: white; color: var(--bg-dark)"> Mulai Modul 1 </a>
+            <a href="leaderboard.html" class="btn btn-outline" style="border-color: rgba(255, 255, 255, 0.3); color: white"> <i class="fa-solid fa-ranking-star"></i> Cek Peringkat </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <h2>
+              <div class="nav-logo-icon" style="width: 30px; height: 30px; font-size: 0.8rem"><i class="fa-solid fa-code"></i></div>
+              RuangInformatika
+            </h2>
+            <p>Platform e-learning interaktif modern kelas XE6 SMA Negeri 4 Yogyakarta. Dibangun untuk mempermudah pemahaman logika komputasi.</p>
+          </div>
+
+          <div>
+            <h3 class="footer-title">Akses Cepat</h3>
+            <ul class="footer-links">
+              <li><a href="kisi.html">Bedah Kisi-Kisi</a></li>
+              <li><a href="materi-bk.html">Berpikir Komputasional</a></li>
+              <li><a href="materi-stack-queue.html">Stack & Queue</a></li>
+              <li><a href="materi-search-sort.html">Searching & Sorting</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 class="footer-title">Hubungi Kami</h3>
+            <ul class="footer-links">
+              <li>
+                <a href="forum.html"><i class="fa-solid fa-comments"></i> Forum Diskusi</a>
+              </li>
+              <li>
+                <a href="leaderboard.html"><i class="fa-solid fa-trophy"></i> Leaderboard</a>
+              </li>
+              <li>
+                <a href="https://wa.me/6285282386260" target="_blank"><i class="fa-brands fa-whatsapp"></i> Chat Pak Ilyas</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="footer-bottom">
+          <p>&copy; 2026 RuangInformatika - Kelas XE6 SMAN 4 YK.</p>
+          <div class="social-links">
+            <a href="https://github.com/fandhi19" target="_blank"><i class="fa-brands fa-github"></i></a>
+            <a href="https://www.instagram.com/fandhidk17/" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+            <a href="https://e-portofolio-fandhi.vercel.app/" target="_blank"><i class="fa-solid fa-globe"></i></a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+      // Navbar scroll effect
+      const navbar = document.getElementById("navbar");
+      window.addEventListener("scroll", () => {
+        if (window.scrollY > 50) {
+          navbar.classList.add("scrolled");
+        } else {
+          navbar.classList.remove("scrolled");
+        }
+      });
+
+      // Mobile Menu Toggle
+      const hamburger = document.getElementById("hamburger");
+      const mobileMenu = document.getElementById("mobile-menu");
+      const mobileLinks = document.querySelectorAll(".mobile-link");
+
+      hamburger.addEventListener("click", () => {
+        mobileMenu.classList.toggle("active");
+        const icon = hamburger.querySelector("i");
+        if (mobileMenu.classList.contains("active")) {
+          icon.classList.remove("fa-bars");
+          icon.classList.add("fa-xmark");
+        } else {
+          icon.classList.remove("fa-xmark");
+          icon.classList.add("fa-bars");
+        }
+      });
+
+      mobileLinks.forEach((link) => {
+        link.addEventListener("click", () => {
+          mobileMenu.classList.remove("active");
+          hamburger.querySelector("i").classList.remove("fa-xmark");
+          hamburger.querySelector("i").classList.add("fa-bars");
+        });
+      });
+
+      // Scroll Reveal Animation
+      function reveal() {
+        var reveals = document.querySelectorAll(".reveal");
+        for (var i = 0; i < reveals.length; i++) {
+          var windowHeight = window.innerHeight;
+          var elementTop = reveals[i].getBoundingClientRect().top;
+          var elementVisible = 100;
+
+          if (elementTop < windowHeight - elementVisible) {
+            reveals[i].classList.add("active");
+          }
+        }
+      }
+      window.addEventListener("scroll", reveal);
+      // Trigger once on load
+      reveal();
+    </script>
+  </body>
+</html>
