@@ -1,0 +1,1807 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Post-Test: Microsoft Excel — RuangInformatika</title>
+    <link rel="shortcut icon" href="../images/Logo Patbhe.png" type="image/x-icon" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ["Plus Jakarta Sans", "sans-serif"],
+              mono: ["JetBrains Mono", "ui-monospace", "monospace"],
+            },
+            colors: {
+              brandDark: "#080c10",
+              brandGray: "#111820",
+              brandGreen: "#00e676",
+              textGray: "#8896a7",
+            },
+          },
+        },
+      };
+    </script>
+
+    <link rel="stylesheet" href="../style.css" />
+
+    <style>
+      .tilt-card {
+        transform-style: preserve-3d;
+      }
+      .tilt-card-content {
+        transform: translateZ(30px);
+      }
+      main {
+        background: transparent;
+      }
+
+      /* ── Reading Progress ── */
+      #readProgress {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #00e676, #38bdf8);
+        z-index: 999;
+        transition: width 0.1s ease-out;
+        width: 0%;
+        box-shadow: 0 0 12px rgba(0, 230, 118, 0.5);
+      }
+
+      /* ── Page Hero ── */
+      .page-hero {
+        position: relative;
+        padding: 64px 0 40px;
+        overflow: hidden;
+      }
+      .page-hero-glow {
+        position: absolute;
+        top: -100px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 700px;
+        height: 400px;
+        background: radial-gradient(ellipse, rgba(0, 230, 118, 0.12) 0%, rgba(16, 185, 129, 0.05) 40%, transparent 70%);
+        filter: blur(40px);
+        pointer-events: none;
+      }
+      .page-hero-inner {
+        max-width: 1024px;
+        margin: 0 auto;
+        padding: 0 24px;
+        position: relative;
+        z-index: 10;
+      }
+      .page-hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 14px;
+        border-radius: 999px;
+        background: rgba(0, 230, 118, 0.1);
+        border: 1px solid rgba(0, 230, 118, 0.3);
+        font-size: 0.78rem;
+        font-weight: 700;
+        color: #00e676;
+        margin-bottom: 18px;
+        backdrop-filter: blur(8px);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
+      .page-hero-title {
+        font-size: clamp(2rem, 4.5vw, 3rem);
+        font-weight: 800;
+        line-height: 1.15;
+        letter-spacing: -0.03em;
+        margin-bottom: 16px;
+      }
+      .page-hero-title .gradient-text-green {
+        background: linear-gradient(135deg, #00e676 0%, #34d399 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .page-hero-desc {
+        font-size: 1rem;
+        line-height: 1.7;
+        color: var(--text-muted);
+        max-width: 640px;
+      }
+
+      /* ── Question Card ── */
+      .question-card {
+        transition: all 0.3s ease;
+      }
+      .question-card.correct {
+        border-color: rgba(0, 230, 118, 0.6) !important;
+        background: rgba(0, 230, 118, 0.05) !important;
+      }
+      .question-card.wrong {
+        border-color: rgba(244, 63, 94, 0.6) !important;
+        background: rgba(244, 63, 94, 0.05) !important;
+      }
+
+      /* ── Option Label ── */
+      .option-label {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 14px 16px;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: rgba(255, 255, 255, 0.02);
+        cursor: pointer;
+        transition: all 0.2s ease;
+        user-select: none;
+      }
+      .option-label:hover {
+        background: rgba(0, 230, 118, 0.05);
+        border-color: rgba(0, 230, 118, 0.3);
+      }
+      .option-label input[type="radio"] {
+        display: none;
+      }
+      .option-label .option-marker {
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        border: 2px solid rgba(255, 255, 255, 0.25);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        margin-top: 1px;
+        font-size: 11px;
+        font-weight: 700;
+        color: transparent;
+        transition: all 0.2s ease;
+      }
+      .option-label input[type="radio"]:checked ~ .option-marker {
+        border-color: #00e676;
+        background: #00e676;
+        color: #080c10;
+      }
+      .option-label.selected {
+        background: rgba(0, 230, 118, 0.08);
+        border-color: rgba(0, 230, 118, 0.5);
+      }
+      .option-label.disabled {
+        cursor: not-allowed;
+        pointer-events: none;
+      }
+      .option-label.review-correct {
+        background: rgba(0, 230, 118, 0.1) !important;
+        border-color: rgba(0, 230, 118, 0.5) !important;
+      }
+      .option-label.review-correct .option-marker {
+        background: #00e676;
+        border-color: #00e676;
+        color: #080c10;
+      }
+      .option-label.review-wrong {
+        background: rgba(244, 63, 94, 0.1) !important;
+        border-color: rgba(244, 63, 94, 0.5) !important;
+      }
+      .option-label.review-wrong .option-marker {
+        background: #f43f5e;
+        border-color: #f43f5e;
+        color: white;
+      }
+
+      .progress-bar-fill {
+        transition: width 0.4s ease;
+      }
+
+      /* ── Mini table & Formula chip ── */
+      .mini-table {
+        background: #0d1117;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        overflow: hidden;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 11px;
+        display: inline-block;
+      }
+      .mini-table table {
+        border-collapse: collapse;
+      }
+      .mini-table th,
+      .mini-table td {
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 5px 9px;
+        text-align: center;
+      }
+      .mini-table th {
+        background: rgba(0, 230, 118, 0.15);
+        color: #00e676;
+        font-weight: 700;
+        font-size: 10px;
+      }
+      .mini-table td.header-col {
+        background: rgba(255, 255, 255, 0.04);
+        color: #8896a7;
+        font-weight: 700;
+        font-size: 10px;
+      }
+      .mini-table td.value {
+        color: #d1d5db;
+      }
+      .mini-table td.highlight {
+        background: rgba(251, 191, 36, 0.1);
+        color: #fbbf24;
+        font-weight: 700;
+      }
+      .formula-chip {
+        display: inline-block;
+        padding: 3px 10px;
+        background: rgba(0, 0, 0, 0.4);
+        border: 1px solid rgba(251, 191, 36, 0.3);
+        border-radius: 6px;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.88em;
+        color: #fbbf24;
+        font-weight: 700;
+        margin: 0 2px;
+      }
+
+      /* ── Animations ── */
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(15px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .fade-in-up {
+        animation: fadeInUp 0.5s ease forwards;
+      }
+
+      @keyframes scorePulse {
+        0% {
+          transform: scale(0.8);
+          opacity: 0;
+        }
+        50% {
+          transform: scale(1.05);
+        }
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+      .score-pulse {
+        animation: scorePulse 0.6s ease forwards;
+      }
+
+      @keyframes spin {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      .spinner {
+        animation: spin 1s linear infinite;
+      }
+
+      /* ═══════════════════════════════════════════
+         NEW: SLIDE TRANSITIONS FOR QUESTIONS
+         ═══════════════════════════════════════════ */
+      @keyframes slideInRight {
+        from {
+          opacity: 0;
+          transform: translateX(50px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+      @keyframes slideInLeft {
+        from {
+          opacity: 0;
+          transform: translateX(-50px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+      .slide-in-right {
+        animation: slideInRight 0.35s cubic-bezier(0.22, 0.61, 0.36, 1);
+      }
+      .slide-in-left {
+        animation: slideInLeft 0.35s cubic-bezier(0.22, 0.61, 0.36, 1);
+      }
+
+      /* ═══════════════════════════════════════════
+         NEW: TIMER WIDGET (Top-Right Corner)
+         ═══════════════════════════════════════════ */
+      #timer-widget {
+        transition: all 0.3s ease;
+      }
+      .timer-safe {
+        color: #00e676;
+        border-color: rgba(0, 230, 118, 0.4) !important;
+        background: rgba(0, 230, 118, 0.08) !important;
+      }
+      .timer-warning {
+        color: #fbbf24;
+        border-color: rgba(251, 191, 36, 0.5) !important;
+        background: rgba(251, 191, 36, 0.08) !important;
+      }
+      .timer-danger {
+        color: #f43f5e;
+        border-color: rgba(244, 63, 94, 0.6) !important;
+        background: rgba(244, 63, 94, 0.1) !important;
+        animation: timerPulse 1s ease-in-out infinite;
+      }
+      @keyframes timerPulse {
+        0%,
+        100% {
+          box-shadow: 0 0 0 0 rgba(244, 63, 94, 0.6);
+        }
+        50% {
+          box-shadow: 0 0 0 10px rgba(244, 63, 94, 0);
+        }
+      }
+
+      /* ═══════════════════════════════════════════
+         NEW: PROGRESS BAR PULSE (near end)
+         ═══════════════════════════════════════════ */
+      @keyframes progressPulse {
+        0%,
+        100% {
+          box-shadow: 0 0 6px rgba(0, 230, 118, 0.4);
+        }
+        50% {
+          box-shadow: 0 0 18px rgba(0, 230, 118, 0.85);
+        }
+      }
+      .progress-pulse {
+        animation: progressPulse 1.5s ease-in-out infinite;
+      }
+
+      /* ═══════════════════════════════════════════
+         NEW: ANTI-CHEAT (disable selection/copy)
+         ═══════════════════════════════════════════ */
+      body.quiz-active {
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        -webkit-touch-callout: none;
+      }
+      body.quiz-active input,
+      body.quiz-active textarea {
+        -webkit-user-select: text !important;
+        user-select: text !important;
+      }
+
+      #copy-toast {
+        position: fixed;
+        bottom: 24px;
+        left: 50%;
+        transform: translateX(-50%) translateY(120px);
+        background: rgba(244, 63, 94, 0.95);
+        color: white;
+        padding: 12px 20px;
+        border-radius: 12px;
+        font-size: 14px;
+        font-weight: 600;
+        box-shadow: 0 10px 30px rgba(244, 63, 94, 0.4);
+        z-index: 9998;
+        opacity: 0;
+        transition: all 0.3s ease;
+        pointer-events: none;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        max-width: 90vw;
+      }
+      #copy-toast.show {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+
+      /* ═══════════════════════════════════════════
+         NEW: CHEAT WARNING OVERLAY
+         ═══════════════════════════════════════════ */
+      #cheat-warning {
+        backdrop-filter: blur(10px);
+      }
+      @keyframes warningShake {
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+        20% {
+          transform: translateX(-8px);
+        }
+        40% {
+          transform: translateX(8px);
+        }
+        60% {
+          transform: translateX(-5px);
+        }
+        80% {
+          transform: translateX(5px);
+        }
+      }
+      .warning-shake {
+        animation: warningShake 0.5s ease;
+      }
+
+      /* ═══════════════════════════════════════════
+         NEW: VIOLATION BADGE
+         ═══════════════════════════════════════════ */
+      .violation-badge {
+        transition: all 0.3s ease;
+      }
+      .violation-badge.pulse {
+        animation: violationPulse 0.6s ease;
+      }
+      @keyframes violationPulse {
+        0% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.25);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+
+      /* ═══════════════════════════════════════════
+         MOBILE RESPONSIVE
+         ═══════════════════════════════════════════ */
+      @media (max-width: 640px) {
+        body {
+          font-size: 1rem;
+        }
+        h1 {
+          font-size: 1.875rem !important;
+          line-height: 1.2 !important;
+        }
+        h2 {
+          font-size: 1.5rem !important;
+        }
+        h3 {
+          font-size: 1.25rem !important;
+        }
+        .mini-table {
+          font-size: 10px;
+        }
+        .mini-table th,
+        .mini-table td {
+          padding: 4px 6px;
+        }
+        #timer-widget {
+          transform: scale(0.9);
+          transform-origin: top right;
+        }
+      }
+    </style>
+  </head>
+
+  <body class="bg-grid text-white font-sans antialiased overflow-x-hidden flex flex-col min-h-screen">
+    <div id="readProgress"></div>
+
+    <!-- ═══════════════ NAVIGATION ═══════════════ -->
+    <nav class="navbar">
+      <div class="navbar-inner">
+        <a href="../index.html" class="navbar-logo">
+          <div class="navbar-logo-icon"><i class="fa-solid fa-code"></i></div>
+          <span class="navbar-logo-text">RuangInformatika</span>
+        </a>
+        <div class="navbar-links">
+          <a href="../index.html" class="nav-link">Dashboard</a>
+          <a href="../index.html#materi" class="nav-link">Daftar Modul</a>
+          <a href="../leaderboard.html" class="nav-link">Leaderboard</a>
+          <a href="../forum.html" class="nav-link">Forum Diskusi</a>
+        </div>
+        <a href="../materi-excel.html" class="nav-badge" style="text-decoration: none"><i class="fa-solid fa-arrow-left"></i> Kembali</a>
+        <button class="hamburger-btn" id="hamburgerBtn" aria-label="Menu">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+      <div class="mobile-menu" id="mobileMenu">
+        <a href="../index.html" class="mobile-nav-link"><i class="fa-solid fa-house" style="margin-right: 10px"></i> Dashboard</a>
+        <a href="../index.html#materi" class="mobile-nav-link"><i class="fa-solid fa-book-open" style="margin-right: 10px"></i> Daftar Modul</a>
+        <a href="../leaderboard.html" class="mobile-nav-link"><i class="fa-solid fa-trophy" style="margin-right: 10px"></i> Leaderboard</a>
+        <a href="../forum.html" class="mobile-nav-link"><i class="fa-solid fa-comments" style="margin-right: 10px"></i> Forum Diskusi</a>
+        <a href="../materi-excel.html" class="mobile-nav-link"><i class="fa-solid fa-arrow-left" style="margin-right: 10px"></i> Kembali ke Modul Excel</a>
+        <div style="padding: 12px 16px">
+          <button class="nav-badge" style="width: 100%; justify-content: center"><i class="fa-solid fa-chalkboard-user"></i> Kelas XE6 — SMAN 4 Yogyakarta</button>
+        </div>
+      </div>
+    </nav>
+
+    <div class="flex-grow relative">
+      <!-- ═══════════════ PAGE HERO ═══════════════ -->
+      <header class="page-hero">
+        <div class="page-hero-glow"></div>
+        <div class="page-hero-inner">
+          <div class="reveal fade-in-up">
+            <div class="page-hero-badge"><i class="fa-solid fa-clipboard-check"></i> Tahap Akhir • Post-Test Excel</div>
+            <h1 class="page-hero-title">Post-Test<br /><span class="gradient-text-green">Microsoft Excel</span></h1>
+            <p class="page-hero-desc">Ukur kembali pemahamanmu setelah praktik langsung di Excel. Kerjakan dengan jujur — hasil ini untuk melihat perkembanganmu!</p>
+          </div>
+        </div>
+      </header>
+
+      <main class="max-w-4xl mx-auto px-6 pb-12 relative z-10">
+        <!-- ════════════════════════════════════════════════
+             SECTION 1: FORM IDENTITAS
+             ════════════════════════════════════════════════ -->
+        <div id="posttest-form-section" class="space-y-6">
+          <div class="reveal fade-in-up bg-gradient-to-br from-emerald-500/10 via-brandGray to-brandGray border border-emerald-500/30 rounded-3xl p-6 md:p-8">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-sm font-bold text-emerald-400 mb-4">
+              <i class="fa-solid fa-clipboard-check"></i> Tahap Akhir • Post-Test Excel
+            </div>
+            <h2 class="text-2xl md:text-3xl font-bold tracking-tight mb-3">Uji Pemahaman Excel-mu</h2>
+            <p class="text-textGray text-base md:text-lg max-w-2xl leading-relaxed">Jawab <strong class="text-white">10 soal</strong> tentang rumus dasar, IF, COUNTIF, referensi sel, dan jenis grafik yang sudah kamu praktikkan di LKPD.</p>
+          </div>
+
+          <div class="reveal fade-in-up bg-brandGray border border-white/5 rounded-3xl p-6 md:p-8">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-xl bg-brandGreen/10 border border-brandGreen/25 flex items-center justify-center text-brandGreen text-lg shrink-0"><i class="fa-solid fa-list-ol"></i></div>
+                <div>
+                  <p class="text-xs text-textGray uppercase tracking-wider font-bold">Jumlah Soal</p>
+                  <p class="text-white font-bold">10 Pilihan Ganda</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-xl bg-sky-500/10 border border-sky-500/25 flex items-center justify-center text-sky-400 text-lg shrink-0"><i class="fa-solid fa-clock"></i></div>
+                <div>
+                  <p class="text-xs text-textGray uppercase tracking-wider font-bold">Estimasi Waktu</p>
+                  <p class="text-white font-bold">±10 Menit</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-xl bg-purple-500/10 border border-purple-500/25 flex items-center justify-center text-purple-400 text-lg shrink-0"><i class="fa-solid fa-star-half-stroke"></i></div>
+                <div>
+                  <p class="text-xs text-textGray uppercase tracking-wider font-bold">Penilaian</p>
+                  <p class="text-white font-bold">10 Poin / Soal</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Anti-Cheat Notice -->
+          <div class="reveal fade-in-up bg-rose-500/5 border border-rose-500/30 rounded-2xl p-5">
+            <div class="flex items-start gap-3">
+              <div class="w-10 h-10 rounded-xl bg-rose-500/15 border border-rose-500/30 flex items-center justify-center text-rose-400 shrink-0">
+                <i class="fa-solid fa-shield-halved"></i>
+              </div>
+              <div class="flex-1">
+                <h4 class="text-white font-bold mb-1">Mode Ujian Terproteksi Aktif</h4>
+                <ul class="text-xs md:text-sm text-textGray space-y-1 leading-relaxed">
+                  <li><i class="fa-solid fa-circle-check text-rose-400 mr-1"></i> Soal & pilihan diacak setiap kali tes dimulai</li>
+                  <li><i class="fa-solid fa-circle-check text-rose-400 mr-1"></i> Berpindah tab 3× akan <strong class="text-white">otomatis mengumpulkan</strong> jawaban</li>
+                  <li><i class="fa-solid fa-circle-check text-rose-400 mr-1"></i> Waktu habis (10 menit) → submit otomatis</li>
+                  <li><i class="fa-solid fa-circle-check text-rose-400 mr-1"></i> Copy-paste & klik kanan diblokir selama tes</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="reveal fade-in-up bg-brandGray border border-brandGreen/30 rounded-3xl p-6 md:p-8 space-y-5">
+            <div class="flex items-center gap-3 border-b border-white/10 pb-4">
+              <div class="w-11 h-11 rounded-xl bg-brandGreen/10 border border-brandGreen/25 flex items-center justify-center text-brandGreen text-lg shrink-0"><i class="fa-solid fa-user-pen"></i></div>
+              <div>
+                <h3 class="text-lg md:text-xl font-bold text-white">Isi Data Dirimu Dulu</h3>
+                <p class="text-xs md:text-sm text-textGray">Data ini digunakan untuk menyimpan hasil Post-Test kamu.</p>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-bold text-textGray uppercase mb-2">Nama Lengkap <span class="text-rose-400">*</span></label>
+                <input
+                  type="text"
+                  id="posttest-nama"
+                  placeholder="Contoh: Budi Santoso"
+                  class="w-full bg-brandDark border border-white/20 rounded-xl px-4 py-3 text-white font-semibold text-base focus:outline-none focus:border-brandGreen transition"
+                />
+              </div>
+              <div>
+                <label class="block text-sm font-bold text-textGray uppercase mb-2">Nomor Absen <span class="text-rose-400">*</span></label>
+                <input
+                  type="number"
+                  id="posttest-absen"
+                  placeholder="Contoh: 15"
+                  min="1"
+                  max="50"
+                  class="w-full bg-brandDark border border-white/20 rounded-xl px-4 py-3 text-white font-semibold text-base focus:outline-none focus:border-brandGreen transition"
+                />
+              </div>
+            </div>
+
+            <div id="posttest-form-warning" class="hidden text-rose-400 text-sm font-semibold bg-rose-500/10 border border-rose-500/30 rounded-lg px-4 py-3">
+              <i class="fa-solid fa-triangle-exclamation mr-2"></i><span id="posttest-form-warning-text"></span>
+            </div>
+
+            <button onclick="startPostTest()" class="w-full py-4 bg-brandGreen text-black font-bold rounded-xl hover:bg-green-400 transition shadow-lg shadow-brandGreen/20 flex items-center justify-center gap-2 text-base cursor-pointer">
+              <i class="fa-solid fa-play"></i> Mulai Post-Test
+            </button>
+          </div>
+        </div>
+
+        <!-- ════════════════════════════════════════════════
+             SECTION 2: QUIZ (PAGINATION + TIMER + ANTI-CHEAT)
+             ════════════════════════════════════════════════ -->
+        <div id="posttest-quiz-section" class="hidden space-y-5">
+          <!-- Info Peserta -->
+          <div class="bg-brandGray border border-white/5 rounded-2xl p-4 md:p-5 flex items-center justify-between flex-wrap gap-3">
+            <div class="flex items-center gap-3">
+              <div class="w-11 h-11 rounded-xl bg-brandGreen/15 border border-brandGreen/30 flex items-center justify-center text-brandGreen text-lg font-bold shrink-0"><i class="fa-solid fa-user-check"></i></div>
+              <div>
+                <p class="text-xs text-textGray uppercase tracking-wider font-bold">Peserta</p>
+                <p class="text-white font-bold text-base"><span id="display-nama">-</span> • Absen <span id="display-absen">-</span></p>
+              </div>
+            </div>
+            <button onclick="cancelPostTest()" class="text-xs text-textGray hover:text-rose-400 transition flex items-center gap-1.5 font-semibold cursor-pointer"><i class="fa-solid fa-rotate-left"></i> Ganti Identitas</button>
+          </div>
+
+          <!-- Sticky Progress Bar -->
+          <div id="progress-container" class="bg-brandGray/90 backdrop-blur-md border border-white/5 rounded-2xl p-4 sticky top-2 z-40">
+            <div class="flex items-center justify-between mb-2 flex-wrap gap-2">
+              <span class="text-sm font-bold text-white flex items-center gap-2"> <i class="fa-solid fa-chart-simple text-brandGreen"></i> Progress </span>
+              <div class="flex items-center gap-2">
+                <span class="violation-badge hidden items-center gap-1.5 px-2.5 py-1 rounded-full bg-rose-500/15 border border-rose-500/30 text-rose-400 text-xs font-bold" id="violation-badge">
+                  <i class="fa-solid fa-triangle-exclamation"></i>
+                  <span id="violation-count-display">0</span>/3
+                </span>
+                <span class="text-sm font-bold"><span id="answered-count" class="text-brandGreen">0</span><span class="text-textGray"> / 10</span></span>
+              </div>
+            </div>
+            <div class="w-full h-2 bg-black/50 rounded-full overflow-hidden">
+              <div id="progress-fill" class="progress-bar-fill h-full bg-gradient-to-r from-brandGreen to-emerald-400" style="width: 0%"></div>
+            </div>
+          </div>
+
+          <!-- Question Stage -->
+          <div id="question-stage" class="relative">
+            <div id="questions-container"></div>
+          </div>
+
+          <!-- Navigation Controls -->
+          <div id="nav-controls" class="bg-brandGray border border-white/10 rounded-2xl p-4 flex items-center justify-between gap-3">
+            <button
+              id="btn-prev"
+              onclick="goPrev()"
+              disabled
+              class="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-4 py-3 bg-white/5 border border-white/15 text-white font-bold rounded-xl hover:bg-white/10 transition disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
+            >
+              <i class="fa-solid fa-chevron-left"></i> <span class="hidden sm:inline">Sebelumnya</span>
+            </button>
+            <div class="text-center">
+              <p class="text-[10px] text-textGray uppercase tracking-wider font-bold">Soal</p>
+              <p class="text-white font-bold text-lg leading-tight"><span id="current-q-number" class="text-brandGreen">1</span><span class="text-textGray"> / </span><span id="total-q">10</span></p>
+            </div>
+            <button
+              id="btn-next"
+              onclick="goNext()"
+              class="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-4 py-3 bg-brandGreen text-black font-bold rounded-xl hover:bg-green-400 transition shadow-lg shadow-brandGreen/20 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
+            >
+              <span class="hidden sm:inline">Selanjutnya</span> <i class="fa-solid fa-chevron-right"></i>
+            </button>
+          </div>
+
+          <!-- Question Navigator (dots) -->
+          <div id="question-dots" class="flex flex-wrap items-center justify-center gap-2"></div>
+
+          <!-- Submit Section -->
+          <div id="submit-section" class="bg-brandGray border border-brandGreen/30 rounded-2xl p-6 text-center space-y-4">
+            <p class="text-textGray text-sm">Sudah yakin dengan semua jawabanmu? Pastikan tidak ada soal yang terlewat sebelum mengumpulkan.</p>
+            <button
+              id="btn-submit"
+              onclick="submitPostTest()"
+              class="inline-flex items-center gap-3 px-8 py-3.5 bg-brandGreen text-black font-bold rounded-xl hover:bg-green-400 transition shadow-lg shadow-brandGreen/20 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+            >
+              <i class="fa-solid fa-paper-plane"></i> Kumpulkan Jawaban
+            </button>
+            <div id="submit-warning" class="hidden text-rose-400 text-sm font-semibold"><i class="fa-solid fa-triangle-exclamation mr-1"></i><span id="submit-warning-text"></span></div>
+          </div>
+        </div>
+
+        <!-- ════════════════════════════════════════════════
+             SECTION 3: HASIL
+             ════════════════════════════════════════════════ -->
+        <div id="posttest-result-section" class="hidden space-y-6">
+          <div class="bg-gradient-to-br from-brandGreen/15 via-brandGray to-brandGray border-2 border-brandGreen/40 rounded-3xl p-8 text-center">
+            <div class="score-pulse inline-flex items-center justify-center w-32 h-32 rounded-full bg-brandGreen/10 border-4 border-brandGreen mb-4 relative">
+              <div>
+                <div id="final-score" class="text-4xl md:text-5xl font-extrabold text-brandGreen leading-none">0</div>
+                <div class="text-xs text-brandGreen/70 font-bold tracking-wider uppercase mt-1">/ 100</div>
+              </div>
+            </div>
+            <h2 id="score-title" class="text-2xl md:text-3xl font-bold text-white mb-2">-</h2>
+            <p id="score-message" class="text-textGray max-w-md mx-auto leading-relaxed">-</p>
+
+            <div id="auto-submit-notice" class="hidden mt-4 mx-auto max-w-md bg-amber-500/10 border border-amber-500/30 rounded-xl px-4 py-3">
+              <p class="text-amber-400 text-sm font-bold"><i class="fa-solid fa-triangle-exclamation mr-2"></i><span id="auto-submit-reason"></span></p>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 max-w-md mx-auto mt-6">
+              <div class="bg-white/5 border border-white/10 rounded-xl p-4">
+                <div class="text-brandGreen text-2xl font-bold" id="correct-count">0</div>
+                <div class="text-xs text-textGray uppercase tracking-wider font-bold mt-1">Benar</div>
+              </div>
+              <div class="bg-white/5 border border-white/10 rounded-xl p-4">
+                <div class="text-rose-400 text-2xl font-bold" id="wrong-count">0</div>
+                <div class="text-xs text-textGray uppercase tracking-wider font-bold mt-1">Salah</div>
+              </div>
+            </div>
+
+            <div id="save-status" class="hidden mt-5 inline-flex items-center gap-2 text-sm font-semibold px-4 py-2 rounded-full">
+              <span id="save-status-text"><i class="fa-solid fa-spinner spinner mr-1"></i> Menyimpan hasil...</span>
+            </div>
+          </div>
+
+          <!-- Review -->
+          <div class="bg-brandGray border border-white/10 rounded-2xl overflow-hidden">
+            <button onclick="toggleReview()" class="w-full flex items-center justify-between p-5 hover:bg-white/5 transition cursor-pointer">
+              <span class="flex items-center gap-3 font-bold text-white text-base"><i class="fa-solid fa-list-check text-brandGreen"></i> Lihat Review Jawaban + Pembahasan</span>
+              <i id="review-chevron" class="fa-solid fa-chevron-down text-textGray transition-transform"></i>
+            </button>
+            <div id="review-body" class="hidden border-t border-white/10 p-5 space-y-4"></div>
+          </div>
+
+          <!-- Next Step -->
+          <div class="bg-brandGray border border-purple-500/30 rounded-2xl p-6 flex flex-col md:flex-row items-center gap-5">
+            <div class="w-14 h-14 rounded-2xl bg-purple-500/15 border border-purple-500/30 flex items-center justify-center text-purple-400 text-2xl shrink-0">
+              <i class="fa-solid fa-lightbulb"></i>
+            </div>
+            <div class="flex-1 text-center md:text-left">
+              <h3 class="font-bold text-white text-lg mb-1">Langkah Terakhir: Refleksi</h3>
+              <p class="text-sm text-textGray">Ceritakan pengalaman belajarmu dan isi refleksi sebagai penutup modul Excel.</p>
+            </div>
+            <a href="refleksi.html" class="inline-flex items-center gap-2 px-6 py-3 bg-purple-500 text-white font-bold rounded-xl hover:bg-purple-400 transition shadow-lg shadow-purple-500/20 whitespace-nowrap">
+              <i class="fa-solid fa-lightbulb"></i> Isi Refleksi
+            </a>
+          </div>
+
+          <div class="flex flex-wrap gap-3 justify-center">
+            <button onclick="retryPostTest()" class="inline-flex items-center gap-2 px-6 py-3 bg-white/5 border border-white/15 text-white font-bold rounded-xl hover:bg-white/10 transition cursor-pointer">
+              <i class="fa-solid fa-rotate-left"></i> Coba Lagi
+            </button>
+            <a href="../materi-excel.html" class="inline-flex items-center gap-2 px-6 py-3 bg-white/5 border border-white/15 text-white font-bold rounded-xl hover:bg-white/10 transition">
+              <i class="fa-solid fa-book-open"></i> Kembali ke Materi
+            </a>
+            <a href="../index.html" class="inline-flex items-center gap-2 px-6 py-3 bg-white/5 border border-white/15 text-white font-bold rounded-xl hover:bg-white/10 transition"> <i class="fa-solid fa-house"></i> Dashboard </a>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- ═══════════════ FOOTER ═══════════════ -->
+    <footer class="footer">
+      <div class="container" style="max-width: 1280px; margin: 0 auto; padding: 0 24px">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <div class="footer-logo">
+              <div class="footer-logo-icon"><i class="fa-solid fa-code"></i></div>
+              <span class="footer-logo-text">RuangInformatika</span>
+            </div>
+            <p class="footer-desc">Platform e-learning interaktif modern yang dirancang untuk memfasilitasi gaya belajar visual dan praktik murid SMA Negeri 4 Yogyakarta.</p>
+          </div>
+          <div class="footer-col">
+            <h4 class="footer-heading">Pintasan Modul</h4>
+            <ul class="footer-links">
+              <li>
+                <a href="../kisi.html" class="footer-link"><i class="fa-solid fa-chevron-right" style="font-size: 0.65rem"></i> Bedah Kisi-Kisi</a>
+              </li>
+              <li>
+                <a href="../materi-bk.html" class="footer-link"><i class="fa-solid fa-chevron-right" style="font-size: 0.65rem"></i> Berpikir Komputasional</a>
+              </li>
+              <li>
+                <a href="../materi-stack-queue.html" class="footer-link"><i class="fa-solid fa-chevron-right" style="font-size: 0.65rem"></i> Stack &amp; Queue</a>
+              </li>
+              <li>
+                <a href="../materi-search-sort.html" class="footer-link"><i class="fa-solid fa-chevron-right" style="font-size: 0.65rem"></i> Searching &amp; Sorting</a>
+              </li>
+              <li>
+                <a href="../materi-excel.html" class="footer-link" style="color: #00e676"><i class="fa-solid fa-chevron-right" style="font-size: 0.65rem"></i> Microsoft Excel</a>
+              </li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h4 class="footer-heading">Fitur &amp; Dukungan</h4>
+            <ul class="footer-links">
+              <li>
+                <a href="../leaderboard.html" class="footer-link"><i class="fa-solid fa-trophy" style="color: var(--amber)"></i> Leaderboard Kelas</a>
+              </li>
+              <li>
+                <a href="../forum.html" class="footer-link"><i class="fa-solid fa-comments" style="color: var(--blue)"></i> Forum Diskusi</a>
+              </li>
+              <li>
+                <a href="https://wa.me/6285282386260?text=Halo%20Pak%20Ilyas%2C%20saya%20ingin%20bertanya%20tentang%20materi%20Informatika." target="_blank" class="footer-link"
+                  ><i class="fa-solid fa-chalkboard-user" style="color: var(--green)"></i> Hubungi Pak Ilyas</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p class="footer-copy">&copy; 2026 RuangInformatika. Dikembangkan untuk kelas Informatika XE6 SMA Negeri 4 Yogyakarta.</p>
+          <div class="footer-socials">
+            <a href="https://github.com/fandhi19" target="_blank" class="footer-social" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+            <a href="https://e-portofolio-fandhi.vercel.app/" target="_blank" class="footer-social" aria-label="Portfolio"><i class="fa-solid fa-globe"></i></a>
+            <a href="https://www.instagram.com/fandhidk17/" target="_blank" class="footer-social" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- ═══════════════ FLOATING TIMER WIDGET ═══════════════ -->
+    <div id="timer-widget" class="hidden fixed top-24 right-4 z-50 bg-brandGray border-2 rounded-2xl px-4 py-3 shadow-2xl backdrop-blur-md">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-lg flex items-center justify-center" id="timer-icon-wrap">
+          <i class="fa-solid fa-stopwatch text-lg" id="timer-icon"></i>
+        </div>
+        <div>
+          <p class="text-[10px] text-textGray uppercase tracking-wider font-bold leading-none mb-0.5">Waktu Tersisa</p>
+          <p id="timer-display" class="font-mono text-lg font-bold leading-none">10:00</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════ COPY-BLOCK TOAST ═══════════════ -->
+    <div id="copy-toast">
+      <i class="fa-solid fa-ban"></i>
+      <span id="copy-toast-text">Aksi ini diblokir selama ujian!</span>
+    </div>
+
+    <!-- ═══════════════ CHEAT WARNING OVERLAY ═══════════════ -->
+    <div id="cheat-warning" class="hidden fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 p-4">
+      <div id="cheat-warning-card" class="bg-brandGray border-2 border-rose-500 rounded-3xl p-6 md:p-8 max-w-md w-full text-center shadow-2xl shadow-rose-500/20">
+        <div class="w-20 h-20 rounded-full bg-rose-500/15 border-2 border-rose-500/50 mx-auto flex items-center justify-center mb-4">
+          <i class="fa-solid fa-triangle-exclamation text-rose-400 text-4xl"></i>
+        </div>
+        <h3 class="text-2xl font-bold text-white mb-2">⚠️ Peringatan!</h3>
+        <p class="text-textGray mb-4 text-sm leading-relaxed">Kamu terdeteksi <strong class="text-rose-400">berpindah tab / keluar dari halaman ujian</strong>. Aktivitas ini dicatat oleh sistem.</p>
+        <div class="bg-rose-500/10 border border-rose-500/30 rounded-xl px-4 py-3 mb-4">
+          <p class="text-xs text-textGray uppercase tracking-wider font-bold mb-1">Total Pelanggaran</p>
+          <p class="text-white font-bold text-2xl"><span id="cheat-violation-count">1</span><span class="text-rose-400"> / 3</span></p>
+        </div>
+        <p class="text-xs text-textGray mb-5 italic">Jika melanggar 3 kali, tes akan <strong class="text-rose-400">otomatis dikumpulkan</strong> dengan jawaban yang sudah ada.</p>
+        <button onclick="closeCheatWarning()" class="w-full px-6 py-3 bg-rose-500 text-white font-bold rounded-xl hover:bg-rose-400 transition cursor-pointer"><i class="fa-solid fa-check mr-2"></i> Saya Mengerti, Lanjutkan</button>
+      </div>
+    </div>
+
+    <!-- ═══════════════ MAIN SCRIPT ═══════════════ -->
+    <script>
+      /* ══════════════════════════════════════════════════
+         READING PROGRESS
+         ══════════════════════════════════════════════════ */
+      window.addEventListener("scroll", () => {
+        const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const p = document.getElementById("readProgress");
+        if (!p) return;
+        if (height <= 0) {
+          p.style.width = "100%";
+          return;
+        }
+        p.style.width = (winScroll / height) * 100 + "%";
+      });
+
+      /* ── Vanilla Tilt ── */
+      if (typeof VanillaTilt !== "undefined") {
+        VanillaTilt.init(document.querySelectorAll(".tilt-card"), { max: 6, speed: 400, glare: true, "max-glare": 0.15 });
+      }
+
+      /* ── Mobile Menu ── */
+      const hamburgerBtn = document.getElementById("hamburgerBtn");
+      const mobileMenu = document.getElementById("mobileMenu");
+      if (hamburgerBtn && mobileMenu) {
+        hamburgerBtn.addEventListener("click", () => {
+          mobileMenu.classList.toggle("open");
+          const icon = hamburgerBtn.querySelector("i");
+          icon.classList.toggle("fa-bars");
+          icon.classList.toggle("fa-xmark");
+        });
+        mobileMenu.querySelectorAll("a, button").forEach((item) => {
+          item.addEventListener("click", () => {
+            mobileMenu.classList.remove("open");
+            const icon = hamburgerBtn.querySelector("i");
+            icon.classList.add("fa-bars");
+            icon.classList.remove("fa-xmark");
+          });
+        });
+      }
+
+      /* ── Reveal on Scroll ── */
+      const revealObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("visible");
+              revealObserver.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.1 },
+      );
+      document.querySelectorAll(".reveal").forEach((el) => revealObserver.observe(el));
+
+      /* ══════════════════════════════════════════════════
+         CONFIG
+         ══════════════════════════════════════════════════ */
+      const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyJ1I0GezWJaPxdM_Du9k1Pc-qb7WsiH_Wi4QGfnbF2lDYL8tilQpajlItWDOvjaUyJ/exec";
+
+      const QUIZ_DURATION_SECONDS = 10 * 60; // 10 menit
+      const MAX_TAB_VIOLATIONS = 3;
+
+      /* ══════════════════════════════════════════════════
+         BANK SOAL (raw — belum di-shuffle)
+         ══════════════════════════════════════════════════ */
+      const QUESTIONS_BASE = [
+        {
+          q: "Saat membuat tabel daftar nilai siswa, susunan nama kolom (header) yang paling rapi dan logis dari kiri ke kanan adalah…",
+          options: ["Nama Siswa - Nomor - Nilai", "Nomor - Nama Siswa - Nilai", "Nilai - Nomor - Nama Siswa", "Nama Siswa - Nilai - Nomor"],
+          answer: 1,
+          explanation: "Susunan yang logis adalah <strong>Nomor → Nama Siswa → Nilai</strong>. Nomor absen diletakkan di kolom pertama agar data mudah diurutkan (sort) dan dicari kembali.",
+        },
+        {
+          q: "Saat mengetik rumus perhitungan di Excel, karakter pertama yang wajib kita ketik di dalam sel adalah…",
+          options: ["+ (Tambah)", '" (Tanda kutip)', "= (Sama dengan)", "* (Bintang)"],
+          answer: 2,
+          explanation:
+            "Tanda <span class='formula-chip'>=</span> memberi tahu Excel bahwa yang kita ketik adalah <strong>rumus</strong>, bukan teks biasa. Tanpa tanda <span class='formula-chip'>=</span>, Excel akan menganggapnya sebagai teks.",
+        },
+        {
+          q: "Fitur di Excel yang digunakan untuk menggabungkan beberapa sel menjadi satu kolom adalah…",
+          options: ["Wrap Text", "Merge & Center", "Format Painter", "Sort & Filter"],
+          answer: 1,
+          explanation: "<strong>Merge &amp; Center</strong> menggabungkan beberapa sel menjadi satu sel besar dan menengahkan isinya. Sangat cocok untuk membuat judul tabel.",
+        },
+        {
+          q: "Rumus yang paling cepat dan tepat untuk menjumlahkan semua angka dari sel A1 sampai A5 adalah…",
+          options: ["=A1+A2+A3+A4+A5", "=SUM(A1:A5)", "=SUM(A1+A5)", "=AVERAGE(A1:A5)"],
+          answer: 1,
+          explanation:
+            "<span class='formula-chip'>=SUM(A1:A5)</span> adalah cara paling efisien untuk menjumlahkan <em>range</em> sel. Menulis <span class='formula-chip'>=A1+A2+A3+A4+A5</span> juga benar, tapi tidak praktis untuk data yang banyak.",
+        },
+        {
+          q: "Jika kita ingin menghitung nilai rata-rata ujian siswa di Excel, fungsi rumus dasar yang digunakan adalah…",
+          options: ["SUM", "MAX", "AVERAGE", "MIN"],
+          answer: 2,
+          explanation: "<strong>AVERAGE</strong> menghitung rata-rata. SUM untuk menjumlah, MAX untuk nilai tertinggi, MIN untuk nilai terendah.",
+        },
+        {
+          q: "Untuk mengubah deretan angka pada tabel menjadi gambar visual agar lebih mudah dipahami secara cepat, kita menggunakan fitur…",
+          options: ["Table", "Shapes", "Chart", "Picture"],
+          answer: 2,
+          explanation: "<strong>Chart</strong> (grafik) mengubah data angka menjadi representasi visual sehingga pola dan perbandingan data lebih mudah dipahami secara cepat.",
+        },
+        {
+          q: "Grafik batang (Bar Chart) sangat cocok digunakan untuk tujuan…",
+          options: ["Menghitung total nilai secara otomatis", "Membandingkan ukuran atau jumlah antar kategori secara visual", "Menuliskan laporan teks yang panjang", "Menambahkan warna-warni pada sel"],
+          answer: 1,
+          explanation: "Bar Chart paling tepat untuk <strong>membandingkan</strong> ukuran/jumlah antar kategori — misalnya membandingkan nilai antar siswa atau jumlah antar kelas.",
+        },
+        {
+          q: "Agar orang yang melihat grafik kita langsung paham apa maksud data tersebut, hal terpenting yang wajib kita tambahkan di bagian paling atas grafik adalah…",
+          options: ["Chart Title", "Penjelasan Chart", "Nama pembuat tabel", "Keterangan warna grafik"],
+          answer: 0,
+          explanation: "<strong>Chart Title</strong> (judul grafik) adalah elemen terpenting karena menjelaskan secara singkat apa yang ditampilkan oleh grafik tersebut.",
+        },
+        {
+          q: "Setelah kita menyorot (blocking) data pada tabel, menu tab utama di bagian atas Microsoft Excel yang harus kita klik untuk bisa menambahkan grafik (Chart) adalah…",
+          options: ["Home", "Insert", "Formulas", "View"],
+          answer: 1,
+          explanation: "Tab <strong>Insert</strong> berisi grup <em>Charts</em> tempat semua jenis grafik (Column, Line, Pie, Bar, dll.) dapat ditambahkan ke worksheet.",
+        },
+        {
+          q: 'Sebelum kita mengklik menu "Insert" dan memilih bentuk "Bar Chart", langkah paling awal yang wajib kita lakukan agar grafik langsung muncul sesuai data adalah…',
+          options: ["Menyorot (memblok) sel/area data pada tabel yang ingin dijadikan grafik", "Memberi warna pada setiap baris tabel", "Mengubah ukuran huruf (font size) menjadi sangat besar", "Menghapus semua rumus yang sudah dibuat"],
+          answer: 0,
+          explanation: "Menyorot (<em>blocking</em>) area data terlebih dahulu wajib dilakukan agar Excel tahu <strong>data mana</strong> yang akan dijadikan sumber grafik.",
+        },
+      ];
+
+      const LETTERS = ["A", "B", "C", "D"];
+
+      /* ══════════════════════════════════════════════════
+         STATE
+         ══════════════════════════════════════════════════ */
+      let QUESTIONS = []; // versi ter-shuffle
+      let answers = [];
+      let currentIndex = 0;
+      let isSubmitted = false;
+      let studentData = { nama: "", absen: "" };
+
+      let timerInterval = null;
+      let timeRemaining = QUIZ_DURATION_SECONDS;
+      let testStartTime = null;
+
+      let tabViolations = 0;
+      let lastNavDirection = "next";
+
+      const questionsContainer = document.getElementById("questions-container");
+      const answeredCountEl = document.getElementById("answered-count");
+      const progressFill = document.getElementById("progress-fill");
+
+      /* ══════════════════════════════════════════════════
+         UTIL: SHUFFLE
+         ══════════════════════════════════════════════════ */
+      function shuffleArray(arr) {
+        const a = [...arr];
+        for (let i = a.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+      }
+
+      function buildShuffledQuiz() {
+        return shuffleArray(QUESTIONS_BASE).map((q) => {
+          // Pack options + flag benar, lalu shuffle
+          const packed = q.options.map((text, i) => ({
+            text,
+            isCorrect: i === q.answer,
+          }));
+          const shuffled = shuffleArray(packed);
+          return {
+            q: q.q,
+            options: shuffled.map((o) => o.text),
+            answer: shuffled.findIndex((o) => o.isCorrect),
+            explanation: q.explanation,
+          };
+        });
+      }
+
+      /* ══════════════════════════════════════════════════
+         AUTO-FILL IDENTITAS
+         ══════════════════════════════════════════════════ */
+      window.addEventListener("DOMContentLoaded", () => {
+        const savedNama = localStorage.getItem("siswa_nama");
+        const savedAbsen = localStorage.getItem("siswa_absen");
+        if (savedNama) document.getElementById("posttest-nama").value = savedNama;
+        if (savedAbsen) document.getElementById("posttest-absen").value = savedAbsen;
+      });
+
+      /* ══════════════════════════════════════════════════
+         START POST-TEST
+         ══════════════════════════════════════════════════ */
+      function startPostTest() {
+        const namaInput = document.getElementById("posttest-nama");
+        const absenInput = document.getElementById("posttest-absen");
+        const warning = document.getElementById("posttest-form-warning");
+        const warningText = document.getElementById("posttest-form-warning-text");
+
+        const nama = namaInput.value.trim();
+        const absen = absenInput.value.trim();
+
+        if (!nama) {
+          warningText.textContent = "Nama tidak boleh kosong. Isi nama lengkap kamu ya!";
+          warning.classList.remove("hidden");
+          namaInput.focus();
+          return;
+        }
+        if (nama.length < 3) {
+          warningText.textContent = "Nama terlalu pendek. Isi nama lengkap kamu.";
+          warning.classList.remove("hidden");
+          namaInput.focus();
+          return;
+        }
+        if (!absen) {
+          warningText.textContent = "Nomor absen tidak boleh kosong.";
+          warning.classList.remove("hidden");
+          absenInput.focus();
+          return;
+        }
+        const absenNum = parseInt(absen);
+        if (isNaN(absenNum) || absenNum < 1 || absenNum > 50) {
+          warningText.textContent = "Nomor absen harus berupa angka 1-50.";
+          warning.classList.remove("hidden");
+          absenInput.focus();
+          return;
+        }
+
+        // Cek sudah pernah submit
+        const cleanNama = nama.toLowerCase().replace(/\s+/g, " ").trim();
+        const submitKey = "posttest_excel_submitted_" + cleanNama + "_" + absen;
+        if (localStorage.getItem(submitKey)) {
+          if (!confirm("Kamu sudah pernah submit Post-Test Excel.\n\nYakin mau mengerjakan lagi? Nilai baru akan dikirim ulang ke Pak Ilyas.")) return;
+        }
+
+        warning.classList.add("hidden");
+
+        // Init student data
+        studentData.nama = nama;
+        studentData.absen = absen;
+        localStorage.setItem("siswa_nama", nama);
+        localStorage.setItem("siswa_absen", absen);
+
+        document.getElementById("display-nama").textContent = nama;
+        document.getElementById("display-absen").textContent = absen;
+
+        // Init quiz state
+        QUESTIONS = buildShuffledQuiz();
+        answers = new Array(QUESTIONS.length).fill(null);
+        currentIndex = 0;
+        isSubmitted = false;
+        tabViolations = 0;
+        timeRemaining = QUIZ_DURATION_SECONDS;
+        testStartTime = Date.now();
+        lastNavDirection = "next";
+
+        // Update UI
+        document.getElementById("posttest-form-section").classList.add("hidden");
+        document.getElementById("posttest-quiz-section").classList.remove("hidden");
+        document.getElementById("posttest-result-section").classList.add("hidden");
+        document.getElementById("total-q").textContent = QUESTIONS.length;
+        document.getElementById("violation-badge").classList.remove("hidden");
+        document.getElementById("violation-badge").classList.add("inline-flex");
+        document.getElementById("violation-count-display").textContent = "0";
+
+        renderQuestions();
+        renderDots();
+        showQuestion(0, null); // no animation for first
+        updateProgress();
+        updateNavButtons();
+        updateTimerDisplay();
+
+        // Enable anti-cheat + timer
+        document.body.classList.add("quiz-active");
+        attachAntiCheat();
+        startTimer();
+        document.getElementById("timer-widget").classList.remove("hidden");
+
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function cancelPostTest() {
+        if (!confirm("Yakin ingin ganti identitas? Jawabanmu akan hilang dan waktu akan di-reset.")) return;
+
+        stopTimer();
+        detachAntiCheat();
+        document.body.classList.remove("quiz-active");
+        document.getElementById("timer-widget").classList.add("hidden");
+        document.getElementById("cheat-warning").classList.add("hidden");
+
+        document.getElementById("posttest-form-section").classList.remove("hidden");
+        document.getElementById("posttest-quiz-section").classList.add("hidden");
+        document.getElementById("posttest-result-section").classList.add("hidden");
+
+        answers = new Array(QUESTIONS.length).fill(null);
+        isSubmitted = false;
+        currentIndex = 0;
+      }
+
+      /* ══════════════════════════════════════════════════
+         RENDER QUESTIONS (all, but show one)
+         ══════════════════════════════════════════════════ */
+      function renderQuestions() {
+        questionsContainer.innerHTML = "";
+        QUESTIONS.forEach((item, idx) => {
+          const card = document.createElement("div");
+          card.className = "question-card bg-brandGray border border-white/10 rounded-2xl p-5 md:p-6 space-y-4";
+          card.id = "q-card-" + idx;
+          if (idx !== 0) card.classList.add("hidden");
+
+          const header = document.createElement("div");
+          header.className = "flex items-start gap-3";
+          header.innerHTML = `
+            <div class="w-9 h-9 rounded-xl bg-brandGreen/10 border border-brandGreen/25 flex items-center justify-center text-brandGreen font-bold text-sm shrink-0">
+              ${idx + 1}
+            </div>
+            <div class="flex-1">
+              <p class="font-semibold text-white text-base md:text-lg leading-relaxed">${item.q}</p>
+            </div>
+          `;
+          card.appendChild(header);
+
+          const optionsWrap = document.createElement("div");
+          optionsWrap.className = "space-y-2.5 pl-0 md:pl-12";
+
+          item.options.forEach((opt, optIdx) => {
+            const label = document.createElement("label");
+            label.className = "option-label";
+            label.dataset.qidx = idx;
+            label.dataset.optidx = optIdx;
+            if (answers[idx] === optIdx) label.classList.add("selected");
+
+            label.innerHTML = `
+              <input type="radio" name="q-${idx}" value="${optIdx}" ${answers[idx] === optIdx ? "checked" : ""} />
+              <span class="option-marker">${LETTERS[optIdx]}</span>
+              <span class="flex-1 text-sm md:text-base text-gray-200 leading-snug">${opt}</span>
+            `;
+
+            const input = label.querySelector("input");
+            input.addEventListener("change", () => {
+              if (isSubmitted) return;
+              answers[idx] = optIdx;
+              updateSelection(idx, optIdx);
+              updateProgress();
+              renderDots();
+            });
+
+            optionsWrap.appendChild(label);
+          });
+
+          card.appendChild(optionsWrap);
+          questionsContainer.appendChild(card);
+        });
+      }
+
+      function updateSelection(qIdx, optIdx) {
+        const card = document.getElementById("q-card-" + qIdx);
+        card.querySelectorAll(".option-label").forEach((lbl) => {
+          lbl.classList.toggle("selected", Number(lbl.dataset.optidx) === optIdx);
+        });
+      }
+
+      /* ══════════════════════════════════════════════════
+         QUESTION NAVIGATION (PAGINATION)
+         ══════════════════════════════════════════════════ */
+      function showQuestion(idx, direction) {
+        // Sembunyikan semua
+        QUESTIONS.forEach((_, i) => {
+          const c = document.getElementById("q-card-" + i);
+          if (c) {
+            c.classList.add("hidden");
+            c.classList.remove("slide-in-right", "slide-in-left");
+          }
+        });
+
+        const target = document.getElementById("q-card-" + idx);
+        if (!target) return;
+
+        target.classList.remove("hidden");
+        if (direction) {
+          void target.offsetWidth; // force reflow
+          target.classList.add(direction === "next" ? "slide-in-right" : "slide-in-left");
+        }
+
+        currentIndex = idx;
+        document.getElementById("current-q-number").textContent = idx + 1;
+        updateNavButtons();
+        renderDots();
+      }
+
+      function goNext() {
+        if (currentIndex < QUESTIONS.length - 1) {
+          lastNavDirection = "next";
+          showQuestion(currentIndex + 1, "next");
+          window.scrollTo({ top: document.getElementById("progress-container").offsetTop - 20, behavior: "smooth" });
+        }
+      }
+
+      function goPrev() {
+        if (currentIndex > 0) {
+          lastNavDirection = "prev";
+          showQuestion(currentIndex - 1, "prev");
+          window.scrollTo({ top: document.getElementById("progress-container").offsetTop - 20, behavior: "smooth" });
+        }
+      }
+
+      function jumpToQuestion(idx) {
+        if (idx === currentIndex) return;
+        const dir = idx > currentIndex ? "next" : "prev";
+        lastNavDirection = dir;
+        showQuestion(idx, dir);
+        window.scrollTo({ top: document.getElementById("progress-container").offsetTop - 20, behavior: "smooth" });
+      }
+
+      function updateNavButtons() {
+        const prev = document.getElementById("btn-prev");
+        const next = document.getElementById("btn-next");
+        if (prev) prev.disabled = currentIndex === 0;
+        if (next) next.disabled = currentIndex === QUESTIONS.length - 1;
+      }
+
+      /* ══════════════════════════════════════════════════
+         QUESTION DOTS (Navigator)
+         ══════════════════════════════════════════════════ */
+      function renderDots() {
+        const wrap = document.getElementById("question-dots");
+        if (!wrap) return;
+        wrap.innerHTML = "";
+        QUESTIONS.forEach((_, i) => {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          const isCurrent = i === currentIndex;
+          const isAnswered = answers[i] !== null;
+          let cls = "w-8 h-8 rounded-lg font-bold text-xs transition cursor-pointer border ";
+          if (isCurrent) {
+            cls += "bg-brandGreen text-black border-brandGreen scale-110 shadow-lg shadow-brandGreen/40";
+          } else if (isAnswered) {
+            cls += "bg-brandGreen/20 text-brandGreen border-brandGreen/50";
+          } else {
+            cls += "bg-white/5 text-textGray border-white/10 hover:bg-white/10";
+          }
+          btn.className = cls;
+          btn.textContent = i + 1;
+          btn.onclick = () => jumpToQuestion(i);
+          wrap.appendChild(btn);
+        });
+      }
+
+      /* ══════════════════════════════════════════════════
+         PROGRESS
+         ══════════════════════════════════════════════════ */
+      function updateProgress() {
+        const answered = answers.filter((a) => a !== null).length;
+        const total = QUESTIONS.length;
+        answeredCountEl.textContent = answered;
+        const pct = (answered / total) * 100;
+        progressFill.style.width = pct + "%";
+
+        // Pulse saat mendekati akhir (>= 70%)
+        if (pct >= 70) {
+          progressFill.classList.add("progress-pulse");
+        } else {
+          progressFill.classList.remove("progress-pulse");
+        }
+      }
+
+      /* ══════════════════════════════════════════════════
+         TIMER
+         ══════════════════════════════════════════════════ */
+      function startTimer() {
+        stopTimer();
+        updateTimerDisplay();
+        timerInterval = setInterval(() => {
+          timeRemaining--;
+          updateTimerDisplay();
+          if (timeRemaining <= 0) {
+            stopTimer();
+            autoSubmit("⏰ Waktu habis! Jawaban kamu otomatis dikumpulkan.");
+          }
+        }, 1000);
+      }
+
+      function stopTimer() {
+        if (timerInterval) {
+          clearInterval(timerInterval);
+          timerInterval = null;
+        }
+      }
+
+      function updateTimerDisplay() {
+        const display = document.getElementById("timer-display");
+        const widget = document.getElementById("timer-widget");
+        const iconWrap = document.getElementById("timer-icon-wrap");
+        const icon = document.getElementById("timer-icon");
+        if (!display) return;
+
+        const m = Math.floor(Math.max(0, timeRemaining) / 60);
+        const s = Math.max(0, timeRemaining) % 60;
+        display.textContent = `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+
+        // Reset classes
+        widget.classList.remove("timer-safe", "timer-warning", "timer-danger");
+        iconWrap.classList.remove("bg-brandGreen/15", "bg-amber-500/15", "bg-rose-500/15");
+        icon.classList.remove("text-brandGreen", "text-amber-400", "text-rose-400");
+
+        if (timeRemaining <= 60) {
+          widget.classList.add("timer-danger");
+          iconWrap.classList.add("bg-rose-500/15");
+          icon.classList.add("text-rose-400");
+        } else if (timeRemaining <= 180) {
+          widget.classList.add("timer-warning");
+          iconWrap.classList.add("bg-amber-500/15");
+          icon.classList.add("text-amber-400");
+        } else {
+          widget.classList.add("timer-safe");
+          iconWrap.classList.add("bg-brandGreen/15");
+          icon.classList.add("text-brandGreen");
+        }
+      }
+
+      /* ══════════════════════════════════════════════════
+         ANTI-CHEAT: TAB SWITCH DETECTION
+         ══════════════════════════════════════════════════ */
+      let visibilityHandler = null;
+
+      function attachAntiCheat() {
+        // Tab switch detection
+        visibilityHandler = () => {
+          if (isSubmitted) return;
+          if (document.hidden) {
+            tabViolations++;
+            document.getElementById("violation-count-display").textContent = tabViolations;
+            const badge = document.getElementById("violation-badge");
+            badge.classList.remove("pulse");
+            void badge.offsetWidth;
+            badge.classList.add("pulse");
+
+            // Vibrate if supported
+            if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
+
+            if (tabViolations >= MAX_TAB_VIOLATIONS) {
+              autoSubmit(`🚫 Terdeteksi ${MAX_TAB_VIOLATIONS}× berpindah tab! Tes otomatis dikumpulkan.`);
+            } else {
+              showCheatWarning(tabViolations);
+            }
+          }
+        };
+        document.addEventListener("visibilitychange", visibilityHandler);
+
+        // Block context menu
+        document.addEventListener("contextmenu", blockEvent);
+        // Block copy / cut / paste
+        document.addEventListener("copy", blockEvent);
+        document.addEventListener("cut", blockEvent);
+        document.addEventListener("paste", blockEvent);
+        // Block selectstart (kecuali input/textarea)
+        document.addEventListener("selectstart", blockSelect);
+        // Block keyboard shortcuts Ctrl+C/V/X/A
+        document.addEventListener("keydown", blockKeys);
+      }
+
+      function detachAntiCheat() {
+        if (visibilityHandler) {
+          document.removeEventListener("visibilitychange", visibilityHandler);
+          visibilityHandler = null;
+        }
+        document.removeEventListener("contextmenu", blockEvent);
+        document.removeEventListener("copy", blockEvent);
+        document.removeEventListener("cut", blockEvent);
+        document.removeEventListener("paste", blockEvent);
+        document.removeEventListener("selectstart", blockSelect);
+        document.removeEventListener("keydown", blockKeys);
+      }
+
+      let toastTimeout = null;
+      function showCopyToast(text) {
+        const toast = document.getElementById("copy-toast");
+        if (!toast) return;
+        document.getElementById("copy-toast-text").textContent = text || "Aksi ini diblokir selama ujian!";
+        toast.classList.add("show");
+        clearTimeout(toastTimeout);
+        toastTimeout = setTimeout(() => toast.classList.remove("show"), 1800);
+      }
+
+      function blockEvent(e) {
+        if (isSubmitted) return;
+        e.preventDefault();
+        showCopyToast();
+        return false;
+      }
+
+      function blockSelect(e) {
+        if (isSubmitted) return;
+        const tag = (e.target.tagName || "").toUpperCase();
+        if (tag !== "INPUT" && tag !== "TEXTAREA") {
+          e.preventDefault();
+        }
+      }
+
+      function blockKeys(e) {
+        if (isSubmitted) return;
+        if (e.ctrlKey || e.metaKey) {
+          const k = (e.key || "").toLowerCase();
+          if (["c", "v", "x", "a", "p", "s", "u"].includes(k)) {
+            e.preventDefault();
+            showCopyToast();
+            return false;
+          }
+        }
+      }
+
+      /* ══════════════════════════════════════════════════
+         CHEAT WARNING OVERLAY
+         ══════════════════════════════════════════════════ */
+      function showCheatWarning(count) {
+        const overlay = document.getElementById("cheat-warning");
+        const card = document.getElementById("cheat-warning-card");
+        document.getElementById("cheat-violation-count").textContent = count;
+        overlay.classList.remove("hidden");
+        card.classList.remove("warning-shake");
+        void card.offsetWidth;
+        card.classList.add("warning-shake");
+      }
+
+      function closeCheatWarning() {
+        document.getElementById("cheat-warning").classList.add("hidden");
+      }
+
+      /* ══════════════════════════════════════════════════
+         SUBMIT (manual + auto)
+         ══════════════════════════════════════════════════ */
+      function submitPostTest() {
+        if (isSubmitted) return; // guard double-submit
+
+        const unanswered = answers.filter((a) => a === null).length;
+        if (unanswered > 0) {
+          const warning = document.getElementById("submit-warning");
+          const warningText = document.getElementById("submit-warning-text");
+          warningText.textContent = `Masih ada ${unanswered} soal yang belum dijawab. Harap lengkapi semua soal terlebih dahulu.`;
+          warning.classList.remove("hidden");
+          setTimeout(() => warning.classList.add("hidden"), 4000);
+
+          // Jump ke soal pertama yang kosong
+          const firstEmpty = answers.findIndex((a) => a === null);
+          if (firstEmpty !== -1) {
+            jumpToQuestion(firstEmpty);
+          }
+          return;
+        }
+
+        performSubmit(false, null);
+      }
+
+      function autoSubmit(reason) {
+        if (isSubmitted) return;
+        performSubmit(true, reason);
+      }
+
+      function performSubmit(forced, reason) {
+        isSubmitted = true;
+        document.getElementById("btn-submit").disabled = true;
+        document.getElementById("btn-next").disabled = true;
+        document.getElementById("btn-prev").disabled = true;
+
+        // Stop anti-cheat & timer
+        stopTimer();
+        detachAntiCheat();
+        document.body.classList.remove("quiz-active");
+        document.getElementById("timer-widget").classList.add("hidden");
+        document.getElementById("cheat-warning").classList.add("hidden");
+
+        // Hitung skor
+        let correct = 0;
+        answers.forEach((ans, idx) => {
+          if (ans === QUESTIONS[idx].answer) correct++;
+        });
+        const score = correct * 10;
+
+        document.getElementById("final-score").textContent = score;
+        document.getElementById("correct-count").textContent = correct;
+        document.getElementById("wrong-count").textContent = QUESTIONS.length - correct;
+
+        // Title/message
+        let title = "";
+        let message = "";
+        if (score >= 80) {
+          title = "🌟 Luar Biasa!";
+          message = "Pemahaman Excel-mu sudah sangat kuat! Kamu benar-benar menguasai rumus dasar, IF, COUNTIF, dan konsep grafik.";
+        } else if (score >= 60) {
+          title = "👍 Bagus!";
+          message = "Pemahaman Excel-mu sudah baik. Pertahankan dan terus asah kemampuanmu!";
+        } else if (score >= 40) {
+          title = "💪 Semangat!";
+          message = "Masih ada ruang untuk bertumbuh. Coba baca ulang materi dan lihat pembahasan tiap soal ya!";
+        } else {
+          title = "📚 Ayo Belajar Lagi!";
+          message = "Jangan berkecil hati! Pelajari kembali materi Excel, lalu coba Post-Test lagi.";
+        }
+        document.getElementById("score-title").textContent = title;
+        document.getElementById("score-message").textContent = message;
+
+        // Auto-submit notice
+        if (forced && reason) {
+          const notice = document.getElementById("auto-submit-notice");
+          document.getElementById("auto-submit-reason").textContent = reason;
+          notice.classList.remove("hidden");
+        } else {
+          document.getElementById("auto-submit-notice").classList.add("hidden");
+        }
+
+        // Lock options + review
+        document.querySelectorAll(".option-label").forEach((lbl) => lbl.classList.add("disabled"));
+
+        QUESTIONS.forEach((item, idx) => {
+          const card = document.getElementById("q-card-" + idx);
+          const labels = card.querySelectorAll(".option-label");
+          const userAns = answers[idx];
+          const correctAns = item.answer;
+
+          labels[correctAns].classList.add("review-correct");
+          if (userAns !== correctAns && userAns !== null) {
+            labels[userAns].classList.add("review-wrong");
+            card.classList.add("wrong");
+          } else if (userAns === correctAns) {
+            card.classList.add("correct");
+          }
+        });
+
+        // Show all questions in review mode (unhide)
+        QUESTIONS.forEach((_, i) => {
+          document.getElementById("q-card-" + i).classList.remove("hidden");
+        });
+
+        document.getElementById("posttest-quiz-section").classList.add("hidden");
+        document.getElementById("posttest-result-section").classList.remove("hidden");
+
+        // Simpan status submit
+        const cleanNama = studentData.nama.toLowerCase().replace(/\s+/g, " ").trim();
+        const submitKey = "posttest_excel_submitted_" + cleanNama + "_" + studentData.absen;
+        localStorage.setItem(submitKey, "true");
+
+        renderReview();
+
+        // Kirim ke Sheets
+        const durationSec = testStartTime ? Math.round((Date.now() - testStartTime) / 1000) : 0;
+        sendToGoogleSheets(correct, QUESTIONS.length - correct, score, durationSec);
+
+        setTimeout(() => {
+          document.getElementById("posttest-result-section").scrollIntoView({ behavior: "smooth", block: "start" });
+        }, 200);
+      }
+
+      /* ══════════════════════════════════════════════════
+         REVIEW + PEMBAHASAN
+         ══════════════════════════════════════════════════ */
+      function renderReview() {
+        const body = document.getElementById("review-body");
+        body.innerHTML = "";
+
+        QUESTIONS.forEach((item, idx) => {
+          const userAns = answers[idx];
+          const correctAns = item.answer;
+          const isCorrect = userAns === correctAns;
+
+          const card = document.createElement("div");
+          card.className = "bg-black/30 border border-white/10 rounded-xl p-4 space-y-3";
+
+          const header = document.createElement("div");
+          header.className = "flex items-start gap-3";
+          header.innerHTML = `
+            <div class="w-8 h-8 rounded-lg ${isCorrect ? "bg-brandGreen/15 border-brandGreen/30 text-brandGreen" : "bg-rose-500/15 border-rose-500/30 text-rose-400"} border flex items-center justify-center font-bold text-xs shrink-0">
+              ${isCorrect ? '<i class="fa-solid fa-check"></i>' : '<i class="fa-solid fa-xmark"></i>'}
+            </div>
+            <p class="text-sm text-white font-semibold flex-1">${idx + 1}. ${item.q}</p>
+          `;
+          card.appendChild(header);
+
+          const optsWrap = document.createElement("div");
+          optsWrap.className = "space-y-1.5 pl-11";
+          item.options.forEach((opt, oi) => {
+            let cls = "text-gray-400";
+            let icon = "";
+            if (oi === correctAns) {
+              cls = "text-brandGreen font-bold";
+              icon = '<i class="fa-solid fa-circle-check text-brandGreen mr-2"></i>';
+            } else if (oi === userAns) {
+              cls = "text-rose-400 font-bold";
+              icon = '<i class="fa-solid fa-circle-xmark text-rose-400 mr-2"></i>';
+            }
+            const div = document.createElement("div");
+            div.className = "text-xs " + cls + " flex items-start gap-1";
+            div.innerHTML = `${icon}<span><strong>${LETTERS[oi]}.</strong> ${opt}</span>`;
+            optsWrap.appendChild(div);
+          });
+          card.appendChild(optsWrap);
+
+          if (item.explanation) {
+            const exp = document.createElement("div");
+            exp.className = "ml-11 p-3 bg-emerald-500/5 border-l-2 border-brandGreen rounded-r-lg";
+            exp.innerHTML = `<p class="text-xs text-textGray leading-relaxed"><strong class="text-brandGreen">💡 Pembahasan:</strong> ${item.explanation}</p>`;
+            card.appendChild(exp);
+          }
+
+          body.appendChild(card);
+        });
+      }
+
+      function toggleReview() {
+        const body = document.getElementById("review-body");
+        const chevron = document.getElementById("review-chevron");
+        body.classList.toggle("hidden");
+        chevron.style.transform = body.classList.contains("hidden") ? "rotate(0deg)" : "rotate(180deg)";
+      }
+
+      /* ══════════════════════════════════════════════════
+         KIRIM KE GOOGLE SHEETS
+         ══════════════════════════════════════════════════ */
+      async function sendToGoogleSheets(benar, salah, skor, durasi) {
+        const statusEl = document.getElementById("save-status");
+        const statusText = document.getElementById("save-status-text");
+
+        if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL.includes("......")) {
+          statusEl.classList.remove("hidden");
+          statusEl.className = "mt-5 inline-flex items-center gap-2 text-sm font-semibold px-4 py-2 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-400";
+          statusText.innerHTML = '<i class="fa-solid fa-triangle-exclamation mr-1"></i> URL backend belum dikonfigurasi. Hubungi guru.';
+          return;
+        }
+
+        statusEl.classList.remove("hidden");
+        statusEl.className = "mt-5 inline-flex items-center gap-2 text-sm font-semibold px-4 py-2 rounded-full bg-sky-500/15 border border-sky-500/30 text-sky-400";
+        statusText.innerHTML = '<i class="fa-solid fa-spinner spinner mr-1"></i> Menyimpan hasil ke Google Sheets...';
+
+        try {
+          const formData = new URLSearchParams();
+          formData.append("jenis", "POSTTEST-EXCEL");
+          formData.append("nama", studentData.nama);
+          formData.append("absen", studentData.absen);
+          formData.append("benar", benar);
+          formData.append("salah", salah);
+          formData.append("skor", skor);
+          formData.append("durasi", durasi);
+          formData.append("pelanggaran_tab", tabViolations);
+
+          console.log("📤 Mengirim data Post-Test Excel...", Object.fromEntries(formData));
+
+          await fetch(APPS_SCRIPT_URL, {
+            method: "POST",
+            mode: "no-cors",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: formData.toString(),
+          });
+
+          statusEl.className = "mt-5 inline-flex items-center gap-2 text-sm font-semibold px-4 py-2 rounded-full bg-brandGreen/15 border border-brandGreen/30 text-brandGreen";
+          statusText.innerHTML = '<i class="fa-solid fa-circle-check mr-1"></i> Hasil berhasil dikirim!';
+          console.log("✅ Data Post-Test Excel terkirim.");
+        } catch (err) {
+          statusEl.className = "mt-5 inline-flex items-center gap-2 text-sm font-semibold px-4 py-2 rounded-full bg-rose-500/15 border border-rose-500/30 text-rose-400";
+          statusText.innerHTML = '<i class="fa-solid fa-circle-xmark mr-1"></i> Gagal menyimpan (cek koneksi internet)';
+          console.error("Save error:", err);
+        }
+      }
+
+      /* ══════════════════════════════════════════════════
+         RETRY
+         ══════════════════════════════════════════════════ */
+      function retryPostTest() {
+        if (!confirm("Yakin ingin mengulang Post-Test? Jawaban sebelumnya akan direset dan soal akan diacak ulang.")) return;
+
+        isSubmitted = false;
+        answers = new Array(QUESTIONS.length).fill(null);
+        currentIndex = 0;
+        tabViolations = 0;
+        timeRemaining = QUIZ_DURATION_SECONDS;
+        testStartTime = Date.now();
+
+        // Reset UI
+        document.getElementById("posttest-result-section").classList.add("hidden");
+        document.getElementById("posttest-quiz-section").classList.remove("hidden");
+        document.getElementById("progress-container").classList.remove("hidden");
+        document.getElementById("submit-section").classList.remove("hidden");
+        document.getElementById("nav-controls").classList.remove("hidden");
+        document.getElementById("question-dots").classList.remove("hidden");
+        document.getElementById("btn-submit").disabled = false;
+        document.getElementById("btn-next").disabled = false;
+        document.getElementById("btn-prev").disabled = false;
+        document.getElementById("save-status").classList.add("hidden");
+        document.getElementById("save-status-text").innerHTML = "";
+        document.getElementById("auto-submit-notice").classList.add("hidden");
+        document.getElementById("violation-badge").classList.remove("hidden");
+        document.getElementById("violation-badge").classList.add("inline-flex");
+        document.getElementById("violation-count-display").textContent = "0";
+
+        // Reset review section
+        document.getElementById("review-body").innerHTML = "";
+        document.getElementById("review-body").classList.add("hidden");
+        document.getElementById("review-chevron").style.transform = "rotate(0deg)";
+
+        // Shuffle ulang & render ulang
+        QUESTIONS = buildShuffledQuiz();
+        answers = new Array(QUESTIONS.length).fill(null);
+        renderQuestions();
+        renderDots();
+        showQuestion(0, null);
+        updateProgress();
+        updateNavButtons();
+        updateTimerDisplay();
+
+        // Re-enable anti-cheat + timer
+        document.body.classList.add("quiz-active");
+        attachAntiCheat();
+        startTimer();
+        document.getElementById("timer-widget").classList.remove("hidden");
+
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    </script>
+  </body>
+</html>
