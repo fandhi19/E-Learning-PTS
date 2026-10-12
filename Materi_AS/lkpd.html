@@ -1,0 +1,1860 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LKPD Praktik: Algoritma Standar — RuangInformatika</title>
+    <link rel="shortcut icon" href="../images/Logo Patbhe.png" type="image/x-icon" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: { sans: ["Plus Jakarta Sans", "sans-serif"], mono: ["JetBrains Mono", "ui-monospace", "monospace"] },
+            colors: { brandDark: "#080c10", brandGray: "#111820", brandGreen: "#00e676", textGray: "#8896a7" },
+          },
+        },
+      };
+    </script>
+
+    <link rel="stylesheet" href="../style.css" />
+
+    <style>
+      main {
+        background: transparent;
+      }
+      #readProgress {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #00e676, #38bdf8);
+        z-index: 999;
+        transition: width 0.1s ease-out;
+        width: 0%;
+        box-shadow: 0 0 12px rgba(0, 230, 118, 0.5);
+      }
+      .page-hero {
+        position: relative;
+        padding: 64px 0 40px;
+        overflow: hidden;
+      }
+      .page-hero-glow {
+        position: absolute;
+        top: -100px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 800px;
+        height: 400px;
+        background: radial-gradient(ellipse, rgba(16, 185, 129, 0.1) 0%, rgba(56, 189, 248, 0.05) 40%, transparent 70%);
+        filter: blur(40px);
+        pointer-events: none;
+      }
+      .page-hero-inner {
+        max-width: 1024px;
+        margin: 0 auto;
+        padding: 0 24px;
+        position: relative;
+        z-index: 10;
+      }
+      .page-hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 14px;
+        border-radius: 999px;
+        background: rgba(16, 185, 129, 0.08);
+        border: 1px solid rgba(16, 185, 129, 0.3);
+        font-size: 0.78rem;
+        font-weight: 700;
+        color: #34d399;
+        margin-bottom: 18px;
+        backdrop-filter: blur(8px);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
+      .page-hero-title {
+        font-size: clamp(2rem, 4.5vw, 3rem);
+        font-weight: 800;
+        line-height: 1.15;
+        letter-spacing: -0.03em;
+        margin-bottom: 16px;
+      }
+      .page-hero-title .gradient-text {
+        background: linear-gradient(135deg, #00e676 0%, #38bdf8 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .page-hero-desc {
+        font-size: 1rem;
+        line-height: 1.7;
+        color: #8896a7;
+        max-width: 640px;
+      }
+
+      .form-input {
+        width: 100%;
+        background: rgba(0, 0, 0, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 12px;
+        padding: 12px 16px;
+        color: white;
+        font-size: 15px;
+        font-family: inherit;
+        transition: all 0.2s;
+      }
+      .form-input:focus {
+        outline: none;
+        border-color: #00e676;
+        box-shadow: 0 0 0 3px rgba(0, 230, 118, 0.15);
+      }
+      .form-input::placeholder {
+        color: rgba(136, 150, 167, 0.5);
+      }
+
+      .form-textarea {
+        width: 100%;
+        background: rgba(0, 0, 0, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 12px;
+        padding: 14px 16px;
+        color: white;
+        font-size: 14px;
+        font-family: inherit;
+        transition: all 0.2s;
+        min-height: 110px;
+        resize: vertical;
+        line-height: 1.6;
+      }
+      .form-textarea:focus {
+        outline: none;
+        border-color: #00e676;
+        box-shadow: 0 0 0 3px rgba(0, 230, 118, 0.15);
+      }
+      .form-textarea::placeholder {
+        color: rgba(136, 150, 167, 0.5);
+      }
+
+      .blank-input {
+        display: inline-block;
+        min-width: 140px;
+        background: rgba(0, 0, 0, 0.4);
+        border: none;
+        border-bottom: 2px dashed rgba(0, 230, 118, 0.5);
+        color: #38bdf8;
+        font-family: "JetBrains Mono", monospace;
+        font-weight: 700;
+        font-size: 14px;
+        padding: 4px 8px;
+        text-align: center;
+        border-radius: 4px 4px 0 0;
+        transition: all 0.2s;
+      }
+      .blank-input:focus {
+        outline: none;
+        border-bottom-color: #00e676;
+        border-bottom-style: solid;
+        background: rgba(0, 230, 118, 0.08);
+      }
+      .blank-input.sm {
+        min-width: 80px;
+      }
+      .blank-input.md {
+        min-width: 110px;
+      }
+      .blank-input.lg {
+        min-width: 160px;
+      }
+      .blank-input::placeholder {
+        color: rgba(56, 189, 248, 0.4);
+        font-weight: 400;
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(15px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .fade-in-up {
+        animation: fadeInUp 0.5s ease forwards;
+      }
+      @keyframes scorePulse {
+        0% {
+          transform: scale(0.8);
+          opacity: 0;
+        }
+        50% {
+          transform: scale(1.05);
+        }
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+      @keyframes spin {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      .step-card {
+        position: relative;
+        transition: all 0.3s ease;
+      }
+      .step-card.done {
+        border-color: rgba(0, 230, 118, 0.5) !important;
+        background: linear-gradient(135deg, rgba(0, 230, 118, 0.05) 0%, transparent 60%) !important;
+      }
+      .step-num {
+        width: 52px;
+        height: 52px;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        font-weight: 800;
+        flex-shrink: 0;
+        transition: all 0.3s ease;
+      }
+      .step-num.done {
+        background: #00e676 !important;
+        color: #080c10 !important;
+        border-color: #00e676 !important;
+        box-shadow: 0 0 20px rgba(0, 230, 118, 0.4);
+      }
+
+      .checklist-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 12px 14px;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: rgba(255, 255, 255, 0.02);
+        cursor: pointer;
+        transition: all 0.2s;
+        user-select: none;
+      }
+      .checklist-item:hover {
+        background: rgba(0, 230, 118, 0.05);
+        border-color: rgba(0, 230, 118, 0.3);
+      }
+      .checklist-item.checked {
+        background: rgba(0, 230, 118, 0.1);
+        border-color: rgba(0, 230, 118, 0.5);
+      }
+      .checklist-box {
+        width: 22px;
+        height: 22px;
+        border-radius: 6px;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        margin-top: 1px;
+        transition: all 0.2s;
+        color: transparent;
+        font-size: 12px;
+      }
+      .checklist-item.checked .checklist-box {
+        background: #00e676;
+        border-color: #00e676;
+        color: #080c10;
+      }
+
+      /* Algorithm-specific */
+      .case-head {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 16px;
+        background: linear-gradient(135deg, #0f172a, #1e3a8a);
+        border-radius: 12px;
+        margin-bottom: 14px;
+      }
+      .case-head .case-icon {
+        width: 34px;
+        height: 34px;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.15);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        font-weight: 800;
+        color: #7dd3fc;
+        flex-shrink: 0;
+      }
+      .case-head .case-title {
+        font-size: 0.95rem;
+        font-weight: 800;
+        letter-spacing: 0.02em;
+        line-height: 1.3;
+      }
+      .case-head .case-sub {
+        font-size: 0.75rem;
+        color: #94a3b8;
+        font-weight: 500;
+        margin-top: 1px;
+      }
+
+      .array-chips {
+        display: inline-flex;
+        gap: 6px;
+        flex-wrap: wrap;
+        margin: 6px 0;
+        vertical-align: middle;
+      }
+      .array-chips .chip {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 40px;
+        height: 34px;
+        padding: 0 12px;
+        background: #0d1117;
+        border: 1.5px solid rgba(255, 255, 255, 0.15);
+        border-radius: 8px;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 14px;
+        font-weight: 700;
+        color: #d1d5db;
+      }
+      .array-chips .chip.hi {
+        background: rgba(0, 230, 118, 0.15);
+        border-color: #00e676;
+        color: #4ade80;
+      }
+      .array-chips .chip.swap {
+        background: rgba(251, 191, 36, 0.15);
+        border-color: #fbbf24;
+        color: #fbbf24;
+      }
+      .array-chips .chip.target {
+        background: rgba(168, 85, 247, 0.15);
+        border-color: #a855f7;
+        color: #c084fc;
+      }
+      .array-chips .chip.dim {
+        opacity: 0.35;
+      }
+
+      .step-row {
+        display: flex;
+        gap: 12px;
+        padding: 10px 0;
+        border-bottom: 1px dashed rgba(255, 255, 255, 0.08);
+        font-size: 14px;
+        line-height: 1.6;
+        align-items: flex-start;
+      }
+      .step-row:last-child {
+        border-bottom: none;
+      }
+      .step-row-num {
+        flex-shrink: 0;
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        background: rgba(56, 189, 248, 0.15);
+        border: 1px solid rgba(56, 189, 248, 0.4);
+        color: #38bdf8;
+        font-size: 12px;
+        font-weight: 800;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "JetBrains Mono", monospace;
+        margin-top: 2px;
+      }
+      .step-row-body {
+        flex: 1;
+        color: #d1d5db;
+      }
+      .step-row-body code {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 13px;
+        font-weight: 600;
+        background: rgba(0, 0, 0, 0.4);
+        padding: 2px 8px;
+        border-radius: 5px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: #fbbf24;
+      }
+      .step-row-body .hint {
+        display: block;
+        margin-top: 6px;
+        font-size: 12px;
+        color: #8896a7;
+        font-style: italic;
+      }
+
+      .code-inline {
+        display: inline-block;
+        padding: 2px 8px;
+        background: rgba(0, 0, 0, 0.4);
+        border-radius: 6px;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.82em;
+        color: #fbbf24;
+        font-weight: 600;
+      }
+
+      .radio-option {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 14px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-size: 14px;
+        color: #d1d5db;
+      }
+      .radio-option:hover {
+        background: rgba(0, 230, 118, 0.05);
+        border-color: rgba(0, 230, 118, 0.3);
+      }
+      .radio-option input[type="radio"] {
+        width: 18px;
+        height: 18px;
+        accent-color: #00e676;
+        flex-shrink: 0;
+      }
+
+      .btn-upload {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        padding: 18px 36px;
+        border-radius: 16px;
+        background: linear-gradient(135deg, #00e676 0%, #00c853 55%, #00b848 100%);
+        color: #052e16;
+        font-weight: 800;
+        font-size: 1.05rem;
+        letter-spacing: -0.01em;
+        box-shadow:
+          0 4px 24px rgba(0, 230, 118, 0.4),
+          0 0 60px rgba(0, 230, 118, 0.15),
+          inset 0 1px 0 rgba(255, 255, 255, 0.4);
+        text-decoration: none;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s;
+        cursor: pointer;
+        border: none;
+      }
+      .btn-upload::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -120%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+        transform: skewX(-20deg);
+        transition: left 0.7s ease;
+      }
+      .btn-upload:hover:not(:disabled)::before {
+        left: 120%;
+      }
+      .btn-upload:hover:not(:disabled) {
+        transform: translateY(-3px);
+        box-shadow:
+          0 10px 40px rgba(0, 230, 118, 0.55),
+          0 0 80px rgba(0, 230, 118, 0.3);
+      }
+      .btn-upload:active:not(:disabled) {
+        transform: translateY(-1px);
+      }
+      .btn-upload i {
+        transition: transform 0.3s;
+      }
+      .btn-upload:hover:not(:disabled) i {
+        transform: scale(1.15) rotate(-5deg);
+      }
+      .btn-upload:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        filter: grayscale(0.5);
+      }
+      .btn-upload:disabled:hover {
+        transform: none;
+        box-shadow: 0 4px 24px rgba(0, 230, 118, 0.2);
+      }
+      .btn-upload:disabled::before {
+        display: none;
+      }
+
+      .progress-info-bar {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 16px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+      }
+
+      .upload-zone {
+        border: 2px dashed rgba(0, 230, 118, 0.4);
+        border-radius: 16px;
+        padding: 32px 24px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s;
+        background: rgba(0, 230, 118, 0.03);
+      }
+      .upload-zone:hover,
+      .upload-zone.dragover {
+        border-color: #00e676;
+        background: rgba(0, 230, 118, 0.08);
+        transform: translateY(-2px);
+      }
+      .upload-zone.has-file {
+        border-style: solid;
+        border-color: #00e676;
+        background: rgba(0, 230, 118, 0.1);
+        padding: 18px 20px;
+      }
+      .upload-zone .upload-icon {
+        font-size: 2.5rem;
+        color: #00e676;
+        margin-bottom: 12px;
+        transition: transform 0.3s;
+      }
+      .upload-zone:hover .upload-icon {
+        transform: scale(1.1) translateY(-4px);
+      }
+      .upload-zone .upload-title {
+        font-weight: 700;
+        font-size: 1rem;
+        margin-bottom: 4px;
+      }
+      .upload-zone .upload-subtitle {
+        font-size: 0.82rem;
+        color: #8896a7;
+      }
+
+      .file-preview {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        text-align: left;
+      }
+      .file-preview .file-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        background: rgba(0, 230, 118, 0.15);
+        border: 1px solid rgba(0, 230, 118, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #00e676;
+        font-size: 1.4rem;
+        flex-shrink: 0;
+      }
+      .file-preview .file-info {
+        flex: 1;
+        min-width: 0;
+      }
+      .file-preview .file-name {
+        font-weight: 700;
+        color: white;
+        font-size: 0.9rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .file-preview .file-size {
+        font-size: 0.75rem;
+        color: #8896a7;
+        margin-top: 2px;
+      }
+      .file-preview .file-remove {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        background: rgba(244, 63, 94, 0.15);
+        border: 1px solid rgba(244, 63, 94, 0.3);
+        color: #f43f5e;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+        flex-shrink: 0;
+      }
+      .file-preview .file-remove:hover {
+        background: rgba(244, 63, 94, 0.3);
+        transform: scale(1.1);
+      }
+
+      .upload-status {
+        margin-top: 16px;
+        padding: 14px 18px;
+        border-radius: 12px;
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        font-size: 0.88rem;
+        line-height: 1.5;
+        text-align: left;
+      }
+      .upload-status.success {
+        background: rgba(0, 230, 118, 0.1);
+        border: 1px solid rgba(0, 230, 118, 0.4);
+        color: #00e676;
+      }
+      .upload-status.error {
+        background: rgba(244, 63, 94, 0.1);
+        border: 1px solid rgba(244, 63, 94, 0.4);
+        color: #f43f5e;
+      }
+      .upload-status.loading {
+        background: rgba(56, 189, 248, 0.1);
+        border: 1px solid rgba(56, 189, 248, 0.4);
+        color: #38bdf8;
+      }
+      .upload-status i {
+        margin-top: 1px;
+        flex-shrink: 0;
+      }
+      .upload-status.success i {
+        animation: scorePulse 0.6s ease;
+      }
+      .upload-status.loading i {
+        animation: spin 1s linear infinite;
+      }
+
+      @media (max-width: 640px) {
+        body {
+          font-size: 1rem;
+        }
+        h1 {
+          font-size: 1.75rem !important;
+          line-height: 1.2 !important;
+        }
+        h2 {
+          font-size: 1.35rem !important;
+        }
+        .btn-upload {
+          padding: 16px 24px;
+          font-size: 0.95rem;
+          width: 100%;
+        }
+        .array-chips .chip {
+          min-width: 34px;
+          height: 30px;
+          padding: 0 8px;
+          font-size: 12px;
+        }
+        .upload-zone {
+          padding: 24px 16px;
+        }
+        .blank-input {
+          min-width: 100px;
+        }
+      }
+    </style>
+  </head>
+
+  <body class="bg-grid text-white font-sans antialiased overflow-x-hidden flex flex-col min-h-screen">
+    <div id="readProgress"></div>
+
+    <nav class="navbar">
+      <div class="navbar-inner">
+        <a href="materi-search-sort.html" class="navbar-logo">
+          <div class="navbar-logo-icon"><i class="fa-solid fa-code"></i></div>
+          <span class="navbar-logo-text">RuangInformatika</span>
+        </a>
+        <div class="navbar-links">
+          <a href="../index.html" class="nav-link">Dashboard</a>
+          <a href="../index.html#materi" class="nav-link">Daftar Modul</a>
+          <a href="../leaderboard.html" class="nav-link">Leaderboard</a>
+          <a href="../forum.html" class="nav-link">Forum Diskusi</a>
+        </div>
+        <button class="nav-badge"><i class="fa-solid fa-chalkboard-user"></i> Kelas XE6</button>
+        <button class="hamburger-btn" id="hamburgerBtn" aria-label="Menu"><i class="fa-solid fa-bars"></i></button>
+      </div>
+      <div class="mobile-menu" id="mobileMenu">
+        <a href="../index.html" class="mobile-nav-link"><i class="fa-solid fa-house" style="margin-right: 10px"></i> Dashboard</a>
+        <a href="../index.html#materi" class="mobile-nav-link"><i class="fa-solid fa-book-open" style="margin-right: 10px"></i> Daftar Modul</a>
+        <a href="../leaderboard.html" class="mobile-nav-link"><i class="fa-solid fa-trophy" style="margin-right: 10px"></i> Leaderboard</a>
+        <a href="../forum.html" class="mobile-nav-link"><i class="fa-solid fa-comments" style="margin-right: 10px"></i> Forum Diskusi</a>
+        <div style="padding: 12px 16px">
+          <a href="../materi-search-sort.html" class="nav-badge" style="width: 100%; justify-content: center; text-decoration: none"><i class="fa-solid fa-arrow-left"></i> Kembali ke Materi</a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="flex-grow relative">
+      <header class="page-hero">
+        <div class="page-hero-glow"></div>
+        <div class="page-hero-inner">
+          <div class="reveal fade-in-up">
+            <div class="page-hero-badge"><i class="fa-solid fa-diagram-project"></i> LKPD Praktik • Algoritma Standar</div>
+            <h1 class="page-hero-title">LKPD Praktik:<br /><span class="gradient-text">Searching &amp; Sorting</span></h1>
+            <p class="page-hero-desc">
+              Diskusikan bersama kelompokmu untuk memahami, menerapkan, dan menganalisis <strong class="text-white">algoritma standar</strong>. Halaman ini adalah <strong class="text-brandGreen">panduan langkah-langkah</strong> yang harus
+              kelompokmu selesaikan.
+            </p>
+            <div class="mt-5 flex flex-wrap gap-3">
+              <a href="../materi-search-sort.html" class="inline-flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-xl text-sm font-semibold hover:bg-white/10 transition">
+                <i class="fa-solid fa-arrow-left text-brandGreen"></i> Kembali ke Materi
+              </a>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main class="max-w-4xl mx-auto px-6 pb-12 relative z-10">
+        <!-- Info Cards -->
+        <div class="bg-brandGray border border-white/5 rounded-3xl p-5 md:p-6 mb-6 fade-in-up">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div class="flex items-center gap-3">
+              <div class="w-11 h-11 rounded-xl bg-brandGreen/10 border border-brandGreen/25 flex items-center justify-center text-brandGreen text-lg shrink-0"><i class="fa-solid fa-bullseye"></i></div>
+              <div>
+                <p class="text-xs text-textGray uppercase tracking-wider font-bold">Target</p>
+                <p class="text-white font-bold text-sm">Karakteristik • Penerapan • Analisis</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="w-11 h-11 rounded-xl bg-sky-500/10 border border-sky-500/25 flex items-center justify-center text-sky-400 text-lg shrink-0"><i class="fa-solid fa-clock"></i></div>
+              <div>
+                <p class="text-xs text-textGray uppercase tracking-wider font-bold">Waktu</p>
+                <p class="text-white font-bold text-sm">30 Menit</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="w-11 h-11 rounded-xl bg-purple-500/10 border border-purple-500/25 flex items-center justify-center text-purple-400 text-lg shrink-0"><i class="fa-solid fa-users"></i></div>
+              <div>
+                <p class="text-xs text-textGray uppercase tracking-wider font-bold">Formasi</p>
+                <p class="text-white font-bold text-sm">Kelompok (4 orang)</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-5 pt-5 border-t border-white/10 space-y-3">
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-brandGreen shadow-[0_0_0_3px_rgba(0,230,118,0.15)]"></span>
+              <p class="text-xs text-brandGreen uppercase tracking-widest font-bold">Target Pembelajaran</p>
+            </div>
+            <div class="flex items-start gap-3">
+              <span class="w-6 h-6 rounded-md bg-brandGreen/15 border border-brandGreen/30 text-brandGreen flex items-center justify-center text-xs font-mono font-bold shrink-0 mt-0.5">1</span>
+              <p class="text-sm text-textGray leading-relaxed">
+                Melalui diskusi kelompok, murid mampu <strong class="text-white">menjelaskan perbedaan mendasar</strong> algoritma Searching dan Sorting serta <strong class="text-white">mengidentifikasi karakteristik</strong> tiap algoritma
+                standar.
+              </p>
+            </div>
+            <div class="flex items-start gap-3">
+              <span class="w-6 h-6 rounded-md bg-brandGreen/15 border border-brandGreen/30 text-brandGreen flex items-center justify-center text-xs font-mono font-bold shrink-0 mt-0.5">2</span>
+              <p class="text-sm text-textGray leading-relaxed">
+                Melalui studi kasus, murid mampu <strong class="text-white">menerapkan</strong> algoritma standar (Linear/Binary Search, Bubble/Insertion Sort) untuk memecahkan permasalahan secara runtut.
+              </p>
+            </div>
+            <div class="flex items-start gap-3">
+              <span class="w-6 h-6 rounded-md bg-brandGreen/15 border border-brandGreen/30 text-brandGreen flex items-center justify-center text-xs font-mono font-bold shrink-0 mt-0.5">3</span>
+              <p class="text-sm text-textGray leading-relaxed">
+                Berdasarkan hasil analisis, murid mampu <strong class="text-white">membandingkan efisiensi</strong> algoritma standar dan memilih algoritma paling tepat sesuai karakteristik data.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- PETUNJUK -->
+        <div class="bg-gradient-to-br from-amber-500/10 via-brandGray to-brandGray border border-amber-500/30 rounded-3xl p-5 md:p-6 mb-6 fade-in-up">
+          <div class="flex items-center gap-3 border-b border-white/10 pb-4 mb-4">
+            <div class="w-11 h-11 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 text-lg shrink-0"><i class="fa-solid fa-clipboard-check"></i></div>
+            <div>
+              <h3 class="text-lg md:text-xl font-bold text-white">Petunjuk Pengerjaan</h3>
+              <p class="text-xs text-textGray">Baca dulu supaya tidak bingung</p>
+            </div>
+          </div>
+          <ol class="space-y-3 text-sm">
+            <li class="flex items-start gap-3">
+              <span class="w-7 h-7 rounded-lg bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-300 text-xs font-bold shrink-0 mt-0.5">1</span>
+              <span class="text-gray-300"><strong class="text-white">Diskusikan</strong> setiap permasalahan bersama anggota kelompokmu — jangan bekerja sendiri.</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="w-7 h-7 rounded-lg bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-300 text-xs font-bold shrink-0 mt-0.5">2</span>
+              <span class="text-gray-300">Gunakan fitur <strong class="text-white">Simulasi Visual</strong> pada halaman materi jika kelompokmu kesulitan membayangkan cara kerja algoritma.</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="w-7 h-7 rounded-lg bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-300 text-xs font-bold shrink-0 mt-0.5">3</span>
+              <span class="text-gray-300">Ketikkan jawaban hasil diskusi kelompok langsung pada kolom yang disediakan.</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="w-7 h-7 rounded-lg bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-300 text-xs font-bold shrink-0 mt-0.5">4</span>
+              <span class="text-gray-300">Setelah selesai, <strong class="text-white">screenshot</strong> jawaban kelompokmu lalu upload dalam bentuk PDF/gambar.</span>
+            </li>
+          </ol>
+        </div>
+
+        <!-- IDENTITAS KELOMPOK -->
+        <div class="bg-brandGray border border-brandGreen/30 rounded-3xl p-6 md:p-8 mb-6 space-y-5 fade-in-up">
+          <div class="flex items-center gap-3 border-b border-white/10 pb-4">
+            <div class="w-11 h-11 rounded-xl bg-brandGreen/10 border border-brandGreen/25 flex items-center justify-center text-brandGreen text-lg shrink-0"><i class="fa-solid fa-users-gear"></i></div>
+            <div>
+              <h3 class="text-lg md:text-xl font-bold text-white">Identitas Kelompok</h3>
+              <p class="text-xs md:text-sm text-textGray">Isi dengan data kelompokmu</p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-textGray uppercase mb-2">Kelas <span class="text-rose-400">*</span></label>
+              <select id="kelas" class="form-input">
+                <option value="">-- Pilih Kelas --</option>
+                <option value="XE1">XE1</option>
+                <option value="XE2">XE2</option>
+                <option value="XE3">XE3</option>
+                <option value="XE4">XE4</option>
+                <option value="XE5">XE5</option>
+                <option value="XE6">XE6</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-textGray uppercase mb-2">Tanggal Pengerjaan</label>
+              <input type="date" id="tanggal" class="form-input" />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-textGray uppercase mb-2">Nama Anggota 1 <span class="text-rose-400">*</span></label>
+              <input type="text" id="anggota1" placeholder="Contoh: Budi Santoso" class="form-input" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-textGray uppercase mb-2">No. Absen</label>
+              <input type="number" id="absen1" placeholder="15" min="1" max="50" class="form-input" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-textGray uppercase mb-2">Nama Anggota 2 <span class="text-rose-400">*</span></label>
+              <input type="text" id="anggota2" placeholder="Contoh: Ani Lestari" class="form-input" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-textGray uppercase mb-2">No. Absen</label>
+              <input type="number" id="absen2" placeholder="22" min="1" max="50" class="form-input" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-textGray uppercase mb-2">Nama Anggota 3 <span class="text-rose-400">*</span></label>
+              <input type="text" id="anggota3" placeholder="Contoh: Citra Dewi" class="form-input" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-textGray uppercase mb-2">No. Absen</label>
+              <input type="number" id="absen3" placeholder="08" min="1" max="50" class="form-input" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-textGray uppercase mb-2">Nama Anggota 4 <span class="text-rose-400">*</span></label>
+              <input type="text" id="anggota4" placeholder="Contoh: Dodi Pratama" class="form-input" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-textGray uppercase mb-2">No. Absen</label>
+              <input type="number" id="absen4" placeholder="30" min="1" max="50" class="form-input" />
+            </div>
+          </div>
+
+          <div class="bg-white/5 border border-white/10 rounded-xl p-3 flex items-start gap-2">
+            <i class="fa-solid fa-circle-info text-sky-400 mt-0.5 shrink-0"></i>
+            <p class="text-xs text-textGray leading-relaxed">Identitas ini akan dipakai untuk <strong class="text-white">nama file upload</strong>. Pastikan diisi dengan benar sebelum mengumpulkan tugas.</p>
+          </div>
+        </div>
+
+        <!-- ===================== TUGAS 1 ===================== -->
+        <div class="mb-6">
+          <div class="flex items-center gap-3 mb-5">
+            <div class="w-10 h-10 rounded-xl bg-brandGreen/15 border border-brandGreen/30 flex items-center justify-center text-brandGreen text-lg">
+              <i class="fa-solid fa-1"></i>
+            </div>
+            <div>
+              <h2 class="text-xl md:text-2xl font-bold text-white">Tugas 1 — Memahami Karakteristik Algoritma</h2>
+              <p class="text-xs text-textGray">Fokus TP 1 • Diskusikan bersama kelompokmu</p>
+            </div>
+          </div>
+
+          <div id="step1-card" class="step-card bg-brandGray border border-white/10 rounded-3xl p-5 md:p-6 mb-4">
+            <div class="flex items-start gap-4 border-b border-white/10 pb-4 mb-5">
+              <div id="step1-num" class="step-num bg-emerald-500/15 border border-emerald-500/30 text-emerald-400">1</div>
+              <div class="flex-1">
+                <h3 class="text-lg md:text-xl font-bold text-white">Definisi &amp; Karakteristik Dasar</h3>
+                <p class="text-sm text-textGray mt-1">Tulis jawaban dengan bahasa kelompokmu sendiri.</p>
+              </div>
+            </div>
+
+            <div class="space-y-4">
+              <!-- A. Definisi -->
+              <div class="bg-white/5 border border-white/10 rounded-2xl p-4 space-y-3">
+                <p class="text-xs font-bold text-emerald-400 uppercase tracking-wider">A. Definisi Dasar</p>
+                <p class="text-sm text-textGray leading-relaxed">
+                  Jelaskan dengan bahasa kelompokmu sendiri, apa <strong class="text-white">perbedaan mendasar</strong> antara algoritma <strong class="text-emerald-300">Searching</strong> (Pencarian) dan
+                  <strong class="text-emerald-300">Sorting</strong> (Pengurutan)?
+                </p>
+                <textarea id="jawaban-definisi" class="form-textarea" placeholder="Tulis jawaban kelompokmu di sini..."></textarea>
+              </div>
+
+              <!-- B. Identifikasi Karakteristik -->
+              <div class="bg-white/5 border border-white/10 rounded-2xl p-4 space-y-3">
+                <p class="text-xs font-bold text-emerald-400 uppercase tracking-wider">B. Identifikasi Karakteristik</p>
+                <p class="text-sm text-textGray leading-relaxed mb-2">
+                  Pasangkan karakteristik di bawah ini dengan algoritma yang paling tepat! Pilihan: <strong class="text-white">Linear Search</strong>, <strong class="text-white">Binary Search</strong>,
+                  <strong class="text-white">Bubble Sort</strong>, <strong class="text-white">Insertion Sort</strong>.
+                </p>
+
+                <div class="step-row">
+                  <span class="step-row-num">1</span>
+                  <div class="step-row-body">
+                    &ldquo;Saya mencari data dengan cara <strong class="text-white">membagi dua ruang pencarian</strong> terus-menerus. Syaratnya, data harus sudah berurutan.&rdquo;
+                    <span class="hint">Jawaban: <input type="text" id="karakter1" class="blank-input lg" placeholder="tulis di sini..." /></span>
+                  </div>
+                </div>
+
+                <div class="step-row">
+                  <span class="step-row-num">2</span>
+                  <div class="step-row-body">
+                    &ldquo;Saya mengurutkan data dengan cara menganalogikan <strong class="text-white">menyisipkan kartu</strong> ke posisi yang tepat di antara kartu yang sudah urut.&rdquo;
+                    <span class="hint">Jawaban: <input type="text" id="karakter2" class="blank-input lg" placeholder="tulis di sini..." /></span>
+                  </div>
+                </div>
+
+                <div class="step-row">
+                  <span class="step-row-num">3</span>
+                  <div class="step-row-body">
+                    &ldquo;Saya mencari data dengan cara <strong class="text-white">mengecek satu per satu</strong> dari awal sampai akhir, tanpa peduli datanya urut atau acak.&rdquo;
+                    <span class="hint">Jawaban: <input type="text" id="karakter3" class="blank-input lg" placeholder="tulis di sini..." /></span>
+                  </div>
+                </div>
+
+                <div class="step-row">
+                  <span class="step-row-num">4</span>
+                  <div class="step-row-body">
+                    &ldquo;Saya mengurutkan data dengan cara selalu <strong class="text-white">membandingkan dua data yang bersebelahan</strong>, lalu menukarnya jika posisinya salah.&rdquo;
+                    <span class="hint">Jawaban: <input type="text" id="karakter4" class="blank-input lg" placeholder="tulis di sini..." /></span>
+                  </div>
+                </div>
+              </div>
+
+              <p class="text-xs font-bold text-textGray uppercase tracking-wider mt-4 mb-2">Checklist:</p>
+              <div class="space-y-2">
+                <label class="checklist-item" data-step="1">
+                  <span class="checklist-box"><i class="fa-solid fa-check"></i></span>
+                  <span class="text-sm text-gray-300 flex-1">Definisi Searching &amp; Sorting sudah ditulis dengan bahasa kelompok sendiri</span>
+                </label>
+                <label class="checklist-item" data-step="1">
+                  <span class="checklist-box"><i class="fa-solid fa-check"></i></span>
+                  <span class="text-sm text-gray-300 flex-1">Keempat karakteristik sudah dipasangkan dengan algoritma yang tepat</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===================== TUGAS 2 ===================== -->
+        <div class="mb-6">
+          <div class="flex items-center gap-3 mb-5">
+            <div class="w-10 h-10 rounded-xl bg-sky-500/15 border border-sky-500/30 flex items-center justify-center text-sky-400 text-lg">
+              <i class="fa-solid fa-2"></i>
+            </div>
+            <div>
+              <h2 class="text-xl md:text-2xl font-bold text-white">Tugas 2 — Menerapkan Algoritma Standar</h2>
+              <p class="text-xs text-textGray">Fokus TP 2 • Simulasikan langkahnya satu per satu</p>
+            </div>
+          </div>
+
+          <!-- Studi Kasus 1: Bubble Sort -->
+          <div id="step2-card" class="step-card bg-brandGray border border-white/10 rounded-3xl p-5 md:p-6 mb-4">
+            <div class="flex items-start gap-4 border-b border-white/10 pb-4 mb-5">
+              <div id="step2-num" class="step-num bg-sky-500/15 border border-sky-500/30 text-sky-400">2</div>
+              <div class="flex-1">
+                <h3 class="text-lg md:text-xl font-bold text-white">Studi Kasus 1 — Bubble Sort</h3>
+                <p class="text-sm text-textGray mt-1">Simulasikan Iterasi Pertama dari pengurutan data nilai ujian.</p>
+              </div>
+            </div>
+
+            <div class="space-y-4">
+              <div class="case-head">
+                <span class="case-icon">🫧</span>
+                <div class="flex-1">
+                  <div class="case-title">Mengurutkan Data Nilai Ujian</div>
+                  <div class="case-sub">Bubble Sort • Iterasi Pertama • Kecil ke Besar</div>
+                </div>
+              </div>
+
+              <p class="text-sm text-textGray leading-relaxed">Pak Ilyas baru selesai mengoreksi <strong class="text-white">5 lembar ujian</strong> murid kelas XE6 dengan nilai acak sebagai berikut:</p>
+
+              <div class="bg-black/40 border border-white/5 rounded-xl p-4">
+                <p class="text-xs font-bold text-sky-400 uppercase tracking-wider mb-2">Data Awal</p>
+                <div class="array-chips"><span class="chip">85</span><span class="chip">70</span><span class="chip">95</span><span class="chip">60</span><span class="chip">80</span></div>
+              </div>
+
+              <div class="bg-sky-500/5 border-l-4 border-sky-500 rounded-r-lg p-4">
+                <p class="text-sm text-textGray leading-relaxed">
+                  <strong class="text-white">Tugas:</strong> Urutkan data dari <strong class="text-sky-300">terkecil ke terbesar</strong> menggunakan <strong class="text-sky-300">Bubble Sort</strong>. Tuliskan simulasi pertukaran posisi
+                  data pada <strong class="text-white">Iterasi / Putaran Pertama</strong> saja!
+                </p>
+                <p class="text-xs text-textGray italic mt-2">Petunjuk: Bandingkan dua angka bersebelahan dari kiri ke kanan. Tukar jika urutannya salah (kiri > kanan).</p>
+              </div>
+
+              <div class="bg-white/5 border border-white/10 rounded-2xl p-4 space-y-3">
+                <p class="text-xs font-bold text-sky-400 uppercase tracking-wider">Simulasi Iterasi 1</p>
+
+                <div class="step-row">
+                  <span class="step-row-num">1</span>
+                  <div class="step-row-body">
+                    Bandingkan <code>85</code> dan <code>70</code> → <strong class="text-amber-300">Tukar</strong> posisinya menjadi:
+                    <div class="array-chips mt-2"><span class="chip swap">70</span><span class="chip swap">85</span><span class="chip">95</span><span class="chip">60</span><span class="chip">80</span></div>
+                  </div>
+                </div>
+
+                <div class="step-row">
+                  <span class="step-row-num">2</span>
+                  <div class="step-row-body">
+                    Bandingkan <code>85</code> dan <input type="text" id="bubble2a" class="blank-input sm" placeholder="?" /> → <strong>Tukar / Tidak Tukar</strong> (tulis salah satu):
+                    <span class="hint">Hasil: <input type="text" id="bubble2b" class="blank-input md" placeholder="tulis hasil..." /></span>
+                  </div>
+                </div>
+
+                <div class="step-row">
+                  <span class="step-row-num">3</span>
+                  <div class="step-row-body">
+                    Bandingkan <input type="text" id="bubble3a" class="blank-input sm" placeholder="?" /> dan <input type="text" id="bubble3b" class="blank-input sm" placeholder="?" /> → <strong>Tukar / Tidak Tukar</strong>:
+                    <span class="hint">Hasil: <input type="text" id="bubble3c" class="blank-input md" placeholder="tulis hasil..." /></span>
+                  </div>
+                </div>
+
+                <div class="step-row">
+                  <span class="step-row-num">4</span>
+                  <div class="step-row-body">
+                    Bandingkan <input type="text" id="bubble4a" class="blank-input sm" placeholder="?" /> dan <input type="text" id="bubble4b" class="blank-input sm" placeholder="?" /> → <strong>Tukar / Tidak Tukar</strong>:
+                    <span class="hint">Hasil: <input type="text" id="bubble4c" class="blank-input md" placeholder="tulis hasil..." /></span>
+                  </div>
+                </div>
+
+                <div class="step-row" style="border-top: 1.5px dashed rgba(255, 255, 255, 0.15); border-bottom: none; margin-top: 4px; padding-top: 12px">
+                  <span class="step-row-num" style="background: rgba(0, 230, 118, 0.15); border-color: #00e676; color: #4ade80">✓</span>
+                  <div class="step-row-body">
+                    <strong>Hasil akhir Iterasi 1:</strong>
+                    <span class="hint">
+                      Tulis 5 angka hasil akhir iterasi 1 dipisahkan koma, contoh: <code class="code-inline">10, 20, 30, 40, 50</code><br />
+                      <input type="text" id="bubbleHasil" class="blank-input" style="min-width: 320px; margin-top: 6px" placeholder="tulis 5 angka, pisahkan koma..." />
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <p class="text-xs font-bold text-textGray uppercase tracking-wider mt-4 mb-2">Checklist:</p>
+              <div class="space-y-2">
+                <label class="checklist-item" data-step="2">
+                  <span class="checklist-box"><i class="fa-solid fa-check"></i></span>
+                  <span class="text-sm text-gray-300 flex-1">Empat langkah perbandingan Bubble Sort sudah diisi lengkap</span>
+                </label>
+                <label class="checklist-item" data-step="2">
+                  <span class="checklist-box"><i class="fa-solid fa-check"></i></span>
+                  <span class="text-sm text-gray-300 flex-1">Hasil akhir Iterasi 1 sudah ditulis sesuai urutan hasil pertukaran</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Studi Kasus 2: Binary Search -->
+          <div id="step3-card" class="step-card bg-brandGray border border-white/10 rounded-3xl p-5 md:p-6 mb-4">
+            <div class="flex items-start gap-4 border-b border-white/10 pb-4 mb-5">
+              <div id="step3-num" class="step-num bg-sky-500/15 border border-sky-500/30 text-sky-400">3</div>
+              <div class="flex-1">
+                <h3 class="text-lg md:text-xl font-bold text-white">Studi Kasus 2 — Binary Search</h3>
+                <p class="text-sm text-textGray mt-1">Cari NISN 112 dari daftar yang sudah terurut.</p>
+              </div>
+            </div>
+
+            <div class="space-y-4">
+              <div class="case-head">
+                <span class="case-icon">✂️</span>
+                <div class="flex-1">
+                  <div class="case-title">Mencari NISN Siswa</div>
+                  <div class="case-sub">Binary Search • Data Sudah Terurut</div>
+                </div>
+              </div>
+
+              <p class="text-sm text-textGray leading-relaxed">Diberikan daftar NISN siswa yang sudah <strong class="text-white">terurut</strong> dari terkecil ke terbesar:</p>
+
+              <div class="bg-black/40 border border-white/5 rounded-xl p-4">
+                <p class="text-xs font-bold text-sky-400 uppercase tracking-wider mb-2">Data Terurut</p>
+                <div class="array-chips">
+                  <span class="chip">101</span><span class="chip">105</span><span class="chip target">112</span><span class="chip">118</span><span class="chip">125</span><span class="chip">130</span><span class="chip">135</span>
+                </div>
+                <p class="text-xs text-textGray italic mt-2">Target: cari NISN <strong class="text-purple-400">112</strong> menggunakan Binary Search.</p>
+              </div>
+
+              <div class="bg-white/5 border border-white/10 rounded-2xl p-4 space-y-3">
+                <p class="text-xs font-bold text-sky-400 uppercase tracking-wider">Langkah Penyelesaian</p>
+
+                <div class="step-row">
+                  <span class="step-row-num">1</span>
+                  <div class="step-row-body">Cari nilai tengah dari data tersebut, yaitu: <input type="text" id="binary1" class="blank-input md" placeholder="nilai tengah..." /></div>
+                </div>
+
+                <div class="step-row">
+                  <span class="step-row-num">2</span>
+                  <div class="step-row-body">
+                    Apakah 112 sama dengan nilai tengah? <strong class="text-white">Ya / Tidak</strong>. Jika tidak, apakah 112 lebih <input type="text" id="binary2a" class="blank-input sm" placeholder="?" /> atau lebih
+                    <input type="text" id="binary2b" class="blank-input sm" placeholder="?" />?
+                  </div>
+                </div>
+
+                <div class="step-row">
+                  <span class="step-row-num">3</span>
+                  <div class="step-row-body">
+                    Karena lebih kecil, maka sisa area pencarian adalah bagian <strong class="text-white">Kiri / Kanan</strong>. Tulis sisa data:
+                    <span class="hint"> Tulis 3 angka sisa, dipisahkan koma: <input type="text" id="binary3" class="blank-input" style="min-width: 200px; margin-top: 4px" placeholder="contoh: 10, 20, 30" /> </span>
+                  </div>
+                </div>
+
+                <div class="step-row">
+                  <span class="step-row-num">4</span>
+                  <div class="step-row-body">
+                    Nilai tengah dari sisa data tersebut adalah: <input type="text" id="binary4" class="blank-input md" placeholder="nilai tengah..." /> — <strong class="text-emerald-400">Data ditemukan!</strong>
+                  </div>
+                </div>
+              </div>
+
+              <p class="text-xs font-bold text-textGray uppercase tracking-wider mt-4 mb-2">Checklist:</p>
+              <div class="space-y-2">
+                <label class="checklist-item" data-step="3">
+                  <span class="checklist-box"><i class="fa-solid fa-check"></i></span>
+                  <span class="text-sm text-gray-300 flex-1">Nilai tengah awal Binary Search sudah diisi</span>
+                </label>
+                <label class="checklist-item" data-step="3">
+                  <span class="checklist-box"><i class="fa-solid fa-check"></i></span>
+                  <span class="text-sm text-gray-300 flex-1">Sisa data &amp; nilai tengah akhir sudah diisi sampai NISN 112 ditemukan</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===================== TUGAS 3 ===================== -->
+        <div class="mb-6">
+          <div class="flex items-center gap-3 mb-5">
+            <div class="w-10 h-10 rounded-xl bg-purple-500/15 border border-purple-500/30 flex items-center justify-center text-purple-400 text-lg">
+              <i class="fa-solid fa-3"></i>
+            </div>
+            <div>
+              <h2 class="text-xl md:text-2xl font-bold text-white">Tugas 3 — Analisis Efisiensi Algoritma</h2>
+              <p class="text-xs text-textGray">Fokus TP 3 • Pilih algoritma paling tepat &amp; jelaskan alasannya</p>
+            </div>
+          </div>
+
+          <div id="step4-card" class="step-card bg-brandGray border border-white/10 rounded-3xl p-5 md:p-6 mb-4">
+            <div class="flex items-start gap-4 border-b border-white/10 pb-4 mb-5">
+              <div id="step4-num" class="step-num bg-purple-500/15 border border-purple-500/30 text-purple-400">4</div>
+              <div class="flex-1">
+                <h3 class="text-lg md:text-xl font-bold text-white">Analisis Kasus A — Linear vs Binary Search</h3>
+                <p class="text-sm text-textGray mt-1">Analisis efisiensi pencarian pada perpustakaan digital.</p>
+              </div>
+            </div>
+
+            <div class="space-y-4">
+              <div class="case-head" style="background: linear-gradient(135deg, #4c1d95, #7c3aed)">
+                <span class="case-icon">A</span>
+                <div class="flex-1">
+                  <div class="case-title">Perpustakaan Digital SMAN 4 Yogyakarta</div>
+                  <div class="case-sub">10.000 judul buku • Tersusun Alfabetis A–Z</div>
+                </div>
+              </div>
+
+              <p class="text-sm text-textGray leading-relaxed">
+                Sistem Perpustakaan SMA Negeri 4 Yogyakarta memiliki database berisi <strong class="text-white">10.000 judul buku</strong> yang telah disusun rapi secara <strong class="text-white">alfabetis</strong> (dari A sampai Z). Suatu
+                hari, seorang siswa ingin meminjam buku berjudul <em>&ldquo;Sistem Operasi Komputer&rdquo;</em>.
+              </p>
+
+              <div class="bg-purple-500/5 border-l-4 border-purple-500 rounded-r-lg p-4">
+                <p class="text-sm text-textGray leading-relaxed">
+                  Menurut kelompok kalian, algoritma pencarian manakah (<strong class="text-purple-300">Linear Search</strong> atau <strong class="text-purple-300">Binary Search</strong>) yang paling cepat dan efisien?
+                  <strong class="text-white">Berikan alasan logisnya!</strong>
+                </p>
+              </div>
+
+              <textarea id="jawaban-kasusA" class="form-textarea" style="min-height: 130px" placeholder="Tulis pilihan algoritma + alasan logis kelompokmu di sini..."></textarea>
+
+              <p class="text-xs font-bold text-textGray uppercase tracking-wider mt-4 mb-2">Checklist:</p>
+              <div class="space-y-2">
+                <label class="checklist-item" data-step="4">
+                  <span class="checklist-box"><i class="fa-solid fa-check"></i></span>
+                  <span class="text-sm text-gray-300 flex-1">Kasus A sudah dianalisis: pilihan algoritma + alasan logis berbasis karakteristik data</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Kasus B -->
+          <div id="step5-card" class="step-card bg-brandGray border border-white/10 rounded-3xl p-5 md:p-6 mb-4">
+            <div class="flex items-start gap-4 border-b border-white/10 pb-4 mb-5">
+              <div id="step5-num" class="step-num bg-purple-500/15 border border-purple-500/30 text-purple-400">5</div>
+              <div class="flex-1">
+                <h3 class="text-lg md:text-xl font-bold text-white">Analisis Kasus B — Bubble vs Insertion Sort</h3>
+                <p class="text-sm text-textGray mt-1">Analisis efisiensi pengurutan pada data yang hampir terurut.</p>
+              </div>
+            </div>
+
+            <div class="space-y-4">
+              <div class="case-head" style="background: linear-gradient(135deg, #4c1d95, #7c3aed)">
+                <span class="case-icon">B</span>
+                <div class="flex-1">
+                  <div class="case-title">Data Tinggi Badan Siswa Kelas XE6</div>
+                  <div class="case-sub">5 siswa • Hampir terurut sempurna</div>
+                </div>
+              </div>
+
+              <p class="text-sm text-textGray leading-relaxed">
+                Data tinggi badan 5 orang siswa kelas XE6 <strong class="text-white">hampir terurut sempurna</strong> dari yang paling pendek. Hanya ada satu siswa baru di akhir barisan yang ternyata lebih pendek dan harus dimasukkan ke
+                tengah barisan:
+              </p>
+
+              <div class="bg-black/40 border border-white/5 rounded-xl p-4">
+                <p class="text-xs font-bold text-purple-400 uppercase tracking-wider mb-2">Data Tinggi Badan (cm)</p>
+                <div class="array-chips"><span class="chip hi">150</span><span class="chip hi">155</span><span class="chip hi">160</span><span class="chip hi">165</span><span class="chip swap">152</span></div>
+                <p class="text-xs text-textGray italic mt-2">Hanya <strong class="text-amber-300">152 cm</strong> yang posisinya salah — harus disisipkan di antara 150 dan 155.</p>
+              </div>
+
+              <div class="bg-purple-500/5 border-l-4 border-purple-500 rounded-r-lg p-4">
+                <p class="text-sm text-textGray leading-relaxed">
+                  Antara <strong class="text-purple-300">Bubble Sort</strong> dan <strong class="text-purple-300">Insertion Sort</strong>, algoritma manakah yang paling efisien dan memakan proses paling sedikit?
+                  <strong class="text-white">Berikan alasan logisnya!</strong>
+                </p>
+              </div>
+
+              <textarea id="jawaban-kasusB" class="form-textarea" style="min-height: 130px" placeholder="Tulis pilihan algoritma + alasan logis kelompokmu di sini..."></textarea>
+
+              <p class="text-xs font-bold text-textGray uppercase tracking-wider mt-4 mb-2">Checklist:</p>
+              <div class="space-y-2">
+                <label class="checklist-item" data-step="5">
+                  <span class="checklist-box"><i class="fa-solid fa-check"></i></span>
+                  <span class="text-sm text-gray-300 flex-1">Kasus B sudah dianalisis: pilihan algoritma + alasan logis tentang kondisi &ldquo;data hampir terurut&rdquo;</span>
+                </label>
+                <label class="checklist-item" data-step="5">
+                  <span class="checklist-box"><i class="fa-solid fa-check"></i></span>
+                  <span class="text-sm text-gray-300 flex-1">Semua jawaban sudah didiskusikan bersama seluruh anggota kelompok</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===================== PROGRESS + UPLOAD ===================== -->
+        <div class="bg-gradient-to-br from-brandGreen/10 via-brandGray to-brandGray border-2 border-brandGreen/40 rounded-3xl p-6 md:p-8 mb-6 fade-in-up">
+          <div class="text-center mb-5">
+            <div class="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-brandGreen/15 border border-brandGreen/30 mb-3">
+              <i class="fa-solid fa-clipboard-check text-brandGreen"></i>
+              <span class="text-sm font-bold text-brandGreen">Progress Checklist</span>
+            </div>
+            <div class="progress-info-bar justify-center max-w-md mx-auto">
+              <span class="text-sm font-bold text-white">Sudah selesai:</span>
+              <span class="text-lg font-bold text-brandGreen"><span id="check-count">0</span>/<span id="check-total">0</span></span>
+              <div class="flex-1 h-2 bg-black/50 rounded-full overflow-hidden">
+                <div id="check-progress" class="h-full bg-gradient-to-r from-brandGreen to-emerald-400 transition-all duration-500" style="width: 0%"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="space-y-4">
+            <div class="text-sm text-textGray max-w-lg mx-auto leading-relaxed text-center">
+              <i class="fa-solid fa-triangle-exclamation text-amber-400 mr-1"></i>
+              Pastikan <strong class="text-white">semua checklist sudah tercentang</strong>. Setelah itu, <strong class="text-white">screenshot</strong> jawaban kelompokmu, gabungkan menjadi
+              <strong class="text-white">1 file PDF</strong> (atau beberapa gambar), lalu upload di bawah ini.
+            </div>
+
+            <!-- Upload Zone -->
+            <div id="upload-zone" class="upload-zone max-w-xl mx-auto">
+              <input type="file" id="file-input" accept=".pdf,.docx,.doc,.jpg,.jpeg,.png" style="display: none" />
+              <div id="upload-prompt">
+                <div class="upload-icon"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+                <p class="upload-title">Klik atau seret file jawaban ke sini</p>
+                <p class="upload-subtitle">Format: <strong class="text-white">PDF, DOCX, JPG, PNG</strong> — Maks. 25 MB</p>
+              </div>
+              <div id="file-preview" class="file-preview" style="display: none">
+                <div class="file-icon"><i class="fa-solid fa-file-pdf"></i></div>
+                <div class="file-info">
+                  <p class="file-name" id="file-name">-</p>
+                  <p class="file-size" id="file-size">-</p>
+                </div>
+                <button type="button" class="file-remove" onclick="removeFile(event)" title="Hapus file">
+                  <i class="fa-solid fa-xmark"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Tombol Upload -->
+            <div class="text-center">
+              <button id="btn-upload" class="btn-upload" onclick="uploadFile()" disabled>
+                <i class="fa-solid fa-cloud-arrow-up text-2xl"></i>
+                <span id="btn-upload-text">Pilih File Dulu</span>
+                <i class="fa-solid fa-arrow-right text-sm opacity-80"></i>
+              </button>
+            </div>
+
+            <!-- Status message -->
+            <div id="upload-status" class="upload-status max-w-xl mx-auto" style="display: none"></div>
+
+            <p class="text-xs text-textGray text-center">
+              <i class="fa-solid fa-circle-info mr-1"></i>
+              File akan <strong class="text-white">otomatis terkirim ke folder Google Drive Pak Ilyas</strong>. Kamu tidak perlu login atau upload manual.
+            </p>
+          </div>
+        </div>
+
+        <!-- TIPS TAMBAHAN -->
+        <div class="bg-brandGray border border-amber-500/30 rounded-3xl p-5 md:p-6 mb-6 fade-in-up">
+          <div class="flex items-center gap-3 border-b border-white/10 pb-4 mb-4">
+            <div class="w-11 h-11 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 text-lg shrink-0"><i class="fa-solid fa-lightbulb"></i></div>
+            <div>
+              <h3 class="text-lg font-bold text-white">Tips &amp; Trik Selama Mengerjakan</h3>
+              <p class="text-xs text-textGray">Supaya hasil diskusi kelompok lebih efektif</p>
+            </div>
+          </div>
+          <ul class="space-y-2.5 text-sm text-textGray">
+            <li class="flex items-start gap-2.5">
+              <i class="fa-solid fa-circle-check text-amber-400 mt-1 shrink-0 text-xs"></i
+              ><span>Kalau bingung membayangkan algoritma, buka tab <strong class="text-white">Simulasi Visual</strong> di halaman materi — di sana ada visualizer interaktif untuk 5 algoritma.</span>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <i class="fa-solid fa-circle-check text-amber-400 mt-1 shrink-0 text-xs"></i
+              ><span>Untuk soal tipe <em>fill-in-the-blank</em>, tulis jawaban dengan <strong class="text-white">angka saja</strong> tanpa tanda kurung atau koma ekstra (kecuali diminta list).</span>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <i class="fa-solid fa-circle-check text-amber-400 mt-1 shrink-0 text-xs"></i
+              ><span>Alasan logis dinilai dari <strong class="text-white">penalaran</strong>, bukan hafalan. Gunakan kalimat seperti "karena data sudah terurut, maka..." atau "karena data hampir terurut, maka...".</span>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <i class="fa-solid fa-circle-check text-amber-400 mt-1 shrink-0 text-xs"></i
+              ><span>Butuh referensi cepat? Buka tab <strong class="text-white">Materi Baca</strong> atau <strong class="text-white">Cheat Sheet</strong> di halaman materi utama.</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- CTA BALIK -->
+        <div class="flex flex-wrap gap-3 justify-center mb-6">
+          <a href="materi-search-sort.html" class="inline-flex items-center gap-2 px-6 py-3 bg-white/5 border border-white/10 rounded-xl font-semibold hover:bg-white/10 transition">
+            <i class="fa-solid fa-arrow-left text-brandGreen"></i> Kembali ke Materi
+          </a>
+        </div>
+      </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container" style="max-width: 1280px; margin: 0 auto; padding: 0 24px">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <div class="footer-logo">
+              <div class="footer-logo-icon"><i class="fa-solid fa-code"></i></div>
+              <span class="footer-logo-text">RuangInformatika</span>
+            </div>
+            <p class="footer-desc">Platform e-learning interaktif modern yang dirancang untuk memfasilitasi gaya belajar visual dan praktik murid SMA Negeri 4 Yogyakarta.</p>
+          </div>
+          <div class="footer-col">
+            <h4 class="footer-heading">Pintasan Modul</h4>
+            <ul class="footer-links">
+              <li>
+                <a href="../kisi.html" class="footer-link"><i class="fa-solid fa-chevron-right" style="font-size: 0.65rem"></i> Bedah Kisi-Kisi</a>
+              </li>
+              <li>
+                <a href="../materi-bk.html" class="footer-link"><i class="fa-solid fa-chevron-right" style="font-size: 0.65rem"></i> Berpikir Komputasional</a>
+              </li>
+              <li>
+                <a href="../materi-stack-queue.html" class="footer-link"><i class="fa-solid fa-chevron-right" style="font-size: 0.65rem"></i> Stack &amp; Queue</a>
+              </li>
+              <li>
+                <a href="../materi-search-sort.html" class="footer-link"><i class="fa-solid fa-chevron-right" style="font-size: 0.65rem"></i> Searching &amp; Sorting</a>
+              </li>
+              <li>
+                <a href="../materi-excel.html" class="footer-link"><i class="fa-solid fa-chevron-right" style="font-size: 0.65rem"></i> Microsoft Excel</a>
+              </li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h4 class="footer-heading">Fitur &amp; Dukungan</h4>
+            <ul class="footer-links">
+              <li>
+                <a href="../leaderboard.html" class="footer-link"><i class="fa-solid fa-trophy" style="color: var(--amber)"></i> Leaderboard Kelas</a>
+              </li>
+              <li>
+                <a href="../forum.html" class="footer-link"><i class="fa-solid fa-comments" style="color: var(--blue)"></i> Forum Diskusi</a>
+              </li>
+              <li>
+                <a href="https://wa.me/6285282386260?text=Halo%20Pak%20Ilyas%2C%20saya%20ingin%20bertanya%20tentang%20materi%20Informatika." target="_blank" class="footer-link"
+                  ><i class="fa-solid fa-chalkboard-user" style="color: var(--green)"></i> Hubungi Pak Ilyas</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p class="footer-copy">&copy; 2026 RuangInformatika. Dikembangkan untuk kelas Informatika XE6 SMA Negeri 4 Yogyakarta.</p>
+          <div class="footer-socials">
+            <a href="https://github.com/fandhi19" target="_blank" class="footer-social" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+            <a href="https://e-portofolio-fandhi.vercel.app/" target="_blank" class="footer-social" aria-label="Portfolio"><i class="fa-solid fa-globe"></i></a>
+            <a href="https://www.instagram.com/fandhidk17/" target="_blank" class="footer-social" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      /* Reading Progress */
+      window.addEventListener("scroll", () => {
+        const w = document.body.scrollTop || document.documentElement.scrollTop;
+        const h = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const p = document.getElementById("readProgress");
+        if (p) p.style.width = (w / h) * 100 + "%";
+      });
+
+      /* Mobile Menu */
+      const hamburgerBtn = document.getElementById("hamburgerBtn");
+      const mobileMenu = document.getElementById("mobileMenu");
+      if (hamburgerBtn && mobileMenu) {
+        hamburgerBtn.addEventListener("click", () => {
+          mobileMenu.classList.toggle("open");
+          const icon = hamburgerBtn.querySelector("i");
+          icon.classList.toggle("fa-bars");
+          icon.classList.toggle("fa-xmark");
+        });
+        mobileMenu.querySelectorAll("a, button").forEach((item) => {
+          item.addEventListener("click", () => {
+            mobileMenu.classList.remove("open");
+            const icon = hamburgerBtn.querySelector("i");
+            icon.classList.add("fa-bars");
+            icon.classList.remove("fa-xmark");
+          });
+        });
+      }
+
+      /* Reveal on scroll */
+      const revealObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              e.target.classList.add("visible");
+              revealObserver.unobserve(e.target);
+            }
+          });
+        },
+        { threshold: 0.1 },
+      );
+      document.querySelectorAll(".reveal").forEach((el) => revealObserver.observe(el));
+
+      /* ============================================================
+         CHECKLIST LOGIC
+         ============================================================ */
+      const CHECK_STORAGE_KEY = "lkpd_searchsort_checklist_v1";
+
+      function updateCheckProgress() {
+        const items = document.querySelectorAll(".checklist-item");
+        const total = items.length;
+        const checked = document.querySelectorAll(".checklist-item.checked").length;
+        document.getElementById("check-count").textContent = checked;
+        document.getElementById("check-total").textContent = total;
+        document.getElementById("check-progress").style.width = (checked / total) * 100 + "%";
+
+        // Setiap step card: 1, 2, 3, 4, 5
+        [1, 2, 3, 4, 5].forEach((step) => {
+          const card = document.getElementById("step" + step + "-card");
+          const num = document.getElementById("step" + step + "-num");
+          if (!card || !num) return;
+          const stepItems = document.querySelectorAll(`.checklist-item[data-step="${step}"]`);
+          const stepChecked = document.querySelectorAll(`.checklist-item[data-step="${step}"].checked`).length;
+          const allDone = stepChecked === stepItems.length && stepItems.length > 0;
+          card.classList.toggle("done", allDone);
+          num.classList.toggle("done", allDone);
+        });
+
+        const btnUpload = document.getElementById("btn-upload");
+        if (btnUpload && !btnUpload.disabled && checked === total) {
+          btnUpload.style.animation = "scorePulse 0.6s ease";
+        }
+      }
+
+      function loadChecklist() {
+        try {
+          const saved = JSON.parse(localStorage.getItem(CHECK_STORAGE_KEY) || "[]");
+          const items = document.querySelectorAll(".checklist-item");
+          saved.forEach((idx) => {
+            if (items[idx]) items[idx].classList.add("checked");
+          });
+          updateCheckProgress();
+        } catch (e) {
+          console.error(e);
+        }
+      }
+
+      function saveChecklist() {
+        const items = document.querySelectorAll(".checklist-item");
+        const checked = [];
+        items.forEach((item, idx) => {
+          if (item.classList.contains("checked")) checked.push(idx);
+        });
+        try {
+          localStorage.setItem(CHECK_STORAGE_KEY, JSON.stringify(checked));
+        } catch (e) {
+          console.error(e);
+        }
+      }
+
+      document.querySelectorAll(".checklist-item").forEach((item) => {
+        item.addEventListener("click", () => {
+          item.classList.toggle("checked");
+          saveChecklist();
+          updateCheckProgress();
+        });
+      });
+
+      /* ============================================================
+         IDENTITAS PERSISTENCE
+         ============================================================ */
+      const ID_FIELDS = ["kelas", "tanggal", "anggota1", "absen1", "anggota2", "absen2", "anggota3", "absen3", "anggota4", "absen4"];
+
+      function loadIdentity() {
+        ID_FIELDS.forEach((id) => {
+          const el = document.getElementById(id);
+          if (!el) return;
+          const saved = localStorage.getItem("lkpd_searchsort_" + id);
+          if (saved) el.value = saved;
+        });
+      }
+
+      function saveIdentity() {
+        ID_FIELDS.forEach((id) => {
+          const el = document.getElementById(id);
+          if (el) {
+            try {
+              localStorage.setItem("lkpd_searchsort_" + id, el.value);
+            } catch (e) {
+              /* ignore */
+            }
+          }
+        });
+      }
+
+      ID_FIELDS.forEach((id) => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.addEventListener("input", saveIdentity);
+          el.addEventListener("change", saveIdentity);
+        }
+      });
+
+      /* ============================================================
+         JAWABAN PERSISTENCE (textarea & input)
+         ============================================================ */
+      const ANSWER_FIELDS = [
+        "jawaban-definisi",
+        "karakter1",
+        "karakter2",
+        "karakter3",
+        "karakter4",
+        "bubble2a",
+        "bubble2b",
+        "bubble3a",
+        "bubble3b",
+        "bubble3c",
+        "bubble4a",
+        "bubble4b",
+        "bubble4c",
+        "bubbleHasil",
+        "binary1",
+        "binary2a",
+        "binary2b",
+        "binary3",
+        "binary4",
+        "jawaban-kasusA",
+        "jawaban-kasusB",
+      ];
+
+      function loadAnswers() {
+        ANSWER_FIELDS.forEach((id) => {
+          const el = document.getElementById(id);
+          if (!el) return;
+          const saved = localStorage.getItem("lkpd_searchsort_ans_" + id);
+          if (saved !== null) el.value = saved;
+        });
+      }
+
+      function saveAnswer(e) {
+        const el = e.target;
+        try {
+          localStorage.setItem("lkpd_searchsort_ans_" + el.id, el.value);
+        } catch (err) {
+          /* ignore */
+        }
+      }
+
+      ANSWER_FIELDS.forEach((id) => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.addEventListener("input", saveAnswer);
+        }
+      });
+
+      /* ============================================================
+         UPLOAD FILE KE APPS SCRIPT (mode: no-cors)
+         ============================================================ */
+
+      // ⚠️ GANTI dengan URL deployment Apps Script kamu (bisa sama atau beda dengan Excel)
+      const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzjU4YyZ8ScP9xsXuqpfVFKChn_rrR_fBm1PfRdp8i8UaQ5LrdCiGSI8BmTOMB1K9o/exec";
+
+      const MAX_FILE_SIZE_MB = 25;
+      let selectedFile = null;
+
+      function initUploadZone() {
+        const zone = document.getElementById("upload-zone");
+        const input = document.getElementById("file-input");
+        if (!zone || !input) return;
+
+        zone.addEventListener("click", (e) => {
+          if (e.target.closest(".file-remove")) return;
+          if (selectedFile) return;
+          input.click();
+        });
+
+        input.addEventListener("change", (e) => {
+          const file = e.target.files[0];
+          if (file) handleFile(file);
+          input.value = "";
+        });
+
+        zone.addEventListener("dragover", (e) => {
+          e.preventDefault();
+          if (!selectedFile) zone.classList.add("dragover");
+        });
+        zone.addEventListener("dragleave", () => zone.classList.remove("dragover"));
+        zone.addEventListener("drop", (e) => {
+          e.preventDefault();
+          zone.classList.remove("dragover");
+          if (selectedFile) return;
+          const file = e.dataTransfer.files[0];
+          if (file) handleFile(file);
+        });
+      }
+
+      function handleFile(file) {
+        const ext = file.name.split(".").pop().toLowerCase();
+        const allowed = ["pdf", "docx", "doc", "jpg", "jpeg", "png"];
+        if (!allowed.includes(ext)) {
+          showUploadStatus("error", "Format file harus PDF, DOCX, JPG, atau PNG. File kamu: ." + ext);
+          return;
+        }
+
+        const sizeMB = file.size / (1024 * 1024);
+        if (sizeMB > MAX_FILE_SIZE_MB) {
+          showUploadStatus("error", `File terlalu besar (${sizeMB.toFixed(1)} MB). Maksimal ${MAX_FILE_SIZE_MB} MB.`);
+          return;
+        }
+
+        selectedFile = file;
+        hideUploadStatus();
+
+        const zone = document.getElementById("upload-zone");
+        const prompt = document.getElementById("upload-prompt");
+        const preview = document.getElementById("file-preview");
+        zone.classList.add("has-file");
+        prompt.style.display = "none";
+        preview.style.display = "flex";
+
+        // Update icon based on ext
+        const iconEl = preview.querySelector(".file-icon i");
+        if (iconEl) {
+          if (ext === "pdf") iconEl.className = "fa-solid fa-file-pdf";
+          else if (ext === "docx" || ext === "doc") iconEl.className = "fa-solid fa-file-word";
+          else iconEl.className = "fa-solid fa-file-image";
+        }
+
+        document.getElementById("file-name").textContent = file.name;
+        document.getElementById("file-size").textContent = formatFileSize(file.size);
+
+        const btn = document.getElementById("btn-upload");
+        btn.disabled = false;
+        document.getElementById("btn-upload-text").textContent = "Kumpulkan Tugas Sekarang";
+
+        btn.scrollIntoView({ behavior: "smooth", block: "center" });
+        updateCheckProgress();
+      }
+
+      function removeFile(e) {
+        if (e) e.stopPropagation();
+        selectedFile = null;
+        const zone = document.getElementById("upload-zone");
+        const prompt = document.getElementById("upload-prompt");
+        const preview = document.getElementById("file-preview");
+        if (zone) zone.classList.remove("has-file");
+        if (prompt) prompt.style.display = "block";
+        if (preview) preview.style.display = "none";
+
+        const btn = document.getElementById("btn-upload");
+        if (btn) {
+          btn.disabled = true;
+          document.getElementById("btn-upload-text").textContent = "Pilih File Dulu";
+          btn.style.animation = "";
+        }
+        hideUploadStatus();
+      }
+
+      function fileToBase64(file) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => {
+            const result = reader.result;
+            const base64 = result.split(",")[1] || "";
+            resolve(base64);
+          };
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+      }
+
+      function formatFileSize(bytes) {
+        if (bytes < 1024) return bytes + " B";
+        if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
+        return (bytes / 1024 / 1024).toFixed(2) + " MB";
+      }
+
+      async function uploadFile() {
+        if (!selectedFile) {
+          showUploadStatus("error", "Pilih file dulu sebelum kumpulkan.");
+          return;
+        }
+
+        if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL.indexOf("PASTE_URL") !== -1) {
+          showUploadStatus("error", "⚠️ Konfigurasi server belum di-set. Hubungi Pak Ilyas.");
+          return;
+        }
+
+        const kelas = (document.getElementById("kelas")?.value || "").trim();
+        const anggota1 = (document.getElementById("anggota1")?.value || "").trim();
+        const anggota2 = (document.getElementById("anggota2")?.value || "").trim();
+        const anggota3 = (document.getElementById("anggota3")?.value || "").trim();
+        const anggota4 = (document.getElementById("anggota4")?.value || "").trim();
+        const absen1 = (document.getElementById("absen1")?.value || "").trim();
+
+        if (!kelas) {
+          showUploadStatus("error", "Kelas belum dipilih.");
+          document.getElementById("kelas")?.scrollIntoView({ behavior: "smooth", block: "center" });
+          return;
+        }
+        if (!anggota1 || anggota1.length < 3) {
+          showUploadStatus("error", "Nama Anggota 1 belum diisi atau terlalu pendek (minimal 3 karakter).");
+          document.getElementById("anggota1")?.scrollIntoView({ behavior: "smooth", block: "center" });
+          return;
+        }
+        if (!anggota2 || !anggota3 || !anggota4) {
+          showUploadStatus("error", "Semua nama anggota (1–4) harus diisi.");
+          return;
+        }
+        if (!absen1) {
+          showUploadStatus("error", "No. Absen Anggota 1 harus diisi (dipakai untuk nama file).");
+          document.getElementById("absen1")?.scrollIntoView({ behavior: "smooth", block: "center" });
+          return;
+        }
+
+        const items = document.querySelectorAll(".checklist-item");
+        const total = items.length;
+        const checked = document.querySelectorAll(".checklist-item.checked").length;
+        if (checked < total) {
+          const lanjut = confirm(`Checklist belum selesai (${checked}/${total}).\n\nYakin mau kumpulkan sekarang?\nPastikan file jawaban kelompokmu sudah benar-benar selesai ya.`);
+          if (!lanjut) return;
+        }
+
+        const btn = document.getElementById("btn-upload");
+        btn.disabled = true;
+        document.getElementById("btn-upload-text").textContent = "Mengirim...";
+        showUploadStatus("loading", "Mengupload file ke Google Drive... Mohon tunggu, jangan tutup halaman.");
+
+        try {
+          const base64 = await fileToBase64(selectedFile);
+
+          const ext = selectedFile.name.split(".").pop().toLowerCase();
+          const safeName = (s) => s.replace(/[^\w\d]+/g, "_").replace(/^_+|_+$/g, "");
+          const anggotaList = [anggota1, anggota2, anggota3, anggota4].map(safeName).join("-");
+          const finalFileName = `${safeName(kelas)}_${safeName(absen1)}_${anggotaList}.${ext}`;
+
+          const fd = new FormData();
+          fd.append("fileName", finalFileName);
+          fd.append("fileBase64", base64);
+          fd.append("mimeType", selectedFile.type || "application/octet-stream");
+          fd.append("kelas", kelas);
+          fd.append("anggota1", anggota1);
+          fd.append("anggota2", anggota2);
+          fd.append("anggota3", anggota3);
+          fd.append("anggota4", anggota4);
+          fd.append("absen1", absen1);
+          fd.append("tugas", "LKPD-Searching-Sorting");
+
+          await fetch(APPS_SCRIPT_URL, {
+            method: "POST",
+            body: fd,
+            mode: "no-cors",
+          });
+
+          await new Promise((r) => setTimeout(r, 2000));
+
+          showUploadStatus("success", `✅ Berhasil! File <strong>${finalFileName}</strong> sudah terkirim ke Google Drive Pak Ilyas.<br><br>Kalau ingin memastikan, tanya Pak Ilyas apakah file sudah masuk.`);
+          document.getElementById("btn-upload-text").textContent = "✅ Terkirim";
+          const zone = document.getElementById("upload-zone");
+          zone.style.opacity = "0.5";
+          zone.style.pointerEvents = "none";
+
+          document.getElementById("upload-status").scrollIntoView({ behavior: "smooth", block: "center" });
+        } catch (err) {
+          console.error("Upload error:", err);
+          showUploadStatus("error", `❌ Gagal mengirim. Kemungkinan koneksi internet terputus.<br><br>Coba klik <strong>Kumpulkan Tugas</strong> lagi. Kalau tetap gagal, hubungi Pak Ilyas.`);
+          btn.disabled = false;
+          document.getElementById("btn-upload-text").textContent = "Coba Kirim Ulang";
+        }
+      }
+
+      function showUploadStatus(type, message) {
+        const el = document.getElementById("upload-status");
+        if (!el) return;
+        el.style.display = "flex";
+        el.className = "upload-status max-w-xl mx-auto " + type;
+        const icon = type === "success" ? "fa-circle-check" : type === "error" ? "fa-circle-exclamation" : "fa-spinner";
+        el.innerHTML = `<i class="fa-solid ${icon}"></i><div>${message}</div>`;
+      }
+
+      function hideUploadStatus() {
+        const el = document.getElementById("upload-status");
+        if (el) el.style.display = "none";
+      }
+
+      window.addEventListener("DOMContentLoaded", () => {
+        const tanggal = document.getElementById("tanggal");
+        if (tanggal && !tanggal.value) {
+          const today = new Date().toISOString().split("T")[0];
+          tanggal.value = today;
+        }
+        loadIdentity();
+        loadChecklist();
+        loadAnswers();
+        initUploadZone();
+        updateCheckProgress();
+      });
+    </script>
+  </body>
+</html>

@@ -344,6 +344,124 @@
         max-height: 300px;
       }
 
+      /* ── Lembar Kerja Cards (BARU) ── */
+      .lk-card {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        padding: 28px 24px;
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
+        text-decoration: none;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        cursor: pointer;
+      }
+      .lk-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: var(--lk-accent, #00e676);
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.4s ease;
+      }
+      .lk-card:hover::before {
+        transform: scaleX(1);
+      }
+      .lk-card:hover {
+        transform: translateY(-6px);
+        border-color: var(--lk-accent, #00e676);
+        box-shadow:
+          0 20px 40px -20px rgba(0, 230, 118, 0.3),
+          0 0 0 1px rgba(0, 230, 118, 0.15);
+      }
+      .lk-card-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.6rem;
+        color: #fff;
+        background: var(--lk-accent-gradient, linear-gradient(135deg, #00e676, #00b85c));
+        box-shadow: 0 8px 24px -8px var(--lk-accent, #00e676);
+        transition: transform 0.3s ease;
+      }
+      .lk-card:hover .lk-card-icon {
+        transform: scale(1.08) rotate(-3deg);
+      }
+      .lk-card-title {
+        font-size: 1.4rem;
+        font-weight: 800;
+        color: #fff;
+        letter-spacing: -0.01em;
+        line-height: 1.2;
+      }
+      .lk-card-desc {
+        font-size: 0.95rem;
+        color: var(--textGray);
+        line-height: 1.6;
+        flex-grow: 1;
+      }
+      .lk-card-cta {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: var(--lk-accent, #00e676);
+        margin-top: 4px;
+      }
+      .lk-card-cta i {
+        transition: transform 0.3s ease;
+      }
+      .lk-card:hover .lk-card-cta i {
+        transform: translateX(4px);
+      }
+      .lk-card-badge {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        padding: 4px 10px;
+        border-radius: 999px;
+        text-transform: uppercase;
+        background: rgba(0, 230, 118, 0.1);
+        color: var(--lk-accent, #00e676);
+        border: 1px solid rgba(0, 230, 118, 0.2);
+      }
+      .lk-card.lk-lkpd {
+        --lk-accent: #00e676;
+        --lk-accent-gradient: linear-gradient(135deg, #00e676, #00b85c);
+      }
+      .lk-card.lk-posttest {
+        --lk-accent: #38bdf8;
+        --lk-accent-gradient: linear-gradient(135deg, #38bdf8, #0284c7);
+      }
+      .lk-card.lk-refleksi {
+        --lk-accent: #a855f7;
+        --lk-accent-gradient: linear-gradient(135deg, #a855f7, #7c3aed);
+      }
+      .lk-card.lk-posttest .lk-card-badge {
+        background: rgba(56, 189, 248, 0.1);
+        color: #38bdf8;
+        border-color: rgba(56, 189, 248, 0.2);
+      }
+      .lk-card.lk-refleksi .lk-card-badge {
+        background: rgba(168, 85, 247, 0.1);
+        color: #a855f7;
+        border-color: rgba(168, 85, 247, 0.2);
+      }
+
       /* Responsive fonts mobile */
       @media (max-width: 640px) {
         body {
@@ -430,14 +548,331 @@
       <main class="max-w-5xl mx-auto px-6 pb-12 relative z-10">
         <!-- Navigation Tabs (Pills) -->
         <div class="tab-nav-pills reveal mb-8">
-          <button onclick="openTab(event, 'bacaan')" class="tab-btn active"><i class="fa-solid fa-book-open"></i> Materi Baca</button>
+          <button onclick="openTab(event, 'pretest')" class="tab-btn active"><i class="fa-solid fa-clipboard-question"></i> Pre Test</button>
+          <button onclick="openTab(event, 'bacaan')" class="tab-btn"><i class="fa-solid fa-book-open"></i> Materi Baca</button>
           <button onclick="openTab(event, 'simulasi')" class="tab-btn"><i class="fa-solid fa-laptop-code"></i> Simulasi Visual</button>
           <button onclick="openTab(event, 'video')" class="tab-btn"><i class="fa-solid fa-play"></i> Video Penjelasan</button>
+          <button onclick="openTab(event, 'lembarkerja')" class="tab-btn"><i class="fa-solid fa-file-pen"></i> Lembar Kerja</button>
           <button onclick="openTab(event, 'latihan')" class="tab-btn"><i class="fa-solid fa-pen-to-square"></i> Latihan Soal</button>
         </div>
 
+        <!-- ============================================================ -->
+        <!-- TAB 1: PRE TEST (10 SOAL)                                     -->
+        <!-- ============================================================ -->
+        <div id="pretest" class="tab-content">
+          <div class="bg-brandGray border border-white/5 rounded-3xl p-6 md:p-10">
+            <div class="flex flex-col md:flex-row items-start md:items-center justify-between mb-8 gap-4 border-b border-white/10 pb-6">
+              <div>
+                <div class="flex items-center gap-2 mb-2">
+                  <span class="text-xs font-bold text-amber-400 bg-amber-400/10 px-3 py-1 rounded-full border border-amber-400/20 uppercase tracking-wider"><i class="fa-solid fa-flag mr-1"></i> Sebelum Belajar</span>
+                </div>
+                <h3 class="text-3xl font-bold mb-2">Pre Test — Algoritma Standar</h3>
+                <p class="text-lg text-gray-300">Ukur pengetahuan awalmu tentang Searching &amp; Sorting sebelum mempelajari materi lebih dalam.</p>
+              </div>
+              <div class="flex flex-col items-end gap-2">
+                <span class="text-sm font-bold text-brandGreen bg-brandGreen/10 px-4 py-2 rounded-full border border-brandGreen/20"> <i class="fa-solid fa-list-check mr-1"></i> 10 Soal </span>
+                <span class="text-xs text-gray-400 flex items-center gap-1"><i class="fa-solid fa-clock"></i> Estimasi: 10 Menit</span>
+              </div>
+            </div>
+
+            <div class="bg-amber-500/5 border border-amber-500/20 rounded-2xl p-5 mb-8 flex gap-4 items-start">
+              <div class="w-10 h-10 rounded-full bg-amber-500/20 flex items-center justify-center text-amber-400 shrink-0"><i class="fa-solid fa-circle-info"></i></div>
+              <div class="text-base text-gray-300 leading-relaxed">
+                <strong class="text-amber-400 block mb-1">Tujuan Pre Test</strong>
+                Pre Test ini <strong>tidak mempengaruhi nilai</strong>. Tujuannya untuk mengukur sejauh mana pemahaman awalmu. Jawab dengan jujur — hasilnya akan membantu gurumu menyesuaikan pembelajaran.
+              </div>
+            </div>
+
+            <div id="pretest-container" class="space-y-6">
+              <!-- Soal 1 -->
+              <div class="bg-white/5 border border-white/10 p-6 rounded-2xl space-y-4" id="pt-block-1">
+                <p class="text-lg text-gray-200 font-medium leading-relaxed">
+                  <span class="text-amber-400 font-bold mr-2">1.</span>
+                  Proses menemukan data tertentu dari sekumpulan data yang ada disebut....
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="pt1" value="A" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">A. Sorting</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="pt1" value="B" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">B. Searching</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="pt1" value="C" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">C. Editing</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="pt1" value="D" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">D. Coding</span>
+                  </label>
+                </div>
+                <div id="pt-explain-1" class="hidden p-4 rounded-xl text-base bg-black/40 border border-white/10 mt-3 text-gray-300"></div>
+              </div>
+
+              <!-- Soal 2 -->
+              <div class="bg-white/5 border border-white/10 p-6 rounded-2xl space-y-4" id="pt-block-2">
+                <p class="text-lg text-gray-200 font-medium leading-relaxed">
+                  <span class="text-amber-400 font-bold mr-2">2.</span>
+                  Algoritma pencarian yang bekerja dengan cara memeriksa setiap data satu per satu dari awal hingga akhir secara berurutan disebut...
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="pt2" value="A" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">A. Binary Search</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="pt2" value="B" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">B. Bubble Search</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="pt2" value="C" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">C. Linear Search</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="pt2" value="D" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">D. Insertion Search</span>
+                  </label>
+                </div>
+                <div id="pt-explain-2" class="hidden p-4 rounded-xl text-base bg-black/40 border border-white/10 mt-3 text-gray-300"></div>
+              </div>
+
+              <!-- Soal 3 -->
+              <div class="bg-white/5 border border-white/10 p-6 rounded-2xl space-y-4" id="pt-block-3">
+                <p class="text-lg text-gray-200 font-medium leading-relaxed">
+                  <span class="text-amber-400 font-bold mr-2">3.</span>
+                  Syarat mutlak kumpulan data agar bisa dicari menggunakan algoritma Binary Search adalah...
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="pt3" value="A" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">A. Datanya harus berupa angka</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="pt3" value="B" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">B. Datanya harus berjumlah sedikit</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="pt3" value="C" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">C. Datanya harus sudah terurut (sorted)</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="pt3" value="D" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">D. Datanya harus diacak terlebih dahulu</span>
+                  </label>
+                </div>
+                <div id="pt-explain-3" class="hidden p-4 rounded-xl text-base bg-black/40 border border-white/10 mt-3 text-gray-300"></div>
+              </div>
+
+              <!-- Soal 4 -->
+              <div class="bg-white/5 border border-white/10 p-6 rounded-2xl space-y-4" id="pt-block-4">
+                <p class="text-lg text-gray-200 font-medium leading-relaxed">
+                  <span class="text-amber-400 font-bold mr-2">4.</span>
+                  Jika kamu memiliki kumpulan data nama siswa sejumlah <strong class="text-white">1.000.000 data</strong> yang sudah diurutkan sesuai abjad, algoritma pencarian apa yang paling cepat digunakan untuk menemukan nama "Andi"?
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="pt4" value="A" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">A. Linear Search</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="pt4" value="B" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">B. Binary Search</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="pt4" value="C" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">C. Bubble Sort</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="pt4" value="D" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">D. Sequential Search</span>
+                  </label>
+                </div>
+                <div id="pt-explain-4" class="hidden p-4 rounded-xl text-base bg-black/40 border border-white/10 mt-3 text-gray-300"></div>
+              </div>
+
+              <!-- Soal 5 -->
+              <div class="bg-white/5 border border-white/10 p-6 rounded-2xl space-y-4" id="pt-block-5">
+                <p class="text-lg text-gray-200 font-medium leading-relaxed">
+                  <span class="text-amber-400 font-bold mr-2">5.</span>
+                  Proses mengatur sekumpulan data agar tersusun berdasarkan aturan tertentu (misal: dari terkecil ke terbesar) disebut...
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="pt5" value="A" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">A. Sorting</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="pt5" value="B" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">B. Searching</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="pt5" value="C" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">C. Filtering</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="pt5" value="D" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">D. Deleting</span>
+                  </label>
+                </div>
+                <div id="pt-explain-5" class="hidden p-4 rounded-xl text-base bg-black/40 border border-white/10 mt-3 text-gray-300"></div>
+              </div>
+
+              <!-- Soal 6 -->
+              <div class="bg-white/5 border border-white/10 p-6 rounded-2xl space-y-4" id="pt-block-6">
+                <p class="text-lg text-gray-200 font-medium leading-relaxed">
+                  <span class="text-amber-400 font-bold mr-2">6.</span>
+                  Algoritma pengurutan yang bekerja dengan cara membandingkan dua elemen yang posisinya bersebelahan, lalu menukarnya jika urutannya salah, adalah konsep dari...
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="pt6" value="A" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">A. Binary Sort</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="pt6" value="B" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">B. Bubble Sort</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="pt6" value="C" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">C. Insertion Sort</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="pt6" value="D" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">D. Linear Sort</span>
+                  </label>
+                </div>
+                <div id="pt-explain-6" class="hidden p-4 rounded-xl text-base bg-black/40 border border-white/10 mt-3 text-gray-300"></div>
+              </div>
+
+              <!-- Soal 7 -->
+              <div class="bg-white/5 border border-white/10 p-6 rounded-2xl space-y-4" id="pt-block-7">
+                <p class="text-lg text-gray-200 font-medium leading-relaxed">
+                  <span class="text-amber-400 font-bold mr-2">7.</span>
+                  Bayangkan kamu sedang bermain kartu. Kamu mengambil satu kartu, lalu mencari posisi yang pas untuk menyisipkan kartu tersebut di antara kartu-kartu lain yang sudah ada di tanganmu. Cara ini adalah penerapan dari
+                  algoritma...
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="pt7" value="A" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">A. Bubble Sort</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="pt7" value="B" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">B. Insertion Sort</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="pt7" value="C" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">C. Binary Search</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="pt7" value="D" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">D. Linear Search</span>
+                  </label>
+                </div>
+                <div id="pt-explain-7" class="hidden p-4 rounded-xl text-base bg-black/40 border border-white/10 mt-3 text-gray-300"></div>
+              </div>
+
+              <!-- Soal 8 -->
+              <div class="bg-white/5 border border-white/10 p-6 rounded-2xl space-y-4" id="pt-block-8">
+                <p class="text-lg text-gray-200 font-medium leading-relaxed">
+                  <span class="text-amber-400 font-bold mr-2">8.</span>
+                  Diberikan urutan angka: <code class="bg-black/50 px-3 py-1 rounded text-brandGreen font-mono text-base inline-block">5, 2, 8, 1</code>. Jika kita menggunakan algoritma
+                  <strong class="text-white">Bubble Sort</strong> (terkecil ke terbesar), bagaimana urutan angka setelah dilakukan <strong class="text-white">satu kali pertukaran pertama</strong>?
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="pt8" value="A" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">A. [2, 5, 8, 1]</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="pt8" value="B" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">B. [1, 2, 5, 8]</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="pt8" value="C" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">C. [5, 2, 1, 8]</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="pt8" value="D" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">D. [2, 8, 5, 1]</span>
+                  </label>
+                </div>
+                <div id="pt-explain-8" class="hidden p-4 rounded-xl text-base bg-black/40 border border-white/10 mt-3 text-gray-300"></div>
+              </div>
+
+              <!-- Soal 9 -->
+              <div class="bg-white/5 border border-white/10 p-6 rounded-2xl space-y-4" id="pt-block-9">
+                <p class="text-lg text-gray-200 font-medium leading-relaxed">
+                  <span class="text-amber-400 font-bold mr-2">9.</span>
+                  Mengapa kita perlu mempelajari berbagai jenis algoritma jika Linear Search saja sudah bisa digunakan untuk mencari data?
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="pt9" value="A" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">A. Karena Linear Search hanya untuk data huruf</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="pt9" value="B" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">B. Karena cara kerja setiap algoritma memengaruhi efisiensi dan kecepatan sistem, terutama pada data besar</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="pt9" value="C" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">C. Karena Linear Search tidak bisa dijalankan di komputer modern</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="pt9" value="D" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">D. Karena algoritma lain lebih mudah diketik</span>
+                  </label>
+                </div>
+                <div id="pt-explain-9" class="hidden p-4 rounded-xl text-base bg-black/40 border border-white/10 mt-3 text-gray-300"></div>
+              </div>
+
+              <!-- Soal 10 -->
+              <div class="bg-white/5 border border-white/10 p-6 rounded-2xl space-y-4" id="pt-block-10">
+                <p class="text-lg text-gray-200 font-medium leading-relaxed">
+                  <span class="text-amber-400 font-bold mr-2">10.</span>
+                  Sebuah sekolah memiliki database perpustakaan. Jika jumlah buku ada <strong class="text-white">50.000 buah</strong>, cara mencari manual (Linear Search) akan memakan waktu sangat lama. Solusi terbaik dari sisi algoritma
+                  adalah...
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="pt10" value="A" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">A. Menggunakan Linear Search tanpa diurutkan</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="pt10" value="B" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">B. Mengurutkan data terlebih dahulu (Sorting), lalu mencari dengan Binary Search</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="pt10" value="C" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">C. Mengurangi jumlah buku yang ada di database</span>
+                  </label>
+                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                    <input type="radio" name="pt10" value="D" class="w-5 h-5 accent-brandGreen" />
+                    <span class="text-base text-gray-200">D. Menggunakan Bubble Sort untuk mencari buku</span>
+                  </label>
+                </div>
+                <div id="pt-explain-10" class="hidden p-4 rounded-xl text-base bg-black/40 border border-white/10 mt-3 text-gray-300"></div>
+              </div>
+
+              <div class="pt-4 flex flex-col md:flex-row items-center justify-between gap-4">
+                <button
+                  onclick="cekPreTest()"
+                  class="w-full md:w-auto bg-amber-500 text-black font-bold px-8 py-4 rounded-xl text-lg hover:bg-amber-400 transition shadow-[0_0_15px_rgba(251,191,36,0.3)] flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  <i class="fa-solid fa-flag-checkered"></i> Cek Jawaban Pre Test
+                </button>
+              </div>
+
+              <div id="pretest-result" class="hidden p-6 rounded-2xl text-base leading-relaxed border mt-6"></div>
+            </div>
+          </div>
+        </div>
+
         <!-- TAB 1: MATERI BACAAN -->
-        <div id="bacaan" class="tab-content block space-y-8">
+        <div id="bacaan" class="tab-content hidden block space-y-8">
           <!-- BANNER INTRODUKSI -->
           <div class="bg-brandGray border border-white/5 rounded-3xl p-6 md:p-10 relative overflow-hidden">
             <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-8 relative z-10">
@@ -960,7 +1395,94 @@
           </div>
         </div>
 
-        <!-- TAB 4: LATIHAN SOAL -->
+        <!-- ============================================================ -->
+        <!-- TAB 5: LEMBAR KERJA (BARU)                                    -->
+        <!-- ============================================================ -->
+        <div id="lembarkerja" class="tab-content hidden">
+          <div class="bg-brandGray border border-white/5 rounded-3xl p-6 md:p-10 space-y-8">
+            <!-- Header -->
+            <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b border-white/10 pb-6">
+              <div>
+                <div class="flex items-center gap-2 mb-2">
+                  <span class="text-xs font-bold text-brandGreen bg-brandGreen/10 px-3 py-1 rounded-full border border-brandGreen/20 uppercase tracking-wider"><i class="fa-solid fa-file-pen mr-1"></i> Aktivitas Belajar</span>
+                </div>
+                <h3 class="text-3xl md:text-4xl font-bold mb-2">Lembar Kerja</h3>
+                <p class="text-lg text-gray-300">Pilih aktivitas pembelajaran yang ingin kamu kerjakan. Tiga aktivitas berikut dirancang untuk menguatkan pemahamanmu secara bertahap.</p>
+              </div>
+            </div>
+
+            <!-- Card Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
+              <!-- Card 1: LKPD -->
+              <a href="Materi_AS/lkpd.html" class="lk-card lk-lkpd group">
+                <span class="lk-card-badge">Langkah 1</span>
+                <div class="lk-card-icon"><i class="fa-solid fa-clipboard-list"></i></div>
+                <div>
+                  <h4 class="lk-card-title">LKPD</h4>
+                  <p class="text-sm text-gray-400 mt-1 font-mono">Lembar Kerja Peserta Didik</p>
+                </div>
+                <p class="lk-card-desc">Kerjakan lembar kerja algoritma standar secara berkelompok. Berisi studi kasus Sorting & Searching yang harus diselesaikan langkah demi langkah.</p>
+                <span class="lk-card-cta"> Buka LKPD <i class="fa-solid fa-arrow-right"></i> </span>
+              </a>
+
+              <!-- Card 2: Post Test -->
+              <a href="Materi_AS/post.html" class="lk-card lk-posttest group">
+                <span class="lk-card-badge">Langkah 2</span>
+                <div class="lk-card-icon"><i class="fa-solid fa-clipboard-check"></i></div>
+                <div>
+                  <h4 class="lk-card-title">Post Test</h4>
+                  <p class="text-sm text-gray-400 mt-1 font-mono">Asesmen Akhir Materi</p>
+                </div>
+                <p class="lk-card-desc">Uji pemahamanmu setelah mempelajari materi. Post Test ini mengukur ketercapaian tujuan pembelajaran Searching & Sorting dengan soal analisis.</p>
+                <span class="lk-card-cta"> Mulai Post Test <i class="fa-solid fa-arrow-right"></i> </span>
+              </a>
+
+              <!-- Card 3: Refleksi -->
+              <a href="Materi_AS/refleksi.html" class="lk-card lk-refleksi group">
+                <span class="lk-card-badge">Langkah 3</span>
+                <div class="lk-card-icon"><i class="fa-solid fa-brain"></i></div>
+                <div>
+                  <h4 class="lk-card-title">Refleksi</h4>
+                  <p class="text-sm text-gray-400 mt-1 font-mono">Penutup Pembelajaran</p>
+                </div>
+                <p class="lk-card-desc">Tuliskan kesan, kesulitan, dan pemahaman barumu setelah mempelajari algoritma standar. Refleksi membantumu mengingat lebih lama.</p>
+                <span class="lk-card-cta"> Isi Refleksi <i class="fa-solid fa-arrow-right"></i> </span>
+              </a>
+            </div>
+
+            <!-- Progress Timeline -->
+            <div class="bg-black/30 border border-white/10 rounded-2xl p-6 mt-4">
+              <h5 class="text-lg font-bold text-white mb-5 flex items-center gap-2"><i class="fa-solid fa-route text-brandGreen"></i> Alur Pembelajaran</h5>
+              <div class="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-2">
+                <div class="flex items-center gap-3 flex-1">
+                  <div class="w-10 h-10 rounded-full bg-brandGreen/20 border border-brandGreen/40 flex items-center justify-center text-brandGreen font-bold shrink-0">1</div>
+                  <div>
+                    <div class="text-sm font-bold text-white">LKPD</div>
+                    <div class="text-xs text-gray-400">Praktik kelompok</div>
+                  </div>
+                </div>
+                <div class="hidden md:block flex-1 h-px bg-gradient-to-r from-brandGreen/40 to-blue-500/40"></div>
+                <div class="flex items-center gap-3 flex-1">
+                  <div class="w-10 h-10 rounded-full bg-blue-500/20 border border-blue-500/40 flex items-center justify-center text-blue-400 font-bold shrink-0">2</div>
+                  <div>
+                    <div class="text-sm font-bold text-white">Post Test</div>
+                    <div class="text-xs text-gray-400">Asesmen individu</div>
+                  </div>
+                </div>
+                <div class="hidden md:block flex-1 h-px bg-gradient-to-r from-blue-500/40 to-purple-500/40"></div>
+                <div class="flex items-center gap-3 flex-1">
+                  <div class="w-10 h-10 rounded-full bg-purple-500/20 border border-purple-500/40 flex items-center justify-center text-purple-400 font-bold shrink-0">3</div>
+                  <div>
+                    <div class="text-sm font-bold text-white">Refleksi</div>
+                    <div class="text-xs text-gray-400">Penutup</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 6: LATIHAN SOAL -->
         <div id="latihan" class="tab-content hidden">
           <div class="bg-brandGray border border-white/5 rounded-3xl p-6 md:p-10">
             <div class="flex flex-col md:flex-row items-start md:items-center justify-between mb-8 gap-4 border-b border-white/10 pb-6">
@@ -2133,7 +2655,7 @@
         resetSim();
       });
 
-      /* ── Quiz ── */
+      /* ── Quiz Latihan (10 soal) ── */
       function cekJawaban() {
         const kunciJawaban = {
           q1: { ans: "C", label: "C — Mencari data tertentu dari sekumpulan data", exp: "Searching adalah proses mencari data tertentu dari sekumpulan data. Contohnya mencari nama siswa atau angka tertentu." },
@@ -2197,6 +2719,127 @@
           <p class="text-gray-300">Tetap semangat! Pelajari kembali penjelasan di setiap nomor soal di atas serta ringkasan 5 kalimat kunci untuk memahami materi ini.</p>
         `;
         }
+
+        resultBox.scrollIntoView({ behavior: "smooth" });
+      }
+
+      /* ── Pre Test (5 soal) ── */
+      /* ── Pre Test (10 soal) ── */
+      function cekPreTest() {
+        const kunciPreTest = {
+          pt1: {
+            ans: "B",
+            label: "B — Searching",
+            exp: "Searching (pencarian) adalah proses menemukan data tertentu dari sekumpulan data. Contoh: mencari nama siswa dalam daftar kelas.",
+          },
+          pt2: {
+            ans: "C",
+            label: "C — Linear Search",
+            exp: "Linear Search memeriksa data satu per satu secara berurutan dari awal hingga akhir. Cocok untuk data kecil atau data yang belum terurut.",
+          },
+          pt3: {
+            ans: "C",
+            label: "C — Datanya harus sudah terurut (sorted)",
+            exp: "Binary Search membagi ruang pencarian menjadi dua dengan membandingkan nilai tengah. Syarat mutlaknya: data harus sudah terurut terlebih dahulu.",
+          },
+          pt4: {
+            ans: "B",
+            label: "B — Binary Search",
+            exp: "Untuk 1.000.000 data yang sudah terurut, Binary Search hanya butuh sekitar 20 pemeriksaan. Linear Search bisa butuh sampai 1.000.000 pemeriksaan!",
+          },
+          pt5: {
+            ans: "A",
+            label: "A — Sorting",
+            exp: "Sorting (pengurutan) adalah proses menyusun data berdasarkan aturan tertentu, misalnya dari kecil ke besar atau dari A sampai Z.",
+          },
+          pt6: {
+            ans: "B",
+            label: "B — Bubble Sort",
+            exp: "Ciri khas Bubble Sort: membandingkan dua elemen bersebelahan dan menukarnya jika salah urut. Elemen terbesar perlahan 'mengapung' ke kanan.",
+          },
+          pt7: {
+            ans: "B",
+            label: "B — Insertion Sort",
+            exp: "Insertion Sort menganalogikan menyusun kartu di tangan — ambil satu kartu, geser yang lebih besar, lalu sisipkan di posisi yang tepat.",
+          },
+          pt8: {
+            ans: "A",
+            label: "A — [2, 5, 8, 1]",
+            exp: "Langkah pertama Bubble Sort: bandingkan 5 dan 2. Karena 5 > 2, tukar posisinya. Hasil setelah pertukaran pertama: [2, 5, 8, 1].",
+          },
+          pt9: {
+            ans: "B",
+            label: "B — Karena cara kerja setiap algoritma memengaruhi efisiensi dan kecepatan sistem, terutama pada data besar",
+            exp: "Setiap algoritma punya karakteristik efisiensi berbeda. Pada data besar, perbedaan Linear vs Binary Search bisa sangat signifikan — dari jutaan langkah jadi ratusan langkah saja.",
+          },
+          pt10: {
+            ans: "B",
+            label: "B — Mengurutkan data terlebih dahulu (Sorting), lalu mencari dengan Binary Search",
+            exp: "Solusi optimal: urutkan database terlebih dahulu (sekali saja), lalu gunakan Binary Search untuk setiap pencarian. Sekali investasi Sorting, pencarian ke depan jadi sangat cepat.",
+          },
+        };
+
+        let skor = 0;
+        let total = 10;
+
+        for (let i = 1; i <= total; i++) {
+          const qName = "pt" + i;
+          const selected = document.querySelector(`input[name="${qName}"]:checked`);
+          const blockEl = document.getElementById(`pt-block-${i}`);
+          const explainEl = document.getElementById(`pt-explain-${i}`);
+          const key = kunciPreTest[qName];
+
+          explainEl.classList.remove("hidden");
+
+          if (selected) {
+            if (selected.value === key.ans) {
+              skor += 10;
+              blockEl.className = "bg-green-500/10 border border-green-500/30 p-6 rounded-2xl space-y-4";
+              explainEl.innerHTML = `<strong class="text-green-400 block mb-1"><i class="fa-solid fa-circle-check mr-1"></i> Benar! (Jawaban: ${key.label})</strong><span class="text-gray-300">${key.exp}</span>`;
+            } else {
+              blockEl.className = "bg-red-500/10 border border-red-500/30 p-6 rounded-2xl space-y-4";
+              explainEl.innerHTML = `<strong class="text-red-400 block mb-1"><i class="fa-solid fa-circle-xmark mr-1"></i> Kurang Tepat (Jawaban Benar: ${key.label})</strong><span class="text-gray-300">${key.exp}</span>`;
+            }
+          } else {
+            blockEl.className = "bg-yellow-500/10 border border-yellow-500/30 p-6 rounded-2xl space-y-4";
+            explainEl.innerHTML = `<strong class="text-yellow-400 block mb-1"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Belum Dijawab (Jawaban Benar: ${key.label})</strong><span class="text-gray-300">${key.exp}</span>`;
+          }
+        }
+
+        const resultBox = document.getElementById("pretest-result");
+        resultBox.classList.remove("hidden");
+
+        let header, message, iconClass, boxClass;
+
+        if (skor >= 80) {
+          header = "Pemahaman Awalmu Sudah Kuat!";
+          iconClass = "fa-solid fa-rocket text-amber-400";
+          message = "Kamu sudah punya dasar yang baik tentang algoritma. Pelajari materi untuk memperdalam, lalu uji lagi dengan Latihan Soal.";
+          boxClass = "p-6 rounded-2xl text-base leading-relaxed border mt-6 bg-brandGreen/10 border-brandGreen/30 text-white";
+        } else if (skor >= 60) {
+          header = "Pemahaman Awalmu Cukup Baik";
+          iconClass = "fa-solid fa-thumbs-up text-amber-400";
+          message = "Sebagian konsep sudah kamu kuasai. Fokus pada bagian yang masih salah, lalu lanjutkan ke materi.";
+          boxClass = "p-6 rounded-2xl text-base leading-relaxed border mt-6 bg-blue-500/10 border-blue-500/30 text-white";
+        } else {
+          header = "Waktunya Belajar Lebih Dalam!";
+          iconClass = "fa-solid fa-book-open-reader text-amber-400";
+          message = "Jangan khawatir — Pre Test ini hanya pemetaan awal. Baca materi dengan teliti, coba Simulasi Visual, lalu kerjakan kembali.";
+          boxClass = "p-6 rounded-2xl text-base leading-relaxed border mt-6 bg-amber-500/10 border-amber-500/30 text-white";
+        }
+
+        resultBox.className = boxClass;
+        resultBox.innerHTML = `
+          <div class="flex items-center gap-3 mb-3">
+            <i class="${iconClass} text-2xl"></i>
+            <h4 class="text-xl font-bold">Skor Pre Test: ${skor} / 100</h4>
+          </div>
+          <p class="text-gray-300 font-semibold mb-2">${header}</p>
+          <p class="text-gray-300">${message}</p>
+          <div class="mt-4 pt-4 border-t border-white/10 flex flex-wrap gap-3">
+            <span class="text-sm text-gray-400"><i class="fa-solid fa-check-circle text-brandGreen mr-1"></i> Lanjutkan ke Materi Baca untuk memperdalam konsep</span>
+          </div>
+        `;
 
         resultBox.scrollIntoView({ behavior: "smooth" });
       }
