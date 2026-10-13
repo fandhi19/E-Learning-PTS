@@ -1,0 +1,3051 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LKPD CBT — Sistem Komputer: Arsitektur Von Neumann &amp; I-P-O</title>
+    <link rel="shortcut icon" href="../images/Logo Patbhe.png" type="image/x-icon" />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ["Plus Jakarta Sans", "sans-serif"],
+              mono: ["JetBrains Mono", "ui-monospace", "monospace"],
+            },
+            colors: {
+              brandDark: "#080c10",
+              brandGray: "#111820",
+              brandGreen: "#00e676",
+              textGray: "#8896a7",
+            },
+          },
+        },
+      };
+    </script>
+
+    <!-- jsPDF (menggantikan html2pdf) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <link rel="stylesheet" href="../style.css" />
+
+    <style>
+      main {
+        background: transparent;
+      }
+
+      /* Bar Progress Ujian (Atas) */
+      #examProgress {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #a78bfa, #38bdf8, #00e676);
+        z-index: 999;
+        width: 0%;
+        transition: width 0.3s ease;
+        box-shadow: 0 0 12px rgba(0, 230, 118, 0.6);
+      }
+
+      /* Indikator Autosave Melayang */
+      #saveIndicator {
+        position: fixed;
+        top: 76px;
+        right: 20px;
+        z-index: 998;
+        padding: 8px 14px;
+        border-radius: 999px;
+        background: rgba(17, 24, 32, 0.92);
+        border: 1px solid rgba(0, 230, 118, 0.5);
+        color: #00e676;
+        font-size: 0.75rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        opacity: 0;
+        transform: translateY(-8px);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        pointer-events: none;
+        backdrop-filter: blur(12px);
+        box-shadow: 0 4px 20px rgba(0, 230, 118, 0.15);
+      }
+      #saveIndicator.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* Hero Banner */
+      .page-hero {
+        position: relative;
+        padding: 44px 0 24px;
+        overflow: hidden;
+      }
+      .page-hero-glow {
+        position: absolute;
+        top: -100px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 700px;
+        height: 380px;
+        background: radial-gradient(ellipse, rgba(167, 139, 250, 0.16) 0%, rgba(56, 189, 248, 0.08) 40%, transparent 70%);
+        filter: blur(50px);
+        pointer-events: none;
+      }
+      .page-hero-inner {
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 0 20px;
+        position: relative;
+        z-index: 10;
+      }
+      .page-hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 14px;
+        border-radius: 999px;
+        background: rgba(167, 139, 250, 0.1);
+        border: 1px solid rgba(167, 139, 250, 0.35);
+        font-size: 0.75rem;
+        font-weight: 800;
+        color: #c4b5fd;
+        margin-bottom: 14px;
+        backdrop-filter: blur(8px);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
+      .page-hero-title {
+        font-size: clamp(1.8rem, 4vw, 2.5rem);
+        font-weight: 800;
+        line-height: 1.2;
+        letter-spacing: -0.025em;
+        margin-bottom: 10px;
+      }
+      .page-hero-title .gradient-text {
+        background: linear-gradient(135deg, #a78bfa 0%, #38bdf8 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .page-hero-desc {
+        font-size: 0.92rem;
+        line-height: 1.65;
+        color: #94a3b8;
+        max-width: 680px;
+      }
+
+      /* Kartu Aktivitas / Sections */
+      .exam-section {
+        background: linear-gradient(180deg, rgba(17, 24, 32, 0.95), rgba(11, 15, 20, 0.95));
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 20px;
+        padding: 24px 28px;
+        margin-bottom: 24px;
+        position: relative;
+        box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(12px);
+      }
+      .exam-section::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 24px;
+        right: 24px;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, var(--accent, #a78bfa), transparent);
+        opacity: 0.8;
+      }
+      .exam-section.sec-amber {
+        --accent: #fbbf24;
+      }
+      .exam-section.sec-sky {
+        --accent: #38bdf8;
+      }
+      .exam-section.sec-purple {
+        --accent: #a78bfa;
+      }
+      .exam-section.sec-green {
+        --accent: #00e676;
+      }
+      .exam-section.sec-rose {
+        --accent: #f43f5e;
+      }
+
+      .exam-head {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding-bottom: 16px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        margin-bottom: 18px;
+      }
+      .exam-num {
+        flex-shrink: 0;
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        background: var(--accent, #a78bfa);
+        color: #080c10;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.95rem;
+        font-weight: 800;
+        font-family: "JetBrains Mono", monospace;
+        box-shadow: 0 4px 16px -2px var(--accent, #a78bfa);
+        flex-direction: column;
+        line-height: 1;
+      }
+      .exam-num small {
+        font-size: 0.5rem;
+        font-weight: 800;
+        opacity: 0.85;
+        letter-spacing: 0.04em;
+        margin-top: 2px;
+      }
+      .exam-title {
+        font-size: 1.15rem;
+        font-weight: 800;
+        color: #fff;
+        letter-spacing: -0.015em;
+      }
+      .exam-sub {
+        font-size: 0.78rem;
+        color: #8896a7;
+        margin-top: 2px;
+      }
+      .exam-points {
+        margin-left: auto;
+        flex-shrink: 0;
+        padding: 5px 12px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 999px;
+        font-size: 0.72rem;
+        font-weight: 800;
+        color: #cbd5e1;
+        font-family: "JetBrains Mono", monospace;
+        letter-spacing: 0.04em;
+      }
+
+      .exam-intro {
+        background: rgba(255, 255, 255, 0.025);
+        border-left: 3px solid var(--accent, #a78bfa);
+        border-radius: 10px;
+        padding: 12px 16px;
+        margin-bottom: 20px;
+        font-size: 0.85rem;
+        line-height: 1.6;
+        color: #cbd5e1;
+      }
+      .exam-intro strong {
+        color: #fff;
+      }
+
+      /* Form Input & Select */
+      .cbt-input {
+        width: 100%;
+        background: rgba(0, 0, 0, 0.35);
+        border: 1.5px solid rgba(255, 255, 255, 0.12);
+        border-radius: 10px;
+        padding: 10px 14px;
+        color: #fff;
+        font-family: "Plus Jakarta Sans", sans-serif;
+        font-size: 0.875rem;
+        outline: none;
+        transition: all 0.2s ease;
+      }
+      .cbt-input::placeholder {
+        color: #64748b;
+        font-style: italic;
+      }
+      .cbt-input:hover {
+        border-color: rgba(167, 139, 250, 0.4);
+      }
+      .cbt-input:focus {
+        border-color: #a78bfa;
+        background: rgba(167, 139, 250, 0.05);
+        box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.15);
+      }
+      .cbt-input.filled {
+        border-color: rgba(0, 230, 118, 0.45);
+        background: rgba(0, 230, 118, 0.03);
+      }
+      .cbt-textarea {
+        min-height: 110px;
+        line-height: 1.6;
+        resize: vertical;
+      }
+
+      .cbt-input-sm {
+        width: 100%;
+        background: rgba(0, 0, 0, 0.35);
+        border: 1.5px solid rgba(255, 255, 255, 0.12);
+        border-radius: 8px;
+        padding: 8px 12px;
+        color: #fff;
+        font-family: "Plus Jakarta Sans", sans-serif;
+        font-size: 0.8rem;
+        line-height: 1.5;
+        outline: none;
+        transition: all 0.2s ease;
+        min-height: 48px;
+        resize: vertical;
+      }
+      .cbt-input-sm::placeholder {
+        color: #64748b;
+        font-style: italic;
+      }
+      .cbt-input-sm:hover {
+        border-color: rgba(167, 139, 250, 0.4);
+      }
+      .cbt-input-sm:focus {
+        border-color: #a78bfa;
+        background: rgba(167, 139, 250, 0.05);
+        box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.15);
+      }
+      .cbt-input-sm.filled {
+        border-color: rgba(0, 230, 118, 0.45);
+        background: rgba(0, 230, 118, 0.03);
+      }
+
+      .cbt-select {
+        width: 100%;
+        appearance: none;
+        padding: 9px 34px 9px 12px;
+        background: rgba(0, 0, 0, 0.35)
+          url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23cbd5e1' stroke-width='2.5'><polyline points='6 9 12 15 18 9'/></svg>") no-repeat right 12px
+          center;
+        border: 1.5px solid rgba(255, 255, 255, 0.14);
+        border-radius: 8px;
+        color: #e2e8f0;
+        font-family: "Plus Jakarta Sans", sans-serif;
+        font-size: 0.82rem;
+        font-weight: 600;
+        outline: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+      .cbt-select:hover {
+        border-color: rgba(167, 139, 250, 0.5);
+      }
+      .cbt-select:focus {
+        border-color: #a78bfa;
+        box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.2);
+      }
+      .cbt-select.filled {
+        border-color: rgba(0, 230, 118, 0.5);
+        background-color: rgba(0, 230, 118, 0.06);
+        color: #86efac;
+      }
+      .cbt-select option {
+        background: #111820;
+        color: #e2e8f0;
+        padding: 8px;
+      }
+
+      /* Tabel Aktivitas */
+      .aktivitas-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        font-size: 0.82rem;
+        border-radius: 14px;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: rgba(0, 0, 0, 0.2);
+      }
+      .aktivitas-table thead th {
+        background: rgba(251, 191, 36, 0.08);
+        color: #fbbf24;
+        font-size: 0.72rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        padding: 12px 16px;
+        text-align: left;
+        border-bottom: 1px solid rgba(251, 191, 36, 0.2);
+        border-right: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      .aktivitas-table thead th:last-child {
+        border-right: none;
+      }
+      .aktivitas-table tbody tr {
+        background: transparent;
+        transition: background 0.2s ease;
+      }
+      .aktivitas-table tbody tr:hover {
+        background: rgba(255, 255, 255, 0.02);
+      }
+      .aktivitas-table tbody tr.row-contoh {
+        background: rgba(0, 230, 118, 0.04);
+      }
+      .aktivitas-table tbody tr.row-contoh td {
+        border-left: 3px solid rgba(0, 230, 118, 0.6);
+      }
+      .aktivitas-table tbody tr:not(:last-child) td {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      .aktivitas-table tbody td {
+        padding: 14px 16px;
+        vertical-align: middle;
+        border-right: 1px solid rgba(255, 255, 255, 0.04);
+      }
+      .aktivitas-table tbody td:last-child {
+        border-right: none;
+      }
+      .hw-cell {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .hw-icon {
+        font-size: 1.5rem;
+        flex-shrink: 0;
+      }
+      .hw-name {
+        font-weight: 700;
+        color: #fff;
+        font-size: 0.85rem;
+        line-height: 1.3;
+      }
+      .badge-answer {
+        display: inline-flex;
+        align-items: center;
+        padding: 5px 12px;
+        background: rgba(0, 230, 118, 0.15);
+        border: 1.5px solid rgba(0, 230, 118, 0.5);
+        color: #86efac;
+        border-radius: 8px;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.82rem;
+        font-weight: 800;
+      }
+      .penjelasan-text {
+        color: #86efac;
+        font-size: 0.8rem;
+        line-height: 1.5;
+        font-style: italic;
+      }
+
+      @media (max-width: 768px) {
+        .aktivitas-table thead {
+          display: none;
+        }
+        .aktivitas-table,
+        .aktivitas-table tbody,
+        .aktivitas-table tr,
+        .aktivitas-table td {
+          display: block;
+          width: 100%;
+        }
+        .aktivitas-table tbody tr {
+          margin-bottom: 14px;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 12px;
+          overflow: hidden;
+          background: rgba(255, 255, 255, 0.015);
+        }
+        .aktivitas-table tbody td {
+          border-right: none;
+          padding: 10px 14px;
+        }
+        .aktivitas-table tbody td::before {
+          content: attr(data-label);
+          display: block;
+          font-size: 0.65rem;
+          font-weight: 800;
+          color: #fbbf24;
+          text-transform: uppercase;
+          letter-spacing: 0.06em;
+          margin-bottom: 6px;
+        }
+      }
+
+      /* CPU Unit Card */
+      .cpu-unit-card {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1.5px solid rgba(255, 255, 255, 0.08);
+        border-radius: 14px;
+        padding: 14px;
+        transition: all 0.2s ease;
+      }
+      .cpu-unit-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px -6px rgba(0, 0, 0, 0.4);
+      }
+      .cpu-unit-icon {
+        font-size: 1.6rem;
+        margin-bottom: 6px;
+        display: block;
+      }
+      .cpu-unit-label {
+        font-size: 0.72rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        margin-bottom: 4px;
+      }
+      .cpu-unit-desc {
+        font-size: 0.72rem;
+        color: #cbd5e1;
+        line-height: 1.5;
+      }
+
+      /* Item Matching Card */
+      .item-matching-card {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        padding: 14px 16px;
+        background: rgba(255, 255, 255, 0.025);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 12px;
+        transition: all 0.2s ease;
+      }
+      @media (min-width: 768px) {
+        .item-matching-card {
+          flex-direction: row;
+          align-items: center;
+          gap: 14px;
+        }
+      }
+      .item-matching-card:hover {
+        background: rgba(255, 255, 255, 0.04);
+        border-color: rgba(56, 189, 248, 0.3);
+      }
+
+      /* Flow Step Card */
+      .flow-step-card {
+        position: relative;
+        padding: 14px 16px;
+        background: rgba(255, 255, 255, 0.025);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 14px;
+        transition: all 0.2s ease;
+      }
+      .flow-step-card:hover {
+        background: rgba(255, 255, 255, 0.04);
+        border-color: rgba(56, 189, 248, 0.3);
+      }
+
+      /* Sortable */
+      .sortable {
+        list-style: none;
+        padding: 6px;
+        margin: 0;
+        background: rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 14px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .sort-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 16px;
+        background: linear-gradient(135deg, rgba(167, 139, 250, 0.08), rgba(56, 189, 248, 0.04));
+        border: 1.5px solid rgba(167, 139, 250, 0.25);
+        border-radius: 12px;
+        cursor: grab;
+        transition: all 0.2s ease;
+        font-size: 0.85rem;
+        color: #e2e8f0;
+        user-select: none;
+      }
+      .sort-item:hover {
+        border-color: rgba(167, 139, 250, 0.55);
+        background: linear-gradient(135deg, rgba(167, 139, 250, 0.14), rgba(56, 189, 248, 0.08));
+        transform: translateY(-1px);
+      }
+      .sort-item.dragging {
+        opacity: 0.5;
+        cursor: grabbing;
+        transform: scale(0.98);
+      }
+      .drag-handle {
+        flex-shrink: 0;
+        color: #a78bfa;
+        font-size: 1rem;
+        cursor: grab;
+      }
+      .sort-num {
+        flex-shrink: 0;
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        background: rgba(167, 139, 250, 0.2);
+        border: 1px solid rgba(167, 139, 250, 0.5);
+        color: #c4b5fd;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.72rem;
+        font-weight: 800;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .sort-text {
+        flex: 1;
+        line-height: 1.45;
+      }
+      .sort-moves {
+        flex-shrink: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+      }
+      .sort-move-btn {
+        width: 26px;
+        height: 20px;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 5px;
+        color: #cbd5e1;
+        cursor: pointer;
+        font-size: 0.6rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.15s ease;
+      }
+      .sort-move-btn:hover {
+        background: rgba(167, 139, 250, 0.2);
+        border-color: rgba(167, 139, 250, 0.5);
+        color: #fff;
+      }
+      .sort-move-btn:disabled {
+        opacity: 0.25;
+        cursor: not-allowed;
+      }
+
+      /* FDE Palette */
+      .fde-palette-container {
+        background: rgba(167, 139, 250, 0.06);
+        border: 1px solid rgba(167, 139, 250, 0.22);
+        border-radius: 14px;
+        padding: 14px 16px;
+        margin-bottom: 16px;
+        transition: box-shadow 0.25s ease;
+      }
+      .fde-palette-container.pulse {
+        box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.55);
+      }
+      .fde-drag-token {
+        display: inline-flex;
+        align-items: center;
+        padding: 8px 16px;
+        border-radius: 10px;
+        cursor: grab;
+        user-select: none;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.82rem;
+        font-weight: 800;
+        letter-spacing: 0.05em;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+      }
+      .fde-drag-token:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+      }
+      .fde-drag-token:active,
+      .fde-drag-token.dragging {
+        cursor: grabbing;
+        opacity: 0.55;
+        transform: scale(0.96);
+      }
+      .fde-drag-token.token-fetch {
+        background: rgba(56, 189, 248, 0.14);
+        border: 1.5px solid rgba(56, 189, 248, 0.45);
+        color: #7dd3fc;
+      }
+      .fde-drag-token.token-fetch:hover {
+        border-color: #38bdf8;
+        background: rgba(56, 189, 248, 0.22);
+      }
+      .fde-drag-token.token-decode {
+        background: rgba(251, 191, 36, 0.14);
+        border: 1.5px solid rgba(251, 191, 36, 0.45);
+        color: #fde047;
+      }
+      .fde-drag-token.token-decode:hover {
+        border-color: #fbbf24;
+        background: rgba(251, 191, 36, 0.22);
+      }
+      .fde-drag-token.token-execute {
+        background: rgba(0, 230, 118, 0.14);
+        border: 1.5px solid rgba(0, 230, 118, 0.45);
+        color: #86efac;
+      }
+      .fde-drag-token.token-execute:hover {
+        border-color: #00e676;
+        background: rgba(0, 230, 118, 0.22);
+      }
+      .fde-drag-token.token-selected {
+        outline: 2px solid #fff;
+        outline-offset: 2px;
+        transform: scale(1.05);
+        box-shadow: 0 0 16px rgba(255, 255, 255, 0.35);
+      }
+
+      .fde-dropzone {
+        min-height: 44px;
+        padding: 5px 10px;
+        border-radius: 10px;
+        border: 2px dashed rgba(255, 255, 255, 0.2);
+        background: rgba(0, 0, 0, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        position: relative;
+        user-select: none;
+      }
+      .fde-dropzone:hover {
+        border-color: rgba(167, 139, 250, 0.5);
+        background: rgba(167, 139, 250, 0.05);
+      }
+      .fde-dropzone:focus-visible {
+        outline: 2px solid #a78bfa;
+        outline-offset: 2px;
+      }
+      .fde-dropzone.drag-over {
+        border-color: #38bdf8;
+        border-style: solid;
+        background: rgba(56, 189, 248, 0.15);
+        transform: scale(1.02);
+        box-shadow: 0 0 14px rgba(56, 189, 248, 0.35);
+      }
+      .fde-drop-placeholder {
+        font-size: 0.76rem;
+        color: #94a3b8;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        pointer-events: none;
+      }
+      .fde-dropzone.filled-fetch {
+        border: 1.5px solid rgba(56, 189, 248, 0.55);
+        background: rgba(56, 189, 248, 0.08);
+      }
+      .fde-dropzone.filled-decode {
+        border: 1.5px solid rgba(251, 191, 36, 0.55);
+        background: rgba(251, 191, 36, 0.08);
+      }
+      .fde-dropzone.filled-execute {
+        border: 1.5px solid rgba(0, 230, 118, 0.55);
+        background: rgba(0, 230, 118, 0.08);
+      }
+
+      .fde-token-badge {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        padding: 4px 6px;
+        font-size: 0.8rem;
+        font-weight: 800;
+        font-family: "JetBrains Mono", monospace;
+        letter-spacing: 0.05em;
+      }
+      .fde-token-badge.phase-fetch {
+        color: #7dd3fc;
+      }
+      .fde-token-badge.phase-decode {
+        color: #fde047;
+      }
+      .fde-token-badge.phase-execute {
+        color: #86efac;
+      }
+
+      .drop-remove-btn {
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 6px;
+        width: 22px;
+        height: 22px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: #94a3b8;
+        font-size: 0.7rem;
+        transition: all 0.15s ease;
+        margin-left: 6px;
+        flex-shrink: 0;
+      }
+      .drop-remove-btn:hover {
+        background: rgba(244, 63, 94, 0.25);
+        border-color: rgba(244, 63, 94, 0.5);
+        color: #fca5a5;
+      }
+
+      .step-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 10px;
+        border-radius: 999px;
+        font-size: 0.72rem;
+        font-weight: 800;
+        letter-spacing: 0.04em;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        color: #cbd5e1;
+      }
+
+      /* Progress Wrap */
+      .progress-wrap {
+        background: rgba(17, 24, 32, 0.85);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 16px;
+        padding: 16px 20px;
+        margin-bottom: 24px;
+        backdrop-filter: blur(12px);
+      }
+      .progress-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.8rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+      }
+      .progress-label-left {
+        color: #cbd5e1;
+      }
+      .progress-label-left strong {
+        color: #c4b5fd;
+      }
+      .progress-percent {
+        color: #00e676;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.95rem;
+      }
+      .progress-track {
+        height: 10px;
+        background: rgba(255, 255, 255, 0.06);
+        border-radius: 999px;
+        overflow: hidden;
+      }
+      .progress-fill {
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(90deg, #a78bfa, #38bdf8, #00e676);
+        border-radius: 999px;
+        transition: width 0.4s ease;
+        box-shadow: 0 0 12px rgba(0, 230, 118, 0.4);
+      }
+      .progress-fill.full {
+        animation: progressGlow 1.6s ease-in-out infinite alternate;
+      }
+      @keyframes progressGlow {
+        0% {
+          box-shadow: 0 0 12px rgba(0, 230, 118, 0.4);
+        }
+        100% {
+          box-shadow: 0 0 24px rgba(0, 230, 118, 0.8);
+        }
+      }
+
+      /* Submit Area */
+      .submit-area {
+        background: linear-gradient(135deg, rgba(0, 230, 118, 0.06), rgba(56, 189, 248, 0.04));
+        border: 1px solid rgba(0, 230, 118, 0.3);
+        border-radius: 20px;
+        padding: 32px 24px;
+        text-align: center;
+      }
+      .btn-submit {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 13px 30px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #00e676, #00c853);
+        color: #080c10;
+        font-weight: 800;
+        font-size: 0.95rem;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        box-shadow: 0 8px 24px -6px rgba(0, 230, 118, 0.5);
+        font-family: "Plus Jakarta Sans", sans-serif;
+      }
+      .btn-submit:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 30px -6px rgba(0, 230, 118, 0.7);
+      }
+      .btn-submit:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+        filter: grayscale(0.6);
+      }
+      .btn-ghost {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 11px 22px;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        color: #e2e8f0;
+        font-weight: 700;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        font-family: "Plus Jakarta Sans", sans-serif;
+      }
+      .btn-ghost:hover {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: rgba(255, 255, 255, 0.3);
+      }
+
+      /* Modal */
+      .modal {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.85);
+        backdrop-filter: blur(8px);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        padding: 20px;
+      }
+      .modal.show {
+        display: flex;
+        animation: fadeIn 0.3s ease;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+      .modal-card {
+        background: linear-gradient(180deg, #111820, #080c10);
+        border: 1px solid rgba(167, 139, 250, 0.4);
+        border-radius: 20px;
+        padding: 32px 28px;
+        max-width: 480px;
+        width: 100%;
+        text-align: center;
+        box-shadow: 0 30px 80px -20px rgba(167, 139, 250, 0.4);
+        animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        max-height: 90vh;
+        overflow-y: auto;
+      }
+      @keyframes popIn {
+        from {
+          transform: scale(0.85);
+          opacity: 0;
+        }
+        to {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+      .score-circle {
+        width: 130px;
+        height: 130px;
+        border-radius: 50%;
+        margin: 0 auto 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.4rem;
+        font-weight: 800;
+        font-family: "JetBrains Mono", monospace;
+        color: #fff;
+        position: relative;
+        background: conic-gradient(#00e676 0% var(--pct, 0%), rgba(255, 255, 255, 0.08) var(--pct, 0%) 100%);
+      }
+      .score-circle::before {
+        content: "";
+        position: absolute;
+        inset: 8px;
+        border-radius: 50%;
+        background: linear-gradient(180deg, #111820, #080c10);
+      }
+      .score-circle span {
+        position: relative;
+        z-index: 1;
+      }
+      .score-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 0;
+        border-bottom: 1px dashed rgba(255, 255, 255, 0.08);
+        font-size: 0.85rem;
+      }
+      .score-row:last-child {
+        border-bottom: none;
+      }
+      .score-row .label {
+        color: #cbd5e1;
+        text-align: left;
+      }
+      .score-row .value {
+        color: #fff;
+        font-weight: 700;
+        font-family: "JetBrains Mono", monospace;
+      }
+
+      .reveal {
+        opacity: 0;
+        transform: translateY(14px);
+        transition:
+          opacity 0.5s ease,
+          transform 0.5s ease;
+      }
+      .reveal.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      @media (max-width: 640px) {
+        .exam-section {
+          padding: 18px 16px;
+          border-radius: 16px;
+        }
+        .exam-title {
+          font-size: 1rem;
+        }
+        .exam-points {
+          font-size: 0.65rem;
+          padding: 4px 10px;
+        }
+      }
+    </style>
+  </head>
+
+  <body class="bg-grid text-white font-sans antialiased overflow-x-hidden flex flex-col min-h-screen">
+    <div id="examProgress"></div>
+    <div id="saveIndicator"><i class="fa-solid fa-cloud-arrow-up"></i><span>Tersimpan otomatis</span></div>
+
+    <nav class="navbar">
+      <div class="navbar-inner">
+        <a href="../index.html" class="navbar-logo">
+          <div class="navbar-logo-icon"><i class="fa-solid fa-code"></i></div>
+          <span class="navbar-logo-text">RuangInformatika</span>
+        </a>
+        <div class="navbar-links">
+          <a href="../index.html" class="nav-link">Dashboard</a>
+          <a href="../index.html#materi" class="nav-link">Daftar Modul</a>
+          <a href="../leaderboard.html" class="nav-link">Leaderboard</a>
+          <a href="../forum.html" class="nav-link">Forum Diskusi</a>
+        </div>
+        <button class="nav-badge"><i class="fa-solid fa-chalkboard-user"></i> Kelas XE6</button>
+        <button class="hamburger-btn" id="hamburgerBtn" aria-label="Menu"><i class="fa-solid fa-bars"></i></button>
+      </div>
+      <div class="mobile-menu" id="mobileMenu">
+        <a href="../index.html" class="mobile-nav-link"><i class="fa-solid fa-house" style="margin-right: 10px"></i> Dashboard</a>
+        <a href="../index.html#materi" class="mobile-nav-link"><i class="fa-solid fa-book-open" style="margin-right: 10px"></i> Daftar Modul</a>
+        <a href="../leaderboard.html" class="mobile-nav-link"><i class="fa-solid fa-trophy" style="margin-right: 10px"></i> Leaderboard</a>
+        <a href="../forum.html" class="mobile-nav-link"><i class="fa-solid fa-comments" style="margin-right: 10px"></i> Forum Diskusi</a>
+        <div style="padding: 12px 16px">
+          <button class="nav-badge" style="width: 100%; justify-content: center"><i class="fa-solid fa-chalkboard-user"></i> Kelas XE6</button>
+        </div>
+      </div>
+    </nav>
+
+    <div class="flex-grow relative">
+      <header class="page-hero">
+        <div class="page-hero-glow"></div>
+        <div class="page-hero-inner">
+          <div class="reveal">
+            <div class="page-hero-badge"><i class="fa-solid fa-file-circle-check"></i> LKPD CBT • Sistem Komputer</div>
+            <h1 class="page-hero-title">Arsitektur Von Neumann &amp; <span class="gradient-text">Dinamika I-P-O</span></h1>
+            <p class="page-hero-desc">Kerjakan 4 aktivitas berikut secara mandiri. Jawabanmu akan <strong class="text-emerald-300">dinilai otomatis</strong> untuk Aktivitas 1–3, sedangkan Aktivitas 4 akan dinilai oleh guru.</p>
+            <div class="flex flex-wrap items-center gap-3 mt-4">
+              <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-500/15 border border-purple-500/35 text-xs font-bold text-purple-300 uppercase tracking-wider"><i class="fa-solid fa-clock"></i> 45 Menit</span>
+              <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-sky-500/15 border border-sky-500/35 text-xs font-bold text-sky-300 uppercase tracking-wider"><i class="fa-solid fa-star"></i> Total 100 Poin</span>
+              <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-xs font-bold text-emerald-400"><i class="fa-solid fa-circle-check"></i> Autosave Aktif</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main class="max-w-4xl mx-auto px-4 md:px-6 pb-16 relative z-10">
+        <!-- Tujuan Pembelajaran -->
+        <div class="exam-section reveal" style="--accent: #a78bfa">
+          <div class="exam-head">
+            <div class="exam-num" style="width: 40px; height: 40px; font-size: 1rem"><i class="fa-solid fa-bullseye"></i></div>
+            <div>
+              <div class="exam-title">Tujuan Pembelajaran</div>
+              <div class="exam-sub">Indikator capaian kompetensi LKPD ini</div>
+            </div>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div class="flex items-start gap-3 bg-purple-500/5 border border-purple-500/20 rounded-xl p-3.5">
+              <span class="flex-shrink-0 w-7 h-7 rounded-lg bg-purple-500/20 border border-purple-500/40 text-purple-300 font-bold text-[11px] flex items-center justify-center font-mono">A</span>
+              <p class="text-xs text-gray-300 leading-relaxed">Mengidentifikasi <strong class="text-white">komponen utama Von Neumann</strong>: Input, RAM/Memori, CPU/Pemroses, dan Output.</p>
+            </div>
+            <div class="flex items-start gap-3 bg-sky-500/5 border border-sky-500/20 rounded-xl p-3.5">
+              <span class="flex-shrink-0 w-7 h-7 rounded-lg bg-sky-500/20 border border-sky-500/40 text-sky-300 font-bold text-[11px] flex items-center justify-center font-mono">B</span>
+              <p class="text-xs text-gray-300 leading-relaxed">Menggambarkan <strong class="text-white">alur data, instruksi, dan eksekusi</strong> dalam sistem I-P-O melalui RAM.</p>
+            </div>
+            <div class="flex items-start gap-3 bg-emerald-500/5 border border-emerald-500/20 rounded-xl p-3.5">
+              <span class="flex-shrink-0 w-7 h-7 rounded-lg bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 font-bold text-[11px] flex items-center justify-center font-mono">C</span>
+              <p class="text-xs text-gray-300 leading-relaxed"><strong class="text-white">Mensimulasikan &amp; mengurutkan</strong> tahapan proses komputasi pada studi kasus nyata.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- IDENTITAS -->
+        <div class="exam-section sec-purple reveal">
+          <div class="exam-head">
+            <div class="exam-num"><i class="fa-solid fa-user"></i></div>
+            <div>
+              <div class="exam-title">Identitas Peserta Didik</div>
+              <div class="exam-sub">Isi data dirimu sebelum memulai pengerjaan</div>
+            </div>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 flex items-center gap-1.5"> <i class="fa-solid fa-signature text-purple-400"></i> Nama Lengkap </label>
+              <input type="text" id="inNama" class="cbt-input" placeholder="Nama sesuai absen" autocomplete="off" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 flex items-center gap-1.5"> <i class="fa-solid fa-chalkboard-user text-purple-400"></i> Kelas </label>
+              <input type="text" id="inKelas" class="cbt-input" placeholder="Contoh: XE6" autocomplete="off" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 flex items-center gap-1.5"> <i class="fa-solid fa-hashtag text-purple-400"></i> No. Absen </label>
+              <input type="text" id="inAbsen" class="cbt-input" placeholder="Contoh: 12" autocomplete="off" />
+            </div>
+          </div>
+        </div>
+
+        <!-- PROGRESS -->
+        <div class="progress-wrap reveal">
+          <div class="progress-info">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span class="progress-label-left"
+                >Progress Pengerjaan: <strong><span id="progressCurrent">0</span> dari 4 aktivitas</strong></span
+              >
+            </div>
+            <span class="progress-percent" id="progressPercent">0%</span>
+          </div>
+          <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-2 mt-3 pt-3 border-t border-white/5 text-[11px] text-gray-400">
+            <div class="flex items-center gap-1.5">
+              <span class="w-4 h-4 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 flex items-center justify-center text-[9px] font-mono font-bold">1</span> <span>A1: Struktur Internal</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <span class="w-4 h-4 rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/40 flex items-center justify-center text-[9px] font-mono font-bold">2</span> <span>A2: Alur I-P-O</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <span class="w-4 h-4 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/40 flex items-center justify-center text-[9px] font-mono font-bold">3</span> <span>A3: Simulasi Urutan</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <span class="w-4 h-4 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 flex items-center justify-center text-[9px] font-mono font-bold">4</span> <span>A4: Esai Refleksi</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ AKTIVITAS 1 ============ -->
+        <div class="exam-section sec-amber reveal">
+          <div class="exam-head">
+            <div class="exam-num">A1<small>30 POIN</small></div>
+            <div>
+              <div class="exam-title">Aktivitas 1 — Struktur Internal Von Neumann</div>
+              <div class="exam-sub">Mengukur TP (a) · Klasifikasi hardware &amp; unit inti CPU</div>
+            </div>
+            <div class="exam-points">30 POIN</div>
+          </div>
+
+          <div class="exam-intro">
+            <strong>📌 Pengantar:</strong> Arsitektur Von Neumann memiliki <strong class="text-amber-300">4 komponen utama</strong>: Input, CPU (Pemroses), Memori (RAM), dan Output. Di dalam CPU terdapat
+            <strong class="text-sky-300">3 unit inti</strong> yang bekerja bersama mengolah data. Mari kita bedah!
+          </div>
+
+          <div class="mb-6">
+            <div class="flex items-center justify-between mb-3">
+              <h4 class="text-sm font-bold text-amber-300 flex items-center gap-2"><i class="fa-solid fa-cube"></i> A. Klasifikasi Hardware ke Komponen Von Neumann</h4>
+              <span class="text-xs text-gray-400 font-mono">12,5 Poin</span>
+            </div>
+
+            <div class="overflow-x-auto">
+              <table class="aktivitas-table">
+                <thead>
+                  <tr>
+                    <th style="width: 28%">Perangkat Keras</th>
+                    <th style="width: 26%">Komponen Von Neumann</th>
+                    <th>Penjelasan Fungsi <span style="color: #94a3b8; font-weight: 500; text-transform: none">(ketik manual)</span></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="row-contoh">
+                    <td data-label="Perangkat Keras">
+                      <div class="hw-cell">
+                        <span class="hw-icon">⌨️</span>
+                        <div>
+                          <div class="hw-name">Keyboard &amp; Mouse</div>
+                          <span class="text-[10px] text-emerald-400 uppercase font-bold tracking-wider">[Contoh Panduan]</span>
+                        </div>
+                      </div>
+                    </td>
+                    <td data-label="Komponen"><span class="badge-answer">Input</span></td>
+                    <td data-label="Penjelasan"><span class="penjelasan-text">Memasukkan data atau perintah dari pengguna ke dalam sistem komputer.</span></td>
+                  </tr>
+
+                  <tr>
+                    <td data-label="Perangkat Keras">
+                      <div class="hw-cell">
+                        <span class="hw-icon">🧠</span>
+                        <div>
+                          <span class="hw-name">Prosesor</span>
+                          <div class="text-[11px] text-gray-500 font-mono">(Intel / AMD / Apple M)</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td data-label="Komponen">
+                      <select class="cbt-select" id="a1_1">
+                        <option value="">-- Pilih Komponen --</option>
+                        <option value="input">Input</option>
+                        <option value="cpu">CPU</option>
+                        <option value="memori">Memori</option>
+                        <option value="output">Output</option>
+                      </select>
+                    </td>
+                    <td data-label="Penjelasan"><textarea id="a1_2" class="cbt-input-sm" placeholder="Jelaskan fungsinya..."></textarea></td>
+                  </tr>
+
+                  <tr>
+                    <td data-label="Perangkat Keras">
+                      <div class="hw-cell">
+                        <span class="hw-icon">💾</span>
+                        <div>
+                          <span class="hw-name">RAM &amp; Storage</span>
+                          <div class="text-[11px] text-gray-500 font-mono">(Harddisk / SSD)</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td data-label="Komponen">
+                      <select class="cbt-select" id="a1_3">
+                        <option value="">-- Pilih Komponen --</option>
+                        <option value="input">Input</option>
+                        <option value="cpu">CPU</option>
+                        <option value="memori">Memori</option>
+                        <option value="output">Output</option>
+                      </select>
+                    </td>
+                    <td data-label="Penjelasan"><textarea id="a1_4" class="cbt-input-sm" placeholder="Jelaskan fungsinya..."></textarea></td>
+                  </tr>
+
+                  <tr>
+                    <td data-label="Perangkat Keras">
+                      <div class="hw-cell">
+                        <span class="hw-icon">🖥️</span>
+                        <div>
+                          <span class="hw-name">Monitor &amp; Printer</span>
+                          <div class="text-[11px] text-gray-500 font-mono">(Layar / Pencetak)</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td data-label="Komponen">
+                      <select class="cbt-select" id="a1_5">
+                        <option value="">-- Pilih Komponen --</option>
+                        <option value="input">Input</option>
+                        <option value="cpu">CPU</option>
+                        <option value="memori">Memori</option>
+                        <option value="output">Output</option>
+                      </select>
+                    </td>
+                    <td data-label="Penjelasan"><textarea id="a1_6" class="cbt-input-sm" placeholder="Jelaskan fungsinya..."></textarea></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="mt-8 pt-6 border-t border-white/10">
+            <div class="flex items-center justify-between mb-3">
+              <h4 class="text-sm font-bold text-sky-300 flex items-center gap-2"><i class="fa-solid fa-microchip"></i> B. Struktur Internal CPU — Kenali 3 Unit Intinya</h4>
+              <span class="text-xs text-gray-400 font-mono">17,5 Poin</span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
+              <div class="cpu-unit-card border-sky-500/30 bg-sky-500/5">
+                <span class="cpu-unit-icon text-sky-400">🧠</span>
+                <div class="cpu-unit-label text-sky-300">CU — Control Unit</div>
+                <p class="cpu-unit-desc">Mengatur &amp; mengendalikan jalannya instruksi serta mengirim sinyal kontrol.</p>
+              </div>
+              <div class="cpu-unit-card border-emerald-500/30 bg-emerald-500/5">
+                <span class="cpu-unit-icon text-emerald-400">🧮</span>
+                <div class="cpu-unit-label text-emerald-300">ALU — Arithmetic Logic</div>
+                <p class="cpu-unit-desc">Melakukan operasi matematika (+ − × ÷) dan logika (AND, OR, NOT, perbandingan).</p>
+              </div>
+              <div class="cpu-unit-card border-amber-500/30 bg-amber-500/5">
+                <span class="cpu-unit-icon text-amber-400">📝</span>
+                <div class="cpu-unit-label text-amber-300">Register — Memori CPU</div>
+                <p class="cpu-unit-desc">Penyimpanan berkecepatan ultra-tinggi untuk menampung data/alamat sementara di CPU.</p>
+              </div>
+            </div>
+
+            <p class="text-xs text-gray-400 mb-3 italic">🎯 Pasangkan setiap pernyataan dengan unit CPU yang tepat:</p>
+
+            <div class="space-y-2.5">
+              <div class="item-matching-card">
+                <span class="w-6 h-6 rounded-md bg-sky-500/20 text-sky-300 font-mono text-xs font-bold flex items-center justify-center shrink-0 border border-sky-500/30">1</span>
+                <div class="flex-1 text-sm text-gray-300 leading-snug">Unit yang mengatur jalannya instruksi, menerjemahkan perintah, dan mengirim sinyal kendali.</div>
+                <select class="cbt-select md:w-56 shrink-0" id="a1b_1">
+                  <option value="">-- Pilih Unit --</option>
+                  <option value="cu">CU (Control Unit)</option>
+                  <option value="alu">ALU</option>
+                  <option value="register">Register</option>
+                </select>
+              </div>
+
+              <div class="item-matching-card">
+                <span class="w-6 h-6 rounded-md bg-sky-500/20 text-sky-300 font-mono text-xs font-bold flex items-center justify-center shrink-0 border border-sky-500/30">2</span>
+                <div class="flex-1 text-sm text-gray-300 leading-snug">
+                  Unit yang bertugas melakukan operasi perhitungan <code class="text-amber-300 bg-black/40 px-1 rounded font-mono text-xs">25 + 15</code> serta operasi logika AND/OR.
+                </div>
+                <select class="cbt-select md:w-56 shrink-0" id="a1b_2">
+                  <option value="">-- Pilih Unit --</option>
+                  <option value="cu">CU (Control Unit)</option>
+                  <option value="alu">ALU</option>
+                  <option value="register">Register</option>
+                </select>
+              </div>
+
+              <div class="item-matching-card">
+                <span class="w-6 h-6 rounded-md bg-sky-500/20 text-sky-300 font-mono text-xs font-bold flex items-center justify-center shrink-0 border border-sky-500/30">3</span>
+                <div class="flex-1 text-sm text-gray-300 leading-snug">Penyimpanan sementara berkecepatan super tinggi di dalam prosesor untuk menampung data yang sedang aktif.</div>
+                <select class="cbt-select md:w-56 shrink-0" id="a1b_3">
+                  <option value="">-- Pilih Unit --</option>
+                  <option value="cu">CU (Control Unit)</option>
+                  <option value="alu">ALU</option>
+                  <option value="register">Register</option>
+                </select>
+              </div>
+
+              <div class="item-matching-card">
+                <span class="w-6 h-6 rounded-md bg-sky-500/20 text-sky-300 font-mono text-xs font-bold flex items-center justify-center shrink-0 border border-sky-500/30">4</span>
+                <div class="flex-1 text-sm text-gray-300 leading-snug">Unit yang mengambil instruksi dari RAM lalu melakukan proses penerjemahan (decode) sebelum dieksekusi.</div>
+                <select class="cbt-select md:w-56 shrink-0" id="a1b_4">
+                  <option value="">-- Pilih Unit --</option>
+                  <option value="cu">CU (Control Unit)</option>
+                  <option value="alu">ALU</option>
+                  <option value="register">Register</option>
+                </select>
+              </div>
+
+              <div class="item-matching-card">
+                <span class="w-6 h-6 rounded-md bg-sky-500/20 text-sky-300 font-mono text-xs font-bold flex items-center justify-center shrink-0 border border-sky-500/30">5</span>
+                <div class="flex-1 text-sm text-gray-300 leading-snug">Unit yang kapasitasnya sangat kecil (hanya beberapa byte), namun kecepatan transfernya paling tinggi di seluruh sistem.</div>
+                <select class="cbt-select md:w-56 shrink-0" id="a1b_5">
+                  <option value="">-- Pilih Unit --</option>
+                  <option value="cu">CU (Control Unit)</option>
+                  <option value="alu">ALU</option>
+                  <option value="register">Register</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div id="feedbackTask1" class="hidden mt-4 p-3 rounded-lg text-sm"></div>
+        </div>
+
+        <!-- ============ AKTIVITAS 2 ============ -->
+        <div class="exam-section sec-sky reveal">
+          <div class="exam-head">
+            <div class="exam-num">A2<small>30 POIN</small></div>
+            <div>
+              <div class="exam-title">Aktivitas 2 — Alur Data, Instruksi &amp; Eksekusi</div>
+              <div class="exam-sub">Mengukur TP (b) · Studi kasus kalkulator 25 + 15 = 40</div>
+            </div>
+            <div class="exam-points">30 POIN</div>
+          </div>
+
+          <div class="exam-intro">
+            <strong>📌 Studi Kasus:</strong> Rara membuka aplikasi Kalkulator di komputernya. Ia mengetik <code class="bg-black/40 px-1.5 py-0.5 rounded text-amber-300 font-mono">25 + 15</code>, lalu di layar monitor muncul hasil
+            <code class="bg-black/40 px-1.5 py-0.5 rounded text-emerald-300 font-mono">40</code>. Lengkapi rantai perjalanan data dan eksekusinya di bawah ini!
+          </div>
+
+          <div class="space-y-4 text-sm text-gray-300">
+            <div class="p-3 bg-amber-500/5 border border-amber-500/20 rounded-xl space-y-3">
+              <div class="text-[11px] font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5"><i class="fa-solid fa-arrow-down-long"></i> Tahap 1: Penginputan Data ke Sistem</div>
+
+              <div class="flow-step-card flex flex-col md:flex-row md:items-center justify-between gap-3">
+                <div class="flex items-start gap-3 flex-1">
+                  <span class="flex-shrink-0 w-7 h-7 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-300 font-bold text-xs flex items-center justify-center font-mono">1</span>
+                  <div class="leading-relaxed">
+                    Jari Rara menekan tombol <code class="bg-black/40 px-1.5 py-0.5 rounded text-amber-300 font-mono text-xs">25</code>, <code class="bg-black/40 px-1.5 py-0.5 rounded text-amber-300 font-mono text-xs">+</code>,
+                    <code class="bg-black/40 px-1.5 py-0.5 rounded text-amber-300 font-mono text-xs">15</code>. Data ini masuk melalui unit...
+                  </div>
+                </div>
+                <select class="cbt-select md:w-60 shrink-0" id="a2_1">
+                  <option value="">-- Pilih Unit --</option>
+                  <option value="input">Input (Keyboard)</option>
+                  <option value="ram">RAM</option>
+                  <option value="cpu">CPU</option>
+                  <option value="monitor">Monitor</option>
+                </select>
+              </div>
+
+              <div class="flow-step-card flex flex-col md:flex-row md:items-center justify-between gap-3">
+                <div class="flex items-start gap-3 flex-1">
+                  <span class="flex-shrink-0 w-7 h-7 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-300 font-bold text-xs flex items-center justify-center font-mono">2</span>
+                  <div class="leading-relaxed">Sinyal listrik data tersebut dititipkan terlebih dahulu ke penyimpanan memori utama, yaitu...</div>
+                </div>
+                <select class="cbt-select md:w-60 shrink-0" id="a2_2">
+                  <option value="">-- Pilih Komponen --</option>
+                  <option value="input">Input (Keyboard)</option>
+                  <option value="ram">RAM</option>
+                  <option value="cpu">CPU</option>
+                  <option value="monitor">Monitor</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="p-3 bg-sky-500/5 border border-sky-500/20 rounded-xl space-y-3">
+              <div class="text-[11px] font-bold text-sky-400 uppercase tracking-wider flex items-center gap-1.5"><i class="fa-solid fa-microchip"></i> Tahap 2: Pengolahan di Prosesor (CPU)</div>
+
+              <div class="flow-step-card flex flex-col md:flex-row md:items-center justify-between gap-3">
+                <div class="flex items-start gap-3 flex-1">
+                  <span class="flex-shrink-0 w-7 h-7 rounded-full bg-sky-500/20 border border-sky-500/40 text-sky-300 font-bold text-xs flex items-center justify-center font-mono">3</span>
+                  <div class="leading-relaxed">CPU mengambil data dan instruksi yang siap di RAM via Bus Sistem. Tahap ini disebut...</div>
+                </div>
+                <select class="cbt-select md:w-60 shrink-0" id="a2_3">
+                  <option value="">-- Pilih Tahap --</option>
+                  <option value="fetch">FETCH</option>
+                  <option value="decode">DECODE</option>
+                  <option value="execute">EXECUTE</option>
+                </select>
+              </div>
+
+              <div class="flow-step-card flex flex-col md:flex-row md:items-center justify-between gap-3">
+                <div class="flex items-start gap-3 flex-1">
+                  <span class="flex-shrink-0 w-7 h-7 rounded-full bg-sky-500/20 border border-sky-500/40 text-sky-300 font-bold text-xs flex items-center justify-center font-mono">4</span>
+                  <div class="leading-relaxed">Instruksi <em>"lakukan operasi penjumlahan"</em> diterjemahkan oleh unit pengendali...</div>
+                </div>
+                <select class="cbt-select md:w-60 shrink-0" id="a2_4">
+                  <option value="">-- Pilih Unit --</option>
+                  <option value="cu">CU (Control Unit)</option>
+                  <option value="alu">ALU</option>
+                  <option value="register">Register</option>
+                </select>
+              </div>
+
+              <div class="flow-step-card flex flex-col md:flex-row md:items-center justify-between gap-3">
+                <div class="flex items-start gap-3 flex-1">
+                  <span class="flex-shrink-0 w-7 h-7 rounded-full bg-sky-500/20 border border-sky-500/40 text-sky-300 font-bold text-xs flex items-center justify-center font-mono">5</span>
+                  <div class="leading-relaxed">Operasi matematika <code class="bg-black/40 px-1.5 py-0.5 rounded text-amber-300 font-mono text-xs">25 + 15 = 40</code> benar-benar dihitung oleh unit...</div>
+                </div>
+                <select class="cbt-select md:w-60 shrink-0" id="a2_5">
+                  <option value="">-- Pilih Unit --</option>
+                  <option value="cu">CU (Control Unit)</option>
+                  <option value="alu">ALU</option>
+                  <option value="register">Register</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="p-3 bg-emerald-500/5 border border-emerald-500/20 rounded-xl space-y-3">
+              <div class="text-[11px] font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-1.5"><i class="fa-solid fa-desktop"></i> Tahap 3 &amp; 4: Penyimpanan Balik &amp; Penayangan Output</div>
+
+              <div class="flow-step-card flex flex-col md:flex-row md:items-center justify-between gap-3">
+                <div class="flex items-start gap-3 flex-1">
+                  <span class="flex-shrink-0 w-7 h-7 rounded-full bg-purple-500/20 border border-purple-500/40 text-purple-300 font-bold text-xs flex items-center justify-center font-mono">6</span>
+                  <div class="leading-relaxed">Hasil angka <code class="bg-black/40 px-1.5 py-0.5 rounded text-emerald-300 font-mono text-xs">40</code> tidak boleh langsung ke monitor, melainkan disetorkan kembali ke...</div>
+                </div>
+                <select class="cbt-select md:w-60 shrink-0" id="a2_6">
+                  <option value="">-- Pilih Komponen --</option>
+                  <option value="ram">RAM</option>
+                  <option value="cpu">CPU</option>
+                  <option value="register">Register</option>
+                  <option value="monitor">Monitor</option>
+                </select>
+              </div>
+
+              <div class="flow-step-card flex flex-col md:flex-row md:items-center justify-between gap-3">
+                <div class="flex items-start gap-3 flex-1">
+                  <span class="flex-shrink-0 w-7 h-7 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 font-bold text-xs flex items-center justify-center font-mono">7</span>
+                  <div class="leading-relaxed">Terakhir, perangkat output membaca data dari RAM dan menampilkan angka <code class="bg-black/40 px-1.5 py-0.5 rounded text-emerald-300 font-mono text-xs">40</code> di...</div>
+                </div>
+                <select class="cbt-select md:w-60 shrink-0" id="a2_7">
+                  <option value="">-- Pilih Perangkat --</option>
+                  <option value="ram">RAM</option>
+                  <option value="cpu">CPU</option>
+                  <option value="monitor">Monitor</option>
+                  <option value="keyboard">Keyboard</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div id="feedbackTask2" class="hidden mt-4 p-3 rounded-lg text-sm"></div>
+        </div>
+
+        <!-- ============ AKTIVITAS 3 ============ -->
+        <div class="exam-section sec-purple reveal">
+          <div class="exam-head">
+            <div class="exam-num">A3<small>25 POIN</small></div>
+            <div>
+              <div class="exam-title">Aktivitas 3 — Simulasi Alur IPO (Diagram Blok)</div>
+              <div class="exam-sub">Mengukur TP (c) · Urutkan &amp; beri label diagram alur eksekusi</div>
+            </div>
+            <div class="exam-points">25 POIN</div>
+          </div>
+
+          <div class="exam-intro">
+            <strong>📌 Studi Kasus:</strong> Budi sedang mendengarkan musik di komputernya. Ia menekan tombol <code class="bg-black/40 px-1.5 py-0.5 rounded text-amber-300 font-mono">+</code> di keyboard agar volume lagu naik. Urutkan 5
+            langkah berikut secara kronologis menggunakan <strong>[Drag and Drop]</strong>, lalu beri label tahapan prosesnya di bawah!
+          </div>
+
+          <div class="mb-6">
+            <div class="flex items-center justify-between mb-3">
+              <h4 class="text-sm font-bold text-purple-300 flex items-center gap-2"><i class="fa-solid fa-up-down-left-right"></i> Bagian 1: Urutkan 5 Langkah Perjalanan Data</h4>
+              <span class="text-xs text-gray-400 font-mono">10 Poin</span>
+            </div>
+            <p class="text-xs text-gray-400 mb-3 italic">💡 Seret (drag) kotak, atau gunakan tombol panah ▲ / ▼ di kanan setiap item:</p>
+
+            <ul class="sortable" id="sortableList">
+              <li class="sort-item" draggable="true" data-order="3">
+                <span class="drag-handle"><i class="fa-solid fa-grip-vertical"></i></span>
+                <span class="sort-num">1</span>
+                <span class="sort-text">ALU menghitung nilai volume baru setelah instruksi diterjemahkan</span>
+                <span class="sort-moves">
+                  <button type="button" class="sort-move-btn move-up" aria-label="Naikkan"><i class="fa-solid fa-chevron-up"></i></button>
+                  <button type="button" class="sort-move-btn move-down" aria-label="Turunkan"><i class="fa-solid fa-chevron-down"></i></button>
+                </span>
+              </li>
+              <li class="sort-item" draggable="true" data-order="5">
+                <span class="drag-handle"><i class="fa-solid fa-grip-vertical"></i></span>
+                <span class="sort-num">1</span>
+                <span class="sort-text">Speaker mengeluarkan suara lagu dengan volume yang lebih keras</span>
+                <span class="sort-moves">
+                  <button type="button" class="sort-move-btn move-up" aria-label="Naikkan"><i class="fa-solid fa-chevron-up"></i></button>
+                  <button type="button" class="sort-move-btn move-down" aria-label="Turunkan"><i class="fa-solid fa-chevron-down"></i></button>
+                </span>
+              </li>
+              <li class="sort-item" draggable="true" data-order="1">
+                <span class="drag-handle"><i class="fa-solid fa-grip-vertical"></i></span>
+                <span class="sort-num">1</span>
+                <span class="sort-text">Tombol (+) ditekan, sinyal digital dikirim ke RAM</span>
+                <span class="sort-moves">
+                  <button type="button" class="sort-move-btn move-up" aria-label="Naikkan"><i class="fa-solid fa-chevron-up"></i></button>
+                  <button type="button" class="sort-move-btn move-down" aria-label="Turunkan"><i class="fa-solid fa-chevron-down"></i></button>
+                </span>
+              </li>
+              <li class="sort-item" draggable="true" data-order="4">
+                <span class="drag-handle"><i class="fa-solid fa-grip-vertical"></i></span>
+                <span class="sort-num">1</span>
+                <span class="sort-text">Hasil perhitungan dikembalikan ke RAM sebelum diteruskan ke perangkat output</span>
+                <span class="sort-moves">
+                  <button type="button" class="sort-move-btn move-up" aria-label="Naikkan"><i class="fa-solid fa-chevron-up"></i></button>
+                  <button type="button" class="sort-move-btn move-down" aria-label="Turunkan"><i class="fa-solid fa-chevron-down"></i></button>
+                </span>
+              </li>
+              <li class="sort-item" draggable="true" data-order="2">
+                <span class="drag-handle"><i class="fa-solid fa-grip-vertical"></i></span>
+                <span class="sort-num">1</span>
+                <span class="sort-text">CPU mengambil data perintah dari RAM, CU menerjemahkan instruksi</span>
+                <span class="sort-moves">
+                  <button type="button" class="sort-move-btn move-up" aria-label="Naikkan"><i class="fa-solid fa-chevron-up"></i></button>
+                  <button type="button" class="sort-move-btn move-down" aria-label="Turunkan"><i class="fa-solid fa-chevron-down"></i></button>
+                </span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="mt-8 pt-6 border-t border-white/10">
+            <div class="flex items-center justify-between mb-3">
+              <h4 class="text-sm font-bold text-purple-300 flex items-center gap-2"><i class="fa-solid fa-tags"></i> Bagian 2: Beri Label Tahap Eksekusi untuk Tiap Langkah</h4>
+              <span class="text-xs text-gray-400 font-mono">15 Poin</span>
+            </div>
+            <p class="text-xs text-gray-400 mb-3 italic">Tentukan apakah setiap langkah termasuk <strong>FETCH</strong>, <strong>DECODE</strong>, atau <strong>EXECUTE</strong> menggunakan interaksi Drag and Drop berikut:</p>
+
+            <div class="fde-palette-container space-y-2.5" id="fdePaletteContainer">
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <div class="flex items-center gap-2 text-xs font-bold text-purple-300 uppercase tracking-wider"><i class="fa-solid fa-layer-group"></i> Pilihan Fase (Bisa Dipakai Berulang Kali)</div>
+                <span class="text-[11px] text-gray-400 italic"> <i class="fa-solid fa-arrows-up-down-left-right mr-1"></i>Seret (drag) atau klik label lalu klik kotak langkah di bawah </span>
+              </div>
+              <div class="flex flex-wrap items-center gap-3" id="fdeTokensPalette">
+                <div class="fde-drag-token token-fetch" draggable="true" data-phase="fetch" title="Seret atau klik untuk memilih FETCH">
+                  <i class="fa-solid fa-grip-vertical opacity-50 mr-2 text-xs"></i>
+                  <i class="fa-solid fa-download mr-1.5 text-sky-400"></i>
+                  <span>FETCH</span>
+                </div>
+                <div class="fde-drag-token token-decode" draggable="true" data-phase="decode" title="Seret atau klik untuk memilih DECODE">
+                  <i class="fa-solid fa-grip-vertical opacity-50 mr-2 text-xs"></i>
+                  <i class="fa-solid fa-code mr-1.5 text-amber-400"></i>
+                  <span>DECODE</span>
+                </div>
+                <div class="fde-drag-token token-execute" draggable="true" data-phase="execute" title="Seret atau klik untuk memilih EXECUTE">
+                  <i class="fa-solid fa-grip-vertical opacity-50 mr-2 text-xs"></i>
+                  <i class="fa-solid fa-bolt mr-1.5 text-emerald-400"></i>
+                  <span>EXECUTE</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="space-y-2.5" id="fdeDropList">
+              <div class="item-matching-card">
+                <div class="flex items-center gap-2 md:w-36 shrink-0">
+                  <span class="step-badge"><i class="fa-solid fa-circle-dot text-[9px] text-purple-400"></i> Langkah 1</span>
+                </div>
+                <div class="flex-1 text-sm text-gray-300 leading-snug">Tombol (+) ditekan, sinyal digital dikirim ke RAM</div>
+                <div class="fde-dropzone md:w-52 shrink-0" id="drop_a3_1" data-target="a3_1" tabindex="0" role="button" aria-label="Dropzone langkah 1">
+                  <input type="hidden" id="a3_1" value="" />
+                  <span class="fde-drop-placeholder"><i class="fa-solid fa-hand-pointer text-xs opacity-60"></i> Tarik / Taruh ke sini</span>
+                </div>
+              </div>
+
+              <div class="item-matching-card">
+                <div class="flex items-center gap-2 md:w-36 shrink-0">
+                  <span class="step-badge"><i class="fa-solid fa-circle-dot text-[9px] text-purple-400"></i> Langkah 2</span>
+                </div>
+                <div class="flex-1 text-sm text-gray-300 leading-snug">CPU mengambil data perintah dari RAM, CU menerjemahkan instruksi</div>
+                <div class="fde-dropzone md:w-52 shrink-0" id="drop_a3_2" data-target="a3_2" tabindex="0" role="button" aria-label="Dropzone langkah 2">
+                  <input type="hidden" id="a3_2" value="" />
+                  <span class="fde-drop-placeholder"><i class="fa-solid fa-hand-pointer text-xs opacity-60"></i> Tarik / Taruh ke sini</span>
+                </div>
+              </div>
+
+              <div class="item-matching-card">
+                <div class="flex items-center gap-2 md:w-36 shrink-0">
+                  <span class="step-badge"><i class="fa-solid fa-circle-dot text-[9px] text-purple-400"></i> Langkah 3</span>
+                </div>
+                <div class="flex-1 text-sm text-gray-300 leading-snug">ALU menghitung nilai volume baru setelah instruksi diterjemahkan</div>
+                <div class="fde-dropzone md:w-52 shrink-0" id="drop_a3_3" data-target="a3_3" tabindex="0" role="button" aria-label="Dropzone langkah 3">
+                  <input type="hidden" id="a3_3" value="" />
+                  <span class="fde-drop-placeholder"><i class="fa-solid fa-hand-pointer text-xs opacity-60"></i> Tarik / Taruh ke sini</span>
+                </div>
+              </div>
+
+              <div class="item-matching-card">
+                <div class="flex items-center gap-2 md:w-36 shrink-0">
+                  <span class="step-badge"><i class="fa-solid fa-circle-dot text-[9px] text-purple-400"></i> Langkah 4</span>
+                </div>
+                <div class="flex-1 text-sm text-gray-300 leading-snug">Hasil perhitungan dikembalikan ke RAM sebelum diteruskan ke output</div>
+                <div class="fde-dropzone md:w-52 shrink-0" id="drop_a3_4" data-target="a3_4" tabindex="0" role="button" aria-label="Dropzone langkah 4">
+                  <input type="hidden" id="a3_4" value="" />
+                  <span class="fde-drop-placeholder"><i class="fa-solid fa-hand-pointer text-xs opacity-60"></i> Tarik / Taruh ke sini</span>
+                </div>
+              </div>
+
+              <div class="item-matching-card">
+                <div class="flex items-center gap-2 md:w-36 shrink-0">
+                  <span class="step-badge"><i class="fa-solid fa-circle-dot text-[9px] text-purple-400"></i> Langkah 5</span>
+                </div>
+                <div class="flex-1 text-sm text-gray-300 leading-snug">Speaker mengeluarkan suara lagu dengan volume yang lebih keras</div>
+                <div class="fde-dropzone md:w-52 shrink-0" id="drop_a3_5" data-target="a3_5" tabindex="0" role="button" aria-label="Dropzone langkah 5">
+                  <input type="hidden" id="a3_5" value="" />
+                  <span class="fde-drop-placeholder"><i class="fa-solid fa-hand-pointer text-xs opacity-60"></i> Tarik / Taruh ke sini</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="feedbackTask3" class="hidden mt-4 p-3 rounded-lg text-sm"></div>
+        </div>
+
+        <!-- ============ AKTIVITAS 4 ============ -->
+        <div class="exam-section sec-green reveal">
+          <div class="exam-head">
+            <div class="exam-num">A4<small>15 POIN</small></div>
+            <div>
+              <div class="exam-title">Aktivitas 4 — Esai Refleksi Pemahaman</div>
+              <div class="exam-sub">Refleksi konseptual · Dinilai manual oleh guru</div>
+            </div>
+            <div class="exam-points">15 POIN</div>
+          </div>
+
+          <div class="exam-intro"><strong>📌 Instruksi:</strong> Jawab <strong>2 pertanyaan esai</strong> berikut dengan kalimat sendiri secara runtut dan jelas (minimal 2 kalimat untuk setiap pertanyaan).</div>
+
+          <div class="mb-6 p-4 bg-emerald-500/5 border border-emerald-500/25 rounded-2xl">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-1.5"> <i class="fa-solid fa-circle-question"></i> Soal Esai 1 </span>
+              <span class="text-xs text-emerald-400 font-mono font-bold">7,5 Poin</span>
+            </div>
+            <p class="text-sm text-gray-200 leading-relaxed mb-3 font-medium">
+              <strong class="text-white">Sebutkan dan jelaskan</strong> apa saja <strong class="text-emerald-300">komponen utama dari komputer Von Neumann</strong>! Sertakan minimal 4 komponen beserta fungsi masing-masing.
+            </p>
+            <textarea id="a4_q1" class="cbt-input cbt-textarea" placeholder="Tuliskan jawabanmu di sini (minimal 2 kalimat)..."></textarea>
+            <div class="flex items-center justify-between mt-2 text-xs text-gray-400">
+              <span class="italic text-[11px]">💡 Sebutkan komponen (Input, CPU, Memori, Output) + jelaskan fungsinya.</span>
+              <div>Jumlah: <span id="q1Count" class="font-mono font-bold text-emerald-400">0</span> karakter</div>
+            </div>
+          </div>
+
+          <div class="p-4 bg-sky-500/5 border border-sky-500/25 rounded-2xl">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold text-sky-400 uppercase tracking-wider flex items-center gap-1.5"> <i class="fa-solid fa-circle-question"></i> Soal Esai 2 </span>
+              <span class="text-xs font-bold text-sky-400 font-mono font-bold">7,5 Poin</span>
+            </div>
+            <p class="text-sm text-gray-200 leading-relaxed mb-3 font-medium">
+              Apa yang <strong class="text-white">kelompok kamu pahami</strong> dalam pembelajaran hari ini? Tuliskan refleksi, kesan, atau konsep paling menarik yang kalian pelajari!
+            </p>
+            <textarea id="a4_q2" class="cbt-input cbt-textarea" placeholder="Tuliskan refleksi dan pemahaman kelompokmu di sini (minimal 2 kalimat)..."></textarea>
+            <div class="flex items-center justify-between mt-2 text-xs text-gray-400">
+              <span class="italic text-[11px]">💡 Tuliskan konsep yang paling berkesan, kesulitan, atau hal baru yang kalian temukan.</span>
+              <div>Jumlah: <span id="q2Count" class="font-mono font-bold text-sky-400">0</span> karakter</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SUBMIT AREA -->
+        <div class="submit-area reveal">
+          <div class="w-14 h-14 mx-auto mb-3 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center">
+            <i class="fa-solid fa-paper-plane text-emerald-400 text-xl"></i>
+          </div>
+          <h2 class="text-2xl font-bold text-white mb-2">Siap Mengumpulkan LKPD?</h2>
+          <p class="text-sm text-gray-400 mb-6 max-w-md mx-auto leading-relaxed">Pastikan seluruh identitas dan 4 aktivitas telah lengkap terisi. Hasil Aktivitas 1–3 akan langsung dinilai otomatis!</p>
+
+          <div class="flex flex-wrap items-center justify-center gap-3">
+            <button id="btnSubmit" class="btn-submit" disabled><i class="fa-solid fa-paper-plane"></i> Kumpulkan Jawaban</button>
+            <button id="btnReset" class="btn-ghost"><i class="fa-solid fa-rotate-left"></i> Reset Jawaban</button>
+          </div>
+
+          <p id="submitHint" class="text-xs text-amber-300 mt-4 italic"><i class="fa-solid fa-info-circle mr-1"></i>Lengkapi semua aktivitas untuk mengaktifkan tombol kumpulkan.</p>
+        </div>
+      </main>
+    </div>
+
+    <!-- RESULT MODAL — Skor disembunyikan dari murid, tetap dikirim ke PDF -->
+    <div id="resultModal" class="modal">
+      <div class="modal-card">
+        <div class="w-20 h-20 mx-auto mb-4 rounded-full bg-emerald-500/15 border-2 border-emerald-500/40 flex items-center justify-center">
+          <i class="fa-solid fa-paper-plane text-emerald-400 text-3xl"></i>
+        </div>
+
+        <h3 class="text-xl font-bold text-white mb-3">Jawaban Berhasil Dikumpulkan! 🎉</h3>
+
+        <p class="text-sm text-gray-300 mb-3 leading-relaxed max-w-sm mx-auto">Terima kasih! Jawabanmu sudah <strong class="text-emerald-300">otomatis terkirim ke sistem penilaian Pak Ilyas</strong>.</p>
+
+        <div class="p-3 rounded-lg bg-purple-500/10 border border-purple-500/30 mb-6 text-left">
+          <p class="text-xs text-purple-200 leading-relaxed">
+            <i class="fa-solid fa-circle-info text-purple-300 mr-1"></i>
+            <strong class="text-white">Info:</strong> Hasil penilaian (Aktivitas 1–4) akan diumumkan langsung oleh guru di kelas setelah seluruh esai selesai dikoreksi. Kamu <strong class="text-white">tidak perlu</strong> mengirim ulang.
+          </p>
+        </div>
+
+        <div class="flex flex-wrap gap-3 justify-center">
+          <button onclick="closeResult()" class="btn-ghost"><i class="fa-solid fa-xmark"></i> Tutup</button>
+          <a href="materi.html" class="btn-submit" style="padding: 10px 20px; font-size: 0.85rem"><i class="fa-solid fa-book-open"></i> Kembali ke Modul</a>
+        </div>
+
+        <!-- ============================================================
+         ELEMEN SKOR TERSEMBUNYI — tetap ada di DOM agar JS tidak error.
+         Nilai ini tetap masuk ke PDF yang diupload ke Drive.
+         ============================================================ -->
+        <div style="display: none" aria-hidden="true">
+          <span id="resA1">0</span>
+          <span id="resA2">0</span>
+          <span id="resA3">0</span>
+          <span id="autoScore">0</span>
+          <div id="scoreCircle"><span id="scoreValue">0</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container" style="max-width: 1280px; margin: 0 auto; padding: 0 24px">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <div class="footer-logo">
+              <div class="footer-logo-icon"><i class="fa-solid fa-code"></i></div>
+              <span class="footer-logo-text">RuangInformatika</span>
+            </div>
+            <p class="footer-desc">Platform e-learning interaktif modern untuk murid SMA Negeri 4 Yogyakarta.</p>
+          </div>
+          <div class="footer-col">
+            <h4 class="footer-heading">Pintasan Modul</h4>
+            <ul class="footer-links">
+              <li>
+                <a href="materi.html" class="footer-link"><i class="fa-solid fa-chevron-right" style="font-size: 0.65rem"></i> Modul Von Neumann</a>
+              </li>
+              <li>
+                <a href="lkpd.html" class="footer-link"><i class="fa-solid fa-chevron-right" style="font-size: 0.65rem"></i> LKPD Digital</a>
+              </li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h4 class="footer-heading">Fitur</h4>
+            <ul class="footer-links">
+              <li>
+                <a href="../leaderboard.html" class="footer-link"><i class="fa-solid fa-trophy" style="color: var(--amber)"></i> Leaderboard</a>
+              </li>
+              <li>
+                <a href="../forum.html" class="footer-link"><i class="fa-solid fa-comments" style="color: var(--blue)"></i> Forum Diskusi</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p class="footer-copy">&copy; 2026 RuangInformatika. Dikembangkan untuk kelas Informatika XE6 SMA Negeri 4 Yogyakarta.</p>
+          <div class="footer-socials">
+            <a href="https://github.com/fandhi19" target="_blank" class="footer-social" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+            <a href="https://e-portofolio-fandhi.vercel.app/" target="_blank" class="footer-social" aria-label="Portfolio"><i class="fa-solid fa-globe"></i></a>
+            <a href="https://www.instagram.com/fandhidk17/" target="_blank" class="footer-social" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      /* ============================================
+   INTEGRASI GOOGLE DRIVE — KONFIGURASI
+   ============================================ */
+      const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby7-AmyUI7hl2Dz_lSvqjNLNZ2elOHgN2BMQLVR4cIOQ9bhrGsCApKJgtIEs07xXweX/exec";
+
+      /* ============================================================
+         PDF BUILDER — jsPDF MANUAL (menggantikan html2canvas)
+         ============================================================ */
+      async function buildPDFBlob() {
+        if (!window.jspdf || !window.jspdf.jsPDF) {
+          throw new Error("Library jsPDF belum termuat. Refresh halaman & coba lagi.");
+        }
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+        const measureDoc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+
+        const pageW = doc.internal.pageSize.getWidth();
+        const pageH = doc.internal.pageSize.getHeight();
+        const margin = 12;
+        const contentW = pageW - margin * 2;
+        let y = margin;
+
+        const C = {
+          bg: [8, 12, 16],
+          card: [17, 24, 32],
+          border: [55, 55, 55],
+          green: [0, 230, 118],
+          sky: [56, 189, 248],
+          amber: [251, 191, 36],
+          purple: [167, 139, 250],
+          rose: [244, 63, 94],
+          white: [255, 255, 255],
+          text: [203, 213, 225],
+          dim: [136, 150, 167],
+          codeBg: [13, 17, 23],
+          codeBorder: [60, 80, 100],
+          codeText: [220, 225, 232],
+          greenBoxBg: [10, 30, 20],
+          greenBoxBrd: [30, 100, 60],
+        };
+
+        const setFill = (c) => doc.setFillColor(c[0], c[1], c[2]);
+        const setDraw = (c) => doc.setDrawColor(c[0], c[1], c[2]);
+        function setFont(style, size, color) {
+          doc.setFont("helvetica", style);
+          doc.setFontSize(size);
+          if (color) doc.setTextColor(color[0], color[1], color[2]);
+        }
+        function paintBg() {
+          setFill(C.bg);
+          doc.rect(0, 0, pageW, pageH, "F");
+        }
+        function newPage() {
+          doc.addPage();
+          paintBg();
+          y = margin;
+        }
+        function ensureSpace(h) {
+          if (y + h > pageH - margin - 12) newPage();
+        }
+        function drawCard(x, yy, w, h, opts = {}) {
+          setFill(opts.fill || C.card);
+          doc.roundedRect(x, yy, w, h, 2.5, 2.5, "F");
+          if (opts.borderColor) {
+            setDraw(opts.borderColor);
+            doc.setLineWidth(0.3);
+            doc.roundedRect(x, yy, w, h, 2.5, 2.5, "S");
+          }
+          if (opts.accent) {
+            setFill(opts.accent);
+            doc.rect(x + 0.4, yy + 2, 1.2, h - 4, "F");
+          }
+        }
+        function measure(text, size, style, w) {
+          measureDoc.setFont("helvetica", style);
+          measureDoc.setFontSize(size);
+          const s = String(text ?? "")
+            .replace(/\u2212/g, "-")
+            .replace(/\u2265/g, ">=")
+            .replace(/\u2264/g, "<=")
+            .replace(/\u2190/g, "<-")
+            .replace(/\u2018|\u2019/g, "'")
+            .replace(/\u201C|\u201D/g, '"');
+          const lines = [];
+          s.split("\n").forEach((part) => {
+            const trimmed = part.replace(/\s+$/, "");
+            if (!trimmed) lines.push("");
+            else lines.push(...measureDoc.splitTextToSize(trimmed, w));
+          });
+          if (lines.length === 0) lines.push("-");
+          return lines;
+        }
+        function lh(size) {
+          return size * 0.45;
+        }
+
+        paintBg();
+
+        /* ── 1. BANNER ── */
+        const bannerH = 28;
+        setFill(C.purple);
+        doc.roundedRect(margin, y, contentW, bannerH, 3, 3, "F");
+        setFont("bold", 14, [10, 10, 10]);
+        doc.text("LKPD DIGITAL • SISTEM KOMPUTER", pageW / 2, y + 9.5, { align: "center" });
+        setFont("bold", 11.5, [10, 10, 10]);
+        doc.text("Arsitektur Von Neumann & Dinamika I-P-O", pageW / 2, y + 17, { align: "center" });
+        setFont("normal", 8.5, [10, 10, 10]);
+        doc.text("Fase E / Kelas X  •  Total 100 Poin", pageW / 2, y + 23.5, { align: "center" });
+        y += bannerH + 5;
+
+        /* ── 2. KUMPULKAN DATA ── */
+        const OPT_LABELS = {
+          input: "Input",
+          cpu: "CPU",
+          memori: "Memori",
+          output: "Output",
+          cu: "CU (Control Unit)",
+          alu: "ALU",
+          register: "Register",
+          ram: "RAM",
+          monitor: "Monitor",
+          keyboard: "Keyboard",
+          fetch: "FETCH",
+          decode: "DECODE",
+          execute: "EXECUTE",
+        };
+        const optLabel = (v) => OPT_LABELS[v] || (v ? v.toString() : "-");
+        const getVal = (id) => (document.getElementById(id)?.value || "").trim() || "-";
+        const optVal = (id) => document.getElementById(id)?.value || "";
+
+        const STEP_TEXT = {
+          1: "Tombol (+) ditekan, sinyal digital dikirim ke RAM",
+          2: "CPU mengambil data perintah dari RAM, CU menerjemahkan instruksi",
+          3: "ALU menghitung nilai volume baru setelah instruksi diterjemahkan",
+          4: "Hasil perhitungan dikembalikan ke RAM sebelum diteruskan ke perangkat output",
+          5: "Speaker mengeluarkan suara lagu dengan volume yang lebih keras",
+        };
+        const sortItems = [...document.querySelectorAll("#sortableList .sort-item")];
+        const sortedSteps = sortItems.map((li, idx) => ({
+          no: idx + 1,
+          text: STEP_TEXT[li.dataset.order] || li.querySelector(".sort-text")?.textContent.trim() || "-",
+        }));
+
+        const data = {
+          nama: getVal("inNama"),
+          kelas: getVal("inKelas"),
+          absen: getVal("inAbsen"),
+          a1_1: optLabel(optVal("a1_1")),
+          a1_2: getVal("a1_2"),
+          a1_3: optLabel(optVal("a1_3")),
+          a1_4: getVal("a1_4"),
+          a1_5: optLabel(optVal("a1_5")),
+          a1_6: getVal("a1_6"),
+          a1b_1: optLabel(optVal("a1b_1")),
+          a1b_2: optLabel(optVal("a1b_2")),
+          a1b_3: optLabel(optVal("a1b_3")),
+          a1b_4: optLabel(optVal("a1b_4")),
+          a1b_5: optLabel(optVal("a1b_5")),
+          a2_1: optLabel(optVal("a2_1")),
+          a2_2: optLabel(optVal("a2_2")),
+          a2_3: optLabel(optVal("a2_3")),
+          a2_4: optLabel(optVal("a2_4")),
+          a2_5: optLabel(optVal("a2_5")),
+          a2_6: optLabel(optVal("a2_6")),
+          a2_7: optLabel(optVal("a2_7")),
+          a3_1: optLabel(optVal("a3_1")),
+          a3_2: optLabel(optVal("a3_2")),
+          a3_3: optLabel(optVal("a3_3")),
+          a3_4: optLabel(optVal("a3_4")),
+          a3_5: optLabel(optVal("a3_5")),
+          a4_q1: getVal("a4_q1"),
+          a4_q2: getVal("a4_q2"),
+          sortedSteps,
+          s1: scoreA1(),
+          s2: scoreA2(),
+          s3: scoreA3(),
+        };
+        data.autoTotal = Math.round((data.s1 + data.s2 + data.s3) * 100) / 100;
+
+        /* ── 3. TABEL GENERIK (multi-line) ── */
+        function renderTable(title, accent, borderColor, headers, rows, colWidths) {
+          const padX = 6;
+          const innerW = contentW - padX * 2 - 4;
+          const titleH = 8,
+            headerH = 7,
+            bodySize = 9,
+            bodyLh = lh(bodySize),
+            rowPadY = 3;
+
+          const rowData = rows.map((r) => {
+            const cellLines = r.cells.map((cell, i) => measure(cell, bodySize, "normal", colWidths[i] - 6));
+            const maxLines = Math.max(...cellLines.map((l) => l.length), 1);
+            const rowH = Math.max(11, maxLines * bodyLh + rowPadY * 2);
+            return { ...r, cellLines, rowH };
+          });
+          const totalRowsH = rowData.reduce((a, r) => a + r.rowH, 0);
+          const cardH = titleH + headerH + totalRowsH + 4;
+          ensureSpace(cardH + 5);
+          drawCard(margin, y, contentW, cardH, { accent, borderColor });
+
+          setFont("bold", 10.5, accent);
+          doc.text(title, margin + padX + 2, y + 6);
+
+          let cy = y + titleH;
+          let cx = margin + padX + 2;
+          setFill([30, 30, 30]);
+          doc.rect(cx, cy, innerW, headerH, "F");
+          headers.forEach((h, i) => {
+            setFont("bold", 7.5, h.color || C.dim);
+            doc.text(h.label, cx + 3, cy + 4.5);
+            cx += colWidths[i];
+          });
+          cy += headerH;
+
+          rowData.forEach((r) => {
+            setDraw([45, 45, 45]);
+            doc.setLineWidth(0.15);
+            doc.line(margin + padX + 2, cy + r.rowH, margin + padX + 2 + innerW, cy + r.rowH);
+            let cx2 = margin + padX + 2;
+            r.cells.forEach((_, i) => {
+              const color = (r.colors && r.colors[i]) || C.text;
+              setFont("normal", bodySize, color);
+              let lineY = cy + rowPadY + 3;
+              r.cellLines[i].forEach((line) => {
+                doc.text(line, cx2 + 3, lineY);
+                lineY += bodyLh;
+              });
+              cx2 += colWidths[i];
+            });
+            cy += r.rowH;
+          });
+
+          y += cardH + 5;
+        }
+
+        /* ── 4. IDENTITAS ── */
+        {
+          const padX = 6;
+          const rows = [
+            { label: "NAMA LENGKAP", value: data.nama, color: C.purple },
+            { label: "KELAS", value: data.kelas, color: C.sky },
+            { label: "NO. ABSEN", value: data.absen, color: C.green },
+          ];
+          const titleH = 8,
+            rowH = 10;
+          const cardH = titleH + rowH * rows.length + 4;
+          ensureSpace(cardH + 5);
+          drawCard(margin, y, contentW, cardH, { accent: C.purple, borderColor: [90, 60, 140] });
+          setFont("bold", 10.5, C.purple);
+          doc.text("IDENTITAS PESERTA DIDIK", margin + padX + 2, y + 6);
+          let cy = y + titleH + 3;
+          rows.forEach((r) => {
+            setFont("bold", 7, r.color);
+            doc.text(r.label, margin + padX + 2, cy);
+            setFont("bold", 10, C.white);
+            doc.text(r.value, margin + padX + 2, cy + 5);
+            cy += rowH;
+          });
+          y += cardH + 5;
+        }
+
+        /* ── 5. AKTIVITAS 1A ── */
+        {
+          const innerW = contentW - 12 - 4;
+          const colW = [innerW * 0.3, innerW * 0.22, innerW * 0.48];
+          renderTable(
+            "AKTIVITAS 1A: KLASIFIKASI HARDWARE",
+            C.amber,
+            [120, 90, 20],
+            [
+              { label: "PERANGKAT", color: C.amber },
+              { label: "KOMPONEN", color: C.amber },
+              { label: "PENJELASAN FUNGSI", color: C.amber },
+            ],
+            [
+              { cells: ["Prosesor\n(Intel / AMD / Apple M)", data.a1_1, data.a1_2], colors: [C.white, C.green, C.text] },
+              { cells: ["RAM & Storage\n(Harddisk / SSD)", data.a1_3, data.a1_4], colors: [C.white, C.green, C.text] },
+              { cells: ["Monitor & Printer\n(Layar / Pencetak)", data.a1_5, data.a1_6], colors: [C.white, C.green, C.text] },
+            ],
+            colW,
+          );
+        }
+
+        /* ── 6. AKTIVITAS 1B ── */
+        {
+          const innerW = contentW - 12 - 4;
+          const colW = [innerW * 0.68, innerW * 0.32];
+          const soal = [
+            "Unit yang mengatur jalannya instruksi, menerjemahkan perintah, dan mengirim sinyal kendali.",
+            "Unit yang bertugas melakukan operasi perhitungan 25 + 15 serta operasi logika AND/OR.",
+            "Penyimpanan sementara berkecepatan super tinggi di dalam prosesor.",
+            "Unit yang mengambil instruksi dari RAM lalu melakukan penerjemahan (decode).",
+            "Unit yang kapasitasnya sangat kecil namun kecepatan transfernya paling tinggi.",
+          ];
+          const keys = ["a1b_1", "a1b_2", "a1b_3", "a1b_4", "a1b_5"];
+          renderTable(
+            "AKTIVITAS 1B: STRUKTUR INTERNAL CPU",
+            C.sky,
+            [40, 100, 130],
+            [
+              { label: "PERNYATAAN", color: C.sky },
+              { label: "JAWABAN", color: C.sky },
+            ],
+            soal.map((s, i) => ({ cells: [s, data[keys[i]]], colors: [C.text, C.green] })),
+            colW,
+          );
+        }
+
+        /* ── 7. AKTIVITAS 2 ── */
+        {
+          const innerW = contentW - 12 - 4;
+          const colW = [innerW * 0.72, innerW * 0.28];
+          const langkah = [
+            "1. Jari Rara menekan tombol 25, +, 15. Data masuk melalui...",
+            "2. Sinyal listrik data dititipkan ke penyimpanan memori utama, yaitu...",
+            "3. CPU mengambil data & instruksi dari RAM via Bus Sistem. Tahap ini disebut...",
+            '4. Instruksi "lakukan operasi penjumlahan" diterjemahkan oleh unit...',
+            "5. Operasi matematika 25 + 15 = 40 benar-benar dihitung oleh unit...",
+            "6. Hasil angka 40 disetorkan kembali ke...",
+            "7. Terakhir, perangkat output membaca data dari RAM & menampilkan di...",
+          ];
+          const keys = ["a2_1", "a2_2", "a2_3", "a2_4", "a2_5", "a2_6", "a2_7"];
+          renderTable(
+            "AKTIVITAS 2: ALUR DATA, INSTRUKSI & EKSEKUSI",
+            C.sky,
+            [40, 100, 130],
+            [
+              { label: "LANGKAH", color: C.sky },
+              { label: "JAWABAN", color: C.sky },
+            ],
+            langkah.map((s, i) => ({ cells: [s, data[keys[i]]], colors: [C.text, C.green] })),
+            colW,
+          );
+        }
+
+        /* ── 8. AKTIVITAS 3 - Bagian 1 ── */
+        {
+          const innerW = contentW - 12 - 4;
+          const colW = [innerW * 0.1, innerW * 0.9];
+          renderTable(
+            "AKTIVITAS 3 - BAGIAN 1: URUTAN LANGKAH",
+            C.purple,
+            [90, 60, 140],
+            [
+              { label: "NO", color: C.purple },
+              { label: "LANGKAH", color: C.purple },
+            ],
+            data.sortedSteps.map((s) => ({ cells: [String(s.no), s.text], colors: [C.purple, C.text] })),
+            colW,
+          );
+        }
+
+        /* ── 9. AKTIVITAS 3 - Bagian 2 (FDE) ── */
+        {
+          const innerW = contentW - 12 - 4;
+          const colW = [innerW * 0.72, innerW * 0.28];
+          const langkahFDE = [
+            "Langkah 1: Tombol (+) ditekan, sinyal digital dikirim ke RAM",
+            "Langkah 2: CPU mengambil data perintah dari RAM, CU menerjemahkan instruksi",
+            "Langkah 3: ALU menghitung nilai volume baru setelah instruksi diterjemahkan",
+            "Langkah 4: Hasil perhitungan dikembalikan ke RAM sebelum diteruskan ke output",
+            "Langkah 5: Speaker mengeluarkan suara lagu dengan volume yang lebih keras",
+          ];
+          const keys = ["a3_1", "a3_2", "a3_3", "a3_4", "a3_5"];
+          renderTable(
+            "AKTIVITAS 3 - BAGIAN 2: LABEL FASE (FDE)",
+            C.purple,
+            [90, 60, 140],
+            [
+              { label: "LANGKAH", color: C.purple },
+              { label: "LABEL FASE", color: C.purple },
+            ],
+            langkahFDE.map((s, i) => ({ cells: [s, data[keys[i]]], colors: [C.text, C.green] })),
+            colW,
+          );
+        }
+
+        /* ── 10. AKTIVITAS 4 - Esai ── */
+        {
+          const padX = 6;
+          const innerW = contentW - padX * 2 - 4;
+          const titleH = 8;
+          const bodySize = 9.5,
+            bodyLh = lh(bodySize);
+          const q1Lines = measure(data.a4_q1, bodySize, "normal", innerW - 12);
+          const q2Lines = measure(data.a4_q2, bodySize, "normal", innerW - 12);
+          const q1BlockH = Math.max(q1Lines.length * bodyLh + 6, 22);
+          const q2BlockH = Math.max(q2Lines.length * bodyLh + 6, 22);
+          const subTitleH = 5;
+          const cardH = titleH + subTitleH + q1BlockH + 4 + subTitleH + q2BlockH + 4;
+          ensureSpace(cardH + 5);
+          drawCard(margin, y, contentW, cardH, { accent: C.green, borderColor: [30, 100, 60] });
+          setFont("bold", 10.5, C.green);
+          doc.text("AKTIVITAS 4: ESAI REFLEKSI PEMAHAMAN", margin + padX + 2, y + 6);
+          let cy = y + titleH;
+
+          setFont("bold", 8, C.green);
+          doc.text("SOAL 1: Komponen utama Von Neumann (min. 4) + fungsinya.", margin + padX + 2, cy + 3.5);
+          cy += subTitleH;
+          drawCard(margin + padX + 2, cy, innerW, q1BlockH, { fill: C.codeBg, borderColor: C.codeBorder });
+          setFont("normal", bodySize, C.text);
+          let qy = cy + bodyLh + 2;
+          q1Lines.forEach((line) => {
+            doc.text(line, margin + padX + 6, qy);
+            qy += bodyLh;
+          });
+          cy += q1BlockH + 4;
+
+          setFont("bold", 8, C.sky);
+          doc.text("SOAL 2: Refleksi kelompokmu tentang pembelajaran hari ini.", margin + padX + 2, cy + 3.5);
+          cy += subTitleH;
+          drawCard(margin + padX + 2, cy, innerW, q2BlockH, { fill: C.codeBg, borderColor: C.codeBorder });
+          setFont("normal", bodySize, C.text);
+          let q2y = cy + bodyLh + 2;
+          q2Lines.forEach((line) => {
+            doc.text(line, margin + padX + 6, q2y);
+            q2y += bodyLh;
+          });
+
+          y += cardH + 5;
+        }
+
+        /* ── 11. SKOR OTOMATIS ── */
+        {
+          const padX = 6;
+          const titleH = 8;
+          const bodyH = 32;
+          const cardH = titleH + bodyH + 4;
+          ensureSpace(cardH + 5);
+          drawCard(margin, y, contentW, cardH, { accent: C.green, borderColor: [30, 100, 60] });
+          setFont("bold", 10.5, C.green);
+          doc.text("SKOR OTOMATIS (AKTIVITAS 1-3)", margin + padX + 2, y + 6);
+
+          let cy = y + titleH + 3;
+          const rows = [
+            { label: "Aktivitas 1 — Struktur Internal", value: data.s1 + " / 30" },
+            { label: "Aktivitas 2 — Alur Data & Instruksi", value: data.s2 + " / 30" },
+            { label: "Aktivitas 3 — Simulasi IPO", value: data.s3 + " / 25" },
+            { label: "TOTAL OTOMATIS (A1-A3)", value: data.autoTotal + " / 85", bold: true },
+            { label: "Aktivitas 4 — Esai", value: "Menunggu nilai guru", italic: true },
+          ];
+          rows.forEach((r) => {
+            if (r.bold) {
+              setFont("bold", 10, C.green);
+              doc.text(r.label, margin + padX + 4, cy + 5);
+              doc.text(r.value, margin + contentW - padX - 4, cy + 5, { align: "right" });
+              cy += 7;
+            } else {
+              setFont("normal", 9, r.italic ? C.amber : C.text);
+              doc.text(r.label, margin + padX + 4, cy + 4);
+              doc.text(r.value, margin + contentW - padX - 4, cy + 4, { align: "right" });
+              cy += 6;
+            }
+          });
+          y += cardH + 5;
+        }
+
+        /* ── 12. FOOTER setiap halaman ── */
+        const totalPages = doc.getNumberOfPages();
+        const createdAt = new Date().toLocaleString("id-ID");
+        for (let i = 1; i <= totalPages; i++) {
+          doc.setPage(i);
+          const fY = pageH - 8;
+          setDraw([45, 45, 45]);
+          doc.setLineWidth(0.2);
+          doc.line(margin, fY - 4, pageW - margin, fY - 4);
+          setFont("normal", 7.5, C.dim);
+          doc.text("Platform: RuangInformatika  •  SMA Negeri 4 Yogyakarta", margin, fY);
+          doc.text("Halaman " + i + " / " + totalPages, pageW - margin, fY, { align: "right" });
+          doc.text("Dibuat: " + createdAt, margin, fY + 3.5);
+        }
+
+        const safeName = (s) => (s || "-").replace(/[^\w\d]+/g, "_").replace(/^_+|_+$/g, "");
+        const filename = "LKPD_VonNeumann_" + safeName(data.nama) + "_" + safeName(data.kelas) + ".pdf";
+        return { pdf: doc, data, filename };
+      }
+
+      /* Wrapper agar handleSubmit() yang lama tetap kompatibel */
+      async function generatePdfBase64() {
+        const { pdf } = await buildPDFBlob();
+        return pdf.output("datauristring").split(",")[1];
+      }
+
+      /* Upload PDF ke Google Drive via Apps Script */
+      async function uploadToDrive(payload) {
+        const response = await fetch(APPS_SCRIPT_URL, {
+          method: "POST",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify(payload),
+          redirect: "follow",
+        });
+        const result = await response.json();
+        if (result.status !== "success") {
+          throw new Error(result.message || "Upload gagal");
+        }
+        return result;
+      }
+
+      /* PROGRESS SCROLL */
+      window.addEventListener("scroll", () => {
+        const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrolled = height > 0 ? (winScroll / height) * 100 : 0;
+        const p = document.getElementById("examProgress");
+        if (p) p.style.width = scrolled + "%";
+      });
+
+      /* MOBILE MENU */
+      const hamburgerBtn = document.getElementById("hamburgerBtn");
+      const mobileMenu = document.getElementById("mobileMenu");
+      if (hamburgerBtn && mobileMenu) {
+        hamburgerBtn.addEventListener("click", () => {
+          mobileMenu.classList.toggle("open");
+          const icon = hamburgerBtn.querySelector("i");
+          icon.classList.toggle("fa-bars");
+          icon.classList.toggle("fa-xmark");
+        });
+        mobileMenu.querySelectorAll("a, button").forEach((item) => {
+          item.addEventListener("click", () => {
+            mobileMenu.classList.remove("open");
+            const icon = hamburgerBtn.querySelector("i");
+            icon.classList.add("fa-bars");
+            icon.classList.remove("fa-xmark");
+          });
+        });
+      }
+
+      /* REVEAL */
+      const revealObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("visible");
+              revealObserver.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.08 },
+      );
+      document.querySelectorAll(".reveal").forEach((el) => revealObserver.observe(el));
+
+      const STORAGE_KEY = "lkpd_cbt_vonneumann_XE6_v6";
+      const FDE_IDS = ["a3_1", "a3_2", "a3_3", "a3_4", "a3_5"];
+
+      document.addEventListener("DOMContentLoaded", () => {
+        initSortable();
+        initFdeDragDrop();
+        attachListeners();
+        loadSaved();
+        renderAllFdeDropzones();
+        updateAll();
+        checkTask1();
+        checkTask2();
+        checkTask3();
+      });
+
+      /* ============ SORTABLE ============ */
+      let draggedItem = null;
+
+      function initSortable() {
+        const list = document.getElementById("sortableList");
+        if (!list) return;
+        const items = list.querySelectorAll(".sort-item");
+
+        items.forEach((item) => {
+          item.addEventListener("dragstart", (e) => {
+            draggedItem = item;
+            item.classList.add("dragging");
+            e.dataTransfer.effectAllowed = "move";
+            try {
+              e.dataTransfer.setData("text/plain", item.dataset.order || "");
+            } catch (_) {}
+          });
+          item.addEventListener("dragend", () => {
+            item.classList.remove("dragging");
+            draggedItem = null;
+            updateSortNumbers();
+            saveNow();
+            updateAll();
+          });
+          item.addEventListener("dragover", (e) => {
+            e.preventDefault();
+            if (!draggedItem || draggedItem === item) return;
+            const rect = item.getBoundingClientRect();
+            const midY = rect.top + rect.height / 2;
+            if (e.clientY < midY) list.insertBefore(draggedItem, item);
+            else list.insertBefore(draggedItem, item.nextSibling);
+          });
+
+          item.querySelector(".move-up")?.addEventListener("click", () => {
+            const prev = item.previousElementSibling;
+            if (prev) {
+              list.insertBefore(item, prev);
+              updateSortNumbers();
+              saveNow();
+              updateAll();
+            }
+          });
+          item.querySelector(".move-down")?.addEventListener("click", () => {
+            const next = item.nextElementSibling;
+            if (next) {
+              list.insertBefore(next, item);
+              updateSortNumbers();
+              saveNow();
+              updateAll();
+            }
+          });
+        });
+
+        /* Touch drag — hanya aktif setelah gerakan > 8px agar scroll tidak terblokir */
+        let touchStartY = 0;
+        let touchDragging = false;
+        items.forEach((item) => {
+          item.addEventListener(
+            "touchstart",
+            (e) => {
+              touchStartY = e.touches[0].clientY;
+              touchDragging = false;
+              draggedItem = item;
+            },
+            { passive: true },
+          );
+
+          item.addEventListener(
+            "touchmove",
+            (e) => {
+              if (!draggedItem) return;
+              const touch = e.touches[0];
+              if (!touchDragging) {
+                if (Math.abs(touch.clientY - touchStartY) < 8) return;
+                touchDragging = true;
+                draggedItem.classList.add("dragging");
+              }
+              e.preventDefault();
+              const target = document.elementFromPoint(touch.clientX, touch.clientY);
+              const targetItem = target?.closest(".sort-item");
+              if (!targetItem || targetItem === draggedItem) return;
+              const rect = targetItem.getBoundingClientRect();
+              const midY = rect.top + rect.height / 2;
+              if (touch.clientY < midY) list.insertBefore(draggedItem, targetItem);
+              else list.insertBefore(draggedItem, targetItem.nextSibling);
+            },
+            { passive: false },
+          );
+
+          const endTouch = () => {
+            if (draggedItem) draggedItem.classList.remove("dragging");
+            draggedItem = null;
+            touchDragging = false;
+            updateSortNumbers();
+            saveNow();
+            updateAll();
+          };
+          item.addEventListener("touchend", endTouch);
+          item.addEventListener("touchcancel", endTouch);
+        });
+
+        updateSortNumbers();
+      }
+
+      function updateSortNumbers() {
+        const items = document.querySelectorAll("#sortableList .sort-item");
+        items.forEach((item, idx) => {
+          const numEl = item.querySelector(".sort-num");
+          if (numEl) numEl.textContent = idx + 1;
+          const upBtn = item.querySelector(".move-up");
+          const downBtn = item.querySelector(".move-down");
+          if (upBtn) upBtn.disabled = idx === 0;
+          if (downBtn) downBtn.disabled = idx === items.length - 1;
+        });
+      }
+
+      /* ============ FDE DRAG & DROP ============ */
+      const FDE_CONFIG = {
+        fetch: { label: "FETCH", icon: "fa-download", badgeClass: "phase-fetch", filledClass: "filled-fetch" },
+        decode: { label: "DECODE", icon: "fa-code", badgeClass: "phase-decode", filledClass: "filled-decode" },
+        execute: { label: "EXECUTE", icon: "fa-bolt", badgeClass: "phase-execute", filledClass: "filled-execute" },
+      };
+
+      let draggedFdePhase = null;
+      let selectedFdePhase = null;
+
+      function renderFdeDropzone(targetId, phase) {
+        const dropzone = document.getElementById("drop_" + targetId);
+        if (!dropzone) return;
+        dropzone.classList.remove("filled-fetch", "filled-decode", "filled-execute");
+
+        if (phase && FDE_CONFIG[phase]) {
+          const cfg = FDE_CONFIG[phase];
+          dropzone.classList.add(cfg.filledClass);
+          dropzone.innerHTML = `
+            <input type="hidden" id="${targetId}" value="${phase}">
+            <div class="fde-token-badge ${cfg.badgeClass}">
+              <span class="flex items-center gap-1.5">
+                <i class="fa-solid ${cfg.icon}"></i>
+                <span>${cfg.label}</span>
+              </span>
+              <button type="button" class="drop-remove-btn" title="Hapus jawaban" aria-label="Hapus jawaban">
+                <i class="fa-solid fa-xmark"></i>
+              </button>
+            </div>
+          `;
+          const btn = dropzone.querySelector(".drop-remove-btn");
+          if (btn) {
+            btn.addEventListener("click", (e) => {
+              e.stopPropagation();
+              clearFdeValue(targetId);
+            });
+          }
+        } else {
+          dropzone.innerHTML = `
+            <input type="hidden" id="${targetId}" value="">
+            <span class="fde-drop-placeholder">
+              <i class="fa-solid fa-hand-pointer text-xs opacity-60"></i> Tarik / Taruh ke sini
+            </span>
+          `;
+        }
+      }
+
+      function setFdeValue(targetId, phase) {
+        const input = document.getElementById(targetId);
+        if (input) input.value = phase || "";
+        renderFdeDropzone(targetId, phase || "");
+        saveNow();
+        updateAll();
+        checkTask3();
+      }
+
+      function clearFdeValue(targetId) {
+        setFdeValue(targetId, "");
+      }
+
+      function renderAllFdeDropzones() {
+        FDE_IDS.forEach((id) => {
+          const input = document.getElementById(id);
+          renderFdeDropzone(id, input ? input.value : "");
+        });
+      }
+
+      function pulsePalette() {
+        const palette = document.getElementById("fdePaletteContainer") || document.getElementById("fdeTokensPalette");
+        if (!palette) return;
+        palette.classList.add("pulse");
+        setTimeout(() => palette.classList.remove("pulse"), 700);
+      }
+
+      function initFdeDragDrop() {
+        const tokens = document.querySelectorAll("#fdeTokensPalette .fde-drag-token");
+        tokens.forEach((token) => {
+          token.addEventListener("dragstart", (e) => {
+            draggedFdePhase = token.dataset.phase;
+            token.classList.add("dragging");
+            e.dataTransfer.setData("text/plain", token.dataset.phase);
+            e.dataTransfer.effectAllowed = "copy";
+          });
+          token.addEventListener("dragend", () => {
+            token.classList.remove("dragging");
+            draggedFdePhase = null;
+          });
+          token.addEventListener("click", () => {
+            const phase = token.dataset.phase;
+            if (selectedFdePhase === phase) {
+              selectedFdePhase = null;
+              token.classList.remove("token-selected");
+            } else {
+              tokens.forEach((t) => t.classList.remove("token-selected"));
+              selectedFdePhase = phase;
+              token.classList.add("token-selected");
+            }
+          });
+          token.addEventListener("keydown", (e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              token.click();
+            }
+          });
+        });
+
+        const dropzones = document.querySelectorAll(".fde-dropzone");
+        dropzones.forEach((zone) => {
+          zone.addEventListener("dragover", (e) => {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = "copy";
+            zone.classList.add("drag-over");
+          });
+          zone.addEventListener("dragleave", () => zone.classList.remove("drag-over"));
+          zone.addEventListener("drop", (e) => {
+            e.preventDefault();
+            zone.classList.remove("drag-over");
+            const phase = e.dataTransfer.getData("text/plain") || draggedFdePhase;
+            const targetId = zone.dataset.target;
+            if (targetId && phase && FDE_CONFIG[phase]) setFdeValue(targetId, phase);
+          });
+          zone.addEventListener("click", () => {
+            const targetId = zone.dataset.target;
+            if (!targetId) return;
+            if (selectedFdePhase && FDE_CONFIG[selectedFdePhase]) {
+              setFdeValue(targetId, selectedFdePhase);
+            } else {
+              const currentInput = document.getElementById(targetId);
+              if (!currentInput || !currentInput.value) pulsePalette();
+            }
+          });
+          zone.addEventListener("keydown", (e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              const targetId = zone.dataset.target;
+              if (targetId && selectedFdePhase && FDE_CONFIG[selectedFdePhase]) setFdeValue(targetId, selectedFdePhase);
+            } else if (e.key === "Backspace" || e.key === "Delete") {
+              const targetId = zone.dataset.target;
+              if (targetId) clearFdeValue(targetId);
+            }
+          });
+        });
+      }
+
+      /* ============ EVENTS ============ */
+      function attachListeners() {
+        ["inNama", "inKelas", "inAbsen"].forEach((id) => {
+          const el = document.getElementById(id);
+          if (!el) return;
+          el.addEventListener("input", () => {
+            updateFilled(el);
+            debouncedSave();
+            updateAll();
+          });
+          el.addEventListener("change", () => {
+            updateFilled(el);
+            saveNow();
+            updateAll();
+          });
+        });
+
+        ["a1_1", "a1_3", "a1_5"].forEach((id) => {
+          const el = document.getElementById(id);
+          if (!el) return;
+          el.addEventListener("change", () => {
+            el.classList.toggle("filled", !!el.value);
+            saveNow();
+            updateAll();
+            checkTask1();
+          });
+        });
+        ["a1_2", "a1_4", "a1_6"].forEach((id) => {
+          const el = document.getElementById(id);
+          if (!el) return;
+          el.addEventListener("input", () => {
+            el.classList.toggle("filled", !!el.value.trim());
+            debouncedSave();
+            updateAll();
+          });
+          el.addEventListener("change", () => {
+            saveNow();
+            updateAll();
+            checkTask1();
+          });
+        });
+
+        ["a1b_1", "a1b_2", "a1b_3", "a1b_4", "a1b_5"].forEach((id) => {
+          const el = document.getElementById(id);
+          if (!el) return;
+          el.addEventListener("change", () => {
+            el.classList.toggle("filled", !!el.value);
+            saveNow();
+            updateAll();
+            checkTask1();
+          });
+        });
+
+        ["a2_1", "a2_2", "a2_3", "a2_4", "a2_5", "a2_6", "a2_7"].forEach((id) => {
+          const el = document.getElementById(id);
+          if (!el) return;
+          el.addEventListener("change", () => {
+            el.classList.toggle("filled", !!el.value);
+            saveNow();
+            updateAll();
+            checkTask2();
+          });
+        });
+
+        /* FIX: gunakan event delegation karena a3_* di-render ulang */
+        document.addEventListener("change", (e) => {
+          const el = e.target;
+          if (!el || !el.id || !/^a3_[1-5]$/.test(el.id)) return;
+          el.classList.toggle("filled", !!el.value);
+          saveNow();
+          updateAll();
+          checkTask3();
+        });
+
+        const q1 = document.getElementById("a4_q1");
+        const q2 = document.getElementById("a4_q2");
+        if (q1) {
+          q1.addEventListener("input", () => {
+            q1.classList.toggle("filled", !!q1.value.trim());
+            const c = document.getElementById("q1Count");
+            if (c) c.textContent = q1.value.length;
+            debouncedSave();
+            updateAll();
+          });
+          q1.addEventListener("change", () => {
+            saveNow();
+            updateAll();
+          });
+        }
+        if (q2) {
+          q2.addEventListener("input", () => {
+            q2.classList.toggle("filled", !!q2.value.trim());
+            const c = document.getElementById("q2Count");
+            if (c) c.textContent = q2.value.length;
+            debouncedSave();
+            updateAll();
+          });
+          q2.addEventListener("change", () => {
+            saveNow();
+            updateAll();
+          });
+        }
+
+        document.getElementById("btnSubmit")?.addEventListener("click", handleSubmit);
+        document.getElementById("btnReset")?.addEventListener("click", handleReset);
+      }
+
+      function updateFilled(el) {
+        if (!el) return;
+        el.classList.toggle("filled", !!(el.value && el.value.trim() !== ""));
+      }
+
+      /* ============ SAVE / LOAD ============ */
+      let saveTimeout = null;
+      function debouncedSave() {
+        clearTimeout(saveTimeout);
+        saveTimeout = setTimeout(() => saveNow(), 600);
+      }
+
+      function saveNow() {
+        try {
+          const data = collectData();
+          localStorage.setItem(STORAGE_KEY, JSON.stringify({ data, savedAt: Date.now() }));
+          showSaveIndicator();
+        } catch (e) {}
+      }
+
+      function showSaveIndicator() {
+        const el = document.getElementById("saveIndicator");
+        if (!el) return;
+        el.classList.add("show");
+        clearTimeout(el._hideTimer);
+        el._hideTimer = setTimeout(() => el.classList.remove("show"), 1200);
+      }
+
+      function collectData() {
+        const data = {
+          inNama: document.getElementById("inNama")?.value || "",
+          inKelas: document.getElementById("inKelas")?.value || "",
+          inAbsen: document.getElementById("inAbsen")?.value || "",
+        };
+        ["a1_1", "a1_2", "a1_3", "a1_4", "a1_5", "a1_6"].forEach((id) => {
+          data[id] = document.getElementById(id)?.value || "";
+        });
+        ["a1b_1", "a1b_2", "a1b_3", "a1b_4", "a1b_5"].forEach((id) => {
+          data[id] = document.getElementById(id)?.value || "";
+        });
+        ["a2_1", "a2_2", "a2_3", "a2_4", "a2_5", "a2_6", "a2_7"].forEach((id) => {
+          data[id] = document.getElementById(id)?.value || "";
+        });
+        FDE_IDS.forEach((id) => {
+          data[id] = document.getElementById(id)?.value || "";
+        });
+        data.a4_q1 = document.getElementById("a4_q1")?.value || "";
+        data.a4_q2 = document.getElementById("a4_q2")?.value || "";
+        const order = [...document.querySelectorAll("#sortableList .sort-item")].map((li) => li.dataset.order);
+        data.a3_order = order.join(",");
+        return data;
+      }
+
+      function loadSaved() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (!raw) return;
+          const parsed = JSON.parse(raw);
+          if (!parsed || !parsed.data) return;
+          const d = parsed.data;
+
+          ["inNama", "inKelas", "inAbsen", "a1_2", "a1_4", "a1_6", "a4_q1", "a4_q2"].forEach((id) => {
+            const el = document.getElementById(id);
+            if (el && d[id] !== undefined) {
+              el.value = d[id];
+              updateFilled(el);
+            }
+          });
+
+          ["a1_1", "a1_3", "a1_5", "a1b_1", "a1b_2", "a1b_3", "a1b_4", "a1b_5", "a2_1", "a2_2", "a2_3", "a2_4", "a2_5", "a2_6", "a2_7", ...FDE_IDS].forEach((id) => {
+            const el = document.getElementById(id);
+            if (el && d[id] !== undefined) {
+              el.value = d[id];
+              el.classList.toggle("filled", !!el.value);
+            }
+          });
+
+          if (d.a3_order) {
+            const orderIds = String(d.a3_order).split(",").filter(Boolean);
+            const list = document.getElementById("sortableList");
+            if (list && orderIds.length) {
+              orderIds.forEach((ord) => {
+                const item = list.querySelector(`.sort-item[data-order="${ord}"]`);
+                if (item) list.appendChild(item);
+              });
+              updateSortNumbers();
+            }
+          }
+
+          const q1c = document.getElementById("q1Count");
+          const q2c = document.getElementById("q2Count");
+          if (q1c) q1c.textContent = (d.a4_q1 || "").length;
+          if (q2c) q2c.textContent = (d.a4_q2 || "").length;
+
+          renderAllFdeDropzones();
+        } catch (e) {}
+      }
+
+      /* ============ PROGRESS ============ */
+      function getActivityProgress() {
+        const a1A = ["a1_1", "a1_2", "a1_3", "a1_4", "a1_5", "a1_6"];
+        const a1B = ["a1b_1", "a1b_2", "a1b_3", "a1b_4", "a1b_5"];
+        const a1FilledA = a1A.filter((id) => (document.getElementById(id)?.value || "").trim()).length;
+        const a1FilledB = a1B.filter((id) => document.getElementById(id)?.value).length;
+        const a1Done = a1FilledA === a1A.length && a1FilledB === a1B.length;
+
+        const a2Ids = ["a2_1", "a2_2", "a2_3", "a2_4", "a2_5", "a2_6", "a2_7"];
+        const a2Filled = a2Ids.filter((id) => document.getElementById(id)?.value).length;
+        const a2Done = a2Filled === a2Ids.length;
+
+        const a3DropFilled = FDE_IDS.filter((id) => document.getElementById(id)?.value).length;
+        const a3Done = a3DropFilled === FDE_IDS.length;
+
+        const q1 = (document.getElementById("a4_q1")?.value || "").trim();
+        const q2 = (document.getElementById("a4_q2")?.value || "").trim();
+        const a4Done = q1.length >= 20 && q2.length >= 20;
+
+        const idDone = ["inNama", "inKelas", "inAbsen"].every((id) => (document.getElementById(id)?.value || "").trim() !== "");
+
+        return { idDone, a1Done, a2Done, a3Done, a4Done };
+      }
+
+      function updateAll() {
+        const p = getActivityProgress();
+        const doneCount = [p.a1Done, p.a2Done, p.a3Done, p.a4Done].filter(Boolean).length;
+
+        const elCurrent = document.getElementById("progressCurrent");
+        const elPercent = document.getElementById("progressPercent");
+        const fill = document.getElementById("progressFill");
+
+        if (elCurrent) elCurrent.textContent = doneCount;
+        const pct = Math.round((doneCount / 4) * 100);
+        if (elPercent) elPercent.textContent = pct + "%";
+        if (fill) {
+          fill.style.width = pct + "%";
+          fill.classList.toggle("full", pct === 100);
+        }
+
+        const allDone = p.a1Done && p.a2Done && p.a3Done && p.a4Done && p.idDone;
+        const btn = document.getElementById("btnSubmit");
+        const hint = document.getElementById("submitHint");
+        if (btn) btn.disabled = !allDone;
+        if (!hint) return;
+
+        if (allDone) {
+          hint.innerHTML = '<i class="fa-solid fa-circle-check text-emerald-400 mr-1"></i>Semua siap! Klik tombol Kumpulkan.';
+          hint.className = "text-xs text-emerald-300 mt-4 italic";
+        } else {
+          const missing = [];
+          if (!p.idDone) missing.push("identitas");
+          if (!p.a1Done) missing.push("Aktivitas 1");
+          if (!p.a2Done) missing.push("Aktivitas 2");
+          if (!p.a3Done) missing.push("Aktivitas 3");
+          if (!p.a4Done) missing.push("Aktivitas 4");
+          hint.innerHTML = `<i class="fa-solid fa-info-circle mr-1"></i>Belum lengkap: <strong>${missing.join(", ")}</strong>`;
+          hint.className = "text-xs text-amber-300 mt-4 italic";
+        }
+      }
+
+      /* ============ SCORING ============ */
+      function scoreA1A() {
+        const compKeys = { a1_1: "cpu", a1_3: "memori", a1_5: "output" };
+        let correctCount = 0;
+        Object.entries(compKeys).forEach(([id, key]) => {
+          const el = document.getElementById(id);
+          if (el && el.value === key) correctCount++;
+        });
+        return Math.round((correctCount / 3) * 12.5 * 100) / 100;
+      }
+
+      function scoreA1B() {
+        const keys = { a1b_1: "cu", a1b_2: "alu", a1b_3: "register", a1b_4: "cu", a1b_5: "register" };
+        let correct = 0;
+        Object.entries(keys).forEach(([id, key]) => {
+          const el = document.getElementById(id);
+          if (el && el.value === key) correct++;
+        });
+        return Math.round((correct / 5) * 17.5 * 100) / 100;
+      }
+
+      function scoreA1() {
+        return Math.round((scoreA1A() + scoreA1B()) * 100) / 100;
+      }
+
+      function scoreA2() {
+        const keys = { a2_1: "input", a2_2: "ram", a2_3: "fetch", a2_4: "cu", a2_5: "alu", a2_6: "ram", a2_7: "monitor" };
+        let correct = 0;
+        Object.entries(keys).forEach(([id, key]) => {
+          const el = document.getElementById(id);
+          if (el && el.value === key) correct++;
+        });
+        return Math.round((correct / 7) * 30 * 100) / 100;
+      }
+
+      function scoreA3() {
+        const correctOrder = ["1", "2", "3", "4", "5"];
+        const currentOrder = [...document.querySelectorAll("#sortableList .sort-item")].map((li) => li.dataset.order);
+        let matches = 0;
+        currentOrder.forEach((ord, idx) => {
+          if (ord === correctOrder[idx]) matches++;
+        });
+        let sortScore = 0;
+        if (matches === 5) sortScore = 10;
+        else if (matches === 4) sortScore = 6;
+        else if (matches === 3) sortScore = 3;
+
+        const fdeKeys = { a3_1: "fetch", a3_2: "decode", a3_3: "execute", a3_4: "execute", a3_5: "execute" };
+        let fdeCorrect = 0;
+        Object.entries(fdeKeys).forEach(([id, key]) => {
+          const el = document.getElementById(id);
+          if (el && el.value === key) fdeCorrect++;
+        });
+        const fdeScore = fdeCorrect * 3;
+        return sortScore + fdeScore;
+      }
+
+      /* ============ CHECK FEEDBACK ============ */
+      function checkTask1() {
+        // Skor disembunyikan dari murid — hanya dicetak di PDF
+        const fb = document.getElementById("feedbackTask1");
+        if (fb) fb.classList.add("hidden");
+        return;
+      }
+
+      function checkTask2() {
+        // Skor disembunyikan dari murid — hanya dicetak di PDF
+        const fb = document.getElementById("feedbackTask2");
+        if (fb) fb.classList.add("hidden");
+        return;
+      }
+
+      function checkTask3() {
+        // Skor disembunyikan dari murid — hanya dicetak di PDF
+        const fb = document.getElementById("feedbackTask3");
+        if (fb) fb.classList.add("hidden");
+        return;
+      }
+
+      /* ============ SUBMIT ============ */
+      let isSubmitting = false;
+
+      async function handleSubmit() {
+        if (isSubmitting) return;
+        isSubmitting = true;
+
+        const s1 = scoreA1();
+        const s2 = scoreA2();
+        const s3 = scoreA3();
+        const autoTotal = Math.round((s1 + s2 + s3) * 100) / 100;
+
+        const data = collectData();
+        const submission = {
+          ...data,
+          _scored: { a1: s1, a2: s2, a3: s3, autoTotal },
+          _submittedAt: new Date().toISOString(),
+        };
+
+        const btn = document.getElementById("btnSubmit");
+        const hint = document.getElementById("submitHint");
+        const originalHTML = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan PDF ke Drive...';
+        if (hint) {
+          hint.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i>Sedang mengunggah PDF, mohon tunggu...';
+          hint.className = "text-xs text-sky-300 mt-4 italic";
+        }
+
+        try {
+          const pdfBase64 = await generatePdfBase64();
+
+          const result = await uploadToDrive({
+            nama: (data.inNama || "TanpaNama").replace(/\s+/g, "_"),
+            kelas: data.inKelas || "TanpaKelas",
+            absen: data.inAbsen || "00",
+            pdf: pdfBase64,
+          });
+
+          console.log("✅ Berhasil upload:", result);
+          localStorage.setItem(STORAGE_KEY + "_submitted", JSON.stringify(submission));
+
+          document.getElementById("resA1").textContent = s1 + " / 30";
+          document.getElementById("resA2").textContent = s2 + " / 30";
+          document.getElementById("resA3").textContent = s3 + " / 25";
+          document.getElementById("autoScore").textContent = autoTotal;
+
+          const pct = Math.min(100, Math.round((autoTotal / 85) * 100));
+          document.getElementById("scoreCircle").style.setProperty("--pct", pct + "%");
+          document.getElementById("scoreValue").textContent = autoTotal;
+
+          document.getElementById("resultModal").classList.add("show");
+
+          btn.innerHTML = '<i class="fa-solid fa-check"></i> Terkirim';
+          if (hint) {
+            hint.innerHTML = '<i class="fa-solid fa-circle-check text-emerald-400 mr-1"></i>Jawaban berhasil dikirim. Tunggu penilaian esai dari guru ya!';
+            hint.className = "text-xs text-emerald-300 mt-4 italic";
+          }
+        } catch (err) {
+          console.error("❌ Gagal upload:", err);
+          alert("Maaf, gagal menyimpan PDF.\n\nError: " + err.message + "\n\nCoba klik 'Kumpulkan' lagi ya.");
+          btn.disabled = false;
+          btn.innerHTML = originalHTML;
+          if (hint) {
+            hint.innerHTML = '<i class="fa-solid fa-triangle-exclamation mr-1"></i>Gagal mengirim. Silakan coba lagi.';
+            hint.className = "text-xs text-rose-300 mt-4 italic";
+          }
+        } finally {
+          isSubmitting = false;
+        }
+      }
+
+      function closeResult() {
+        document.getElementById("resultModal").classList.remove("show");
+      }
+
+      function handleReset() {
+        if (!confirm("Yakin ingin menghapus SEMUA jawaban? Tindakan ini tidak bisa dibatalkan.")) return;
+        localStorage.removeItem(STORAGE_KEY);
+        location.reload();
+      }
+    </script>
+  </body>
+</html>

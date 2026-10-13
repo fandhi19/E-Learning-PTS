@@ -1,0 +1,2216 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Arsitektur Von Neumann & Dinamika I-P-O — RuangInformatika</title>
+    <meta name="description" content="Modul interaktif Arsitektur Von Neumann & Dinamika Input-Proses-Output untuk kelas XE6 — belajar alur Input, RAM, CPU, Output, dan siklus Fetch-Decode-Execute." />
+    <link rel="shortcut icon" href="../images/Logo Patbhe.png" type="image/x-icon" />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ["Plus Jakarta Sans", "sans-serif"],
+              mono: ["JetBrains Mono", "ui-monospace", "monospace"],
+            },
+            colors: {
+              brandDark: "#080c10",
+              brandGray: "#111820",
+              brandGreen: "#00e676",
+              textGray: "#8896a7",
+            },
+          },
+        },
+      };
+    </script>
+
+    <link rel="stylesheet" href="../style.css" />
+
+    <style>
+      main {
+        background: transparent;
+      }
+
+      #readProgress {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #00e676, #38bdf8);
+        z-index: 999;
+        transition: width 0.1s ease-out;
+        width: 0%;
+        box-shadow: 0 0 12px rgba(0, 230, 118, 0.5);
+      }
+
+      .page-hero {
+        position: relative;
+        padding: 64px 0 40px;
+        overflow: hidden;
+      }
+      .page-hero-glow {
+        position: absolute;
+        top: -100px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 700px;
+        height: 400px;
+        background: radial-gradient(ellipse, rgba(167, 139, 250, 0.12) 0%, rgba(56, 189, 248, 0.06) 40%, transparent 70%);
+        filter: blur(40px);
+        pointer-events: none;
+      }
+      .page-hero-inner {
+        max-width: 1024px;
+        margin: 0 auto;
+        padding: 0 24px;
+        position: relative;
+        z-index: 10;
+      }
+      .page-hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 14px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(167, 139, 250, 0.35);
+        font-size: 0.78rem;
+        font-weight: 700;
+        color: #a78bfa;
+        margin-bottom: 18px;
+        backdrop-filter: blur(8px);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
+      .page-hero-title {
+        font-size: clamp(2rem, 4.5vw, 3rem);
+        font-weight: 800;
+        line-height: 1.15;
+        letter-spacing: -0.03em;
+        margin-bottom: 16px;
+      }
+      .page-hero-title .gradient-text {
+        background: linear-gradient(135deg, #a78bfa 0%, #38bdf8 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .page-hero-desc {
+        font-size: 1rem;
+        line-height: 1.7;
+        color: #8896a7;
+        max-width: 640px;
+      }
+
+      .tab-nav-pills {
+        display: flex;
+        gap: 8px;
+        padding: 6px;
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 12px;
+        overflow-x: auto;
+        backdrop-filter: blur(12px);
+      }
+      .tab-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 11px 20px;
+        border-radius: 10px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #8896a7;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        transition: all 0.25s ease;
+        white-space: nowrap;
+        font-family: "Plus Jakarta Sans", sans-serif;
+      }
+      .tab-btn:hover {
+        color: #fff;
+        background: rgba(255, 255, 255, 0.04);
+      }
+      .tab-btn.active {
+        color: #a78bfa;
+        background: rgba(167, 139, 250, 0.1);
+        box-shadow:
+          0 0 20px rgba(167, 139, 250, 0.15),
+          inset 0 0 0 1px rgba(167, 139, 250, 0.25);
+      }
+      .tab-btn.active.purple {
+        color: #c084fc;
+        background: rgba(168, 85, 247, 0.1);
+        box-shadow:
+          0 0 20px rgba(168, 85, 247, 0.15),
+          inset 0 0 0 1px rgba(168, 85, 247, 0.25);
+      }
+
+      .code-block {
+        background: #0d1117;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 1rem;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.875rem;
+        line-height: 1.7;
+        overflow-x: auto;
+      }
+      .kw {
+        color: #f472b6;
+        font-weight: 600;
+      }
+      .dt {
+        color: #38bdf8;
+      }
+      .str {
+        color: #fbbf24;
+      }
+      .cmt {
+        color: #6b7280;
+        font-style: italic;
+      }
+      .num {
+        color: #c084fc;
+      }
+      .op {
+        color: #00e676;
+      }
+      .fn {
+        color: #38bdf8;
+        font-weight: 600;
+      }
+
+      .chapter-item {
+        display: flex;
+        gap: 12px;
+        padding: 12px 14px;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: rgba(255, 255, 255, 0.02);
+        cursor: pointer;
+        transition: all 0.2s ease;
+        user-select: none;
+      }
+      .chapter-item:hover {
+        background: rgba(167, 139, 250, 0.06);
+        border-color: rgba(167, 139, 250, 0.35);
+        transform: translateX(3px);
+      }
+      .chapter-item.active {
+        background: rgba(167, 139, 250, 0.12);
+        border-color: rgba(167, 139, 250, 0.6);
+        box-shadow: 0 0 18px rgba(167, 139, 250, 0.2);
+      }
+      .chapter-item.active .chapter-time {
+        background: #a78bfa;
+        color: #0a0a0a;
+        font-weight: 800;
+      }
+      .chapter-item.active .chapter-title {
+        color: #a78bfa;
+      }
+      .chapter-time {
+        flex-shrink: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 4px 10px;
+        border-radius: 8px;
+        background: rgba(167, 139, 250, 0.12);
+        border: 1px solid rgba(167, 139, 250, 0.3);
+        color: #a78bfa;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 12px;
+        font-weight: 700;
+        height: fit-content;
+        min-width: 58px;
+      }
+
+      /* ============ KOMPONEN ARSITEKTUR ============ */
+      .arch-block {
+        border: 2px solid rgba(255, 255, 255, 0.1);
+        border-radius: 14px;
+        padding: 16px;
+        background: rgba(255, 255, 255, 0.02);
+        transition: all 0.3s ease;
+        position: relative;
+      }
+      .arch-block:hover {
+        border-color: rgba(167, 139, 250, 0.4);
+      }
+      .arch-block.cpu {
+        border-color: rgba(56, 189, 248, 0.4);
+        background: linear-gradient(135deg, rgba(56, 189, 248, 0.08), transparent);
+      }
+      .arch-block.ram {
+        border-color: rgba(0, 230, 118, 0.4);
+        background: linear-gradient(135deg, rgba(0, 230, 118, 0.08), transparent);
+      }
+      .arch-block.io {
+        border-color: rgba(251, 191, 36, 0.4);
+        background: linear-gradient(135deg, rgba(251, 191, 36, 0.08), transparent);
+      }
+      .arch-block.bus {
+        border-color: rgba(167, 139, 250, 0.4);
+        background: linear-gradient(135deg, rgba(167, 139, 250, 0.08), transparent);
+        text-align: center;
+      }
+
+      /* ============ SIMULASI I-P-O + FDE ============ */
+      .flow-node {
+        min-width: 92px;
+        padding: 10px 8px;
+        border-radius: 12px;
+        text-align: center;
+        transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 2px solid rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.02);
+        position: relative;
+      }
+      .flow-node.active {
+        border-color: #a78bfa;
+        background: rgba(167, 139, 250, 0.12);
+        box-shadow: 0 0 22px rgba(167, 139, 250, 0.45);
+        transform: scale(1.06);
+      }
+      .flow-node.done {
+        opacity: 0.55;
+        border-color: rgba(0, 230, 118, 0.4);
+      }
+      .flow-icon {
+        font-size: 1.55rem;
+        margin-bottom: 6px;
+        line-height: 1;
+      }
+      .flow-label {
+        font-size: 9px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: #8896a7;
+        margin-bottom: 4px;
+      }
+      .flow-node.active .flow-label {
+        color: #c4b5fd;
+      }
+      .flow-value {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 12px;
+        font-weight: 700;
+        color: #e2e8f0;
+        min-height: 16px;
+        transition: all 0.3s ease;
+      }
+      .flow-node.active .flow-value {
+        color: #fff;
+      }
+      .flow-value-result {
+        font-size: 20px;
+        color: #38bdf8;
+      }
+      .flow-arrow {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #64748b;
+        font-size: 11px;
+        padding: 0 2px;
+        flex-shrink: 0;
+      }
+
+      .progress-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.15);
+        transition: all 0.3s ease;
+      }
+      .progress-dot.active {
+        background: #a78bfa;
+        box-shadow: 0 0 10px #a78bfa;
+        transform: scale(1.4);
+      }
+      .progress-dot.done {
+        background: #00e676;
+      }
+
+      .sim-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 18px;
+        border-radius: 10px;
+        font-size: 0.85rem;
+        font-weight: 700;
+        font-family: "Plus Jakarta Sans", sans-serif;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        border: 1px solid;
+      }
+      .sim-btn-primary {
+        background: #a78bfa;
+        color: #0b0f14;
+        border-color: #a78bfa;
+      }
+      .sim-btn-primary:hover:not(:disabled) {
+        background: #c4b5fd;
+        box-shadow: 0 0 20px rgba(167, 139, 250, 0.5);
+        transform: translateY(-1px);
+      }
+      .sim-btn-secondary {
+        background: rgba(255, 255, 255, 0.03);
+        color: #e2e8f0;
+        border-color: rgba(255, 255, 255, 0.15);
+      }
+      .sim-btn-secondary:hover:not(:disabled) {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: rgba(255, 255, 255, 0.3);
+      }
+      .sim-btn:disabled {
+        opacity: 0.35;
+        cursor: not-allowed;
+      }
+
+      .preset-pill {
+        padding: 6px 14px;
+        border-radius: 999px;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 12px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(255, 255, 255, 0.03);
+        color: #cbd5e1;
+      }
+      .preset-pill:hover {
+        border-color: rgba(167, 139, 250, 0.4);
+        background: rgba(167, 139, 250, 0.08);
+      }
+      .preset-pill.active {
+        background: linear-gradient(135deg, rgba(167, 139, 250, 0.25), rgba(167, 139, 250, 0.1));
+        border-color: #a78bfa;
+        color: #c4b5fd;
+        box-shadow: 0 0 16px rgba(167, 139, 250, 0.35);
+      }
+
+      .phase-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 12px;
+        border-radius: 999px;
+        font-size: 11px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        transition: all 0.3s ease;
+      }
+      .phase-badge.fetch {
+        background: rgba(251, 191, 36, 0.15);
+        color: #fbbf24;
+        border: 1px solid rgba(251, 191, 36, 0.4);
+      }
+      .phase-badge.execute {
+        background: rgba(0, 230, 118, 0.15);
+        color: #00e676;
+        border: 1px solid rgba(0, 230, 118, 0.4);
+      }
+      .phase-badge.idle {
+        background: rgba(255, 255, 255, 0.05);
+        color: #8896a7;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      @media (max-width: 640px) {
+        body {
+          font-size: 1rem;
+        }
+        h1 {
+          font-size: 1.875rem !important;
+          line-height: 1.2 !important;
+        }
+        h2 {
+          font-size: 1.5rem !important;
+        }
+        h3 {
+          font-size: 1.25rem !important;
+        }
+        .code-block {
+          font-size: 0.75rem;
+        }
+        .flow-node {
+          min-width: 68px;
+          padding: 8px 4px;
+        }
+        .flow-icon {
+          font-size: 1.1rem;
+          margin-bottom: 3px;
+        }
+        .flow-label {
+          font-size: 8px;
+        }
+        .flow-value {
+          font-size: 10px;
+        }
+        .flow-value-result {
+          font-size: 15px;
+        }
+        .flow-arrow {
+          font-size: 9px;
+          padding: 0;
+        }
+      }
+    </style>
+  </head>
+
+  <body class="bg-grid text-white font-sans antialiased overflow-x-hidden flex flex-col min-h-screen">
+    <div id="readProgress"></div>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+      <div class="navbar-inner">
+        <a href="../index.html" class="navbar-logo">
+          <div class="navbar-logo-icon"><i class="fa-solid fa-code"></i></div>
+          <span class="navbar-logo-text">RuangInformatika</span>
+        </a>
+        <div class="navbar-links">
+          <a href="../index.html" class="nav-link">Dashboard</a>
+          <a href="../index.html#materi" class="nav-link">Daftar Modul</a>
+          <a href="../leaderboard.html" class="nav-link">Leaderboard</a>
+          <a href="../forum.html" class="nav-link">Forum Diskusi</a>
+        </div>
+        <button class="nav-badge"><i class="fa-solid fa-chalkboard-user"></i> Kelas XE6</button>
+        <button class="hamburger-btn" id="hamburgerBtn" aria-label="Menu"><i class="fa-solid fa-bars"></i></button>
+      </div>
+      <div class="mobile-menu" id="mobileMenu">
+        <a href="../index.html" class="mobile-nav-link"><i class="fa-solid fa-house" style="margin-right: 10px"></i> Dashboard</a>
+        <a href="../index.html#materi" class="mobile-nav-link"><i class="fa-solid fa-book-open" style="margin-right: 10px"></i> Daftar Modul</a>
+        <a href="../leaderboard.html" class="mobile-nav-link"><i class="fa-solid fa-trophy" style="margin-right: 10px"></i> Leaderboard</a>
+        <a href="../forum.html" class="mobile-nav-link"><i class="fa-solid fa-comments" style="margin-right: 10px"></i> Forum Diskusi</a>
+        <div style="padding: 12px 16px">
+          <button class="nav-badge" style="width: 100%; justify-content: center"><i class="fa-solid fa-chalkboard-user"></i> Kelas XE6</button>
+        </div>
+      </div>
+    </nav>
+
+    <div class="flex-grow relative">
+      <!-- Hero -->
+      <header class="page-hero">
+        <div class="page-hero-glow"></div>
+        <div class="page-hero-inner">
+          <div class="reveal">
+            <div class="page-hero-badge"><i class="fa-solid fa-microchip"></i> Modul 05 • Informatika SMA</div>
+            <h1 class="page-hero-title">Arsitektur Von Neumann: <span class="gradient-text">CPU, Memori &amp; Dinamika I-P-O</span></h1>
+            <p class="page-hero-desc">
+              Bedah cara kerja <strong class="text-white">komputer modern</strong> dari dalam: peran <strong class="text-sky-300">CPU</strong>, <strong class="text-emerald-300">RAM</strong>, dan
+              <strong class="text-purple-300">bus sistem</strong> dalam satu ruang memori bersama. Pahami alur <strong class="text-amber-300">Input → Proses → Output</strong> dan siklus
+              <strong class="text-brandGreen">Fetch–Decode–Execute</strong> di dalam CPU.
+            </p>
+          </div>
+        </div>
+      </header>
+
+      <main class="max-w-5xl mx-auto px-6 pb-12 relative z-10">
+        <div class="tab-nav-pills reveal mb-8">
+          <button onclick="openTab(event, 'materi')" class="tab-btn active"><i class="fa-solid fa-book-open"></i> Materi Lengkap</button>
+          <button onclick="openTab(event, 'simulasi')" class="tab-btn"><i class="fa-solid fa-calculator"></i> Simulasi I-P-O</button>
+          <button onclick="openTab(event, 'video')" class="tab-btn"><i class="fa-solid fa-play"></i> Video</button>
+          <button onclick="openTab(event, 'lembarkerja')" class="tab-btn purple"><i class="fa-solid fa-clipboard-list"></i> Lembar Kerja</button>
+        </div>
+
+        <!-- ========== TAB 1: MATERI ========== -->
+        <div id="materi" class="tab-content block space-y-12">
+          <!-- BAGIAN 1 -->
+          <section class="bg-brandGray border border-purple-500/30 rounded-3xl p-6 md:p-8 space-y-6">
+            <div class="flex items-center gap-4 border-b border-white/10 pb-4">
+              <div class="w-12 h-12 rounded-2xl bg-purple-500/10 flex items-center justify-center text-purple-400 text-2xl font-bold border border-purple-500/20 shrink-0"><i class="fa-solid fa-microchip"></i></div>
+              <div>
+                <span class="text-xs font-bold uppercase tracking-widest text-purple-400">BAGIAN 1</span>
+                <h2 class="text-2xl md:text-3xl font-bold text-white">Pengenalan Arsitektur Komputer</h2>
+              </div>
+            </div>
+
+            <div class="space-y-3">
+              <h3 class="text-xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-circle-dot text-purple-400 text-sm"></i> 1. Apa itu Arsitektur Von Neumann?</h3>
+              <p class="text-textGray leading-relaxed">
+                <strong class="text-white">Arsitektur Von Neumann</strong> adalah <strong class="text-purple-300">"cetak biru" atau desain dasar</strong> bagaimana sebuah komputer dirakit dan diatur. Ini bukan tentang "wujud fisik"
+                komponen, tapi lebih ke <strong class="text-white">cara mereka berkomunikasi</strong>.
+              </p>
+              <div class="bg-black/40 border border-purple-500/20 rounded-2xl p-5 space-y-3">
+                <h4 class="font-bold text-purple-300 flex items-center gap-2"><i class="fa-solid fa-clock-rotate-left"></i> Sejarah Singkat</h4>
+                <p class="text-sm text-gray-300 leading-relaxed">
+                  Dulu banget (sebelum 1945), kalau orang mau nyuruh komputer ngerjain tugas A, terus ganti ke tugas B, mereka harus <strong class="text-white">cabut-pasang kabel secara fisik</strong> selama berhari-hari. Sampai akhirnya
+                  ada ilmuwan jenius bernama <strong class="text-purple-300">John von Neumann</strong> yang bikin konsep revolusioner:
+                </p>
+                <div class="bg-purple-500/10 border border-purple-500/30 rounded-lg p-3 italic text-sm text-purple-200">
+                  <i class="fa-solid fa-quote-left mr-2"></i>"Kenapa instruksi/programnya nggak disimpan aja di dalam memori barengan sama datanya?"
+                </div>
+                <p class="text-sm text-gray-300 leading-relaxed">Dari ide itulah lahir <strong class="text-white">4 komponen utama komputer</strong> yang dipakai di SELURUH perangkat saat ini (HP, laptop, tablet).</p>
+              </div>
+            </div>
+
+            <div class="space-y-3">
+              <h3 class="text-xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-circle-dot text-purple-400 text-sm"></i> 2. Empat Komponen Utama (Preview)</h3>
+              <p class="text-textGray text-sm">Arsitektur Von Neumann klasik terdiri dari <strong class="text-white">4 blok fungsional</strong>. Detail masing-masing dibahas di Bagian 2:</p>
+              <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                <div class="bg-amber-500/5 border border-amber-500/30 rounded-2xl p-4 text-center space-y-2">
+                  <i class="fa-solid fa-keyboard text-amber-400 text-2xl"></i>
+                  <p class="font-bold text-white text-sm">Input</p>
+                  <p class="text-[11px] text-textGray">Pintu masuk data</p>
+                </div>
+                <div class="bg-emerald-500/5 border border-emerald-500/30 rounded-2xl p-4 text-center space-y-2">
+                  <i class="fa-solid fa-memory text-emerald-400 text-2xl"></i>
+                  <p class="font-bold text-white text-sm">Memori (RAM)</p>
+                  <p class="text-[11px] text-textGray">Gudang sementara</p>
+                </div>
+                <div class="bg-sky-500/5 border border-sky-500/30 rounded-2xl p-4 text-center space-y-2">
+                  <i class="fa-solid fa-brain text-sky-400 text-2xl"></i>
+                  <p class="font-bold text-white text-sm">CPU</p>
+                  <p class="text-[11px] text-textGray">Otak komputer</p>
+                </div>
+                <div class="bg-cyan-500/5 border border-cyan-500/30 rounded-2xl p-4 text-center space-y-2">
+                  <i class="fa-solid fa-desktop text-cyan-400 text-2xl"></i>
+                  <p class="font-bold text-white text-sm">Output</p>
+                  <p class="text-[11px] text-textGray">Pintu keluar hasil</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Aturan Emas -->
+            <div class="space-y-3">
+              <h3 class="text-xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-circle-dot text-rose-400 text-sm"></i> 3. Aturan Paling Penting dari Von Neumann</h3>
+              <div class="bg-gradient-to-br from-rose-500/10 to-transparent border border-rose-500/30 rounded-2xl p-5 space-y-3">
+                <p class="text-sm text-gray-300 leading-relaxed">
+                  <strong class="text-rose-300">CPU itu "sombong" dan eksklusif.</strong> Dia <strong class="text-white">TIDAK PERNAH</strong> mau berurusan langsung sama benda luar kayak Keyboard (Input) atau Layar (Output).
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+                  <div class="bg-black/40 rounded-lg p-3 text-center">
+                    <i class="fa-solid fa-keyboard text-amber-400 text-lg mb-1"></i>
+                    <p class="text-textGray">Keyboard mau kirim data ke CPU?</p>
+                  </div>
+                  <div class="bg-black/40 rounded-lg p-3 text-center">
+                    <i class="fa-solid fa-arrow-right text-purple-400 text-lg mb-1"></i>
+                    <p class="text-textGray">Datanya harus <strong class="text-white">"dititipin" dulu ke RAM</strong></p>
+                  </div>
+                  <div class="bg-black/40 rounded-lg p-3 text-center">
+                    <i class="fa-solid fa-brain text-sky-400 text-lg mb-1"></i>
+                    <p class="text-textGray">Baru CPU ambil dari RAM</p>
+                  </div>
+                </div>
+                <p class="text-sm text-gray-300 leading-relaxed">
+                  Kalau CPU udah selesai ngitung, hasilnya <strong class="text-white">dilempar lagi ke RAM</strong>. Baru dari RAM diterusin ke Layar. Itulah kenapa disebut ada
+                  <strong class="text-purple-300">sentralisasi di memori</strong>.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          <!-- BAGIAN 2 -->
+          <section class="bg-brandGray border border-sky-500/30 rounded-3xl p-6 md:p-8 space-y-6">
+            <div class="flex items-center gap-4 border-b border-white/10 pb-4">
+              <div class="w-12 h-12 rounded-2xl bg-sky-500/10 flex items-center justify-center text-sky-400 text-2xl font-bold border border-sky-500/20 shrink-0"><i class="fa-solid fa-cubes-stacked"></i></div>
+              <div>
+                <span class="text-xs font-bold uppercase tracking-widest text-sky-400">BAGIAN 2</span>
+                <h2 class="text-2xl md:text-3xl font-bold text-white">Komponen Utama Komputer</h2>
+              </div>
+            </div>
+
+            <p class="text-textGray leading-relaxed">
+              Sebelum masuk ke arsitektur Von Neumann, mari kenali <strong class="text-white">4 komponen utama</strong> yang menyusun sebuah komputer modern — diurutkan sesuai <strong class="text-purple-300">alur I-P-O</strong> dari data
+              masuk sampai data keluar:
+            </p>
+
+            <!-- Alur I-P-O mini -->
+            <div class="bg-black/40 border border-purple-500/20 rounded-2xl p-4">
+              <div class="flex items-center justify-center gap-2 md:gap-3 flex-wrap text-xs font-mono">
+                <span class="px-3 py-1.5 rounded-lg bg-amber-500/15 border border-amber-500/40 text-amber-300 font-bold">INPUT</span>
+                <i class="fa-solid fa-arrow-right text-textGray"></i>
+                <span class="px-3 py-1.5 rounded-lg bg-emerald-500/15 border border-emerald-500/40 text-emerald-300 font-bold">RAM</span>
+                <i class="fa-solid fa-arrow-right text-textGray"></i>
+                <span class="px-3 py-1.5 rounded-lg bg-sky-500/15 border border-sky-500/40 text-sky-300 font-bold">CPU</span>
+                <i class="fa-solid fa-arrow-right text-textGray"></i>
+                <span class="px-3 py-1.5 rounded-lg bg-cyan-500/15 border border-cyan-500/40 text-cyan-300 font-bold">OUTPUT</span>
+              </div>
+            </div>
+
+            <!-- 1. INPUT -->
+            <div class="space-y-3">
+              <h3 class="text-xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-circle-dot text-amber-400 text-sm"></i> 1. Perangkat Input — "Pintu Masuk Data"</h3>
+              <p class="text-textGray text-sm">
+                Perangkat Input adalah <strong class="text-white">pintu masuk</strong> tempat pengguna memasukkan data atau perintah ke dalam komputer. Data yang masuk akan <strong class="text-amber-300">dititipkan ke RAM</strong> terlebih
+                dahulu sebelum diproses CPU.
+              </p>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div class="bg-gradient-to-br from-amber-500/10 to-transparent border border-amber-500/30 rounded-2xl p-4 space-y-2">
+                  <i class="fa-solid fa-keyboard text-amber-400 text-xl"></i>
+                  <h4 class="font-bold text-white text-sm">Contoh Perangkat Input</h4>
+                  <div class="flex flex-wrap gap-1.5 text-[11px]">
+                    <span class="px-2 py-0.5 bg-white/5 border border-white/10 rounded">Keyboard</span>
+                    <span class="px-2 py-0.5 bg-white/5 border border-white/10 rounded">Mouse</span>
+                    <span class="px-2 py-0.5 bg-white/5 border border-white/10 rounded">Touchscreen</span>
+                    <span class="px-2 py-0.5 bg-white/5 border border-white/10 rounded">Mic</span>
+                    <span class="px-2 py-0.5 bg-white/5 border border-white/10 rounded">Scanner</span>
+                  </div>
+                </div>
+                <div class="bg-gradient-to-br from-amber-500/10 to-transparent border border-amber-500/30 rounded-2xl p-4 space-y-2">
+                  <i class="fa-solid fa-crown text-amber-400 text-xl"></i>
+                  <h4 class="font-bold text-white text-sm">Aturan Penting I-P-O</h4>
+                  <p class="text-xs text-textGray leading-relaxed">Data input <strong class="text-rose-300">tidak boleh</strong> langsung ke CPU. Semua data harus lewat RAM terlebih dahulu!</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- 2. RAM -->
+            <div class="space-y-3">
+              <h3 class="text-xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-circle-dot text-emerald-400 text-sm"></i> 2. Memori Utama (RAM) — "Meja Kerja"</h3>
+              <p class="text-textGray text-sm">
+                RAM adalah <strong class="text-white">penampung sementara</strong> — tempat semua data dan instruksi "dititipkan" sebelum diolah CPU. Baik perangkat Input maupun Output
+                <strong class="text-emerald-300">tidak boleh berkomunikasi langsung</strong> dengan CPU; semua lewat RAM.
+              </p>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div class="bg-white/5 border border-white/10 p-4 rounded-2xl">
+                  <p class="font-bold text-white text-sm mb-2"><i class="fa-solid fa-memory text-emerald-400 mr-2"></i> RAM (Random Access Memory)</p>
+                  <ul class="text-xs text-textGray space-y-1.5 list-disc list-inside leading-relaxed">
+                    <li>Menyimpan <strong class="text-white">program &amp; data</strong> yang sedang aktif</li>
+                    <li>Bersifat <strong class="text-white">volatile</strong> — hilang saat listrik mati</li>
+                    <li>Akses <strong class="text-white">acak</strong> (bisa langsung ke alamat mana pun)</li>
+                    <li>Setiap sel punya <strong class="text-white">alamat unik</strong> (mis. 100, 200, 300)</li>
+                  </ul>
+                </div>
+                <div class="bg-white/5 border border-white/10 p-4 rounded-2xl">
+                  <p class="font-bold text-white text-sm mb-2"><i class="fa-solid fa-hard-drive text-amber-400 mr-2"></i> Storage (HDD/SSD) — "Gudang"</p>
+                  <ul class="text-xs text-textGray space-y-1.5 list-disc list-inside leading-relaxed">
+                    <li>Penyimpanan <strong class="text-white">permanen</strong></li>
+                    <li>Bersifat <strong class="text-white">non-volatile</strong> — data tetap ada</li>
+                    <li>Lebih <strong class="text-white">lambat</strong> dari RAM, tapi jauh lebih besar</li>
+                    <li>Contoh: file, OS, aplikasi</li>
+                  </ul>
+                </div>
+              </div>
+              <div class="bg-amber-500/5 border-l-4 border-amber-500 rounded-r-lg p-3 flex items-start gap-2">
+                <i class="fa-solid fa-lightbulb text-amber-400 mt-0.5 shrink-0"></i>
+                <p class="text-xs text-textGray">
+                  <strong class="text-white">Analogi meja kerja:</strong> RAM itu seperti <em>meja kerja</em> — hanya muat beberapa dokumen yang sedang dipakai. Storage itu seperti <em>lemari arsip</em> — besar dan permanen, tapi ambil
+                  dokumennya butuh waktu.
+                </p>
+              </div>
+            </div>
+
+            <!-- 3. CPU -->
+            <div class="space-y-3">
+              <h3 class="text-xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-circle-dot text-sky-400 text-sm"></i> 3. CPU (Central Processing Unit) — "Otak Komputer"</h3>
+              <p class="text-textGray text-sm">
+                CPU adalah <strong class="text-white">otak pemroses</strong> komputer. Ia mengambil data dari RAM, menjalankan perhitungan, lalu <strong class="text-sky-300">mengembalikan hasilnya ke RAM</strong> — tidak pernah langsung ke
+                perangkat Output.
+              </p>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <div class="bg-gradient-to-br from-sky-500/10 to-transparent border border-sky-500/30 rounded-2xl p-4 space-y-2">
+                  <i class="fa-solid fa-microchip text-sky-400 text-xl"></i>
+                  <h4 class="font-bold text-white text-sm">Pusat Hitung &amp; Olah Data</h4>
+                  <p class="text-xs text-textGray leading-relaxed">Menjalankan semua operasi perhitungan (seperti 5 + 3 = 8) dan logika berdasarkan perintah yang diberikan.</p>
+                </div>
+                <div class="bg-gradient-to-br from-sky-500/10 to-transparent border border-sky-500/30 rounded-2xl p-4 space-y-2">
+                  <i class="fa-solid fa-arrow-right-arrow-left text-sky-400 text-xl"></i>
+                  <h4 class="font-bold text-white text-sm">Akses Hanya Melalui RAM</h4>
+                  <p class="text-xs text-textGray leading-relaxed">CPU mengambil bahan data dari RAM lewat Bus Sistem, <strong class="text-rose-300">bukan</strong> langsung dari keyboard atau mouse.</p>
+                </div>
+                <div class="bg-gradient-to-br from-purple-500/10 to-transparent border border-purple-500/30 rounded-2xl p-4 space-y-2">
+                  <i class="fa-solid fa-crown text-amber-400 text-xl"></i>
+                  <h4 class="font-bold text-white text-sm">Aturan Emas I-P-O</h4>
+                  <p class="text-xs text-textGray leading-relaxed">Setelah selesai diproses, hasil perhitungan disimpan kembali ke RAM, <strong class="text-rose-300">tidak pernah</strong> langsung ditembak ke layar monitor.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- 4. OUTPUT -->
+            <div class="space-y-3">
+              <h3 class="text-xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-circle-dot text-cyan-400 text-sm"></i> 4. Perangkat Output — "Pintu Keluar Hasil"</h3>
+              <p class="text-textGray text-sm">
+                Perangkat Output adalah <strong class="text-white">pintu keluar</strong> tempat hasil olahan ditampilkan kepada pengguna. Perangkat Output membaca data <strong class="text-cyan-300">dari RAM</strong> (bukan dari CPU!), lalu
+                menampilkannya sebagai teks, gambar, atau suara.
+              </p>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div class="bg-gradient-to-br from-cyan-500/10 to-transparent border border-cyan-500/30 rounded-2xl p-4 space-y-2">
+                  <i class="fa-solid fa-desktop text-cyan-400 text-xl"></i>
+                  <h4 class="font-bold text-white text-sm">Contoh Perangkat Output</h4>
+                  <div class="flex flex-wrap gap-1.5 text-[11px]">
+                    <span class="px-2 py-0.5 bg-white/5 border border-white/10 rounded">Monitor</span>
+                    <span class="px-2 py-0.5 bg-white/5 border border-white/10 rounded">Speaker</span>
+                    <span class="px-2 py-0.5 bg-white/5 border border-white/10 rounded">Printer</span>
+                    <span class="px-2 py-0.5 bg-white/5 border border-white/10 rounded">Layar HP</span>
+                    <span class="px-2 py-0.5 bg-white/5 border border-white/10 rounded">Projector</span>
+                  </div>
+                </div>
+                <div class="bg-gradient-to-br from-cyan-500/10 to-transparent border border-cyan-500/30 rounded-2xl p-4 space-y-2">
+                  <i class="fa-solid fa-eye text-cyan-400 text-xl"></i>
+                  <h4 class="font-bold text-white text-sm">Ambil Data dari RAM</h4>
+                  <p class="text-xs text-textGray leading-relaxed">Monitor membaca hasil akhir yang sudah diletakkan CPU di RAM, lalu menampilkannya dalam bentuk piksel yang bisa dilihat.</p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- BAGIAN 3 -->
+          <section class="bg-brandGray border border-purple-500/30 rounded-3xl p-6 md:p-8 space-y-6">
+            <div class="flex items-center gap-4 border-b border-white/10 pb-4">
+              <div class="w-12 h-12 rounded-2xl bg-purple-500/10 flex items-center justify-center text-purple-400 text-2xl font-bold border border-purple-500/20 shrink-0"><i class="fa-solid fa-diagram-project"></i></div>
+              <div>
+                <span class="text-xs font-bold uppercase tracking-widest text-purple-400">BAGIAN 3</span>
+                <h2 class="text-2xl md:text-3xl font-bold text-white">Arsitektur Von Neumann</h2>
+              </div>
+            </div>
+
+            <p class="text-textGray leading-relaxed">
+              Arsitektur Von Neumann adalah <strong class="text-white">model arsitektur komputer</strong> yang digunakan oleh hampir semua komputer modern. Inti idenya:
+              <strong class="text-purple-300">program dan data disimpan di memori yang sama</strong>, lalu diproses mengikuti alur <strong class="text-purple-300">Input → RAM → CPU → RAM → Output</strong>.
+            </p>
+
+            <!-- Konsep Stored Program -->
+            <div class="space-y-3">
+              <h3 class="text-xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-circle-dot text-purple-400 text-sm"></i> 1. Konsep "Stored Program"</h3>
+              <div class="bg-gradient-to-br from-purple-500/10 to-transparent border border-purple-500/30 rounded-2xl p-5 space-y-3">
+                <p class="text-sm text-gray-300 leading-relaxed">
+                  Sebelum von Neumann, komputer seperti <strong class="text-white">ENIAC</strong> harus di-<em>rewire</em> (cabut-pasang kabel) untuk mengganti program. Von Neumann mengusulkan:
+                  <strong class="text-purple-300">mengapa tidak program disimpan di memori saja?</strong> Sama seperti data.
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-2">
+                  <div class="bg-black/40 rounded-lg p-3">
+                    <p class="text-xs font-bold text-rose-400 mb-1"><i class="fa-solid fa-xmark mr-1"></i> Sebelum (1940-an)</p>
+                    <p class="text-xs text-textGray">Ganti program = cabut-pasang kabel fisik. Butuh <strong class="text-white">jam sampai hari</strong>.</p>
+                  </div>
+                  <div class="bg-black/40 rounded-lg p-3">
+                    <p class="text-xs font-bold text-emerald-400 mb-1"><i class="fa-solid fa-check mr-1"></i> Sesudah (Von Neumann)</p>
+                    <p class="text-xs text-textGray">Ganti program = muat file baru ke memori. Butuh <strong class="text-white">detik</strong>.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Diagram Blok I-P-O -->
+            <div class="space-y-3">
+              <h3 class="text-xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-circle-dot text-purple-400 text-sm"></i> 2. Diagram Blok Arsitektur Von Neumann (Alur I-P-O)</h3>
+              <p class="text-textGray text-sm">
+                Ikuti alur data: <strong class="text-amber-300">Input</strong> → <strong class="text-emerald-300">RAM</strong> → <strong class="text-sky-300">CPU</strong> → <strong class="text-emerald-300">RAM</strong> →
+                <strong class="text-cyan-300">Output</strong>. Perhatikan bahwa <strong class="text-emerald-300">RAM muncul dua kali</strong> — karena semua data wajib lewat RAM, baik saat masuk maupun saat keluar!
+              </p>
+
+              <div class="bg-black/40 border border-purple-500/20 rounded-2xl p-5 overflow-x-auto">
+                <div class="flex items-center justify-center gap-1.5 md:gap-2 min-w-max md:min-w-0 px-1">
+                  <!-- TAHAP 1: INPUT -->
+                  <div class="arch-block io text-center" style="min-width: 88px; padding: 12px 6px; border-color: rgba(251, 191, 36, 0.4); background: linear-gradient(135deg, rgba(251, 191, 36, 0.08), transparent)">
+                    <p class="text-[10px] font-mono font-bold text-amber-400/70 mb-1">1</p>
+                    <p class="text-xs font-bold text-amber-300 uppercase tracking-widest mb-1"><i class="fa-solid fa-keyboard mr-0.5"></i> Input</p>
+                    <p class="text-[9px] text-textGray">Kirim data</p>
+                  </div>
+
+                  <div class="flex flex-col items-center text-amber-300 text-xs flex-shrink-0">
+                    <i class="fa-solid fa-arrow-right text-base"></i>
+                  </div>
+
+                  <!-- TAHAP 2: RAM -->
+                  <div class="arch-block ram text-center" style="min-width: 88px; padding: 12px 6px">
+                    <p class="text-[10px] font-mono font-bold text-emerald-400/70 mb-1">2</p>
+                    <p class="text-xs font-bold text-emerald-300 uppercase tracking-widest mb-1"><i class="fa-solid fa-memory mr-0.5"></i> RAM</p>
+                    <p class="text-[9px] text-textGray">Titip data</p>
+                  </div>
+
+                  <div class="flex flex-col items-center text-emerald-300 text-xs flex-shrink-0">
+                    <i class="fa-solid fa-arrows-left-right text-base"></i>
+                  </div>
+
+                  <!-- TAHAP 3: CPU -->
+                  <div class="arch-block cpu text-center" style="min-width: 88px; padding: 12px 6px">
+                    <p class="text-[10px] font-mono font-bold text-sky-400/70 mb-1">3</p>
+                    <p class="text-xs font-bold text-sky-300 uppercase tracking-widest mb-1"><i class="fa-solid fa-brain mr-0.5"></i> CPU</p>
+                    <p class="text-[9px] text-textGray">Olah data</p>
+                  </div>
+
+                  <div class="flex flex-col items-center text-emerald-300 text-xs flex-shrink-0">
+                    <i class="fa-solid fa-arrows-left-right text-base"></i>
+                  </div>
+
+                  <!-- TAHAP 4: RAM -->
+                  <div class="arch-block ram text-center" style="min-width: 88px; padding: 12px 6px">
+                    <p class="text-[10px] font-mono font-bold text-emerald-400/70 mb-1">4</p>
+                    <p class="text-xs font-bold text-emerald-300 uppercase tracking-widest mb-1"><i class="fa-solid fa-memory mr-0.5"></i> RAM</p>
+                    <p class="text-[9px] text-textGray">Setor hasil</p>
+                  </div>
+
+                  <div class="flex flex-col items-center text-cyan-300 text-xs flex-shrink-0">
+                    <i class="fa-solid fa-arrow-right text-base"></i>
+                  </div>
+
+                  <!-- TAHAP 5: OUTPUT -->
+                  <div class="arch-block io text-center" style="min-width: 88px; padding: 12px 6px; border-color: rgba(34, 211, 238, 0.4); background: linear-gradient(135deg, rgba(34, 211, 238, 0.08), transparent)">
+                    <p class="text-[10px] font-mono font-bold text-cyan-400/70 mb-1">5</p>
+                    <p class="text-xs font-bold text-cyan-300 uppercase tracking-widest mb-1"><i class="fa-solid fa-desktop mr-0.5"></i> Output</p>
+                    <p class="text-[9px] text-textGray">Tampil hasil</p>
+                  </div>
+                </div>
+
+                <div class="mt-4 grid grid-cols-2 md:grid-cols-5 gap-2 text-center text-[10px]">
+                  <div class="bg-amber-500/5 border border-amber-500/20 rounded-lg p-2">
+                    <p class="font-bold text-amber-300">1. Input → RAM</p>
+                    <p class="text-textGray">Data dititipkan</p>
+                  </div>
+                  <div class="bg-emerald-500/5 border border-emerald-500/20 rounded-lg p-2">
+                    <p class="font-bold text-emerald-300">2. RAM → CPU</p>
+                    <p class="text-textGray">CPU ambil data</p>
+                  </div>
+                  <div class="bg-sky-500/5 border border-sky-500/20 rounded-lg p-2">
+                    <p class="font-bold text-sky-300">3. CPU olah</p>
+                    <p class="text-textGray">Hitung & proses</p>
+                  </div>
+                  <div class="bg-emerald-500/5 border border-emerald-500/20 rounded-lg p-2">
+                    <p class="font-bold text-emerald-300">4. CPU → RAM</p>
+                    <p class="text-textGray">Setor hasil</p>
+                  </div>
+                  <div class="bg-cyan-500/5 border border-cyan-500/20 rounded-lg p-2">
+                    <p class="font-bold text-cyan-300">5. RAM → Output</p>
+                    <p class="text-textGray">Tampilkan</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="bg-sky-500/5 border-l-4 border-sky-500 rounded-r-lg p-4 flex items-start gap-3">
+                <i class="fa-solid fa-info-circle text-sky-400 mt-0.5 shrink-0"></i>
+                <p class="text-xs text-textGray leading-relaxed">
+                  <strong class="text-white">Ciri khas Von Neumann:</strong> hanya ada <strong class="text-white">satu bus</strong> untuk data dan instruksi. Akibatnya, CPU tidak bisa baca instruksi dan data <strong>bersamaan</strong> —
+                  inilah yang disebut <em>Von Neumann Bottleneck</em> (kemacetan). Selain itu, <strong class="text-white">semua data wajib lewat RAM</strong> — CPU tidak pernah berkomunikasi langsung dengan Input/Output.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          <!-- BAGIAN 4 -->
+          <section class="bg-brandGray border border-brandGreen/30 rounded-3xl p-6 md:p-8 space-y-6">
+            <div class="flex items-center gap-4 border-b border-white/10 pb-4">
+              <div class="w-12 h-12 rounded-2xl bg-brandGreen/10 flex items-center justify-center text-brandGreen text-2xl font-bold border border-brandGreen/20 shrink-0"><i class="fa-solid fa-arrows-split-up-and-left"></i></div>
+              <div>
+                <span class="text-xs font-bold uppercase tracking-widest text-brandGreen">BAGIAN 4</span>
+                <h2 class="text-2xl md:text-3xl font-bold text-white">Aliran Data I-P-O dalam Von Neumann</h2>
+              </div>
+            </div>
+
+            <p class="text-textGray leading-relaxed">
+              Mengapa arsitektur Von Neumann begitu penting? Kuncinya terletak pada <strong class="text-brandGreen">bagaimana data mengalir</strong> antara Input, Memori (RAM), Prosesor (CPU), dan Output secara teratur dan efisien.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <div class="bg-gradient-to-br from-amber-500/10 to-transparent border border-amber-500/30 rounded-2xl p-4 space-y-2">
+                <div class="phase-badge fetch"><i class="fa-solid fa-arrow-down-long"></i> Tahap 1</div>
+                <h4 class="font-bold text-white text-lg">INPUT → RAM</h4>
+                <p class="text-xs text-textGray leading-relaxed">Saat pengguna menekan tombol keyboard atau mouse, data <strong class="text-white">dititipkan terlebih dahulu ke RAM</strong>. CPU belum bergerak pada tahap ini.</p>
+              </div>
+              <div class="bg-gradient-to-br from-sky-500/10 to-transparent border border-sky-500/30 rounded-2xl p-4 space-y-2">
+                <div class="phase-badge execute"><i class="fa-solid fa-microchip"></i> Tahap 2</div>
+                <h4 class="font-bold text-white text-lg">RAM ⇄ CPU</h4>
+                <p class="text-xs text-textGray leading-relaxed">CPU mengambil data dari RAM lewat Bus Sistem, menjalankan kalkulasi/proses, lalu <strong class="text-white">menuliskan kembali hasil olahan ke RAM</strong>.</p>
+              </div>
+              <div class="bg-gradient-to-br from-emerald-500/10 to-transparent border border-emerald-500/30 rounded-2xl p-4 space-y-2">
+                <div class="phase-badge execute"><i class="fa-solid fa-desktop"></i> Tahap 3</div>
+                <h4 class="font-bold text-white text-lg">RAM → OUTPUT</h4>
+                <p class="text-xs text-textGray leading-relaxed">Perangkat output (seperti layar monitor) membaca hasil siap-pakai dari RAM melalui Bus Sistem dan <strong class="text-white">menampilkannya kepada pengguna</strong>.</p>
+              </div>
+            </div>
+
+            <div class="space-y-3">
+              <h3 class="text-xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-circle-dot text-sky-400 text-sm"></i> 3 Prinsip Utama yang Wajib Kamu Ingat</h3>
+              <div class="space-y-2">
+                <div class="bg-white/5 border border-sky-500/30 rounded-xl p-3 flex items-start gap-3">
+                  <div class="w-7 h-7 rounded-lg bg-sky-500/15 border border-sky-500/30 flex items-center justify-center text-sky-400 font-bold shrink-0 text-xs">1</div>
+                  <p class="text-xs text-textGray">
+                    <strong class="text-white">RAM adalah Pusat Pertemuan (Hub Data):</strong> Baik perangkat input maupun output tidak boleh langsung berhubungan dengan CPU. RAM adalah tempat pertukaran seluruh data.
+                  </p>
+                </div>
+                <div class="bg-white/5 border border-sky-500/30 rounded-xl p-3 flex items-start gap-3">
+                  <div class="w-7 h-7 rounded-lg bg-sky-500/15 border border-sky-500/30 flex items-center justify-center text-sky-400 font-bold shrink-0 text-xs">2</div>
+                  <p class="text-xs text-textGray">
+                    <strong class="text-white">CPU Fokus Mengolah:</strong> CPU hanya berurusan dua arah dengan RAM melalui Bus Sistem: meminjam data mentah yang sudah siap di RAM dan mengembalikan hasil jadinya.
+                  </p>
+                </div>
+                <div class="bg-white/5 border border-sky-500/30 rounded-xl p-3 flex items-start gap-3">
+                  <div class="w-7 h-7 rounded-lg bg-sky-500/15 border border-sky-500/30 flex items-center justify-center text-sky-400 font-bold shrink-0 text-xs">3</div>
+                  <p class="text-xs text-textGray"><strong class="text-white">Layar Mengambil dari RAM:</strong> Monitor tidak menerima gambar langsung dari CPU, melainkan membaca data hasil akhir yang sudah diletakkan CPU di RAM.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-brandGreen/5 border-l-4 border-brandGreen rounded-r-lg p-4 flex items-start gap-3">
+              <i class="fa-solid fa-crown text-amber-400 text-xl mt-0.5"></i>
+              <p class="text-sm text-textGray">
+                <strong class="text-white">Aturan Emas Von Neumann:</strong> Alur data pada arsitektur Von Neumann bukanlah <code class="text-rose-300 bg-black/40 px-2 py-0.5 rounded">Input ➔ CPU ➔ Output</code>, melainkan selalu melalui
+                memori bersama: <code class="text-emerald-300 bg-black/40 px-2 py-0.5 rounded">Input ➔ RAM ➔ CPU ➔ RAM ➔ Output</code>! 🚀
+              </p>
+            </div>
+          </section>
+
+          <!-- BAGIAN 5 -->
+          <section class="bg-brandGray border border-brandGreen/30 rounded-3xl p-6 md:p-8 space-y-6">
+            <div class="flex items-center gap-4 border-b border-white/10 pb-4">
+              <div class="w-12 h-12 rounded-2xl bg-brandGreen/10 flex items-center justify-center text-brandGreen text-2xl font-bold border border-brandGreen/20 shrink-0"><i class="fa-solid fa-arrows-rotate"></i></div>
+              <div>
+                <span class="text-xs font-bold uppercase tracking-widest text-brandGreen">BAGIAN 5</span>
+                <h2 class="text-2xl md:text-3xl font-bold text-white">Siklus Fetch–Decode–Execute (FDE)</h2>
+              </div>
+            </div>
+
+            <p class="text-textGray leading-relaxed">
+              Pertanyaan yang muncul setelah memahami alur I-P-O: <em>"Bagaimana cara CPU mengolah data dari RAM secara detail?"</em> Jawabannya adalah <strong class="text-brandGreen">Siklus Fetch–Decode–Execute</strong> — siklus berulang
+              yang dijalankan CPU <strong class="text-white">miliaran kali per detik</strong>.
+            </p>
+
+            <div class="bg-gradient-to-br from-brandGreen/10 to-transparent border border-brandGreen/30 rounded-2xl p-5 space-y-2">
+              <h3 class="font-bold text-brandGreen flex items-center gap-2 text-base"><i class="fa-solid fa-lightbulb"></i> Analogi Sederhana</h3>
+              <p class="text-sm text-gray-300 leading-relaxed">
+                Bayangkan CPU seperti <strong class="text-white">koki yang sedang memasak resep</strong>. Setiap kali mau masak satu langkah, ia melakukan: <strong class="text-sky-300">Ambil resep</strong> (Fetch) →
+                <strong class="text-amber-300">Baca instruksinya</strong> (Decode) → <strong class="text-emerald-300">Kerjakan</strong> (Execute). Begitu selesai satu langkah, ia ulangi lagi dari awal untuk langkah berikutnya.
+              </p>
+            </div>
+
+            <div class="space-y-3">
+              <h3 class="text-xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-circle-dot text-brandGreen text-sm"></i> Tiga Fase Utama</h3>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <div class="bg-gradient-to-br from-sky-500/10 to-transparent border border-sky-500/30 rounded-2xl p-4 space-y-2">
+                  <div class="phase-badge fetch"><i class="fa-solid fa-download"></i> Fase 1</div>
+                  <h4 class="font-bold text-white text-lg">FETCH</h4>
+                  <p class="text-xs text-textGray leading-relaxed">CPU <strong class="text-white">mengambil instruksi</strong> dari RAM berdasarkan alamat yang ditunjuk oleh PC (Program Counter).</p>
+                </div>
+                <div class="bg-gradient-to-br from-amber-500/10 to-transparent border border-amber-500/30 rounded-2xl p-4 space-y-2">
+                  <div class="phase-badge fetch" style="background: rgba(251, 191, 36, 0.15); color: #fbbf24; border-color: rgba(251, 191, 36, 0.4)"><i class="fa-solid fa-magnifying-glass"></i> Fase 2</div>
+                  <h4 class="font-bold text-white text-lg">DECODE</h4>
+                  <p class="text-xs text-textGray leading-relaxed">Control Unit <strong class="text-white">menerjemahkan instruksi</strong> — perintah apa ini, datanya di mana, operasinya apa.</p>
+                </div>
+                <div class="bg-gradient-to-br from-emerald-500/10 to-transparent border border-emerald-500/30 rounded-2xl p-4 space-y-2">
+                  <div class="phase-badge execute"><i class="fa-solid fa-bolt"></i> Fase 3</div>
+                  <h4 class="font-bold text-white text-lg">EXECUTE</h4>
+                  <p class="text-xs text-textGray leading-relaxed">ALU/CPU <strong class="text-white">menjalankan</strong> perintah: hitung, pindah data, atau lompat ke instruksi lain.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="space-y-3">
+              <h3 class="text-xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-circle-dot text-sky-400 text-sm"></i> Detail Fase FETCH</h3>
+              <div class="space-y-2">
+                <div class="bg-white/5 border border-sky-500/30 rounded-xl p-3 flex items-start gap-3">
+                  <div class="w-7 h-7 rounded-lg bg-sky-500/15 border border-sky-500/30 flex items-center justify-center text-sky-400 font-bold shrink-0 text-xs">1</div>
+                  <p class="text-xs text-textGray"><strong class="text-white">PC → MAR</strong> — alamat instruksi berikutnya dipindah dari Program Counter ke Memory Address Register.</p>
+                </div>
+                <div class="bg-white/5 border border-sky-500/30 rounded-xl p-3 flex items-start gap-3">
+                  <div class="w-7 h-7 rounded-lg bg-sky-500/15 border border-sky-500/30 flex items-center justify-center text-sky-400 font-bold shrink-0 text-xs">2</div>
+                  <p class="text-xs text-textGray"><strong class="text-white">Memori[MAR] → MDR</strong> — isi RAM di alamat itu diambil, masuk ke Memory Data Register.</p>
+                </div>
+                <div class="bg-white/5 border border-sky-500/30 rounded-xl p-3 flex items-start gap-3">
+                  <div class="w-7 h-7 rounded-lg bg-sky-500/15 border border-sky-500/30 flex items-center justify-center text-sky-400 font-bold shrink-0 text-xs">3</div>
+                  <p class="text-xs text-textGray"><strong class="text-white">MDR → IR</strong> — instruksi dipindah ke Instruction Register, siap dibaca oleh Control Unit.</p>
+                </div>
+                <div class="bg-white/5 border border-sky-500/30 rounded-xl p-3 flex items-start gap-3">
+                  <div class="w-7 h-7 rounded-lg bg-sky-500/15 border border-sky-500/30 flex items-center justify-center text-sky-400 font-bold shrink-0 text-xs">4</div>
+                  <p class="text-xs text-textGray"><strong class="text-white">PC → PC + 1</strong> — PC dinaikkan satu, siap menunjuk instruksi berikutnya.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-brandGreen/5 border-l-4 border-brandGreen rounded-r-lg p-4 flex items-start gap-3">
+              <i class="fa-solid fa-crown text-amber-400 text-xl mt-0.5"></i>
+              <p class="text-sm text-textGray">
+                <strong class="text-white">Intinya:</strong> Setelah satu siklus <strong>Execute</strong> selesai, CPU <strong>kembali ke Fetch</strong> untuk instruksi berikutnya. Siklus ini berulang terus sampai menemukan instruksi
+                <code class="text-amber-300 bg-black/40 px-1.5 py-0.5 rounded">HALT</code>. Untuk operasi 25 + 15 di kalkulator Rara, CPU sebenarnya menjalankan <strong class="text-white">ribuan sampai jutaan siklus FDE</strong> — hanya
+                dalam waktu kurang dari 1 milidetik! ⚡
+              </p>
+            </div>
+          </section>
+
+          <!-- BAGIAN 6 -->
+          <section class="bg-brandGray border border-amber-500/30 rounded-3xl p-6 md:p-8 space-y-6">
+            <div class="flex items-center gap-4 border-b border-white/10 pb-4">
+              <div class="w-12 h-12 rounded-2xl bg-amber-500/10 flex items-center justify-center text-amber-400 text-2xl font-bold border border-amber-500/20 shrink-0"><i class="fa-solid fa-arrow-right-arrow-left"></i></div>
+              <div>
+                <span class="text-xs font-bold uppercase tracking-widest text-amber-400">BAGIAN 6</span>
+                <h2 class="text-2xl md:text-3xl font-bold text-white">Dinamika Input → Proses → Output</h2>
+              </div>
+            </div>
+
+            <p class="text-textGray leading-relaxed">
+              Setiap pekerjaan komputer selalu mengikuti pola <strong class="text-amber-300">I-P-O</strong>: <strong class="text-white">data masuk</strong> (input), <strong class="text-white">diolah</strong> (proses), lalu
+              <strong class="text-white">hasil dikeluarkan</strong> (output).
+            </p>
+
+            <div class="bg-black/40 border border-amber-500/20 rounded-2xl p-5">
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
+                <div class="text-center space-y-2">
+                  <div class="w-16 h-16 mx-auto rounded-2xl bg-sky-500/15 border-2 border-sky-500/40 flex items-center justify-center">
+                    <i class="fa-solid fa-keyboard text-sky-400 text-2xl"></i>
+                  </div>
+                  <p class="font-bold text-sky-300">INPUT</p>
+                  <p class="text-[11px] text-textGray">Data masuk lewat<br />keyboard, mouse, sensor</p>
+                </div>
+                <div class="text-center space-y-2">
+                  <div class="w-16 h-16 mx-auto rounded-2xl bg-amber-500/15 border-2 border-amber-500/40 flex items-center justify-center">
+                    <i class="fa-solid fa-microchip text-amber-400 text-2xl"></i>
+                  </div>
+                  <p class="font-bold text-amber-300">PROSES</p>
+                  <p class="text-[11px] text-textGray">CPU + RAM<br />olah data</p>
+                </div>
+                <div class="text-center space-y-2">
+                  <div class="w-16 h-16 mx-auto rounded-2xl bg-emerald-500/15 border-2 border-emerald-500/40 flex items-center justify-center">
+                    <i class="fa-solid fa-desktop text-emerald-400 text-2xl"></i>
+                  </div>
+                  <p class="font-bold text-emerald-300">OUTPUT</p>
+                  <p class="text-[11px] text-textGray">Hasil ke<br />monitor, printer, speaker</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="space-y-3">
+              <h3 class="text-xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-circle-dot text-amber-400 text-sm"></i> Contoh Kasus: Kalkulator 5 + 3</h3>
+              <p class="text-xs text-textGray italic mb-2">Lihat demo interaktifnya di tab <strong class="text-amber-300">Simulasi I-P-O</strong>!</p>
+              <div class="space-y-3">
+                <div class="bg-white/5 border border-white/10 rounded-2xl p-4 flex items-start gap-4">
+                  <div class="w-9 h-9 rounded-xl bg-sky-500/15 border border-sky-500/30 flex items-center justify-center text-sky-400 font-bold shrink-0">1</div>
+                  <div class="flex-1">
+                    <p class="font-bold text-white text-sm">INPUT — Jari menekan 5, +, 3</p>
+                    <p class="text-xs text-textGray mt-1">Sinyal listrik dari tombol <strong class="text-white">dititipkan dulu ke RAM</strong>. CPU tidak boleh terima langsung!</p>
+                  </div>
+                </div>
+                <div class="bg-white/5 border border-white/10 rounded-2xl p-4 flex items-start gap-4">
+                  <div class="w-9 h-9 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 font-bold shrink-0">2</div>
+                  <div class="flex-1">
+                    <p class="font-bold text-white text-sm">PROCESS — CPU baru bergerak</p>
+                    <p class="text-xs text-textGray mt-1">CPU membaca data dari RAM via Bus Sistem → CPU memproses penjumlahan (5 + 3 = 8) → CPU menuliskan hasil angka 8 kembali ke RAM.</p>
+                  </div>
+                </div>
+                <div class="bg-white/5 border border-white/10 rounded-2xl p-4 flex items-start gap-4">
+                  <div class="w-9 h-9 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 font-bold shrink-0">3</div>
+                  <div class="flex-1">
+                    <p class="font-bold text-white text-sm">OUTPUT — RAM kirim ke layar</p>
+                    <p class="text-xs text-textGray mt-1">Angka 8 dari RAM dikirim ke layar. Piksel menyala membentuk "8".</p>
+                  </div>
+                </div>
+              </div>
+              <p class="text-xs text-textGray italic">Semua ini terjadi dalam <strong class="text-white">kurang dari 1 milidetik</strong> — jauh lebih cepat dari kedipan matamu! ⚡</p>
+            </div>
+
+            <div class="space-y-3">
+              <h3 class="text-xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-circle-dot text-amber-400 text-sm"></i> Kesimpulan Penting</h3>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div class="bg-purple-500/5 border border-purple-500/30 rounded-2xl p-4">
+                  <p class="text-sm font-bold text-purple-300 mb-2"><i class="fa-solid fa-cube mr-1"></i> Arsitektur Von Neumann</p>
+                  <p class="text-xs text-textGray leading-relaxed">Adalah <strong class="text-white">DESAIN/STRUKTUR-nya</strong> — komponen-komponennya dan aturannya.</p>
+                </div>
+                <div class="bg-amber-500/5 border border-amber-500/30 rounded-2xl p-4">
+                  <p class="text-sm font-bold text-amber-300 mb-2"><i class="fa-solid fa-arrow-right-long mr-1"></i> Dinamika I-P-O</p>
+                  <p class="text-xs text-textGray leading-relaxed">Adalah <strong class="text-white">ALUR/PERJALANAN datanya</strong> yang bergerak melewati desain tersebut.</p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- BAGIAN 7: UNIT INTI CPU -->
+          <section class="bg-brandGray border border-sky-500/30 rounded-3xl p-6 md:p-8 space-y-6">
+            <div class="flex items-center gap-4 border-b border-white/10 pb-4">
+              <div class="w-12 h-12 rounded-2xl bg-sky-500/10 flex items-center justify-center text-sky-400 text-2xl font-bold border border-sky-500/20 shrink-0"><i class="fa-solid fa-microchip"></i></div>
+              <div>
+                <span class="text-xs font-bold uppercase tracking-widest text-sky-400">BAGIAN 7</span>
+                <h2 class="text-2xl md:text-3xl font-bold text-white">Unit Inti di Dalam CPU</h2>
+              </div>
+            </div>
+
+            <p class="text-textGray leading-relaxed">
+              Selama ini kita menyebut "CPU" sebagai satu kesatuan. Tapi tahukah kamu, di dalam CPU ada <strong class="text-white">3 unit inti</strong> yang bekerja sebagai satu tim? Masing-masing punya tugas spesifik. Yuk, kenalan lebih
+              dalam!
+            </p>
+
+            <!-- Diagram sederhana 3 unit -->
+            <div class="bg-black/40 border border-sky-500/20 rounded-2xl p-5">
+              <p class="text-xs font-bold text-sky-300 uppercase tracking-wider text-center mb-4">3 Unit Inti di Dalam CPU</p>
+              <div class="flex items-center justify-center gap-3 flex-wrap text-center">
+                <div class="px-4 py-3 rounded-xl bg-gradient-to-br from-sky-500/15 to-transparent border border-sky-500/40 min-w-[130px]">
+                  <i class="fa-solid fa-brain text-sky-400 text-xl mb-1"></i>
+                  <p class="font-bold text-sky-300 text-sm uppercase tracking-wider">CU</p>
+                  <p class="text-[10px] text-textGray">Control Unit</p>
+                  <p class="text-[9px] text-textGray mt-1">Si Mandor</p>
+                </div>
+                <div class="px-4 py-3 rounded-xl bg-gradient-to-br from-emerald-500/15 to-transparent border border-emerald-500/40 min-w-[130px]">
+                  <i class="fa-solid fa-calculator text-emerald-400 text-xl mb-1"></i>
+                  <p class="font-bold text-emerald-300 text-sm uppercase tracking-wider">ALU</p>
+                  <p class="text-[10px] text-textGray">Arithmetic Logic Unit</p>
+                  <p class="text-[9px] text-textGray mt-1">Si Mesin Hitung</p>
+                </div>
+                <div class="px-4 py-3 rounded-xl bg-gradient-to-br from-amber-500/15 to-transparent border border-amber-500/40 min-w-[130px]">
+                  <i class="fa-solid fa-box-archive text-amber-400 text-xl mb-1"></i>
+                  <p class="font-bold text-amber-300 text-sm uppercase tracking-wider">REGISTER</p>
+                  <p class="text-[10px] text-textGray">Memori Kilat</p>
+                  <p class="text-[9px] text-textGray mt-1">Si Catatan Cepat</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- 1. Control Unit -->
+            <div class="bg-gradient-to-br from-sky-500/10 to-transparent border border-sky-500/30 rounded-2xl p-5 space-y-3">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-sky-500/20 border border-sky-500/40 flex items-center justify-center text-sky-400 text-lg shrink-0">
+                  <i class="fa-solid fa-brain"></i>
+                </div>
+                <div>
+                  <h4 class="font-bold text-white text-base">1. Control Unit (CU) — "Si Mandor"</h4>
+                  <p class="text-[11px] text-sky-300 italic">Mengatur lalu lintas instruksi</p>
+                </div>
+              </div>
+              <p class="text-sm text-gray-300 leading-relaxed">
+                <strong class="text-white">Control Unit</strong> adalah <strong class="text-sky-300">"otak pengatur"</strong> di dalam CPU. Ia tidak menghitung, tetapi ia yang <strong class="text-white">mengarahkan semua pekerjaan</strong>.
+                Tugas utamanya:
+              </p>
+              <ul class="text-xs text-textGray space-y-2 list-disc list-inside leading-relaxed pl-1">
+                <li><strong class="text-white">Mengambil instruksi</strong> dari RAM (melalui fase Fetch).</li>
+                <li><strong class="text-white">Men-decode / menerjemahkan</strong> instruksi — paham bahwa perintahnya adalah "tambah", "kurang", "pindah data", dsb.</li>
+                <li><strong class="text-white">Mengirim sinyal kontrol</strong> ke ALU, Register, dan komponen lain: "Hei ALU, tolong hitung ini!" atau "Register, simpan hasil ini!"</li>
+                <li><strong class="text-white">Mengatur urutan</strong> setiap langkah siklus FDE agar tidak ada yang kacau.</li>
+              </ul>
+              <div class="bg-black/40 rounded-lg p-3 border-l-2 border-sky-400">
+                <p class="text-xs text-textGray">
+                  <strong class="text-sky-300">Analogi:</strong> CU itu seperti <em>mandor proyek bangunan</em>. Dia tidak memegang cangkul atau mengangkat batu — dia yang berteriak ke tukang-tukang: "Kamu angkat bata! Kamu aduk semen! Kamu
+                  pasang!" Semua gerakan yang teratur berkat mandor ini.
+                </p>
+              </div>
+            </div>
+
+            <!-- 2. ALU -->
+            <div class="bg-gradient-to-br from-emerald-500/10 to-transparent border border-emerald-500/30 rounded-2xl p-5 space-y-3">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 text-lg shrink-0">
+                  <i class="fa-solid fa-calculator"></i>
+                </div>
+                <div>
+                  <h4 class="font-bold text-white text-base">2. ALU (Arithmetic Logic Unit) — "Si Mesin Hitung"</h4>
+                  <p class="text-[11px] text-emerald-300 italic">Melakukan kalkulasi &amp; operasi logika</p>
+                </div>
+              </div>
+              <p class="text-sm text-gray-300 leading-relaxed">
+                <strong class="text-white">ALU</strong> adalah bagian CPU yang <strong class="text-emerald-300">benar-benar melakukan perhitungan</strong>. Kalau kamu menekan tombol "=" di kalkulator, di sinilah angka itu dihitung. ALU
+                menangani <strong class="text-white">2 jenis operasi</strong>:
+              </p>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div class="bg-black/40 rounded-lg p-4 space-y-2">
+                  <p class="text-xs font-bold text-emerald-300 flex items-center gap-1.5"><i class="fa-solid fa-plus"></i> Aritmatika</p>
+                  <p class="text-xs text-textGray leading-relaxed mb-2">Operasi matematika dasar:</p>
+                  <div class="flex flex-wrap gap-1.5 text-[11px] font-mono">
+                    <span class="px-2 py-0.5 bg-white/5 border border-white/10 rounded text-white">+</span>
+                    <span class="px-2 py-0.5 bg-white/5 border border-white/10 rounded text-white">−</span>
+                    <span class="px-2 py-0.5 bg-white/5 border border-white/10 rounded text-white">×</span>
+                    <span class="px-2 py-0.5 bg-white/5 border border-white/10 rounded text-white">÷</span>
+                  </div>
+                  <p class="text-[11px] text-textGray italic mt-2">Contoh: 25 + 15 = 40</p>
+                </div>
+                <div class="bg-black/40 rounded-lg p-4 space-y-2">
+                  <p class="text-xs font-bold text-emerald-300 flex items-center gap-1.5"><i class="fa-solid fa-code-branch"></i> Logika</p>
+                  <p class="text-xs text-textGray leading-relaxed mb-2">Operasi pembanding &amp; logika:</p>
+                  <div class="flex flex-wrap gap-1.5 text-[11px] font-mono">
+                    <span class="px-2 py-0.5 bg-white/5 border border-white/10 rounded text-white">AND</span>
+                    <span class="px-2 py-0.5 bg-white/5 border border-white/10 rounded text-white">OR</span>
+                    <span class="px-2 py-0.5 bg-white/5 border border-white/10 rounded text-white">NOT</span>
+                    <span class="px-2 py-0.5 bg-white/5 border border-white/10 rounded text-white">&gt;</span>
+                    <span class="px-2 py-0.5 bg-white/5 border border-white/10 rounded text-white">&lt;</span>
+                    <span class="px-2 py-0.5 bg-white/5 border border-white/10 rounded text-white">=</span>
+                  </div>
+                  <p class="text-[11px] text-textGray italic mt-2">Contoh: apakah nilai ini lebih besar dari 75?</p>
+                </div>
+              </div>
+              <div class="bg-black/40 rounded-lg p-3 border-l-2 border-emerald-400">
+                <p class="text-xs text-textGray">
+                  <strong class="text-emerald-300">Analogi:</strong> ALU itu seperti <em>kalkulator super cepat</em>. Setiap kali ada angka yang perlu dihitung, ALU yang mengerjakan. Dialah "tukang hitung" di dalam CPU.
+                </p>
+              </div>
+            </div>
+
+            <!-- 3. Register -->
+            <div class="bg-gradient-to-br from-amber-500/10 to-transparent border border-amber-500/30 rounded-2xl p-5 space-y-3">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 text-lg shrink-0">
+                  <i class="fa-solid fa-box-archive"></i>
+                </div>
+                <div>
+                  <h4 class="font-bold text-white text-base">3. Register — "Memori Kilat"</h4>
+                  <p class="text-[11px] text-amber-300 italic">Penyimpanan super cepat di dalam CPU</p>
+                </div>
+              </div>
+              <p class="text-sm text-gray-300 leading-relaxed">
+                <strong class="text-white">Register</strong> adalah <strong class="text-amber-300">memori super kecil &amp; super cepat</strong> yang ada di dalam CPU. Kalau RAM itu meja kerja, Register itu <em>saku bajumu</em> — sangat
+                dekat dan cepat diakses, tapi sangat terbatas kapasitasnya. Register menyimpan:
+              </p>
+              <ul class="text-xs text-textGray space-y-2 list-disc list-inside leading-relaxed pl-1">
+                <li><strong class="text-white">Data yang sedang diproses</strong> saat itu (angka, huruf, alamat).</li>
+                <li><strong class="text-white">Alamat memori</strong> instruksi berikutnya (agar CPU tahu ke mana harus lanjut).</li>
+                <li><strong class="text-white">Hasil sementara</strong> perhitungan sebelum ditulis kembali ke RAM.</li>
+              </ul>
+              <p class="text-xs text-textGray leading-relaxed">
+                Meskipun kecil, Register jauh lebih cepat dari RAM — bahkan bisa <strong class="text-white">ratusan kali lebih cepat</strong>. Ini yang membuat CPU bisa bekerja dalam hitungan nanodetik.
+              </p>
+              <div class="bg-black/40 rounded-lg p-3 border-l-2 border-amber-400">
+                <p class="text-xs text-textGray">
+                  <strong class="text-amber-300">Analogi:</strong> Register itu seperti <em>catatan kecil di kantong mandor</em>. Sebelum mengambil bahan dari gudang (RAM), mandor menulis di catatannya dulu: "Ambil bata di rak A3." Catatan
+                  ini cepat dibaca, cepat ditulis, tapi hanya bisa muat beberapa kata saja.
+                </p>
+              </div>
+            </div>
+
+            <!-- Tabel Ringkasan -->
+            <div class="bg-black/40 border border-white/10 rounded-2xl p-5 space-y-3">
+              <h4 class="font-bold text-white text-base flex items-center gap-2"><i class="fa-solid fa-table-list text-sky-400"></i> Ringkasan: Tugas Masing-masing Unit</h4>
+              <div class="overflow-x-auto">
+                <table class="w-full text-xs md:text-sm">
+                  <thead class="bg-white/5 text-textGray uppercase text-[10px] border-b border-white/10">
+                    <tr>
+                      <th class="p-3 text-left">Unit</th>
+                      <th class="p-3 text-left">Tugas Utama</th>
+                      <th class="p-3 text-left">Analogi</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-white/5">
+                    <tr>
+                      <td class="p-3 font-bold text-sky-300">CU</td>
+                      <td class="p-3 text-textGray">Mengatur aliran instruksi &amp; kirim sinyal kontrol</td>
+                      <td class="p-3 text-textGray">Mandor bangunan</td>
+                    </tr>
+                    <tr>
+                      <td class="p-3 font-bold text-emerald-300">ALU</td>
+                      <td class="p-3 text-textGray">Melakukan perhitungan aritmatika &amp; logika</td>
+                      <td class="p-3 text-textGray">Kalkulator super cepat</td>
+                    </tr>
+                    <tr>
+                      <td class="p-3 font-bold text-amber-300">Register</td>
+                      <td class="p-3 text-textGray">Menyimpan data/alamat/hasil sementara</td>
+                      <td class="p-3 text-textGray">Catatan kecil di kantong</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Fakta Menarik -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <div class="bg-gradient-to-br from-sky-500/10 to-transparent border border-sky-500/30 rounded-2xl p-4 text-center space-y-1">
+                <div class="text-xl mb-1">🧠</div>
+                <p class="text-xs font-bold text-sky-300">CU</p>
+                <p class="text-[10px] text-textGray">Si "sutradara" panggung CPU</p>
+              </div>
+              <div class="bg-gradient-to-br from-emerald-500/10 to-transparent border border-emerald-500/30 rounded-2xl p-4 text-center space-y-1">
+                <div class="text-xl mb-1">⚡</div>
+                <p class="text-xs font-bold text-emerald-300">ALU</p>
+                <p class="text-[10px] text-textGray">Miliaran operasi per detik</p>
+              </div>
+              <div class="bg-gradient-to-br from-amber-500/10 to-transparent border border-amber-500/30 rounded-2xl p-4 text-center space-y-1">
+                <div class="text-xl mb-1">📝</div>
+                <p class="text-xs font-bold text-amber-300">Register</p>
+                <p class="text-[10px] text-textGray">Memori tercepat di komputer</p>
+              </div>
+            </div>
+
+            <!-- Kesimpulan mini -->
+            <div class="bg-sky-500/5 border-l-4 border-sky-500 rounded-r-lg p-4 flex items-start gap-3">
+              <i class="fa-solid fa-lightbulb text-sky-400 text-xl mt-0.5"></i>
+              <p class="text-sm text-textGray">
+                <strong class="text-white">Intinya:</strong> CPU bukan satu unit tunggal, tapi <strong>tim dari 3 unit</strong>: CU sebagai pengatur, ALU sebagai penghitung, dan Register sebagai penyimpan cepat. Mereka bekerja sama mengolah
+                data miliaran kali per detik! 🚀
+              </p>
+            </div>
+          </section>
+        </div>
+
+        <!-- ========== TAB 2: SIMULASI I-P-O (VERSI SEDERHANA + FDE) ========== -->
+        <div id="simulasi" class="tab-content hidden space-y-6">
+          <div class="bg-brandGray border border-purple-500/30 rounded-3xl p-6 md:p-8 space-y-6">
+            <!-- Header -->
+            <div class="text-center space-y-2 border-b border-white/10 pb-5">
+              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/15 border border-purple-500/30">
+                <i class="fa-solid fa-play text-purple-400 text-xs"></i>
+                <span class="text-xs font-bold text-purple-300 uppercase tracking-wider">Simulasi Interaktif</span>
+              </div>
+              <h2 class="text-2xl md:text-3xl font-bold text-white">Dinamika I-P-O dalam Von Neumann</h2>
+              <p class="text-sm text-textGray">Ikuti perjalanan data dari tombol yang kamu tekan sampai muncul di layar — lengkap dengan siklus <strong class="text-brandGreen">Fetch–Decode–Execute</strong> di dalam CPU!</p>
+            </div>
+
+            <!-- Preset Soal -->
+            <div class="flex flex-wrap items-center justify-center gap-2">
+              <span class="text-xs text-textGray font-bold uppercase tracking-wider mr-1">Pilih Soal:</span>
+              <button type="button" class="preset-pill active" data-preset="add">5 + 3 = 8</button>
+              <button type="button" class="preset-pill" data-preset="sub">9 − 4 = 5</button>
+              <button type="button" class="preset-pill" data-preset="mul">4 × 3 = 12</button>
+            </div>
+
+            <!-- Diagram Alur 5 Node (7 Langkah) -->
+            <div class="bg-black/40 border border-purple-500/20 rounded-2xl p-4 md:p-6 overflow-x-auto">
+              <div class="flex items-stretch justify-center gap-1 md:gap-2 min-w-max md:min-w-0 px-1">
+                <!-- NODE 1: INPUT -->
+                <div id="stepInput" class="flow-node">
+                  <div class="flow-icon text-amber-300"><i class="fa-solid fa-hand-pointer"></i></div>
+                  <div class="flow-label">Input</div>
+                  <div id="valInput" class="flow-value">—</div>
+                </div>
+
+                <div class="flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+
+                <!-- NODE 2: RAM (masuk) -->
+                <div id="stepRAM1" class="flow-node">
+                  <div class="flow-icon text-emerald-300"><i class="fa-solid fa-memory"></i></div>
+                  <div class="flow-label">RAM</div>
+                  <div id="valRAM1" class="flow-value">—</div>
+                </div>
+
+                <div class="flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+
+                <!-- NODE 3: CPU (dengan sub-fase FDE) -->
+                <div id="stepCPU" class="flow-node" style="min-width: 120px">
+                  <div class="flow-icon text-sky-300"><i class="fa-solid fa-brain"></i></div>
+                  <div class="flow-label">CPU</div>
+                  <div id="valCPU" class="flow-value">—</div>
+                  <div id="cpuSubBadge" class="hidden" style="margin-top: 6px">
+                    <span id="cpuPhaseBadge" class="phase-badge idle" style="font-size: 8px; padding: 2px 8px">FETCH</span>
+                  </div>
+                </div>
+
+                <div class="flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+
+                <!-- NODE 4: RAM (hasil) -->
+                <div id="stepRAM2" class="flow-node">
+                  <div class="flow-icon text-emerald-300"><i class="fa-solid fa-memory"></i></div>
+                  <div class="flow-label">RAM</div>
+                  <div id="valRAM2" class="flow-value">—</div>
+                </div>
+
+                <div class="flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+
+                <!-- NODE 5: OUTPUT -->
+                <div id="stepOutput" class="flow-node">
+                  <div class="flow-icon text-cyan-300"><i class="fa-solid fa-tv"></i></div>
+                  <div class="flow-label">Output</div>
+                  <div id="valOutput" class="flow-value flow-value-result">—</div>
+                </div>
+              </div>
+
+              <!-- Legend FDE -->
+              <div class="mt-5 pt-4 border-t border-white/5 flex flex-wrap items-center justify-center gap-3 text-[11px]">
+                <span class="text-textGray font-bold uppercase tracking-wider">Sub-fase CPU:</span>
+                <span class="flex items-center gap-1.5">
+                  <span class="w-2.5 h-2.5 rounded-full bg-sky-400"></span>
+                  <span class="text-textGray">Fetch (Ambil)</span>
+                </span>
+                <span class="flex items-center gap-1.5">
+                  <span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
+                  <span class="text-textGray">Decode (Terjemah)</span>
+                </span>
+                <span class="flex items-center gap-1.5">
+                  <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+                  <span class="text-textGray">Execute (Hitung)</span>
+                </span>
+              </div>
+            </div>
+
+            <!-- Controls -->
+            <div class="flex flex-wrap items-center justify-center gap-2">
+              <button id="btnPrev" onclick="simPrev()" class="sim-btn sim-btn-secondary" disabled><i class="fa-solid fa-backward-step"></i> Kembali</button>
+              <button id="btnNext" onclick="simNext()" class="sim-btn sim-btn-primary"><i class="fa-solid fa-forward-step"></i> Lanjut</button>
+              <button id="btnAuto" onclick="simToggleAuto()" class="sim-btn sim-btn-secondary"><i class="fa-solid fa-play"></i> Otomatis</button>
+              <button id="btnReset" onclick="simReset()" class="sim-btn sim-btn-secondary"><i class="fa-solid fa-rotate-left"></i> Reset</button>
+            </div>
+
+            <!-- Progress Dots -->
+            <div class="flex items-center justify-center gap-2" id="progressDots"></div>
+
+            <!-- Step Info -->
+            <div id="stepInfo" class="bg-black/40 border-l-4 border-purple-500 rounded-r-2xl p-5 space-y-2">
+              <div class="flex items-center gap-2 flex-wrap">
+                <span id="stepBadge" class="phase-badge idle">Siap</span>
+                <span id="stepCounter" class="text-xs text-textGray font-mono">0 / 7</span>
+              </div>
+              <p id="stepText" class="text-sm text-gray-300 leading-relaxed">Tekan tombol <strong class="text-purple-300">Lanjut</strong> untuk memulai simulasi I-P-O + Siklus FDE.</p>
+            </div>
+
+            <!-- Kesimpulan -->
+            <div class="bg-emerald-500/5 border-l-4 border-emerald-500 rounded-r-lg p-4 flex items-start gap-3">
+              <i class="fa-solid fa-lightbulb text-emerald-400 text-xl mt-0.5"></i>
+              <p class="text-sm text-textGray">
+                <strong class="text-white">Kesimpulan:</strong>
+                Di dalam CPU terjadi siklus <strong class="text-sky-300">Fetch</strong> → <strong class="text-amber-300">Decode</strong> → <strong class="text-emerald-300">Execute</strong> untuk setiap instruksi. Semua data selalu lewat
+                <strong class="text-emerald-300">RAM</strong> — CPU <strong class="text-white">tidak pernah</strong> berkomunikasi langsung dengan Input/Output!
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- ========== TAB 3: VIDEO ========== -->
+        <div id="video" class="tab-content hidden space-y-6">
+          <div class="bg-brandGray border border-purple-500/30 rounded-3xl p-6 md:p-8 space-y-6">
+            <div class="flex items-center gap-3 border-b border-white/10 pb-4">
+              <div class="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-400 text-2xl font-bold border border-purple-500/20 shrink-0">
+                <i class="fa-solid fa-play"></i>
+              </div>
+              <div>
+                <h2 class="text-2xl md:text-3xl font-bold text-white">Video Penjelasan Von Neumann</h2>
+                <p class="text-base text-textGray">Klik bab di bawah untuk melompat ke menit tertentu.</p>
+              </div>
+            </div>
+
+            <div class="space-y-3">
+              <div class="aspect-video w-full rounded-2xl overflow-hidden bg-black border border-white/10 shadow-2xl relative">
+                <video id="local-video" controls preload="metadata" class="w-full h-full" style="object-fit: contain">
+                  <source src="video/penjelasan_vonneumann.mp4" type="video/mp4" />
+                  Browser kamu tidak mendukung pemutaran video HTML5. Silakan unduh videonya di link di bawah.
+                </video>
+              </div>
+
+              <div class="flex items-center justify-between text-xs text-textGray px-1 flex-wrap gap-2">
+                <span class="flex items-center gap-2">
+                  <i class="fa-solid fa-film text-purple-400"></i>
+                  <span>Sumber: Video Pembelajaran</span>
+                </span>
+                <a href="video/penjelasan_vonneumann.mp4" download class="hover:text-purple-300 transition flex items-center gap-1.5"> <i class="fa-solid fa-download"></i> Unduh Video </a>
+              </div>
+
+              <div class="bg-sky-500/5 border-l-4 border-sky-500 rounded-r-lg p-4 flex items-start gap-3">
+                <i class="fa-solid fa-circle-info text-sky-400 mt-0.5 shrink-0"></i>
+                <div class="text-xs text-textGray leading-relaxed">
+                  <strong class="text-white">Tips menonton:</strong> Tonton video sekali untuk gambaran besar, lalu putar ulang sambil membuka <strong class="text-purple-300">tab Simulasi I-P-O</strong> di modul ini untuk mempraktikkan
+                  langsung.
+                </div>
+              </div>
+            </div>
+
+            <div class="border-t border-white/10 pt-6 space-y-4">
+              <div class="flex items-center justify-between flex-wrap gap-2">
+                <h3 class="text-xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-list-ol text-purple-400"></i> Daftar Bab Video</h3>
+                <span class="text-xs text-textGray bg-white/5 border border-white/10 px-3 py-1.5 rounded-full" id="chapter-count">0 Bab</span>
+              </div>
+              <div id="chapters-list" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
+            </div>
+          </div>
+
+          <!-- Praktik -->
+          <section class="bg-brandGray border border-brandGreen/30 rounded-3xl p-6 md:p-8 space-y-6">
+            <div class="flex items-center gap-3 border-b border-white/10 pb-4">
+              <div class="w-12 h-12 rounded-xl bg-brandGreen/10 flex items-center justify-center text-brandGreen text-2xl font-bold border border-brandGreen/20 shrink-0">
+                <i class="fa-solid fa-pen-ruler"></i>
+              </div>
+              <div>
+                <h2 class="text-2xl md:text-3xl font-bold text-white">Praktik: Telusuri Alur Dinamika I-P-O Mandiri</h2>
+                <p class="text-base text-textGray">Latihan menelusuri bagaimana data bergerak nyata dari tombol input, mampir ke RAM, diproses CPU, hingga muncul di layar!</p>
+              </div>
+            </div>
+
+            <!-- Studi Kasus -->
+            <div class="bg-gradient-to-r from-purple-500/10 via-sky-500/10 to-emerald-500/10 border border-white/10 rounded-2xl p-4 md:p-5">
+              <p class="text-xs uppercase tracking-widest text-brandGreen font-bold mb-1">Studi Kasus Nyata</p>
+              <h3 class="text-lg font-bold text-white">Kalkulator Menghitung Penjumlahan: 15 + 27 = 42</h3>
+              <p class="text-xs text-textGray mt-1">Mari kita bedah ke mana saja angka 15, tombol +, dan angka 27 berjalan di dalam komputer Von Neumann:</p>
+            </div>
+
+            <!-- Step by Step Tracing -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="bg-white/5 border border-white/10 rounded-2xl p-4 space-y-2">
+                <div class="flex items-center gap-2">
+                  <span class="w-6 h-6 rounded-full bg-amber-500/20 text-amber-300 font-bold text-xs flex items-center justify-center border border-amber-500/40">1</span>
+                  <h4 class="font-bold text-white text-sm">Tahap 1: Input Titipkan Data ke RAM</h4>
+                </div>
+                <p class="text-xs text-textGray leading-relaxed">
+                  Pengguna menekan tombol <code class="text-amber-300 bg-black/40 px-1.5 py-0.5 rounded">15</code>, <code class="text-amber-300 bg-black/40 px-1.5 py-0.5 rounded">+</code>, dan
+                  <code class="text-amber-300 bg-black/40 px-1.5 py-0.5 rounded">27</code>. Sinyal masuk lewat Bus Input dan <strong class="text-white">langsung disimpan di alamat RAM</strong>:
+                </p>
+                <div class="bg-black/50 p-2.5 rounded-lg font-mono text-[11px] text-gray-300 space-y-1">
+                  <div>RAM [0x01] = 15</div>
+                  <div>RAM [0x02] = +</div>
+                  <div>RAM [0x03] = 27</div>
+                </div>
+                <p class="text-[11px] text-amber-300/90 italic">💡 CPU belum bergerak sama sekali pada tahap ini.</p>
+              </div>
+
+              <div class="bg-white/5 border border-white/10 rounded-2xl p-4 space-y-2">
+                <div class="flex items-center gap-2">
+                  <span class="w-6 h-6 rounded-full bg-sky-500/20 text-sky-300 font-bold text-xs flex items-center justify-center border border-sky-500/40">2</span>
+                  <h4 class="font-bold text-white text-sm">Tahap 2: CPU Mengambil Data dari RAM</h4>
+                </div>
+                <p class="text-xs text-textGray leading-relaxed">CPU mulai bekerja! Melalui Bus Sistem, CPU meminta data dari memori RAM untuk dipersiapkan di unit pengolah data.</p>
+                <div class="bg-black/50 p-2.5 rounded-lg font-mono text-[11px] text-sky-300 space-y-1">
+                  <div>Data Masuk CPU: 15 dan 27</div>
+                  <div>Instruksi Operasi: Penjumlahan (+)</div>
+                </div>
+                <p class="text-[11px] text-sky-300/90 italic">💡 Data asli di RAM tetap tersimpan aman.</p>
+              </div>
+
+              <div class="bg-white/5 border border-white/10 rounded-2xl p-4 space-y-2">
+                <div class="flex items-center gap-2">
+                  <span class="w-6 h-6 rounded-full bg-purple-500/20 text-purple-300 font-bold text-xs flex items-center justify-center border border-purple-500/40">3</span>
+                  <h4 class="font-bold text-white text-sm">Tahap 3: CPU Menghitung &amp; Setor Balik ke RAM</h4>
+                </div>
+                <p class="text-xs text-textGray leading-relaxed">
+                  CPU menghitung: <strong class="text-white">15 + 27 = 42</strong>. Sesuai Aturan Emas Von Neumann, CPU <strong class="text-rose-300">tidak boleh</strong> mengirim angka 42 langsung ke layar. Hasil ini disetorkan kembali ke
+                  RAM:
+                </p>
+                <div class="bg-black/50 p-2.5 rounded-lg font-mono text-[11px] text-purple-300 space-y-1">
+                  <div>Hasil CPU: 42</div>
+                  <div>Tersimpan di: RAM [0x04] = 42</div>
+                </div>
+                <p class="text-[11px] text-purple-300/90 italic">💡 Seluruh hasil olahan CPU selalu kembali ke memori.</p>
+              </div>
+
+              <div class="bg-white/5 border border-white/10 rounded-2xl p-4 space-y-2">
+                <div class="flex items-center gap-2">
+                  <span class="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-300 font-bold text-xs flex items-center justify-center border border-emerald-500/40">4</span>
+                  <h4 class="font-bold text-white text-sm">Tahap 4: Layar Mengambil Hasil dari RAM</h4>
+                </div>
+                <p class="text-xs text-textGray leading-relaxed">Layar kalkulator (Output) membaca data dari RAM [0x04] melalui Bus Output. Piksel layar menyala membentuk angka:</p>
+                <div class="bg-black/50 p-2.5 rounded-lg font-mono text-center text-xl font-bold text-emerald-300">Layar Tampil: "42"</div>
+                <p class="text-[11px] text-emerald-300/90 italic">💡 Siklus I-P-O lengkap selesai dalam hitungan mikrodetik!</p>
+              </div>
+            </div>
+
+            <!-- Tabel Rangkuman Tracing -->
+            <div class="space-y-3">
+              <h3 class="text-lg font-bold text-white flex items-center gap-2"><i class="fa-solid fa-table-list text-brandGreen"></i> Tabel Rangkuman Perjalanan Data (I-P-O Tracing)</h3>
+              <div class="overflow-x-auto border border-white/10 rounded-2xl">
+                <table class="w-full text-xs">
+                  <thead class="bg-white/5 text-textGray uppercase text-[10px] border-b border-white/10">
+                    <tr>
+                      <th class="p-3 text-left">No</th>
+                      <th class="p-3 text-left">Tahap Alur</th>
+                      <th class="p-3 text-left">Pengirim</th>
+                      <th class="p-3 text-left">Penerima</th>
+                      <th class="p-3 text-left">Data</th>
+                      <th class="p-3 text-left">Aturan Von Neumann</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-white/5">
+                    <tr>
+                      <td class="p-3 font-bold text-amber-400">1</td>
+                      <td class="p-3 font-semibold text-white">Input Masuk</td>
+                      <td class="p-3 text-amber-300">Keyboard / Tombol</td>
+                      <td class="p-3 text-emerald-300">RAM (Alamat 1-3)</td>
+                      <td class="p-3 font-mono">15, +, 27</td>
+                      <td class="p-3 text-textGray">Data dititipkan ke RAM terlebih dahulu</td>
+                    </tr>
+                    <tr>
+                      <td class="p-3 font-bold text-sky-400">2</td>
+                      <td class="p-3 font-semibold text-white">Ambil Data</td>
+                      <td class="p-3 text-emerald-300">RAM</td>
+                      <td class="p-3 text-sky-300">CPU (Prosesor)</td>
+                      <td class="p-3 font-mono">15, +, 27</td>
+                      <td class="p-3 text-textGray">CPU membaca dari RAM lewat Bus Sistem</td>
+                    </tr>
+                    <tr>
+                      <td class="p-3 font-bold text-purple-400">3</td>
+                      <td class="p-3 font-semibold text-white">Olah &amp; Hitung</td>
+                      <td class="p-3 text-sky-300">CPU (Internal)</td>
+                      <td class="p-3 text-sky-300">CPU (Internal)</td>
+                      <td class="p-3 font-mono">15 + 27 = 42</td>
+                      <td class="p-3 text-textGray">Kalkulasi berlangsung di unit pemroses CPU</td>
+                    </tr>
+                    <tr>
+                      <td class="p-3 font-bold text-purple-400">4</td>
+                      <td class="p-3 font-semibold text-white">Setor Balik</td>
+                      <td class="p-3 text-sky-300">CPU</td>
+                      <td class="p-3 text-emerald-300">RAM (Alamat 4)</td>
+                      <td class="p-3 font-mono">42</td>
+                      <td class="p-3 text-textGray">Hasil wajib disimpan kembali ke RAM</td>
+                    </tr>
+                    <tr>
+                      <td class="p-3 font-bold text-emerald-400">5</td>
+                      <td class="p-3 font-semibold text-white">Tampil Output</td>
+                      <td class="p-3 text-emerald-300">RAM</td>
+                      <td class="p-3 text-emerald-300">Layar Monitor</td>
+                      <td class="p-3 font-mono">42</td>
+                      <td class="p-3 text-textGray">Layar mengambil data dari RAM, bukan CPU</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Analogi Sederhana -->
+            <div class="bg-brandGreen/5 border-l-4 border-brandGreen rounded-r-lg p-4 flex items-start gap-3">
+              <i class="fa-solid fa-utensils text-brandGreen text-xl mt-0.5"></i>
+              <div class="text-sm text-textGray leading-relaxed">
+                <strong class="text-white">Analogi Restoran Cepat Saji:</strong>
+                <p class="mt-1">
+                  Pelanggan (<strong>Input</strong>) memesan makanan ke Meja Kasir (<strong>RAM</strong>). Koki di dapur (<strong>CPU</strong>) mengambil pesanan dari meja kasir, memasaknya, lalu meletakkan makanan matang kembali ke Meja
+                  Saji (<strong>RAM</strong>). Terakhir, pelayan mengambil makanan dari meja saji untuk disajikan ke meja makan (<strong>Output</strong>). Koki tidak pernah melayani pelanggan langsung di pintu masuk!
+                </p>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <!-- ========== TAB 4: LEMBAR KERJA ========== -->
+        <div id="lembarkerja" class="tab-content hidden space-y-6">
+          <div class="bg-gradient-to-br from-purple-500/10 via-brandGray to-brandGray border border-purple-500/30 rounded-3xl p-6 md:p-8">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-purple-500/15 border border-purple-500/30 text-sm font-bold text-purple-300 mb-4">
+              <i class="fa-solid fa-clipboard-list"></i> Tahap Akhir • Lembar Kerja & Evaluasi
+            </div>
+            <h2 class="text-2xl md:text-4xl font-extrabold tracking-tight mb-3">Lembar Kerja, Evaluasi & Refleksi</h2>
+            <p class="text-textGray text-base md:text-lg max-w-3xl leading-relaxed">Selesaikan tiga tahap berikut secara berurutan untuk menutup modul ini. Kerjakan dengan jujur dan sungguh-sungguh ya! 💪</p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <a
+              href="lkpd.html"
+              class="group block bg-gradient-to-br from-amber-500/5 to-transparent border border-amber-500/30 rounded-2xl p-5 md:p-6 hover:border-amber-500/60 hover:bg-amber-500/10 transition-all duration-300 transform hover:-translate-y-1 relative overflow-hidden"
+            >
+              <div class="absolute top-4 right-4 w-9 h-9 rounded-full bg-amber-500/20 border-2 border-amber-500/50 flex items-center justify-center text-amber-400 font-bold text-sm">1</div>
+              <div class="w-14 h-14 rounded-2xl bg-amber-500/15 border border-amber-500/40 flex items-center justify-center mb-4"><i class="fa-solid fa-file-pen text-amber-400 text-2xl"></i></div>
+              <h4 class="text-lg font-bold text-white mb-2">LKPD</h4>
+              <p class="text-xs text-amber-400 font-bold uppercase tracking-wider mb-3">Lembar Kerja Peserta Didik</p>
+              <p class="text-sm text-textGray leading-relaxed mb-4">Gambar diagram Von Neumann &amp; telusuri dinamika alur I-P-O komputer.</p>
+              <div class="inline-flex items-center gap-2 text-sm font-bold text-amber-400 group-hover:gap-3 transition-all">Kerjakan LKPD <i class="fa-solid fa-arrow-right"></i></div>
+            </a>
+
+            <a
+              href="posttest.html"
+              class="group block bg-gradient-to-br from-sky-500/5 to-transparent border border-sky-500/30 rounded-2xl p-5 md:p-6 hover:border-sky-500/60 hover:bg-sky-500/10 transition-all duration-300 transform hover:-translate-y-1 relative overflow-hidden"
+            >
+              <div class="absolute top-4 right-4 w-9 h-9 rounded-full bg-sky-500/20 border-2 border-sky-500/50 flex items-center justify-center text-sky-400 font-bold text-sm">2</div>
+              <div class="w-14 h-14 rounded-2xl bg-sky-500/15 border border-sky-500/40 flex items-center justify-center mb-4">
+                <i class="fa-solid fa-file-circle-check text-sky-400 text-2xl"></i>
+              </div>
+              <h4 class="text-lg font-bold text-white mb-2">Post-Test</h4>
+              <p class="text-xs text-sky-400 font-bold uppercase tracking-wider mb-3">Evaluasi Akhir Modul</p>
+              <p class="text-sm text-textGray leading-relaxed mb-4">Uji pemahamanmu dengan <strong class="text-white">10 soal pilihan ganda</strong> tentang arsitektur Von Neumann dan alur I-P-O.</p>
+              <div class="inline-flex items-center gap-2 text-sm font-bold text-sky-400 group-hover:gap-3 transition-all">Mulai Post-Test <i class="fa-solid fa-arrow-right"></i></div>
+            </a>
+
+            <a
+              href="refleksi.html"
+              class="group block bg-gradient-to-br from-purple-500/5 to-transparent border border-purple-500/30 rounded-2xl p-5 md:p-6 hover:border-purple-500/60 hover:bg-purple-500/10 transition-all duration-300 transform hover:-translate-y-1 relative overflow-hidden"
+            >
+              <div class="absolute top-4 right-4 w-9 h-9 rounded-full bg-purple-500/20 border-2 border-purple-500/50 flex items-center justify-center text-purple-400 font-bold text-sm">3</div>
+              <div class="w-14 h-14 rounded-2xl bg-purple-500/15 border border-purple-500/40 flex items-center justify-center mb-4"><i class="fa-solid fa-lightbulb text-purple-400 text-2xl"></i></div>
+              <h4 class="text-lg font-bold text-white mb-2">Refleksi</h4>
+              <p class="text-xs text-purple-400 font-bold uppercase tracking-widest mb-3">Refleksi Pembelajaran</p>
+              <p class="text-sm text-textGray leading-relaxed mb-4">Tuliskan kesan, kesulitan, dan hal menarik setelah mempelajari arsitektur Von Neumann.</p>
+              <div class="inline-flex items-center gap-2 text-sm font-bold text-purple-400 group-hover:gap-3 transition-all">Isi Refleksi <i class="fa-solid fa-arrow-right"></i></div>
+            </a>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container" style="max-width: 1280px; margin: 0 auto; padding: 0 24px">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <div class="footer-logo">
+              <div class="footer-logo-icon"><i class="fa-solid fa-code"></i></div>
+              <span class="footer-logo-text">RuangInformatika</span>
+            </div>
+            <p class="footer-desc">Platform e-learning interaktif modern yang dirancang untuk memfasilitasi gaya belajar visual dan praktik murid SMA Negeri 4 Yogyakarta.</p>
+          </div>
+          <div class="footer-col">
+            <h4 class="footer-heading">Pintasan Modul</h4>
+            <ul class="footer-links">
+              <li>
+                <a href="../kisi.html" class="footer-link"><i class="fa-solid fa-chevron-right" style="font-size: 0.65rem"></i> Bedah Kisi-Kisi</a>
+              </li>
+              <li>
+                <a href="../materi-bk.html" class="footer-link"><i class="fa-solid fa-chevron-right" style="font-size: 0.65rem"></i> Berpikir Komputasional</a>
+              </li>
+              <li>
+                <a href="../materi-stack-queue.html" class="footer-link"><i class="fa-solid fa-chevron-right" style="font-size: 0.65rem"></i> Stack &amp; Queue</a>
+              </li>
+              <li>
+                <a href="../materi-search-sort.html" class="footer-link"><i class="fa-solid fa-chevron-right" style="font-size: 0.65rem"></i> Searching &amp; Sorting</a>
+              </li>
+              <li>
+                <a href="materi.html" class="footer-link"><i class="fa-solid fa-chevron-right" style="font-size: 0.65rem"></i> Von Neumann &amp; I-P-O</a>
+              </li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h4 class="footer-heading">Fitur &amp; Dukungan</h4>
+            <ul class="footer-links">
+              <li>
+                <a href="../leaderboard.html" class="footer-link"><i class="fa-solid fa-trophy" style="color: var(--amber)"></i> Leaderboard Kelas</a>
+              </li>
+              <li>
+                <a href="../forum.html" class="footer-link"><i class="fa-solid fa-comments" style="color: var(--blue)"></i> Forum Diskusi</a>
+              </li>
+              <li>
+                <a href="https://wa.me/6285282386260?text=Halo%20Pak%20Ilyas%2C%20saya%20ingin%20bertanya%20tentang%20materi%20Informatika." target="_blank" class="footer-link"
+                  ><i class="fa-solid fa-chalkboard-user" style="color: var(--green)"></i> Hubungi Pak Ilyas</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p class="footer-copy">&copy; 2026 RuangInformatika. Dikembangkan untuk kelas Informatika XE6 SMA Negeri 4 Yogyakarta.</p>
+          <div class="footer-socials">
+            <a href="https://github.com/fandhi19" target="_blank" class="footer-social" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+            <a href="https://e-portofolio-fandhi.vercel.app/" target="_blank" class="footer-social" aria-label="Portfolio"><i class="fa-solid fa-globe"></i></a>
+            <a href="https://www.instagram.com/fandhidk17/" target="_blank" class="footer-social" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      /* Reading Progress */
+      window.addEventListener("scroll", () => {
+        const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrolled = (winScroll / height) * 100;
+        const p = document.getElementById("readProgress");
+        if (p) p.style.width = scrolled + "%";
+      });
+
+      /* Vanilla Tilt */
+      if (typeof VanillaTilt !== "undefined") {
+        VanillaTilt.init(document.querySelectorAll(".tilt-card"), { max: 6, speed: 400, glare: true, "max-glare": 0.15 });
+      }
+
+      /* TABS */
+      function openTab(evt, tabName) {
+        const tabContents = document.getElementsByClassName("tab-content");
+        for (let i = 0; i < tabContents.length; i++) {
+          tabContents[i].classList.add("hidden");
+          tabContents[i].classList.remove("block");
+        }
+        const tabBtns = document.getElementsByClassName("tab-btn");
+        for (let i = 0; i < tabBtns.length; i++) {
+          tabBtns[i].classList.remove("active", "purple");
+        }
+        document.getElementById(tabName).classList.remove("hidden");
+        document.getElementById(tabName).classList.add("block");
+        const activeBtn = evt ? evt.currentTarget : null;
+        if (activeBtn) {
+          activeBtn.classList.add("active");
+          if (tabName === "lembarkerja") activeBtn.classList.add("purple");
+        }
+      }
+
+      /* MOBILE MENU */
+      const hamburgerBtn = document.getElementById("hamburgerBtn");
+      const mobileMenu = document.getElementById("mobileMenu");
+      if (hamburgerBtn && mobileMenu) {
+        hamburgerBtn.addEventListener("click", function () {
+          mobileMenu.classList.toggle("open");
+          const icon = hamburgerBtn.querySelector("i");
+          icon.classList.toggle("fa-bars");
+          icon.classList.toggle("fa-xmark");
+        });
+        mobileMenu.querySelectorAll("a, button").forEach((item) => {
+          item.addEventListener("click", () => {
+            mobileMenu.classList.remove("open");
+            const icon = hamburgerBtn.querySelector("i");
+            icon.classList.add("fa-bars");
+            icon.classList.remove("fa-xmark");
+          });
+        });
+      }
+
+      /* ============================================================
+         SIMULATOR I-P-O + SIKLUS FDE (Versi Kelas X Fase E)
+         ============================================================ */
+
+      const SIM_PRESETS = {
+        add: { op1: "5", op: "+", op2: "3", res: "8", formula: "5 + 3 = 8" },
+        sub: { op1: "9", op: "−", op2: "4", res: "5", formula: "9 − 4 = 5" },
+        mul: { op1: "4", op: "×", op2: "3", res: "12", formula: "4 × 3 = 12" },
+      };
+
+      let simPreset = SIM_PRESETS.add;
+      let simCurrentStep = 0;
+      let simAutoTimer = null;
+
+      function buildSimSteps(p) {
+        return [
+          // LANGKAH 1: INPUT
+          {
+            badge: "INPUT",
+            badgeClass: "phase-badge fetch",
+            title: "Tombol ditekan",
+            text: `Kamu menekan tombol <strong>${p.op1}</strong>, <strong>${p.op}</strong>, dan <strong>${p.op2}</strong>. Data ini masuk ke RAM dulu, bukan langsung ke CPU.`,
+            activeNode: "stepInput",
+            cpuPhase: null,
+            values: { valInput: p.op1 + " " + p.op + " " + p.op2 },
+          },
+          // LANGKAH 2: RAM MASUK
+          {
+            badge: "RAM",
+            badgeClass: "phase-badge fetch",
+            title: "Data dititipkan ke RAM",
+            text: `Data <strong>${p.op1} ${p.op} ${p.op2}</strong> tersimpan di RAM. RAM adalah tempat penyimpanan sementara untuk data yang sedang diolah.`,
+            activeNode: "stepRAM1",
+            cpuPhase: null,
+            values: { valRAM1: "[" + p.op1 + ", " + p.op + ", " + p.op2 + "]" },
+          },
+          // LANGKAH 3: CPU — FETCH
+          {
+            badge: "FETCH",
+            badgeClass: "phase-badge fetch",
+            title: "CPU — Fetch (Ambil instruksi dari RAM)",
+            text: `CPU mulai bekerja! Langkah pertama dalam siklus FDE adalah <strong class="text-sky-300">FETCH</strong>: CPU mengambil instruksi dan data <strong>${p.op1} ${p.op} ${p.op2}</strong> dari RAM.`,
+            activeNode: "stepCPU",
+            cpuPhase: "fetch",
+            values: { valCPU: "📥 Ambil data…" },
+          },
+          // LANGKAH 4: CPU — DECODE
+          {
+            badge: "DECODE",
+            badgeClass: "phase-badge fetch",
+            title: "CPU — Decode (Terjemahkan instruksi)",
+            text: `Langkah kedua adalah <strong class="text-amber-300">DECODE</strong>: Control Unit menerjemahkan instruksi yang sudah diambil. "Oh, ini perintah penjumlahan <strong>${p.op1} ${p.op} ${p.op2}</strong>!"`,
+            activeNode: "stepCPU",
+            cpuPhase: "decode",
+            values: { valCPU: "🔍 Baca instruksi…" },
+          },
+          // LANGKAH 5: CPU — EXECUTE
+          {
+            badge: "EXECUTE",
+            badgeClass: "phase-badge execute",
+            title: "CPU — Execute (Hitung hasil)",
+            text: `Langkah ketiga adalah <strong class="text-emerald-300">EXECUTE</strong>: ALU menjalankan perhitungan <strong>${p.formula}</strong>. Hasilnya <strong>${p.res}</strong>. Tapi ingat aturan emas — hasil ini belum boleh ke layar, harus dikembalikan ke RAM dulu!`,
+            activeNode: "stepCPU",
+            cpuPhase: "execute",
+            values: { valCPU: p.op1 + " " + p.op + " " + p.op2 + " = " + p.res },
+          },
+          // LANGKAH 6: RAM — STORE
+          {
+            badge: "STORE",
+            badgeClass: "phase-badge execute",
+            title: "Hasil disimpan ke RAM",
+            text: `Hasil <strong>${p.res}</strong> dikembalikan ke RAM. Inilah aturan terpenting Von Neumann: <strong>semua data harus lewat RAM</strong>, termasuk hasil perhitungan CPU!`,
+            activeNode: "stepRAM2",
+            cpuPhase: null,
+            values: { valRAM2: "[" + p.res + "]" },
+          },
+          // LANGKAH 7: OUTPUT
+          {
+            badge: "OUTPUT",
+            badgeClass: "phase-badge execute",
+            title: "Layar menampilkan hasil 🎉",
+            text: `Layar membaca angka <strong>${p.res}</strong> dari RAM dan menampilkannya. Selesai! Siklus I-P-O lengkap dengan siklus FDE di dalamnya.`,
+            activeNode: "stepOutput",
+            cpuPhase: null,
+            values: { valOutput: p.res },
+          },
+        ];
+      }
+
+      let SIM_STEPS = buildSimSteps(simPreset);
+
+      function renderSimAll() {
+        document.querySelectorAll(".flow-node").forEach((el) => el.classList.remove("active", "done"));
+
+        const doneNodes = new Set();
+        const currentStep = SIM_STEPS[simCurrentStep - 1];
+
+        for (let i = 0; i < simCurrentStep - 1; i++) {
+          doneNodes.add(SIM_STEPS[i].activeNode);
+        }
+
+        doneNodes.forEach((nodeId) => {
+          const el = document.getElementById(nodeId);
+          if (el) el.classList.add("done");
+        });
+
+        if (currentStep) {
+          const el = document.getElementById(currentStep.activeNode);
+          if (el) {
+            el.classList.remove("done");
+            el.classList.add("active");
+          }
+        }
+
+        ["valInput", "valRAM1", "valCPU", "valRAM2", "valOutput"].forEach((id) => {
+          const el = document.getElementById(id);
+          if (el) el.textContent = "—";
+        });
+
+        for (let i = 0; i < simCurrentStep; i++) {
+          const s = SIM_STEPS[i];
+          if (s.values) {
+            Object.entries(s.values).forEach(([key, val]) => {
+              const el = document.getElementById(key);
+              if (el) el.textContent = val;
+            });
+          }
+        }
+
+        const cpuSub = document.getElementById("cpuSubBadge");
+        const cpuBadge = document.getElementById("cpuPhaseBadge");
+        if (cpuSub && cpuBadge) {
+          if (currentStep && currentStep.cpuPhase) {
+            cpuSub.classList.remove("hidden");
+            cpuBadge.textContent = currentStep.cpuPhase.toUpperCase();
+            if (currentStep.cpuPhase === "fetch") {
+              cpuBadge.className = "phase-badge fetch";
+              cpuBadge.style.cssText = "font-size: 8px; padding: 2px 8px; background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.4)";
+            } else if (currentStep.cpuPhase === "decode") {
+              cpuBadge.className = "phase-badge";
+              cpuBadge.style.cssText = "font-size: 8px; padding: 2px 8px; background: rgba(251, 191, 36, 0.15); color: #fbbf24; border: 1px solid rgba(251, 191, 36, 0.4)";
+            } else if (currentStep.cpuPhase === "execute") {
+              cpuBadge.className = "phase-badge execute";
+              cpuBadge.style.cssText = "font-size: 8px; padding: 2px 8px";
+            }
+          } else {
+            cpuSub.classList.add("hidden");
+          }
+        }
+
+        const dots = document.getElementById("progressDots");
+        if (dots) {
+          dots.innerHTML = SIM_STEPS.map((_, i) => {
+            let cls = "progress-dot";
+            if (i < simCurrentStep - 1) cls += " done";
+            else if (i === simCurrentStep - 1) cls += " active";
+            return `<div class="${cls}"></div>`;
+          }).join("");
+        }
+
+        const badgeEl = document.getElementById("stepBadge");
+        const textEl = document.getElementById("stepText");
+        const counterEl = document.getElementById("stepCounter");
+        if (counterEl) counterEl.textContent = simCurrentStep + " / " + SIM_STEPS.length;
+
+        if (simCurrentStep === 0) {
+          if (badgeEl) {
+            badgeEl.className = "phase-badge idle";
+            badgeEl.textContent = "Siap";
+          }
+          if (textEl) textEl.innerHTML = 'Tekan tombol <strong class="text-purple-300">Lanjut</strong> untuk memulai simulasi I-P-O + Siklus FDE.';
+        } else {
+          const step = SIM_STEPS[simCurrentStep - 1];
+          if (badgeEl) {
+            badgeEl.className = step.badgeClass;
+            badgeEl.textContent = step.badge;
+          }
+          if (textEl) {
+            textEl.innerHTML = `<strong class="text-white">Langkah ${simCurrentStep}: ${step.title}.</strong> ${step.text}`;
+          }
+        }
+
+        const btnPrev = document.getElementById("btnPrev");
+        const btnNext = document.getElementById("btnNext");
+        if (btnPrev) btnPrev.disabled = simCurrentStep === 0;
+        if (btnNext) btnNext.disabled = simCurrentStep >= SIM_STEPS.length;
+      }
+
+      function simNext() {
+        if (simCurrentStep >= SIM_STEPS.length) return;
+        simCurrentStep++;
+        renderSimAll();
+        playSimSound();
+      }
+
+      function simPrev() {
+        if (simCurrentStep === 0) return;
+        simCurrentStep--;
+        renderSimAll();
+      }
+
+      function simReset() {
+        if (simAutoTimer) {
+          clearInterval(simAutoTimer);
+          simAutoTimer = null;
+          const btn = document.getElementById("btnAuto");
+          if (btn) btn.innerHTML = '<i class="fa-solid fa-play"></i> Otomatis';
+        }
+        simCurrentStep = 0;
+        renderSimAll();
+      }
+
+      function simToggleAuto() {
+        const btn = document.getElementById("btnAuto");
+        if (simAutoTimer) {
+          clearInterval(simAutoTimer);
+          simAutoTimer = null;
+          if (btn) btn.innerHTML = '<i class="fa-solid fa-play"></i> Otomatis';
+        } else {
+          if (simCurrentStep >= SIM_STEPS.length) simReset();
+          if (btn) btn.innerHTML = '<i class="fa-solid fa-pause"></i> Jeda';
+          simAutoTimer = setInterval(() => {
+            if (simCurrentStep >= SIM_STEPS.length) {
+              clearInterval(simAutoTimer);
+              simAutoTimer = null;
+              if (btn) btn.innerHTML = '<i class="fa-solid fa-play"></i> Otomatis';
+              return;
+            }
+            simNext();
+          }, 1800);
+        }
+      }
+
+      function changeSimPreset(key) {
+        if (!SIM_PRESETS[key]) return;
+        simPreset = SIM_PRESETS[key];
+        SIM_STEPS = buildSimSteps(simPreset);
+        simReset();
+        document.querySelectorAll(".preset-pill").forEach((b) => {
+          b.classList.toggle("active", b.dataset.preset === key);
+        });
+      }
+
+      let simAudioCtx = null;
+      function playSimSound() {
+        try {
+          if (!simAudioCtx) {
+            const AC = window.AudioContext || window.webkitAudioContext;
+            if (AC) simAudioCtx = new AC();
+          }
+          if (!simAudioCtx) return;
+          if (simAudioCtx.state === "suspended") simAudioCtx.resume();
+          const osc = simAudioCtx.createOscillator();
+          const gain = simAudioCtx.createGain();
+          osc.connect(gain);
+          gain.connect(simAudioCtx.destination);
+          const now = simAudioCtx.currentTime;
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(520, now);
+          osc.frequency.exponentialRampToValueAtTime(380, now + 0.08);
+          gain.gain.setValueAtTime(0.08, now);
+          gain.gain.linearRampToValueAtTime(0.01, now + 0.08);
+          osc.start(now);
+          osc.stop(now + 0.08);
+        } catch (e) {
+          /* silent fail */
+        }
+      }
+
+      function initSimulator() {
+        document.querySelectorAll(".preset-pill").forEach((btn) => {
+          btn.addEventListener("click", () => changeSimPreset(btn.dataset.preset));
+        });
+        simCurrentStep = 0;
+        renderSimAll();
+      }
+
+      /* ============================================================
+         LOCAL VIDEO PLAYER
+         ============================================================ */
+      const CHAPTERS = [
+        { time: 0, label: "00:00", title: "Pengenalan Arsitektur Komputer", desc: "Apa itu arsitektur & siapa John von Neumann" },
+        { time: 60, label: "01:00", title: "Komponen Utama", desc: "CPU, RAM, Bus, dan I/O" },
+        { time: 130, label: "02:10", title: "Arsitektur Von Neumann", desc: "Konsep stored program & bottleneck" },
+        { time: 200, label: "03:20", title: "Siklus Fetch-Decode-Execute", desc: "Cara CPU mengolah data dari RAM" },
+        { time: 270, label: "04:30", title: "Dinamika I-P-O", desc: "Alur Input-Proses-Output" },
+        { time: 340, label: "05:40", title: "Von Neumann vs Harvard", desc: "Perbandingan dua arsitektur" },
+      ];
+
+      let localVideo = null;
+      let activeChapterIndex = -1;
+      let videoTimeUpdateBound = false;
+
+      function renderChapters() {
+        const listEl = document.getElementById("chapters-list");
+        if (!listEl) return;
+        const countEl = document.getElementById("chapter-count");
+        if (countEl) countEl.textContent = CHAPTERS.length + " Bab";
+        listEl.innerHTML = "";
+        CHAPTERS.forEach((ch, idx) => {
+          const item = document.createElement("div");
+          item.className = "chapter-item";
+          item.dataset.idx = idx;
+          item.onclick = () => jumpToChapter(idx);
+          item.innerHTML = `<span class="chapter-time">${ch.label}</span><div class="flex-1 min-w-0"><div class="chapter-title text-sm font-bold text-white leading-tight">${ch.title}</div><div class="text-xs text-textGray mt-1 leading-snug">${ch.desc}</div></div>`;
+          listEl.appendChild(item);
+        });
+      }
+
+      function jumpToChapter(idx) {
+        const ch = CHAPTERS[idx];
+        if (!ch || !localVideo) return;
+        try {
+          localVideo.currentTime = ch.time;
+          localVideo.play();
+        } catch (e) {
+          console.warn("Gagal seek video:", e);
+        }
+        highlightChapter(idx);
+      }
+
+      function highlightChapter(idx) {
+        document.querySelectorAll(".chapter-item").forEach((el, i) => {
+          el.classList.toggle("active", i === idx);
+        });
+        activeChapterIndex = idx;
+      }
+
+      function initLocalVideo() {
+        localVideo = document.getElementById("local-video");
+        if (!localVideo) {
+          setTimeout(initLocalVideo, 200);
+          return;
+        }
+        localVideo.addEventListener("loadedmetadata", () => {
+          const dur = localVideo.duration;
+          if (isFinite(dur)) {
+            const m = Math.floor(dur / 60);
+            const s = Math.floor(dur % 60);
+            console.log(`🎬 Video durasi: ${m} menit ${s} detik (${dur.toFixed(1)}s). Sesuaikan CHAPTERS.time jika perlu.`);
+          }
+        });
+
+        if (!videoTimeUpdateBound) {
+          localVideo.addEventListener("timeupdate", () => {
+            const t = localVideo.currentTime;
+            let found = -1;
+            for (let i = CHAPTERS.length - 1; i >= 0; i--) {
+              if (t >= CHAPTERS[i].time) {
+                found = i;
+                break;
+              }
+            }
+            if (found !== -1 && found !== activeChapterIndex) highlightChapter(found);
+          });
+          videoTimeUpdateBound = true;
+        }
+
+        localVideo.addEventListener("error", () => {
+          const wrap = localVideo.parentElement;
+          if (wrap) {
+            wrap.innerHTML = `
+              <div class="flex flex-col items-center justify-center h-full text-center p-8 space-y-3">
+                <i class="fa-solid fa-triangle-exclamation text-rose-400 text-4xl"></i>
+                <p class="text-white font-bold">Video tidak dapat dimuat</p>
+                <p class="text-textGray text-xs max-w-md">Pastikan file <code class="text-amber-300">video/penjelasan_vonneumann.mp4</code> sudah ada di folder yang sama dengan file ini.</p>
+              </div>
+            `;
+          }
+        });
+        renderChapters();
+      }
+
+      /* Reveal */
+      const revealObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("visible");
+              revealObserver.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.1 },
+      );
+      document.querySelectorAll(".reveal").forEach((el) => revealObserver.observe(el));
+
+      /* Init on load */
+      document.addEventListener("DOMContentLoaded", () => {
+        initSimulator();
+        initLocalVideo();
+      });
+
+      if (document.readyState === "interactive" || document.readyState === "complete") {
+        initSimulator();
+        initLocalVideo();
+      }
+    </script>
+  </body>
+</html>

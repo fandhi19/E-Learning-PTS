@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>LKPD Algoritma Standar — Searching &amp; Sorting | RuangInformatika</title>
+    <title>LKPD Arsitektur Von Neumann &amp; Dinamika I-P-O | RuangInformatika</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet" />
@@ -11,22 +11,24 @@
       :root {
         --navy: #0f172a;
         --navy-2: #1e293b;
-        --cyan: #0284c7;
-        --sky: #3b82f6;
+        --purple: #7c3aed;
+        --purple-2: #a78bfa;
+        --purple-tint: #f5f3ff;
+        --purple-border: #ddd6fe;
+        --sky: #0284c7;
+        --sky-2: #38bdf8;
+        --sky-tint: #eff6ff;
+        --sky-border: #bfdbfe;
         --green: #059669;
         --green-tint: #ecfdf5;
         --green-border: #a7f3d0;
-        --sky-tint: #eff6ff;
-        --sky-border: #bfdbfe;
         --amber: #d97706;
         --amber-tint: #fffbeb;
         --amber-border: #fde68a;
-        --purple: #7c3aed;
-        --purple-tint: #f5f3ff;
-        --purple-border: #ddd6fe;
         --rose: #e11d48;
         --rose-tint: #fff1f2;
         --rose-border: #fecdd3;
+        --cyan: #0891b2;
         --cyan-tint: #ecfeff;
         --cyan-border: #a5f3fc;
         --card-bg: #f8fafc;
@@ -50,13 +52,7 @@
         padding: 0;
       }
       body {
-        font-family:
-          "Plus Jakarta Sans",
-          -apple-system,
-          BlinkMacSystemFont,
-          "Segoe UI",
-          Roboto,
-          sans-serif;
+        font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         color: var(--text);
         font-size: 11px;
         line-height: 1.55;
@@ -138,7 +134,7 @@
       }
       .pf-brand {
         font-weight: 700;
-        color: var(--cyan);
+        color: var(--purple);
       }
       .pf-page {
         font-weight: 700;
@@ -163,14 +159,14 @@
         width: 22px;
         height: 22px;
         border-radius: 6px;
-        background: linear-gradient(135deg, var(--cyan), var(--sky));
+        background: linear-gradient(135deg, var(--purple), var(--sky));
         color: #ffffff;
         display: flex;
         align-items: center;
         justify-content: center;
         font-size: 9px;
         font-weight: 800;
-        box-shadow: 0 3px 8px -2px rgba(2, 132, 199, 0.5);
+        box-shadow: 0 3px 8px -2px rgba(124, 58, 237, 0.5);
       }
       .brand-name {
         font-size: 11px;
@@ -190,7 +186,7 @@
       /* HERO */
       .hero {
         position: relative;
-        background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+        background: linear-gradient(135deg, #0f172a 0%, #4c1d95 100%);
         border-radius: 14px;
         padding: 24px 26px 22px;
         color: #ffffff;
@@ -205,7 +201,7 @@
         width: 280px;
         height: 280px;
         border-radius: 50%;
-        background: radial-gradient(circle, rgba(14, 165, 233, 0.4), transparent 65%);
+        background: radial-gradient(circle, rgba(167, 139, 250, 0.4), transparent 65%);
         pointer-events: none;
       }
       .hero::after {
@@ -231,7 +227,7 @@
         font-weight: 700;
         letter-spacing: 0.1em;
         text-transform: uppercase;
-        color: #bae6fd;
+        color: #ddd6fe;
         margin-bottom: 16px;
         position: relative;
         z-index: 1;
@@ -263,7 +259,7 @@
         font-size: 14px;
         font-weight: 700;
         letter-spacing: 0.04em;
-        color: #7dd3fc;
+        color: #c4b5fd;
         text-transform: uppercase;
         margin-top: 8px;
       }
@@ -271,7 +267,7 @@
         width: 44px;
         height: 3px;
         border-radius: 999px;
-        background: linear-gradient(90deg, #38bdf8, #22d3ee);
+        background: linear-gradient(90deg, #a78bfa, #38bdf8);
         margin: 10px 0;
       }
       .hero-line {
@@ -297,7 +293,7 @@
         font-weight: 800;
         letter-spacing: -0.03em;
         line-height: 1;
-        color: #22d3ee;
+        color: #a78bfa;
       }
       .hero-class-label {
         font-size: 8.5px;
@@ -457,7 +453,7 @@
         font-weight: 700;
         letter-spacing: 0.08em;
         text-transform: uppercase;
-        color: var(--accent, var(--cyan));
+        color: var(--accent, var(--purple));
       }
 
       .ctx-green {
@@ -467,7 +463,7 @@
         --accent-shadow: rgba(5, 150, 105, 0.3);
       }
       .ctx-sky {
-        --accent: var(--cyan);
+        --accent: var(--sky);
         --accent-tint: var(--sky-tint);
         --accent-border: var(--sky-border);
         --accent-shadow: rgba(2, 132, 199, 0.3);
@@ -483,6 +479,12 @@
         --accent-tint: var(--purple-tint);
         --accent-border: var(--purple-border);
         --accent-shadow: rgba(124, 58, 237, 0.3);
+      }
+      .ctx-cyan {
+        --accent: var(--cyan);
+        --accent-tint: var(--cyan-tint);
+        --accent-border: var(--cyan-border);
+        --accent-shadow: rgba(8, 145, 178, 0.3);
       }
 
       /* SECTION HEADER */
@@ -556,7 +558,7 @@
         width: 26px;
         height: 26px;
         border-radius: 50%;
-        background: var(--accent, var(--cyan));
+        background: var(--accent, var(--purple));
         color: #ffffff;
         display: flex;
         align-items: center;
@@ -564,7 +566,7 @@
         font-size: 12px;
         font-weight: 700;
         position: relative;
-        box-shadow: 0 3px 8px -2px var(--accent-shadow, rgba(2, 132, 199, 0.35));
+        box-shadow: 0 3px 8px -2px var(--accent-shadow, rgba(124, 58, 237, 0.35));
         z-index: 1;
       }
       .tl-num::after {
@@ -582,7 +584,7 @@
         transform: translateX(-50%);
         width: 2px;
         height: 10px;
-        background: var(--accent-border, var(--sky-border));
+        background: var(--accent-border, var(--purple-border));
       }
       .tl-text {
         flex: 1;
@@ -604,9 +606,9 @@
         gap: 6px;
         padding: 4px 11px;
         border-radius: 999px;
-        background: var(--accent-tint, var(--sky-tint));
-        border: 1px solid var(--accent-border, var(--sky-border));
-        color: var(--accent, var(--cyan));
+        background: var(--accent-tint, var(--purple-tint));
+        border: 1px solid var(--accent-border, var(--purple-border));
+        color: var(--accent, var(--purple));
         font-size: 8.5px;
         font-weight: 800;
         letter-spacing: 0.1em;
@@ -618,7 +620,7 @@
         width: 6px;
         height: 6px;
         border-radius: 50%;
-        background: var(--accent, var(--cyan));
+        background: var(--accent, var(--purple));
       }
       .checklist ul {
         list-style: none;
@@ -641,8 +643,8 @@
         width: 16px;
         height: 16px;
         border-radius: 4px;
-        background: var(--accent-tint, var(--sky-tint));
-        border: 1.5px solid var(--accent-border, var(--sky-border));
+        background: var(--accent-tint, var(--purple-tint));
+        border: 1.5px solid var(--accent-border, var(--purple-border));
         margin-top: 1px;
       }
 
@@ -651,7 +653,7 @@
         padding: 16px 18px 18px;
         background: var(--card-bg);
         border: 1px solid var(--border);
-        border-left: 4px solid var(--cyan);
+        border-left: 4px solid var(--purple);
         border-radius: 10px;
         margin-bottom: 12px;
       }
@@ -679,8 +681,8 @@
         width: 8px;
         height: 8px;
         border-radius: 50%;
-        background: var(--cyan);
-        box-shadow: 0 0 0 3px var(--cyan-tint);
+        background: var(--purple);
+        box-shadow: 0 0 0 3px var(--purple-tint);
       }
       .identity-head-hint {
         font-size: 9.5px;
@@ -711,14 +713,11 @@
         text-transform: uppercase;
         color: #ffffff;
       }
-      .id-badge-green {
-        background: var(--green);
-      }
-      .id-badge-sky {
-        background: var(--cyan);
-      }
       .id-badge-purple {
         background: var(--purple);
+      }
+      .id-badge-green {
+        background: var(--green);
       }
       .id-field {
         display: flex;
@@ -742,13 +741,13 @@
         justify-content: center;
         gap: 8px;
         padding: 10px 16px;
-        background: linear-gradient(135deg, var(--cyan) 0%, #0369a1 100%);
+        background: linear-gradient(135deg, var(--purple) 0%, #4c1d95 100%);
         border-radius: 10px;
         color: #ffffff;
         font-size: 9.5px;
         font-weight: 700;
         text-align: center;
-        box-shadow: 0 6px 16px -6px rgba(2, 132, 199, 0.5);
+        box-shadow: 0 6px 16px -6px rgba(124, 58, 237, 0.5);
       }
       .instruction-strip .dot-sep {
         width: 4px;
@@ -760,8 +759,8 @@
 
       /* NOTES BOX */
       .notes-box {
-        background: var(--cyan-tint);
-        border: 1px solid var(--cyan-border);
+        background: var(--purple-tint);
+        border: 1px solid var(--purple-border);
         border-radius: 10px;
         padding: 12px 14px 14px;
         margin-top: 6px;
@@ -787,7 +786,7 @@
         width: 22px;
         height: 22px;
         border-radius: 50%;
-        background: var(--cyan);
+        background: var(--purple);
         color: #ffffff;
         display: flex;
         align-items: center;
@@ -796,16 +795,13 @@
         font-size: 9px;
         font-weight: 700;
         margin-top: 1px;
-        box-shadow: 0 3px 8px -2px rgba(2, 132, 199, 0.4);
-      }
-      .note-tag.tag-f {
-        background: #0284c7;
+        box-shadow: 0 3px 8px -2px rgba(124, 58, 237, 0.4);
       }
       .note-tag.tag-g {
-        background: #0ea5e9;
+        background: var(--sky);
       }
       .note-tag.tag-h {
-        background: #7c3aed;
+        background: var(--green);
       }
       .notes-list code {
         font-family: "JetBrains Mono", monospace;
@@ -814,13 +810,9 @@
         background: #ffffff;
         padding: 1px 5px;
         border-radius: 4px;
-        border: 1px solid var(--cyan-border);
-        color: #0c4a6e;
+        border: 1px solid var(--purple-border);
+        color: #4c1d95;
       }
-
-      /* ============================================================
-         KOMPONEN KHUSUS LKPD ALGORITMA
-         ============================================================ */
 
       /* ANSWER BOX */
       .answer-box {
@@ -852,8 +844,14 @@
       .answer-box.tall .ab-lines {
         height: 66px;
       }
+      .answer-box.xl {
+        min-height: 120px;
+      }
+      .answer-box.xl .ab-lines {
+        height: 96px;
+      }
 
-      /* FILL BLANK */
+      /* BLANK FILL */
       .blank {
         display: inline-block;
         min-width: 130px;
@@ -863,7 +861,7 @@
         font-family: "JetBrains Mono", monospace;
         font-size: 10.5px;
         font-weight: 700;
-        color: var(--cyan);
+        color: var(--purple);
         text-align: center;
         vertical-align: middle;
       }
@@ -880,31 +878,332 @@
         min-width: 230px;
       }
 
-      /* CHOICE PILLS */
-      .choices {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 6px;
-        margin: 6px 0 10px;
+      /* MATCHING TABLE */
+      .match-grid {
+        display: grid;
+        grid-template-columns: 1fr 30px 1fr;
+        gap: 6px 0;
+        margin: 6px 0 4px;
       }
-      .choice {
+      .match-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 12px;
+        background: #ffffff;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        font-size: 10.5px;
+        line-height: 1.45;
+        color: var(--text);
+        min-height: 52px;
+      }
+      .match-item strong {
+        display: inline;
+      }
+      .match-badge {
+        flex-shrink: 0;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 11px;
+        color: #ffffff;
+      }
+      .match-badge-left {
+        background: var(--purple);
+        box-shadow: 0 3px 8px -2px rgba(124, 58, 237, 0.4);
+      }
+      .match-badge-right {
+        background: var(--sky);
+        box-shadow: 0 3px 8px -2px rgba(2, 132, 199, 0.4);
+      }
+      .match-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        border: 1.5px solid var(--border-strong);
+        background: #ffffff;
+        flex-shrink: 0;
+      }
+      .match-connector {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--border-strong);
+        font-size: 14px;
+        font-weight: 700;
+      }
+
+      /* SIMULATION BOX */
+      .simul {
+        background: #f8fafc;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 10px 12px;
+        margin: 6px 0;
+      }
+      .simul-head {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding-bottom: 6px;
+        margin-bottom: 8px;
+        border-bottom: 1px dashed var(--border-strong);
+        font-size: 9px;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--purple);
+      }
+      .simul-head::before {
+        content: "";
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--purple);
+        box-shadow: 0 0 0 3px var(--purple-tint);
+      }
+
+      /* STEP ROW */
+      .step-row {
+        display: flex;
+        gap: 10px;
+        padding: 8px 0;
+        border-bottom: 1px dashed var(--border);
+        font-size: 10.5px;
+        line-height: 1.55;
+        align-items: flex-start;
+      }
+      .step-row:last-child {
+        border-bottom: none;
+      }
+      .step-num {
+        flex-shrink: 0;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: var(--purple-tint);
+        border: 1px solid var(--purple-border);
+        color: var(--purple);
+        font-size: 9.5px;
+        font-weight: 800;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "JetBrains Mono", monospace;
+        margin-top: 1px;
+      }
+      .step-num.step-done {
+        background: var(--green-tint);
+        border-color: var(--green);
+        color: var(--green);
+      }
+      .step-body {
+        flex: 1;
+      }
+      .step-body code {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 10px;
+        font-weight: 600;
+        background: #ffffff;
+        padding: 1px 5px;
+        border-radius: 4px;
+        border: 1px solid var(--border);
+        color: var(--navy);
+      }
+
+      /* CASE HEADER */
+      .case-head {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 14px;
+        background: linear-gradient(135deg, #0f172a, #4c1d95);
+        color: #ffffff;
+        border-radius: 8px;
+        margin-bottom: 10px;
+      }
+      .case-head .case-icon {
+        width: 26px;
+        height: 26px;
+        border-radius: 6px;
+        background: rgba(255, 255, 255, 0.15);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        font-weight: 800;
+        color: #c4b5fd;
+        flex-shrink: 0;
+      }
+      .case-head .case-text {
+        flex: 1;
+      }
+      .case-head .case-title {
+        font-size: 11.5px;
+        font-weight: 800;
+        letter-spacing: 0.02em;
+        line-height: 1.3;
+      }
+      .case-head .case-sub {
+        font-size: 9px;
+        color: #a5b4fc;
+        font-weight: 500;
+        margin-top: 1px;
+      }
+
+      /* FLOW DIAGRAM */
+      .flow-canvas {
+        background: #ffffff;
+        border: 1.5px dashed var(--border-strong);
+        border-radius: 10px;
+        padding: 18px 14px;
+        margin: 8px 0;
+      }
+      .flow-grid {
+        display: grid;
+        grid-template-columns: 1fr 40px 1fr;
+        grid-template-rows: auto 30px auto;
+        gap: 4px;
+        align-items: center;
+        justify-items: center;
+      }
+      .flow-box {
+        width: 100%;
+        padding: 14px 10px;
+        border-radius: 10px;
+        text-align: center;
+        border: 2px solid;
+        background: #ffffff;
+        font-weight: 700;
+        position: relative;
+      }
+      .flow-box .fb-icon {
+        font-size: 22px;
+        line-height: 1;
+        margin-bottom: 6px;
+        display: block;
+      }
+      .flow-box .fb-label {
+        font-size: 9px;
+        font-weight: 800;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        margin-bottom: 2px;
+      }
+      .flow-box .fb-name {
+        font-size: 11.5px;
+        font-weight: 800;
+        color: var(--navy);
+      }
+      .flow-box.fb-input {
+        border-color: var(--amber-border);
+        background: linear-gradient(135deg, var(--amber-tint), #ffffff);
+      }
+      .flow-box.fb-input .fb-label {
+        color: var(--amber);
+      }
+      .flow-box.fb-ram {
+        border-color: var(--green-border);
+        background: linear-gradient(135deg, var(--green-tint), #ffffff);
+      }
+      .flow-box.fb-ram .fb-label {
+        color: var(--green);
+      }
+      .flow-box.fb-cpu {
+        border-color: var(--sky-border);
+        background: linear-gradient(135deg, var(--sky-tint), #ffffff);
+      }
+      .flow-box.fb-cpu .fb-label {
+        color: var(--sky);
+      }
+      .flow-box.fb-output {
+        border-color: var(--cyan-border);
+        background: linear-gradient(135deg, var(--cyan-tint), #ffffff);
+      }
+      .flow-box.fb-output .fb-label {
+        color: var(--cyan);
+      }
+      .flow-arrow {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--purple);
+        font-size: 22px;
+        font-weight: 800;
+      }
+      .flow-arrow-down {
+        grid-column: 3 / 4;
+        color: var(--purple);
+      }
+      .flow-center {
+        grid-column: 1 / 4;
+        font-size: 9px;
+        color: var(--text-muted);
+        font-style: italic;
+        text-align: center;
+        padding: 2px 0;
+      }
+      .flow-diagram-label {
+        position: absolute;
+        top: -8px;
+        left: 12px;
+        background: var(--purple);
+        color: #ffffff;
+        font-size: 8px;
+        font-weight: 800;
+        letter-spacing: 0.1em;
+        padding: 2px 8px;
+        border-radius: 4px;
+        text-transform: uppercase;
+      }
+
+      .section-gap {
+        height: 6px;
+      }
+
+      /* MINI INFO CARD */
+      .mini-info {
         display: inline-flex;
         align-items: center;
-        gap: 5px;
-        padding: 3px 11px;
+        gap: 6px;
+        padding: 4px 10px;
         border-radius: 999px;
-        border: 1px solid var(--border-strong);
-        background: #ffffff;
-        font-size: 9px;
+        font-size: 8.5px;
         font-weight: 700;
-        color: var(--navy-2);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      .mini-info.mi-amber {
+        background: var(--amber-tint);
+        color: var(--amber);
+        border: 1px solid var(--amber-border);
+      }
+      .mini-info.mi-green {
+        background: var(--green-tint);
+        color: var(--green);
+        border: 1px solid var(--green-border);
+      }
+      .mini-info.mi-sky {
+        background: var(--sky-tint);
+        color: var(--sky);
+        border: 1px solid var(--sky-border);
+      }
+      .mini-info.mi-purple {
+        background: var(--purple-tint);
+        color: var(--purple);
+        border: 1px solid var(--purple-border);
       }
 
       /* QA ITEM */
       .qa-item {
         background: #ffffff;
         border: 1px solid var(--border);
-        border-left: 3px solid var(--accent, var(--cyan));
+        border-left: 3px solid var(--accent, var(--purple));
         border-radius: 6px;
         padding: 10px 12px;
         margin-bottom: 8px;
@@ -927,183 +1226,10 @@
         width: 18px;
         height: 18px;
         border-radius: 50%;
-        background: var(--accent, var(--cyan));
+        background: var(--accent, var(--purple));
         color: #ffffff;
         font-size: 9.5px;
         font-weight: 800;
-      }
-      .qa-item .qa-a {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        font-size: 10.5px;
-        padding-left: 4px;
-      }
-      .qa-a-label {
-        font-weight: 700;
-        color: var(--text-muted);
-        font-size: 9px;
-        text-transform: uppercase;
-        letter-spacing: 0.06em;
-      }
-
-      /* SIMULATION BOX */
-      .simul {
-        background: #f8fafc;
-        border: 1px solid var(--border);
-        border-radius: 8px;
-        padding: 10px 12px;
-        margin: 6px 0;
-      }
-      .simul-head {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        padding-bottom: 6px;
-        margin-bottom: 8px;
-        border-bottom: 1px dashed var(--border-strong);
-        font-size: 9px;
-        font-weight: 800;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        color: var(--cyan);
-      }
-      .simul-head::before {
-        content: "";
-        width: 6px;
-        height: 6px;
-        border-radius: 50%;
-        background: var(--cyan);
-        box-shadow: 0 0 0 3px var(--cyan-tint);
-      }
-
-      /* ARRAY CHIPS */
-      .array {
-        display: inline-flex;
-        gap: 4px;
-        flex-wrap: wrap;
-        margin: 4px 0;
-        vertical-align: middle;
-      }
-      .array span {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        min-width: 34px;
-        height: 26px;
-        padding: 0 9px;
-        background: #ffffff;
-        border: 1.5px solid var(--border-strong);
-        border-radius: 5px;
-        font-family: "JetBrains Mono", monospace;
-        font-size: 10.5px;
-        font-weight: 700;
-        color: var(--navy);
-      }
-      .array span.hi {
-        background: var(--green-tint);
-        border-color: var(--green);
-        color: #064e3b;
-      }
-      .array span.swap {
-        background: var(--amber-tint);
-        border-color: var(--amber);
-        color: #78350f;
-      }
-      .array span.target {
-        background: var(--purple-tint);
-        border-color: var(--purple);
-        color: #4c1d95;
-      }
-      .array span.dim {
-        opacity: 0.35;
-      }
-
-      /* STEP ROW */
-      .step-row {
-        display: flex;
-        gap: 10px;
-        padding: 8px 0;
-        border-bottom: 1px dashed var(--border);
-        font-size: 10.5px;
-        line-height: 1.55;
-        align-items: flex-start;
-      }
-      .step-row:last-child {
-        border-bottom: none;
-      }
-      .step-num {
-        flex-shrink: 0;
-        width: 20px;
-        height: 20px;
-        border-radius: 50%;
-        background: var(--sky-tint);
-        border: 1px solid var(--sky-border);
-        color: var(--cyan);
-        font-size: 9.5px;
-        font-weight: 800;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-family: "JetBrains Mono", monospace;
-        margin-top: 1px;
-      }
-      .step-body {
-        flex: 1;
-      }
-      .step-body code {
-        font-family: "JetBrains Mono", monospace;
-        font-size: 10px;
-        font-weight: 600;
-        background: #ffffff;
-        padding: 1px 5px;
-        border-radius: 4px;
-        border: 1px solid var(--border);
-        color: var(--navy);
-      }
-
-      /* CASE HEADER */
-      .case-head {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        padding: 8px 14px;
-        background: linear-gradient(135deg, #0f172a, #1e3a8a);
-        color: #ffffff;
-        border-radius: 8px;
-        margin-bottom: 10px;
-      }
-      .case-head .case-icon {
-        width: 26px;
-        height: 26px;
-        border-radius: 6px;
-        background: rgba(255, 255, 255, 0.15);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 12px;
-        font-weight: 800;
-        color: #7dd3fc;
-        flex-shrink: 0;
-      }
-      .case-head .case-text {
-        flex: 1;
-      }
-      .case-head .case-title {
-        font-size: 11.5px;
-        font-weight: 800;
-        letter-spacing: 0.02em;
-        line-height: 1.3;
-      }
-      .case-head .case-sub {
-        font-size: 9px;
-        color: #94a3b8;
-        font-weight: 500;
-        margin-top: 1px;
-      }
-
-      .section-gap {
-        height: 6px;
       }
     </style>
   </head>
@@ -1124,10 +1250,10 @@
         <div class="hero-grid">
           <div>
             <h1 class="hero-title">LKPD</h1>
-            <div class="hero-subtitle">Algoritma Standar</div>
+            <div class="hero-subtitle">Arsitektur Von Neumann</div>
             <div class="hero-rule"></div>
-            <p class="hero-line">Searching &middot; Sorting</p>
-            <p class="hero-line-soft">Berpikir Komputasional dalam Memilih Algoritma</p>
+            <p class="hero-line">Komponen Utama &amp; Dinamika I-P-O</p>
+            <p class="hero-line-soft">Memahami cara komputer mengolah data dari tombol sampai layar</p>
           </div>
           <div class="hero-class">
             <div class="hero-class-value">XE6</div>
@@ -1139,20 +1265,16 @@
       <div class="target-card">
         <div class="target-head">
           <span class="target-head-dot"></span>
-          <span class="target-head-title">Target Pembelajaran</span>
+          <span class="target-head-title">🎯 Tujuan Pembelajaran Hari Ini</span>
         </div>
         <ul class="target-list">
           <li>
             <span class="tp-num">1</span>
-            <span>Melalui diskusi kelompok, murid mampu <strong>menjelaskan perbedaan mendasar</strong> algoritma Searching dan Sorting serta <strong>mengidentifikasi karakteristik</strong> tiap algoritma standar dengan tepat.</span>
+            <span><strong>Mengidentifikasi komponen utama</strong> dalam arsitektur komputer Von Neumann, yaitu Input, CPU, Memori (RAM), dan Output beserta perannya masing-masing.</span>
           </li>
           <li>
             <span class="tp-num">2</span>
-            <span>Melalui studi kasus, murid mampu <strong>menerapkan</strong> algoritma standar (Linear/Binary Search, Bubble/Insertion Sort) untuk memecahkan permasalahan secara runtut.</span>
-          </li>
-          <li>
-            <span class="tp-num">3</span>
-            <span>Berdasarkan hasil analisis, murid mampu <strong>membandingkan efisiensi</strong> algoritma standar dan memilih algoritma paling tepat sesuai karakteristik data.</span>
+            <span><strong>Mensimulasikan dinamika alur Input–Proses–Output (I-P-O)</strong> dalam mengeksekusi sebuah instruksi sederhana sesuai aturan arsitektur Von Neumann.</span>
           </li>
         </ul>
       </div>
@@ -1178,7 +1300,7 @@
         </div>
         <div class="id-rows">
           <div class="id-row">
-            <span class="id-badge id-badge-sky">Kelas</span>
+            <span class="id-badge id-badge-purple">Kelas</span>
             <div class="id-field">
               <label>Kelas</label>
               <div class="id-line"></div>
@@ -1238,7 +1360,7 @@
       <div class="instruction-strip">
         <span>Diskusikan bersama kelompok</span>
         <span class="dot-sep"></span>
-        <span>Gunakan Simulasi Interaktif</span>
+        <span>Gunakan Simulasi I-P-O</span>
         <span class="dot-sep"></span>
         <span>Tulis jawaban pada kolom</span>
       </div>
@@ -1246,168 +1368,113 @@
       <footer class="page-footer">
         <span class="pf-brand">RuangInformatika</span>
         <span>LKPD &middot; SMA Negeri 4 Yogyakarta &middot; Pak Ilyas</span>
-        <span class="pf-page">Halaman 1 / 6</span>
+        <span class="pf-page">Halaman 1 / 5</span>
       </footer>
     </section>
 
-    <!-- ========== PAGE 2 — PETUNJUK ========== -->
-    <section class="page">
-      <header class="section-head ctx-amber">
-        <span class="sh-num">01</span>
-        <div class="sh-text">
-          <h2>Petunjuk Pengerjaan Digital</h2>
-          <p>Baca dengan teliti sebelum mulai berdiskusi</p>
-        </div>
-      </header>
-
-      <div class="card ctx-amber">
-        <div class="card-strip">
-          <div class="card-dots"><span></span><span></span><span></span></div>
-          <span class="card-strip-label">Aturan Pengerjaan</span>
-        </div>
-        <ol class="timeline">
-          <li>
-            <span class="tl-num">1</span><span class="tl-text"><strong>Diskusikan</strong> setiap permasalahan bersama anggota kelompokmu — jangan bekerja sendiri.</span>
-          </li>
-          <li>
-            <span class="tl-num">2</span><span class="tl-text">Gunakan fitur <strong>Simulasi Interaktif</strong> pada Website Pembelajaran Informatika jika kelompokmu kesulitan membayangkan cara kerja algoritma.</span>
-          </li>
-          <li>
-            <span class="tl-num">3</span><span class="tl-text">Ketikkan jawaban hasil diskusi kelompok langsung pada <strong>kolom yang disediakan</strong> (text area / isian).</span>
-          </li>
-          <li>
-            <span class="tl-num">4</span><span class="tl-text">Perhatikan alokasi waktu pengerjaan: <strong>30 Menit</strong>.</span>
-          </li>
-        </ol>
-      </div>
-
-      <div class="section-gap"></div>
-
-      <header class="section-head ctx-sky">
-        <span class="sh-num">02</span>
-        <div class="sh-text">
-          <h2>Alur Kerja LKPD</h2>
-          <p>Ikuti 4 langkah berikut secara berurutan</p>
-        </div>
-      </header>
-
-      <div class="card ctx-sky">
-        <div class="card-strip">
-          <div class="card-dots"><span></span><span></span><span></span></div>
-          <span class="card-strip-label">Langkah-Langkah Pengerjaan</span>
-        </div>
-        <ol class="timeline">
-          <li>
-            <span class="tl-num">1</span><span class="tl-text">Baca <strong>Tugas 1</strong> — pahami definisi &amp; karakteristik algoritma Searching dan Sorting.</span>
-          </li>
-          <li>
-            <span class="tl-num">2</span><span class="tl-text">Kerjakan <strong>Tugas 2</strong> — simulasikan algoritma Sorting &amp; Searching pada kasus nyata.</span>
-          </li>
-          <li>
-            <span class="tl-num">3</span><span class="tl-text">Selesaikan <strong>Tugas 3</strong> — analisis efisiensi dan pilih algoritma paling tepat.</span>
-          </li>
-          <li>
-            <span class="tl-num">4</span><span class="tl-text">Periksa <strong>checklist</strong> di tiap tugas, lalu kumpulkan file/LKPD sesuai instruksi gurumu.</span>
-          </li>
-        </ol>
-
-        <div class="notes-box" style="margin-top: 12px">
-          <span class="checklist-pill" style="--accent: var(--cyan); --accent-tint: #ffffff; --accent-border: var(--cyan-border)">Tips Berhasil</span>
-          <ul class="notes-list">
-            <li>
-              <span class="note-tag tag-f">!</span><span>Jangan langsung menulis jawaban akhir — <strong>diskusikan dulu</strong> langkah-langkahnya bersama kelompok.</span>
-            </li>
-            <li>
-              <span class="note-tag tag-g">?</span><span>Kalau bingung, <strong>gambar dulu</strong> data di kertas lalu tandai mana yang dibandingkan / ditukar.</span>
-            </li>
-            <li>
-              <span class="note-tag tag-h">✓</span><span>Gunakan <strong>bahasa sendiri</strong> — yang dinilai adalah penalaran, bukan hafalan.</span>
-            </li>
-          </ul>
-        </div>
-      </div>
-
-      <footer class="page-footer">
-        <span class="pf-brand">RuangInformatika</span>
-        <span>LKPD &middot; SMA Negeri 4 Yogyakarta &middot; Pak Ilyas</span>
-        <span class="pf-page">Halaman 2 / 6</span>
-      </footer>
-    </section>
-
-    <!-- ========== PAGE 3 — TUGAS 1 ========== -->
+    <!-- ========== PAGE 2 — TUGAS 1 ========== -->
     <section class="page">
       <header class="section-head ctx-green">
-        <span class="sh-num">03</span>
+        <span class="sh-num">01</span>
         <div class="sh-text">
-          <h2>Tugas 1 &mdash; Memahami Karakteristik Algoritma</h2>
-          <p>Fokus TP 1 &middot; Diskusikan bersama kelompokmu</p>
+          <h2>Tugas 1 &mdash; Mengenal Tim &ldquo;Dapur Komputer&rdquo;</h2>
+          <p>Mengukur TP 1 &middot; Mengidentifikasi Komponen Utama Von Neumann</p>
         </div>
       </header>
 
       <div class="card ctx-green">
         <div class="card-strip">
           <div class="card-dots"><span></span><span></span><span></span></div>
-          <span class="card-strip-label">A. Definisi Dasar</span>
+          <span class="card-strip-label">Instruksi</span>
         </div>
-        <p style="font-size: 10.5px; line-height: 1.6; color: var(--text); margin-bottom: 4px">
-          Jelaskan dengan bahasa kelompokmu sendiri, apa <strong>perbedaan mendasar</strong> antara algoritma <strong>Searching</strong> (Pencarian) dan <strong>Sorting</strong> (Pengurutan)?
+        <p style="font-size: 10.5px; line-height: 1.6; color: var(--text); margin-bottom: 8px">
+          Pasangkanlah komponen arsitektur Von Neumann di <strong>kolom kiri</strong> dengan <strong>peran &amp; fungsinya</strong> (dalam analogi restoran) di <strong>kolom kanan</strong>. Tariklah garis penghubung yang tepat!
         </p>
-        <div class="answer-box tall">
-          <span class="ab-hint">Kolom Jawaban Teks</span>
-          <div class="ab-lines"></div>
-        </div>
-      </div>
 
-      <div class="card ctx-green">
-        <div class="card-strip">
-          <div class="card-dots"><span></span><span></span><span></span></div>
-          <span class="card-strip-label">B. Identifikasi Karakteristik</span>
-        </div>
-        <p style="font-size: 10.5px; line-height: 1.6; color: var(--text); margin-bottom: 6px">Pasangkan karakteristik di bawah ini dengan nama algoritma yang paling tepat! Pilih salah satu dari:</p>
-        <div class="choices">
-          <span class="choice">Linear Search</span>
-          <span class="choice">Binary Search</span>
-          <span class="choice">Bubble Sort</span>
-          <span class="choice">Insertion Sort</span>
-        </div>
+        <!-- MATCHING -->
+        <div class="match-grid">
+          <!-- Row 1: Input - Koki -->
+          <div class="match-item">
+            <span class="match-badge match-badge-left">A</span>
+            <div>
+              <strong>Perangkat Input</strong>
+              <div style="font-size: 9.5px; color: var(--text-muted); margin-top: 2px">Keyboard, Mouse, Touchscreen</div>
+            </div>
+          </div>
+          <div class="match-connector">•</div>
+          <div class="match-item">
+            <span class="match-badge match-badge-right">1</span>
+            <div>
+              <strong>Otak / Si Koki.</strong> Mengambil instruksi dan bahan masakan, menghitung, lalu mengeksekusinya.
+            </div>
+          </div>
 
-        <div class="qa-item">
-          <p class="qa-q"><span class="qa-num">1</span>&ldquo;Saya mencari data dengan cara <strong>membagi dua ruang pencarian</strong> terus-menerus. Syaratnya, data harus sudah berurutan.&rdquo;</p>
-          <div class="qa-a">
-            <span class="qa-a-label">Jawaban:</span>
-            <span class="blank lg"></span>
+          <!-- Row 2: CPU - Pramusaji -->
+          <div class="match-item">
+            <span class="match-badge match-badge-left">B</span>
+            <div>
+              <strong>CPU</strong>
+              <div style="font-size: 9.5px; color: var(--text-muted); margin-top: 2px">Control Unit &amp; ALU</div>
+            </div>
+          </div>
+          <div class="match-connector">•</div>
+          <div class="match-item">
+            <span class="match-badge match-badge-right">2</span>
+            <div>
+              <strong>Pramusaji / Layar.</strong> Menyajikan hasil akhir dari proses agar bisa dilihat oleh pengguna.
+            </div>
+          </div>
+
+          <!-- Row 3: RAM - Kasir -->
+          <div class="match-item">
+            <span class="match-badge match-badge-left">C</span>
+            <div>
+              <strong>RAM</strong>
+              <div style="font-size: 9.5px; color: var(--text-muted); margin-top: 2px">Memori Utama</div>
+            </div>
+          </div>
+          <div class="match-connector">•</div>
+          <div class="match-item">
+            <span class="match-badge match-badge-right">3</span>
+            <div>
+              <strong>Kasir / Penerima Pesanan.</strong> Menerima instruksi awal atau ketikan dari pengguna komputer.
+            </div>
+          </div>
+
+          <!-- Row 4: Output - Meja Dapur -->
+          <div class="match-item">
+            <span class="match-badge match-badge-left">D</span>
+            <div>
+              <strong>Perangkat Output</strong>
+              <div style="font-size: 9.5px; color: var(--text-muted); margin-top: 2px">Monitor, Speaker, Printer</div>
+            </div>
+          </div>
+          <div class="match-connector">•</div>
+          <div class="match-item">
+            <span class="match-badge match-badge-right">4</span>
+            <div>
+              <strong>Meja Dapur.</strong> Tempat menyimpan sementara semua pesanan masuk, instruksi dari program, dan hasil perhitungan sebelum disajikan.
+            </div>
           </div>
         </div>
 
-        <div class="qa-item">
-          <p class="qa-q"><span class="qa-num">2</span>&ldquo;Saya mengurutkan data dengan cara menganalogikan <strong>menyisipkan kartu</strong> ke posisi yang tepat di antara kartu yang sudah urut.&rdquo;</p>
-          <div class="qa-a">
-            <span class="qa-a-label">Jawaban:</span>
-            <span class="blank lg"></span>
+        <div style="margin-top: 10px; padding: 10px 12px; background: #ffffff; border: 1px dashed var(--border-strong); border-radius: 8px">
+          <div style="font-size: 9px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px">
+            Tulis Pasangan Jawabanmu di Sini:
           </div>
-        </div>
-
-        <div class="qa-item">
-          <p class="qa-q"><span class="qa-num">3</span>&ldquo;Saya mencari data dengan cara <strong>mengecek satu per satu</strong> dari awal sampai akhir, tanpa peduli datanya urut atau acak.&rdquo;</p>
-          <div class="qa-a">
-            <span class="qa-a-label">Jawaban:</span>
-            <span class="blank lg"></span>
-          </div>
-        </div>
-
-        <div class="qa-item">
-          <p class="qa-q"><span class="qa-num">4</span>&ldquo;Saya mengurutkan data dengan cara selalu <strong>membandingkan dua data yang bersebelahan</strong>, lalu menukarnya jika posisinya salah.&rdquo;</p>
-          <div class="qa-a">
-            <span class="qa-a-label">Jawaban:</span>
-            <span class="blank lg"></span>
+          <div style="display: flex; flex-wrap: wrap; gap: 18px; font-size: 10.5px; font-weight: 600">
+            <span>A &rarr; <span class="blank sm"></span></span>
+            <span>B &rarr; <span class="blank sm"></span></span>
+            <span>C &rarr; <span class="blank sm"></span></span>
+            <span>D &rarr; <span class="blank sm"></span></span>
           </div>
         </div>
 
         <div class="checklist">
           <span class="checklist-pill">Checklist Selesai</span>
           <ul>
-            <li><span class="check-box"></span><span>Definisi Searching &amp; Sorting sudah ditulis dengan bahasa kelompok sendiri</span></li>
-            <li><span class="check-box"></span><span>Keempat karakteristik sudah dipasangkan dengan algoritma yang tepat</span></li>
+            <li><span class="check-box"></span><span>Keempat komponen Von Neumann sudah dipasangkan dengan peran yang tepat</span></li>
+            <li><span class="check-box"></span><span>Sudah memahami analogi restoran untuk tiap komponen</span></li>
           </ul>
         </div>
       </div>
@@ -1415,97 +1482,180 @@
       <footer class="page-footer">
         <span class="pf-brand">RuangInformatika</span>
         <span>LKPD &middot; SMA Negeri 4 Yogyakarta &middot; Pak Ilyas</span>
-        <span class="pf-page">Halaman 3 / 6</span>
+        <span class="pf-page">Halaman 2 / 5</span>
       </footer>
     </section>
 
-    <!-- ========== PAGE 4 — TUGAS 2 (1/2): BUBBLE SORT ========== -->
+    <!-- ========== PAGE 3 — TUGAS 2 (DIAGRAM) ========== -->
     <section class="page">
       <header class="section-head ctx-sky">
-        <span class="sh-num">04</span>
+        <span class="sh-num">02</span>
         <div class="sh-text">
-          <h2>Tugas 2 &mdash; Menerapkan Algoritma Standar <span style="font-size: 10px; font-weight: 600; color: var(--text-muted)">(1/2)</span></h2>
-          <p>Fokus TP 2 &middot; Studi Kasus 1: Sorting dengan Bubble Sort</p>
+          <h2>Tugas 2 &mdash; Detektif Jalur Data <span style="font-size: 10px; font-weight: 600; color: var(--text-muted)">(1/2)</span></h2>
+          <p>Mengukur TP 2 &middot; Simulasi Dinamika Alur I-P-O</p>
         </div>
       </header>
 
       <div class="card ctx-sky">
         <div class="case-head">
-          <span class="case-icon">1</span>
+          <span class="case-icon">!</span>
           <div class="case-text">
-            <div class="case-title">Studi Kasus 1 &mdash; Mengurutkan Data (Sorting)</div>
-            <div class="case-sub">Bubble Sort &middot; Simulasi Iterasi Pertama</div>
+            <div class="case-title">Skenario Kasus &mdash; Kalkulator Komputer Rara</div>
+            <div class="case-sub">Data uji: 25 + 15 = 40</div>
           </div>
         </div>
 
-        <p style="font-size: 11px; line-height: 1.65; color: var(--text); margin-bottom: 8px">Pak Ilyas baru selesai mengoreksi <strong>5 lembar ujian</strong> murid kelas XE6 dengan nilai acak sebagai berikut:</p>
+        <p style="font-size: 11px; line-height: 1.65; color: var(--text); margin-bottom: 8px">
+          Rara sedang mengerjakan tugas Matematika. Ia menggunakan aplikasi kalkulator di komputernya. Rara mengetik <strong>25 + 15</strong> di keyboard. Kurang dari satu detik, di layar monitor muncul angka <strong>40</strong>.
+        </p>
+      </div>
 
-        <div class="simul">
-          <div class="simul-head">Data Awal</div>
-          <div class="array"><span>85</span><span>70</span><span>95</span><span>60</span><span>80</span></div>
+      <div class="card ctx-sky">
+        <div class="card-strip">
+          <div class="card-dots"><span></span><span></span><span></span></div>
+          <span class="card-strip-label">Instruksi Simulasi</span>
+        </div>
+        <ol class="timeline">
+          <li><span class="tl-num">1</span><span class="tl-text">Gambarkan bagaimana data <strong>25 + 15</strong> bergerak di dalam mesin komputer Rara sampai menghasilkan angka <strong>40</strong>.</span></li>
+          <li><span class="tl-num">2</span><span class="tl-text">Gambarkan <strong>arah panah</strong> yang menghubungkan kotak-kotak komponen di bawah ini secara berurutan (dari Langkah 1 hingga Langkah 4).</span></li>
+          <li><span class="tl-num">3</span><span class="tl-text">Isilah titik-titik pada kolom penjelasan di <strong>halaman berikutnya</strong> untuk menceritakan proses perpindahan datanya!</span></li>
+        </ol>
+      </div>
+
+      <div class="card ctx-sky">
+        <div class="card-strip">
+          <div class="card-dots"><span></span><span></span><span></span></div>
+          <span class="card-strip-label">Peta Komponen &mdash; Tarik Garis Alur Data</span>
         </div>
 
-        <p style="font-size: 11px; line-height: 1.65; color: var(--text); margin: 8px 0 4px">
-          Urutkan dari <strong>terkecil ke terbesar</strong> menggunakan algoritma <strong>Bubble Sort</strong>. Tuliskan simulasi pertukaran posisi data pada <strong>Iterasi / Putaran Pertama</strong> saja!
+        <div class="flow-canvas" style="position: relative">
+          <span class="flow-diagram-label">Diagram Alur I-P-O</span>
+
+          <div class="flow-grid">
+            <!-- Baris 1: Input (kiri) & Output (kanan) -->
+            <div class="flow-box fb-input">
+              <span class="fb-icon">⌨️</span>
+              <div class="fb-label">Langkah 1 — Input</div>
+              <div class="fb-name">KEYBOARD</div>
+              <div style="font-size: 9.5px; color: var(--text-muted); margin-top: 2px">Rara mengetik: 25 + 15</div>
+            </div>
+
+            <div class="flow-arrow">
+              <span>➜</span>
+            </div>
+
+            <div class="flow-box fb-output">
+              <span class="fb-icon">🖥️</span>
+              <div class="fb-label">Langkah 4 — Output</div>
+              <div class="fb-name">MONITOR</div>
+              <div style="font-size: 9.5px; color: var(--text-muted); margin-top: 2px">Menampilkan: 40</div>
+            </div>
+
+            <!-- Baris Tengah: arrow kiri ke bawah, tengah spacer, arrow kanan ke bawah -->
+            <div style="grid-column: 1; display:flex; justify-content:center; color:var(--purple); font-size:18px">↓</div>
+            <div></div>
+            <div style="grid-column: 3; display:flex; justify-content:center; color:var(--purple); font-size:18px">↑</div>
+
+            <!-- Baris 2: RAM (kiri) & CPU (kanan) -->
+            <div class="flow-box fb-ram">
+              <span class="fb-icon">💾</span>
+              <div class="fb-label">Langkah 2a — Titip Data</div>
+              <div class="fb-name">RAM (MEMORI)</div>
+              <div style="font-size: 9.5px; color: var(--text-muted); margin-top: 2px">Menyimpan: 25, +, 15</div>
+            </div>
+
+            <div class="flow-arrow">
+              <span>⇆</span>
+            </div>
+
+            <div class="flow-box fb-cpu">
+              <span class="fb-icon">🧠</span>
+              <div class="fb-label">Langkah 2b — Proses</div>
+              <div class="fb-name">CPU (PROSESOR)</div>
+              <div style="font-size: 9.5px; color: var(--text-muted); margin-top: 2px">Menghitung: 25 + 15 = 40</div>
+            </div>
+          </div>
+
+          <div style="margin-top: 12px; padding: 8px 10px; background: var(--purple-tint); border: 1px dashed var(--purple-border); border-radius: 6px; font-size: 9.5px; color: var(--purple); font-weight: 600; text-align: center">
+            🖊️ Gambar panah nomor 1, 2, 3, dan 4 sesuai urutan alur data di kertas / canva-mu!
+          </div>
+        </div>
+      </div>
+
+      <footer class="page-footer">
+        <span class="pf-brand">RuangInformatika</span>
+        <span>LKPD &middot; SMA Negeri 4 Yogyakarta &middot; Pak Ilyas</span>
+        <span class="pf-page">Halaman 3 / 5</span>
+      </footer>
+    </section>
+
+    <!-- ========== PAGE 4 — TUGAS 2 (KRONOLOGI) ========== -->
+    <section class="page">
+      <header class="section-head ctx-sky">
+        <span class="sh-num">03</span>
+        <div class="sh-text">
+          <h2>Tugas 2 &mdash; Detektif Jalur Data <span style="font-size: 10px; font-weight: 600; color: var(--text-muted)">(2/2)</span></h2>
+          <p>Mengukur TP 2 &middot; Menuliskan Kronologi Alur Data</p>
+        </div>
+      </header>
+
+      <div class="card ctx-sky">
+        <div class="card-strip">
+          <div class="card-dots"><span></span><span></span><span></span></div>
+          <span class="card-strip-label">Kronologi Alur Data</span>
+        </div>
+        <p style="font-size: 10.5px; line-height: 1.6; color: var(--text); margin-bottom: 8px">
+          Isilah titik-titik di bawah ini sesuai dengan pemahaman kelompokmu tentang alur data <strong>25 + 15 = 40</strong>!
         </p>
-        <p style="font-size: 10px; font-style: italic; color: var(--text-muted); margin-bottom: 6px">Petunjuk: Bandingkan dua angka bersebelahan dari kiri ke kanan, tukar jika urutannya salah.</p>
 
         <div class="simul">
-          <div class="simul-head">Simulasi Iterasi 1</div>
+          <div class="simul-head">Langkah Demi Langkah</div>
 
           <div class="step-row">
             <span class="step-num">1</span>
             <div class="step-body">
-              Bandingkan <code>85</code> dan <code>70</code> &rarr; <strong>Tukar</strong> posisinya menjadi:
-              <div class="array" style="margin-top: 5px"><span class="swap">70</span><span class="swap">85</span><span>95</span><span>60</span><span>80</span></div>
+              <strong>Keyboard (Input)</strong> mengirimkan data <code>25</code>, perintah <code>+</code>, dan <code>15</code> menuju ke <span class="blank xl"></span> untuk disimpan sementara.
             </div>
           </div>
 
           <div class="step-row">
             <span class="step-num">2</span>
             <div class="step-body">
-              Bandingkan <code>85</code> dan <span class="blank sm"></span> &rarr; <strong>Tukar / Tidak Tukar</strong> (lingkari):
-              <div class="array" style="margin-top: 5px"><span class="dim">70</span><span class="hi">85</span><span class="hi"></span><span></span><span></span></div>
+              <span class="blank lg"></span> (Si Koki) mengambil data dan perintah tersebut dari RAM, lalu melakukan proses perhitungan matematika (menjumlahkannya menjadi <strong>40</strong>).
             </div>
           </div>
 
-          <div class="step-row">
-            <span class="step-num">3</span>
+          <div class="step-row" style="background: var(--amber-tint); padding: 10px; border-radius: 6px; border: 1px dashed var(--amber-border); margin: 4px 0">
+            <span class="step-num" style="background: var(--amber-tint); border-color: var(--amber); color: var(--amber)">3</span>
             <div class="step-body">
-              Bandingkan <span class="blank sm"></span> dan <span class="blank sm"></span> &rarr; <strong>Tukar / Tidak Tukar</strong> (lingkari):
-              <div class="array" style="margin-top: 5px"><span class="dim">70</span><span class="dim"></span><span class="hi"></span><span class="hi"></span><span></span></div>
+              <strong style="color: var(--amber)">⚠️ Awas Jebakan Von Neumann!</strong><br />
+              Setelah proses selesai, <strong>CPU TIDAK BOLEH</strong> mengirimkan hasilnya langsung ke Monitor. CPU harus mengembalikan / menyimpan hasil angka <code>40</code> kembali ke <span class="blank xl"></span>.
             </div>
           </div>
 
           <div class="step-row">
             <span class="step-num">4</span>
             <div class="step-body">
-              Bandingkan <span class="blank sm"></span> dan <span class="blank sm"></span> &rarr; <strong>Tukar / Tidak Tukar</strong> (lingkari):
-              <div class="array" style="margin-top: 5px"><span class="dim">70</span><span class="dim"></span><span class="dim"></span><span class="hi"></span><span class="hi"></span></div>
-            </div>
-          </div>
-
-          <div class="step-row" style="border-top: 1.5px dashed var(--border-strong); border-bottom: none; margin-top: 6px; padding-top: 10px">
-            <span class="step-num" style="background: var(--green-tint); border-color: var(--green); color: var(--green)">✓</span>
-            <div class="step-body">
-              <strong>Hasil akhir Iterasi 1:</strong>
-              <div class="array" style="margin-top: 5px">
-                <span class="blank sm" style="height: 26px; min-width: 34px"></span>
-                <span class="blank sm" style="height: 26px; min-width: 34px"></span>
-                <span class="blank sm" style="height: 26px; min-width: 34px"></span>
-                <span class="blank sm" style="height: 26px; min-width: 34px"></span>
-                <span class="blank sm" style="height: 26px; min-width: 34px"></span>
-              </div>
+              Terakhir, barulah <span class="blank lg"></span> mengirimkan data hasil akhir (<code>40</code>) tersebut ke perangkat <strong>Output (Monitor)</strong> untuk ditampilkan kepada Rara.
             </div>
           </div>
         </div>
 
+        <div class="notes-box" style="margin-top: 10px">
+          <span class="checklist-pill" style="--accent: var(--purple); --accent-tint: #ffffff; --accent-border: var(--purple-border)">💡 Ingat Aturan Emas Von Neumann</span>
+          <ul class="notes-list">
+            <li><span class="note-tag">1</span><span><strong>Semua data wajib lewat RAM.</strong> Input ➜ RAM ➜ CPU ➜ RAM ➜ Output.</span></li>
+            <li><span class="note-tag tag-g">2</span><span><strong>CPU tidak boleh menyentuh Input/Output secara langsung.</strong> Tugas CPU hanya mengolah data dari RAM.</span></li>
+            <li><span class="note-tag tag-h">3</span><span><strong>Hasil perhitungan selalu dikembalikan ke RAM</strong> sebelum diteruskan ke layar.</span></li>
+          </ul>
+        </div>
+
         <div class="checklist">
-          <span class="checklist-pill">Checklist Selesai &mdash; Studi Kasus 1</span>
+          <span class="checklist-pill">Checklist Selesai &mdash; Tugas 2</span>
           <ul>
-            <li><span class="check-box"></span><span>Empat langkah perbandingan sudah disimulasikan lengkap</span></li>
-            <li><span class="check-box"></span><span>Hasil akhir Iterasi 1 sudah diisi sesuai urutan hasil pertukaran</span></li>
-            <li><span class="check-box"></span><span>Sudah paham mengapa angka terbesar &ldquo;mengapung&rdquo; ke posisi paling kanan</span></li>
+            <li><span class="check-box"></span><span>Keempat langkah kronologi sudah terisi dengan komponen yang benar</span></li>
+            <li><span class="check-box"></span><span>Sudah memahami mengapa CPU harus mengembalikan hasil ke RAM (bukan langsung ke layar)</span></li>
+            <li><span class="check-box"></span><span>Sudah bisa menjelaskan alur I-P-O dengan bahasa kelompok sendiri</span></li>
           </ul>
         </div>
       </div>
@@ -1513,167 +1663,91 @@
       <footer class="page-footer">
         <span class="pf-brand">RuangInformatika</span>
         <span>LKPD &middot; SMA Negeri 4 Yogyakarta &middot; Pak Ilyas</span>
-        <span class="pf-page">Halaman 4 / 6</span>
+        <span class="pf-page">Halaman 4 / 5</span>
       </footer>
     </section>
 
-    <!-- ========== PAGE 5 — TUGAS 2 (2/2): BINARY SEARCH ========== -->
-    <section class="page">
-      <header class="section-head ctx-sky">
-        <span class="sh-num">05</span>
-        <div class="sh-text">
-          <h2>Tugas 2 &mdash; Menerapkan Algoritma Standar <span style="font-size: 10px; font-weight: 600; color: var(--text-muted)">(2/2)</span></h2>
-          <p>Fokus TP 2 &middot; Studi Kasus 2: Searching dengan Binary Search</p>
-        </div>
-      </header>
-
-      <div class="card ctx-sky">
-        <div class="case-head">
-          <span class="case-icon">2</span>
-          <div class="case-text">
-            <div class="case-title">Studi Kasus 2 &mdash; Mencari Data (Searching)</div>
-            <div class="case-sub">Binary Search &middot; Mencari NISN 112</div>
-          </div>
-        </div>
-
-        <p style="font-size: 11px; line-height: 1.65; color: var(--text); margin-bottom: 8px">Diberikan daftar NISN siswa yang sudah <strong>terurut</strong> dari terkecil ke terbesar:</p>
-
-        <div class="simul">
-          <div class="simul-head">Data Terurut</div>
-          <div class="array"><span>101</span><span>105</span><span class="target">112</span><span>118</span><span>125</span><span>130</span><span>135</span></div>
-          <div style="margin-top: 6px; font-size: 10px; color: var(--text-muted); font-style: italic">Target: cari NISN <strong style="color: var(--purple)">112</strong> menggunakan <strong>Binary Search</strong>.</div>
-        </div>
-
-        <p style="font-size: 11px; line-height: 1.65; color: var(--text); margin: 8px 0 6px">Terapkan langkah kerja <strong>Binary Search</strong> secara singkat. Isi setiap langkah di bawah ini.</p>
-
-        <div class="simul">
-          <div class="simul-head">Langkah Penyelesaian</div>
-
-          <div class="step-row">
-            <span class="step-num">1</span>
-            <div class="step-body">Cari nilai tengah dari data tersebut, yaitu: <span class="blank md"></span></div>
-          </div>
-
-          <div class="step-row">
-            <span class="step-num">2</span>
-            <div class="step-body">
-              Apakah 112 sama dengan nilai tengah? <strong>Ya / Tidak</strong> (lingkari).<br />
-              Jika tidak, apakah 112 lebih <span class="blank sm"></span> atau lebih <span class="blank sm"></span> dari nilai tengah?
-            </div>
-          </div>
-
-          <div class="step-row">
-            <span class="step-num">3</span>
-            <div class="step-body">
-              Karena lebih kecil, maka sisa area pencarian kita sekarang adalah bagian <strong>Kiri / Kanan</strong> (lingkari), yaitu data:
-              <div class="array" style="margin-top: 6px">
-                <span class="blank sm" style="height: 26px; min-width: 34px"></span>
-                <span class="blank sm" style="height: 26px; min-width: 34px"></span>
-                <span class="blank sm" style="height: 26px; min-width: 34px"></span>
-              </div>
-            </div>
-          </div>
-
-          <div class="step-row" style="border-top: 1.5px dashed var(--border-strong); border-bottom: none; margin-top: 6px; padding-top: 10px">
-            <span class="step-num" style="background: var(--green-tint); border-color: var(--green); color: var(--green)">✓</span>
-            <div class="step-body">Nilai tengah dari sisa data tersebut adalah: <span class="blank md"></span> &mdash; <strong>Data ditemukan!</strong></div>
-          </div>
-        </div>
-
-        <div class="checklist">
-          <span class="checklist-pill">Checklist Selesai &mdash; Studi Kasus 2</span>
-          <ul>
-            <li><span class="check-box"></span><span>Nilai tengah awal sudah ditemukan dengan benar</span></li>
-            <li><span class="check-box"></span><span>Sudah menentukan arah pencarian (kiri/kanan) berdasarkan perbandingan</span></li>
-            <li><span class="check-box"></span><span>Sisa data &amp; nilai tengah akhir sudah diisi sampai NISN 112 ditemukan</span></li>
-          </ul>
-        </div>
-      </div>
-
-      <footer class="page-footer">
-        <span class="pf-brand">RuangInformatika</span>
-        <span>LKPD &middot; SMA Negeri 4 Yogyakarta &middot; Pak Ilyas</span>
-        <span class="pf-page">Halaman 5 / 6</span>
-      </footer>
-    </section>
-
-    <!-- ========== PAGE 6 — TUGAS 3 ========== -->
+    <!-- ========== PAGE 5 — TUGAS 3 ========== -->
     <section class="page">
       <header class="section-head ctx-purple">
-        <span class="sh-num">06</span>
+        <span class="sh-num">04</span>
         <div class="sh-text">
-          <h2>Tugas 3 &mdash; Analisis Efisiensi Algoritma</h2>
-          <p>Fokus TP 3 &middot; Pilih algoritma paling tepat &amp; jelaskan alasannya</p>
+          <h2>Tugas 3 &mdash; Analisis Kritis</h2>
+          <p>Berpikir Tingkat Tinggi &middot; Diskusikan bersama kelompokmu</p>
         </div>
       </header>
 
-      <!-- ANALISIS KASUS A -->
       <div class="card ctx-purple">
         <div class="case-head" style="background: linear-gradient(135deg, #4c1d95, #7c3aed)">
-          <span class="case-icon">A</span>
+          <span class="case-icon">?</span>
           <div class="case-text">
-            <div class="case-title">Analisis Kasus A &mdash; Linear vs Binary Search</div>
-            <div class="case-sub">Perpustakaan Digital &middot; 10.000 judul buku</div>
+            <div class="case-title">Studi Kasus &mdash; Ketika RAM Penuh Sesak</div>
+            <div class="case-sub">Analisis dampak RAM penuh terhadap kinerja komputer</div>
           </div>
         </div>
 
-        <p style="font-size: 10.5px; line-height: 1.6; color: var(--text); margin-bottom: 6px">
-          Sistem Perpustakaan SMA Negeri 4 Yogyakarta memiliki database berisi <strong>10.000 judul buku</strong> yang telah disusun rapi secara <strong>alfabetis</strong> (dari A sampai Z). Suatu hari, seorang siswa ingin meminjam buku
-          berjudul <em>&ldquo;Sistem Operasi Komputer&rdquo;</em>.
-        </p>
-        <p style="font-size: 10.5px; line-height: 1.6; color: var(--text); margin-bottom: 6px">
-          Menurut kelompok kalian, algoritma pencarian manakah (<strong>Linear Search</strong> atau <strong>Binary Search</strong>) yang paling cepat dan efisien? <strong>Berikan alasan logisnya!</strong>
+        <p style="font-size: 11px; line-height: 1.65; color: var(--text); margin-bottom: 8px">
+          Berdasarkan alur I-P-O dan simulasi <strong>&ldquo;Meja Dapur&rdquo; (RAM)</strong> di Tugas 2, apa yang menurut kalian akan terjadi jika Rara membuka terlalu banyak aplikasi berat (seperti edit video, game, dan puluhan tab Google Chrome) sehingga <strong>RAM-nya penuh sesak</strong>?
         </p>
 
-        <div class="answer-box tall">
-          <span class="ab-hint">Kolom Jawaban Teks — Tulis pilihan + alasan logis</span>
-          <div class="ab-lines"></div>
-        </div>
-      </div>
-
-      <!-- ANALISIS KASUS B -->
-      <div class="card ctx-purple" style="margin-bottom: 0">
-        <div class="case-head" style="background: linear-gradient(135deg, #4c1d95, #7c3aed)">
-          <span class="case-icon">B</span>
-          <div class="case-text">
-            <div class="case-title">Analisis Kasus B &mdash; Bubble vs Insertion Sort</div>
-            <div class="case-sub">Data hampir terurut &middot; 5 siswa</div>
+        <div class="qa-item">
+          <p class="qa-q"><span class="qa-num">1</span>Apa dampaknya terhadap <strong>kinerja CPU (Si Koki)</strong>?</p>
+          <div style="padding-left: 4px; font-size: 10.5px">
+            <span style="font-weight: 700; color: var(--text-muted); font-size: 9px; text-transform: uppercase; letter-spacing: 0.06em">Jawaban:</span>
+          </div>
+          <div class="answer-box tall" style="margin-top: 6px">
+            <span class="ab-hint">Tulis jawaban diskusi kelompok di sini</span>
+            <div class="ab-lines"></div>
           </div>
         </div>
 
-        <p style="font-size: 10.5px; line-height: 1.6; color: var(--text); margin-bottom: 6px">
-          Data tinggi badan 5 orang siswa kelas XE6 <strong>hampir terurut sempurna</strong> dari yang paling pendek. Hanya ada satu siswa baru di akhir barisan yang ternyata lebih pendek dan harus dimasukkan ke tengah barisan:
-        </p>
-
-        <div class="simul">
-          <div class="simul-head">Data Tinggi Badan (cm)</div>
-          <div class="array"><span class="hi">150</span><span class="hi">155</span><span class="hi">160</span><span class="hi">165</span><span class="swap">152</span></div>
-          <div style="margin-top: 6px; font-size: 10px; color: var(--text-muted); font-style: italic">Hanya <strong style="color: var(--amber)">152 cm</strong> yang posisinya salah &mdash; harus disisipkan di antara 150 dan 155.</div>
+        <div class="qa-item">
+          <p class="qa-q"><span class="qa-num">2</span>Apa dampaknya terhadap <strong>kecepatan komputer Rara secara keseluruhan</strong>?</p>
+          <div style="padding-left: 4px; font-size: 10.5px">
+            <span style="font-weight: 700; color: var(--text-muted); font-size: 9px; text-transform: uppercase; letter-spacing: 0.06em">Jawaban:</span>
+          </div>
+          <div class="answer-box tall" style="margin-top: 6px">
+            <span class="ab-hint">Tulis jawaban diskusi kelompok di sini</span>
+            <div class="ab-lines"></div>
+          </div>
         </div>
 
-        <p style="font-size: 10.5px; line-height: 1.6; color: var(--text); margin: 6px 0">
-          Antara <strong>Bubble Sort</strong> dan <strong>Insertion Sort</strong>, algoritma manakah yang paling efisien dan memakan proses paling sedikit? <strong>Berikan alasan logisnya!</strong>
-        </p>
-
-        <div class="answer-box tall">
-          <span class="ab-hint">Kolom Jawaban Teks — Tulis pilihan + alasan logis</span>
-          <div class="ab-lines"></div>
+        <div class="qa-item" style="border-left-color: var(--amber)">
+          <p class="qa-q"><span class="qa-num" style="background: var(--amber)">3</span><em>(Soal Tantangan)</em> Bagaimana cara Rara mengatasi masalah tersebut? Berikan minimal <strong>2 solusi</strong>!</p>
+          <div style="padding-left: 4px; font-size: 10.5px">
+            <span style="font-weight: 700; color: var(--text-muted); font-size: 9px; text-transform: uppercase; letter-spacing: 0.06em">Jawaban:</span>
+          </div>
+          <div class="answer-box tall" style="margin-top: 6px">
+            <span class="ab-hint">Tulis minimal 2 solusi logis di sini</span>
+            <div class="ab-lines"></div>
+          </div>
         </div>
 
         <div class="checklist">
-          <span class="checklist-pill">Checklist Selesai</span>
+          <span class="checklist-pill">Checklist Selesai &mdash; Tugas 3</span>
           <ul>
-            <li><span class="check-box"></span><span>Kasus A sudah dianalisis: pilihan algoritma + alasan logis berbasis karakteristik data</span></li>
-            <li><span class="check-box"></span><span>Kasus B sudah dianalisis: pilihan algoritma + alasan logis tentang kondisi &ldquo;data hampir terurut&rdquo;</span></li>
-            <li><span class="check-box"></span><span>Semua jawaban sudah didiskusikan bersama seluruh anggota kelompok</span></li>
+            <li><span class="check-box"></span><span>Dampak RAM penuh terhadap CPU sudah dianalisis dengan bahasa kelompok sendiri</span></li>
+            <li><span class="check-box"></span><span>Dampak terhadap kecepatan komputer sudah dijelaskan dengan logis</span></li>
+            <li><span class="check-box"></span><span>Minimal 2 solusi praktis sudah dituliskan</span></li>
           </ul>
+        </div>
+      </div>
+
+      <div class="notes-box" style="margin-top: 6px; background: var(--amber-tint); border-color: var(--amber-border)">
+        <span class="checklist-pill" style="--accent: var(--amber); --accent-tint: #ffffff; --accent-border: var(--amber-border)">🌟 Refleksi Singkat</span>
+        <p style="font-size: 10.5px; line-height: 1.6; color: var(--text); margin: 4px 0 8px">
+          Setelah mempelajari arsitektur Von Neumann hari ini, apa hal paling menarik atau mengejutkan yang kelompokmu temukan?
+        </p>
+        <div class="answer-box" style="margin-top: 4px">
+          <span class="ab-hint">Tulis refleksi singkat kelompok</span>
+          <div class="ab-lines"></div>
         </div>
       </div>
 
       <footer class="page-footer">
         <span class="pf-brand">RuangInformatika</span>
         <span>LKPD &middot; SMA Negeri 4 Yogyakarta &middot; Pak Ilyas</span>
-        <span class="pf-page">Halaman 6 / 6</span>
+        <span class="pf-page">Halaman 5 / 5</span>
       </footer>
     </section>
   </body>
