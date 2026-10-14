@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>LKPD CBT — Sistem Komputer: Arsitektur Von Neumann &amp; I-P-O</title>
+    <title>LKPD — Sistem Komputer: Arsitektur Von Neumann &amp; I-P-O</title>
     <link rel="shortcut icon" href="../images/Logo Patbhe.png" type="image/x-icon" />
 
     <script src="https://cdn.tailwindcss.com"></script>
@@ -1069,7 +1069,9 @@
           <div class="reveal">
             <div class="page-hero-badge"><i class="fa-solid fa-file-circle-check"></i> LKPD CBT • Sistem Komputer</div>
             <h1 class="page-hero-title">Arsitektur Von Neumann &amp; <span class="gradient-text">Dinamika I-P-O</span></h1>
-            <p class="page-hero-desc">Kerjakan 4 aktivitas berikut secara mandiri. Jawabanmu akan <strong class="text-emerald-300">dinilai otomatis</strong> untuk Aktivitas 1–3, sedangkan Aktivitas 4 akan dinilai oleh guru.</p>
+            <p class="page-hero-desc">
+              Kerjakan 4 aktivitas berikut secara berkelompok (2 anggota). Jawabanmu akan <strong class="text-emerald-300">dinilai otomatis</strong> untuk Aktivitas 1–3, sedangkan Aktivitas 4 akan dinilai oleh guru.
+            </p>
             <div class="flex flex-wrap items-center gap-3 mt-4">
               <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-500/15 border border-purple-500/35 text-xs font-bold text-purple-300 uppercase tracking-wider"><i class="fa-solid fa-clock"></i> 45 Menit</span>
               <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-sky-500/15 border border-sky-500/35 text-xs font-bold text-sky-300 uppercase tracking-wider"><i class="fa-solid fa-star"></i> Total 100 Poin</span>
@@ -1105,27 +1107,52 @@
           </div>
         </div>
 
-        <!-- IDENTITAS -->
+        <!-- IDENTITAS KELOMPOK (2 ANGGOTA) -->
         <div class="exam-section sec-purple reveal">
           <div class="exam-head">
-            <div class="exam-num"><i class="fa-solid fa-user"></i></div>
+            <div class="exam-num"><i class="fa-solid fa-users"></i></div>
             <div>
-              <div class="exam-title">Identitas Peserta Didik</div>
-              <div class="exam-sub">Isi data dirimu sebelum memulai pengerjaan</div>
+              <div class="exam-title">Identitas Kelompok (2 Anggota)</div>
+              <div class="exam-sub">Isi data kelompokmu sebelum memulai pengerjaan</div>
             </div>
           </div>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div>
-              <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 flex items-center gap-1.5"> <i class="fa-solid fa-signature text-purple-400"></i> Nama Lengkap </label>
-              <input type="text" id="inNama" class="cbt-input" placeholder="Nama sesuai absen" autocomplete="off" />
+
+          <!-- Kelas (shared) -->
+          <div class="mb-4">
+            <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 flex items-center gap-1.5"> <i class="fa-solid fa-chalkboard-user text-purple-400"></i> Kelas </label>
+            <input type="text" id="inKelas" class="cbt-input" placeholder="Contoh: XE6" autocomplete="off" style="max-width: 320px" />
+          </div>
+
+          <!-- 2 Anggota -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Anggota 1 -->
+            <div class="p-3.5 rounded-xl bg-purple-500/5 border border-purple-500/25">
+              <div class="text-[11px] font-bold text-purple-300 uppercase tracking-wider mb-3 flex items-center gap-1.5"><i class="fa-solid fa-user"></i> Anggota 1</div>
+              <div class="space-y-3">
+                <div>
+                  <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5 flex items-center gap-1.5"> <i class="fa-solid fa-signature text-purple-400"></i> Nama Lengkap </label>
+                  <input type="text" id="inNama1" class="cbt-input" placeholder="Nama sesuai absen" autocomplete="off" />
+                </div>
+                <div>
+                  <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5 flex items-center gap-1.5"> <i class="fa-solid fa-hashtag text-purple-400"></i> No. Absen </label>
+                  <input type="text" id="inAbsen1" class="cbt-input" placeholder="Contoh: 12" autocomplete="off" />
+                </div>
+              </div>
             </div>
-            <div>
-              <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 flex items-center gap-1.5"> <i class="fa-solid fa-chalkboard-user text-purple-400"></i> Kelas </label>
-              <input type="text" id="inKelas" class="cbt-input" placeholder="Contoh: XE6" autocomplete="off" />
-            </div>
-            <div>
-              <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 flex items-center gap-1.5"> <i class="fa-solid fa-hashtag text-purple-400"></i> No. Absen </label>
-              <input type="text" id="inAbsen" class="cbt-input" placeholder="Contoh: 12" autocomplete="off" />
+
+            <!-- Anggota 2 -->
+            <div class="p-3.5 rounded-xl bg-sky-500/5 border border-sky-500/25">
+              <div class="text-[11px] font-bold text-sky-300 uppercase tracking-wider mb-3 flex items-center gap-1.5"><i class="fa-solid fa-user"></i> Anggota 2</div>
+              <div class="space-y-3">
+                <div>
+                  <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5 flex items-center gap-1.5"> <i class="fa-solid fa-signature text-sky-400"></i> Nama Lengkap </label>
+                  <input type="text" id="inNama2" class="cbt-input" placeholder="Nama sesuai absen" autocomplete="off" />
+                </div>
+                <div>
+                  <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5 flex items-center gap-1.5"> <i class="fa-solid fa-hashtag text-sky-400"></i> No. Absen </label>
+                  <input type="text" id="inAbsen2" class="cbt-input" placeholder="Contoh: 15" autocomplete="off" />
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -1162,7 +1189,7 @@
         <!-- ============ AKTIVITAS 1 ============ -->
         <div class="exam-section sec-amber reveal">
           <div class="exam-head">
-            <div class="exam-num">A1<small>30 POIN</small></div>
+            <div class="exam-num">A1</div>
             <div>
               <div class="exam-title">Aktivitas 1 — Struktur Internal Von Neumann</div>
               <div class="exam-sub">Mengukur TP (a) · Klasifikasi hardware &amp; unit inti CPU</div>
@@ -1367,7 +1394,7 @@
         <!-- ============ AKTIVITAS 2 ============ -->
         <div class="exam-section sec-sky reveal">
           <div class="exam-head">
-            <div class="exam-num">A2<small>30 POIN</small></div>
+            <div class="exam-num">A2</div>
             <div>
               <div class="exam-title">Aktivitas 2 — Alur Data, Instruksi &amp; Eksekusi</div>
               <div class="exam-sub">Mengukur TP (b) · Studi kasus kalkulator 25 + 15 = 40</div>
@@ -1498,7 +1525,7 @@
         <!-- ============ AKTIVITAS 3 ============ -->
         <div class="exam-section sec-purple reveal">
           <div class="exam-head">
-            <div class="exam-num">A3<small>25 POIN</small></div>
+            <div class="exam-num">A3</div>
             <div>
               <div class="exam-title">Aktivitas 3 — Simulasi Alur IPO (Diagram Blok)</div>
               <div class="exam-sub">Mengukur TP (c) · Urutkan &amp; beri label diagram alur eksekusi</div>
@@ -1662,7 +1689,7 @@
         <!-- ============ AKTIVITAS 4 ============ -->
         <div class="exam-section sec-green reveal">
           <div class="exam-head">
-            <div class="exam-num">A4<small>15 POIN</small></div>
+            <div class="exam-num">A4</div>
             <div>
               <div class="exam-title">Aktivitas 4 — Esai Refleksi Pemahaman</div>
               <div class="exam-sub">Refleksi konseptual · Dinilai manual oleh guru</div>
@@ -1677,9 +1704,7 @@
               <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-1.5"> <i class="fa-solid fa-circle-question"></i> Soal Esai 1 </span>
               <span class="text-xs text-emerald-400 font-mono font-bold">7,5 Poin</span>
             </div>
-            <p class="text-sm text-gray-200 leading-relaxed mb-3 font-medium">
-              <strong class="text-white">Sebutkan dan jelaskan</strong> apa saja <strong class="text-emerald-300">komponen utama dari komputer Von Neumann</strong>! Sertakan minimal 4 komponen beserta fungsi masing-masing.
-            </p>
+            <p class="text-sm text-gray-200 leading-relaxed mb-3 font-medium"><strong class="text-white">Sebutkan dan jelaskan</strong> apa saja <strong class="text-emerald-300">komponen utama dari komputer Von Neumann</strong></p>
             <textarea id="a4_q1" class="cbt-input cbt-textarea" placeholder="Tuliskan jawabanmu di sini (minimal 2 kalimat)..."></textarea>
             <div class="flex items-center justify-between mt-2 text-xs text-gray-400">
               <span class="italic text-[11px]">💡 Sebutkan komponen (Input, CPU, Memori, Output) + jelaskan fungsinya.</span>
@@ -1692,9 +1717,7 @@
               <span class="text-xs font-bold text-sky-400 uppercase tracking-wider flex items-center gap-1.5"> <i class="fa-solid fa-circle-question"></i> Soal Esai 2 </span>
               <span class="text-xs font-bold text-sky-400 font-mono font-bold">7,5 Poin</span>
             </div>
-            <p class="text-sm text-gray-200 leading-relaxed mb-3 font-medium">
-              Apa yang <strong class="text-white">kelompok kamu pahami</strong> dalam pembelajaran hari ini? Tuliskan refleksi, kesan, atau konsep paling menarik yang kalian pelajari!
-            </p>
+            <p class="text-sm text-gray-200 leading-relaxed mb-3 font-medium">Apa yang <strong class="text-white">kelompok kamu pahami</strong> dalam pembelajaran hari ini?</p>
             <textarea id="a4_q2" class="cbt-input cbt-textarea" placeholder="Tuliskan refleksi dan pemahaman kelompokmu di sini (minimal 2 kalimat)..."></textarea>
             <div class="flex items-center justify-between mt-2 text-xs text-gray-400">
               <span class="italic text-[11px]">💡 Tuliskan konsep yang paling berkesan, kesulitan, atau hal baru yang kalian temukan.</span>
@@ -1709,7 +1732,7 @@
             <i class="fa-solid fa-paper-plane text-emerald-400 text-xl"></i>
           </div>
           <h2 class="text-2xl font-bold text-white mb-2">Siap Mengumpulkan LKPD?</h2>
-          <p class="text-sm text-gray-400 mb-6 max-w-md mx-auto leading-relaxed">Pastikan seluruh identitas dan 4 aktivitas telah lengkap terisi. Hasil Aktivitas 1–3 akan langsung dinilai otomatis!</p>
+          <p class="text-sm text-gray-400 mb-6 max-w-md mx-auto leading-relaxed">Pastikan seluruh identitas kelompok dan 4 aktivitas telah lengkap terisi. Hasil Aktivitas 1–3 akan langsung dinilai otomatis!</p>
 
           <div class="flex flex-wrap items-center justify-center gap-3">
             <button id="btnSubmit" class="btn-submit" disabled><i class="fa-solid fa-paper-plane"></i> Kumpulkan Jawaban</button>
@@ -1730,12 +1753,12 @@
 
         <h3 class="text-xl font-bold text-white mb-3">Jawaban Berhasil Dikumpulkan! 🎉</h3>
 
-        <p class="text-sm text-gray-300 mb-3 leading-relaxed max-w-sm mx-auto">Terima kasih! Jawabanmu sudah <strong class="text-emerald-300">otomatis terkirim ke sistem penilaian Pak Ilyas</strong>.</p>
+        <p class="text-sm text-gray-300 mb-3 leading-relaxed max-w-sm mx-auto">Terima kasih! Jawaban kelompokmu sudah <strong class="text-emerald-300">otomatis terkirim ke sistem penilaian Pak Ilyas</strong>.</p>
 
         <div class="p-3 rounded-lg bg-purple-500/10 border border-purple-500/30 mb-6 text-left">
           <p class="text-xs text-purple-200 leading-relaxed">
             <i class="fa-solid fa-circle-info text-purple-300 mr-1"></i>
-            <strong class="text-white">Info:</strong> Hasil penilaian (Aktivitas 1–4) akan diumumkan langsung oleh guru di kelas setelah seluruh esai selesai dikoreksi. Kamu <strong class="text-white">tidak perlu</strong> mengirim ulang.
+            <strong class="text-white">Info:</strong> Hasil penilaian (Aktivitas 1–4) akan diumumkan langsung oleh guru di kelas setelah seluruh esai selesai dikoreksi. Kalian <strong class="text-white">tidak perlu</strong> mengirim ulang.
           </p>
         </div>
 
@@ -1948,9 +1971,11 @@
         }));
 
         const data = {
-          nama: getVal("inNama"),
+          nama1: getVal("inNama1"),
+          nama2: getVal("inNama2"),
           kelas: getVal("inKelas"),
-          absen: getVal("inAbsen"),
+          absen1: getVal("inAbsen1"),
+          absen2: getVal("inAbsen2"),
           a1_1: optLabel(optVal("a1_1")),
           a1_2: getVal("a1_2"),
           a1_3: optLabel(optVal("a1_3")),
@@ -2039,27 +2064,29 @@
           y += cardH + 5;
         }
 
-        /* ── 4. IDENTITAS ── */
+        /* ── 4. IDENTITAS KELOMPOK (2 ANGGOTA) ── */
         {
           const padX = 6;
           const rows = [
-            { label: "NAMA LENGKAP", value: data.nama, color: C.purple },
             { label: "KELAS", value: data.kelas, color: C.sky },
-            { label: "NO. ABSEN", value: data.absen, color: C.green },
+            { label: "ANGGOTA 1 — NAMA LENGKAP", value: data.nama1, color: C.purple },
+            { label: "ANGGOTA 1 — NO. ABSEN", value: data.absen1, color: C.purple },
+            { label: "ANGGOTA 2 — NAMA LENGKAP", value: data.nama2, color: C.green },
+            { label: "ANGGOTA 2 — NO. ABSEN", value: data.absen2, color: C.green },
           ];
           const titleH = 8,
-            rowH = 10;
+            rowH = 8.5;
           const cardH = titleH + rowH * rows.length + 4;
           ensureSpace(cardH + 5);
           drawCard(margin, y, contentW, cardH, { accent: C.purple, borderColor: [90, 60, 140] });
           setFont("bold", 10.5, C.purple);
-          doc.text("IDENTITAS PESERTA DIDIK", margin + padX + 2, y + 6);
-          let cy = y + titleH + 3;
+          doc.text("IDENTITAS KELOMPOK (2 ANGGOTA)", margin + padX + 2, y + 6);
+          let cy = y + titleH + 2.5;
           rows.forEach((r) => {
             setFont("bold", 7, r.color);
             doc.text(r.label, margin + padX + 2, cy);
-            setFont("bold", 10, C.white);
-            doc.text(r.value, margin + padX + 2, cy + 5);
+            setFont("bold", 9.5, C.white);
+            doc.text(r.value, margin + padX + 2, cy + 4.5);
             cy += rowH;
           });
           y += cardH + 5;
@@ -2277,7 +2304,7 @@
         }
 
         const safeName = (s) => (s || "-").replace(/[^\w\d]+/g, "_").replace(/^_+|_+$/g, "");
-        const filename = "LKPD_VonNeumann_" + safeName(data.nama) + "_" + safeName(data.kelas) + ".pdf";
+        const filename = "LKPD_VonNeumann_" + safeName(data.nama1) + "_" + safeName(data.nama2) + "_" + safeName(data.kelas) + ".pdf";
         return { pdf: doc, data, filename };
       }
 
@@ -2345,7 +2372,7 @@
       );
       document.querySelectorAll(".reveal").forEach((el) => revealObserver.observe(el));
 
-      const STORAGE_KEY = "lkpd_cbt_vonneumann_XE6_v6";
+      const STORAGE_KEY = "lkpd_cbt_vonneumann_XE6_v7";
       const FDE_IDS = ["a3_1", "a3_2", "a3_3", "a3_4", "a3_5"];
 
       document.addEventListener("DOMContentLoaded", () => {
@@ -2622,7 +2649,7 @@
 
       /* ============ EVENTS ============ */
       function attachListeners() {
-        ["inNama", "inKelas", "inAbsen"].forEach((id) => {
+        ["inNama1", "inNama2", "inKelas", "inAbsen1", "inAbsen2"].forEach((id) => {
           const el = document.getElementById(id);
           if (!el) return;
           el.addEventListener("input", () => {
@@ -2757,9 +2784,11 @@
 
       function collectData() {
         const data = {
-          inNama: document.getElementById("inNama")?.value || "",
+          inNama1: document.getElementById("inNama1")?.value || "",
+          inNama2: document.getElementById("inNama2")?.value || "",
           inKelas: document.getElementById("inKelas")?.value || "",
-          inAbsen: document.getElementById("inAbsen")?.value || "",
+          inAbsen1: document.getElementById("inAbsen1")?.value || "",
+          inAbsen2: document.getElementById("inAbsen2")?.value || "",
         };
         ["a1_1", "a1_2", "a1_3", "a1_4", "a1_5", "a1_6"].forEach((id) => {
           data[id] = document.getElementById(id)?.value || "";
@@ -2788,7 +2817,7 @@
           if (!parsed || !parsed.data) return;
           const d = parsed.data;
 
-          ["inNama", "inKelas", "inAbsen", "a1_2", "a1_4", "a1_6", "a4_q1", "a4_q2"].forEach((id) => {
+          ["inNama1", "inNama2", "inKelas", "inAbsen1", "inAbsen2", "a1_2", "a1_4", "a1_6", "a4_q1", "a4_q2"].forEach((id) => {
             const el = document.getElementById(id);
             if (el && d[id] !== undefined) {
               el.value = d[id];
@@ -2844,7 +2873,7 @@
         const q2 = (document.getElementById("a4_q2")?.value || "").trim();
         const a4Done = q1.length >= 20 && q2.length >= 20;
 
-        const idDone = ["inNama", "inKelas", "inAbsen"].every((id) => (document.getElementById(id)?.value || "").trim() !== "");
+        const idDone = ["inNama1", "inNama2", "inKelas", "inAbsen1", "inAbsen2"].every((id) => (document.getElementById(id)?.value || "").trim() !== "");
 
         return { idDone, a1Done, a2Done, a3Done, a4Done };
       }
@@ -2997,10 +3026,12 @@
         try {
           const pdfBase64 = await generatePdfBase64();
 
+          const namaGabung = [data.inNama1, data.inNama2].filter(Boolean).join("_dan_") || "TanpaNama";
+          const absenGabung = [data.inAbsen1, data.inAbsen2].filter(Boolean).join("-") || "00";
           const result = await uploadToDrive({
-            nama: (data.inNama || "TanpaNama").replace(/\s+/g, "_"),
+            nama: namaGabung.replace(/\s+/g, "_"),
             kelas: data.inKelas || "TanpaKelas",
-            absen: data.inAbsen || "00",
+            absen: absenGabung,
             pdf: pdfBase64,
           });
 
