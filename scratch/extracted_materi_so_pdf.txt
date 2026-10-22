@@ -1,0 +1,521 @@
+=== PAGE 1 ===
+B U K U  S A K U  I N F O R M A T I K A  K E L A S  X
+MENGENAL
+SISTEM OPERASI
+Arsitektur, Fungsi, dan Cara Kerja Komputer
+// Siklus Sistem Komputer & Lapisan Bawang
+BOOTING Sistem_Operasi (POST -> BIOS -> RAM)
+Lapisan Hardware -> Kernel -> Shell -> App
+Proses <- Multitasking_RoundRobin(CPU, RAM)
+output "Sistem Siap Digunakan (GUI / CLI)"
+Ilyas Fandhi Anggara, S.Kom
+SMA Negeri 4 Yogyakarta
+
+=== PAGE 2 ===
+KATA PENGANTAR
+Puji syukur ke hadirat Tuhan Yang Maha Esa atas terselesaikannya buku saku ini. Buku saku ini disusun
+sebagai pendamping belajar Informatika bagi siswa kelas X SMA pada elemen Sistem Komputer,
+khususnya untuk memahami bagaimana perangkat keras (hardware), perangkat lunak (software), dan
+Sistem Operasi saling bekerja sama.
+Setiap hari kita menggunakan laptop dan ponsel pintar untuk membuka berbagai aplikasi sekaligus—
+mulai dari memutar musik, mengetik tugas, hingga menjelajah internet. Namun, jarang yang menyadari
+siapa "sutradara" di balik layar yang mengatur memori, menjadwalkan kerja prosesor, dan menerjemahkan
+sentuhan jari kita menjadi instruksi mesin. Sutradara itulah yang disebut Sistem Operasi.
+Buku saku ini merangkum tujuh materi esensial secara sederhana dan bertahap: mulai dari mengenal
+hardware dan software, pengertian Sistem Operasi dan proses booting, abstraksi Model Lapisan
+Bawang, jenis-jenis Sistem Operasi, lima peran utamanya (termasuk multitasking Round Robin), hingga
+berbagai masalah yang sering terjadi pada Sistem Operasi beserta penyebabnya.
+Gunakan buku saku ini secara aktif di kelas maupun di rumah. Pahami setiap analoginya, diskusikan
+bersama teman, dan kerjakan latihan mandirinya agar pemahamanmu benar-benar utuh.
+Akhir kata, semoga buku saku ini membantu kalian memahami cara kerja teknologi yang kalian gunakan
+setiap hari. Selamat belajar dan teruslah penasaran!
+Y ogyakarta, 2026
+Ilyas Fandhi Anggara, S.Kom
+· i ·
+
+=== PAGE 3 ===
+DAFTAR ISI
+B A G IA N  A W A L
+— Kata Pengantar i
+— Daftar Isi ii
+— Petunjuk Penggunaan Buku
+Panduan belajar efektif menggunakan buku saku ini
+1
+B A G IA N  IN T I —  S IS T E M K O MPU T E R  &  S IS T E M O PE R A S I
+Bab I Kom ponen Dasar & Pengertian Sistem  Operasi
+Hardware, Software, Definisi Sistem Operasi, dan Proses Booting
+2
+Bab II Lapisan Bawang & Jenis Sistem  Operasi
+Model Abstraksi Lapisan Bawang serta Desktop, Mobile, Embedded, & Server OS
+5
+Bab III Peran, Fungsi & Masalah Sistem  Operasi
+5 Fungsi Utama SO (Memori, Round Robin, Kernel, UI , Utilitas) & 6 Masalah SO
+8
+— Latihan Mandiri
+Empat soal evaluasi untuk menguji pemahamanmu
+12
+B A G IA N  A K H IR
+— Kam us Istilah (Glosarium ) 13
+— Daftar Pustaka 14
+— Profil Peny usun 15
+T I P S BE L A J A R
+Saat mempelajari cara kerja Sistem Operasi, bayangkan apa yang terjadi pada laptop atau ponselmu
+sendiri ketika kamu menekan tombol daya, membuka banyak aplikasi, atau saat perangkatmu tiba-tiba
+macet (not responding).
+· ii ·
+
+=== PAGE 4 ===
+PETUNJUK PENGGUNAAN BUKU
+Ikuti lima langkah berikut agar kamu dapat menguasai materi Sistem Operasi dengan mudah.
+I. Cermati Tujuan Pembelajaran & Peta Konsep
+Setiap bab diawali dengan kotak Tujuan Pembelajaran (Quest) dan Peta Konsep agar kamu
+mengetahui target kompetensi yang akan dicapai.
+II. Gunakan Analogi Sehari-hari
+Proses di dalam komputer tidak terlihat oleh mata. Buku ini menyertakan analogi restoran, kamar
+hotel, hingga jembatan sempit untuk membantumu membayangkan cara kerja sistem.
+III. Amati Diagram Lapisan & Alur Simulasi
+Perhatikan urutan lapisan pada diagram Model Lapisan Bawang dari inti terdalam hingga kulit
+terluar, serta alur pembagian waktu CPU pada simulasi Round Robin.
+IV. Kerjakan Uji Nyali & Latihan Mandiri
+Di akhir bab terdapat ruang refleksi dan latihan mandiri. Tuliskan jawabanmu dengan kalimat sendiri
+untuk menguji seberapa jauh konsep yang sudah kamu kuasai.
+V. Pindai QR Code pada Portal Digital
+Gunakan kamera ponselmu untuk memindai kotak Portal Digital guna mengakses materi interaktif
+dan pengayaan di web pembelajaran.
+F O K US UT A MA  MA T E R I
+Tujuh topik inti dalam buku saku ini adalah: (1) Hardware, (2) Software, (3) Pengertian SO, (4)
+Lapisan Bawang, (5) Jenis SO, (6) Peran & Fungsi SO, dan (7 ) Masalah dalam  SO.
+· 1 ·
+
+=== PAGE 5 ===
+B A B
+I
+Komponen Dasar &
+Pengertian Sistem Operasi
+Hardware, Software, dan Jembatan Penghubungnya
+
+=== PAGE 6 ===
+BAB I: KOMPONEN & SISTEM OPERASI
+T U J U A N  P E MBE L A J A R A N Q U E S T  0 1
+Membedakan perangkat keras (hardware) dan perangkat lunak (software) beserta contohny a.
+Menjelaskan pengertian Sistem Operasi dalam siklus Input-Proses-Output.
+Mengurutkan tahapan proses meny alakan komputer (booting) hingga siap digunakan.
+Peta Konsep Bab I
+1. Hardware → 2. Software → 3. Sistem Operasi → Proses Booting
+1. Hardware (Perangkat Keras) dan Contohnya
+Hardware didefinisikan sebagai seluruh perangkat atau komponen pada sistem komputer yang tampak
+secara fisik (dapat dilihat dan disentuh langsung) serta memiliki fungsi tertentu dalam alur pengolahan
+data (Input – Proses – Output – Penyimpanan).
+A . PERA NGKA T  I NPUT  (MA SUKA N)
+Memasukkan data/perintah ke komputer.
+Contoh: Key board, Mouse, Joy stick,
+Microphone (Mic), Webcam, Scanner, dan
+Sensor.
+B. PERA NGKA T  PROSES (PENGOLA H)
+Otak y ang mengolah instruksi data. Contoh:
+CPU (Prosesor), RAM (Memori Sementara), dan
+GPU/VGA.
+C. PERA NGKA T  OUT PUT  (KELUA RA N)
+Menampilkan hasil olahan data. Contoh:
+Monitor (Terminals), Speaker, Proy ektor, dan
+Printer.
+D. PENY I MPA NA N (ST ORA GE)
+Meny impan data secara permanen. Contoh:
+SSD, Harddisk (HDD), Flashdisk, dan Piringan
+Disks.
+2. Software (Perangkat Lunak) dan Contohnya
+Software didefinisikan sebagai kumpulan instruksi atau program digital yang tidak tampak secara fisik
+(tidak bisa disentuh), namun berfungsi mengatur dan menggerakkan hardware. Software terbagi menjadi
+dua kategori utama:
+A . SOFT WA RE A PLI KA SI
+Program untuk meny elesaikan tugas spesifik
+pengguna sehari-hari. Contoh: Microsoft Word,
+Excel, PowerPoint (PPT), Canv a, Chrome,
+WhatsApp, Spotify .
+B. SOFT WA RE SI ST EM
+Program utama y ang mengelola seluruh
+hardware dan menjadi tempat berjalanny a
+aplikasi. Contoh: Sistem  Operasi (Windows,
+Linux, Android, macOS).
+· 3 ·
+
+=== PAGE 7 ===
+3. Pengertian Sistem Operasi (SO)
+Sistem Operasi (Operating System / OS) adalah perangkat lunak sistem yang bertugas mengelola
+perangkat keras komputer (hardware), mengelola sumber daya perangkat lunak (software), dan
+menyediakan layanan umum untuk program komputer. Sistem Operasi berfungsi mengendalikan,
+mengontrol, serta memberikan koneksi antarperangkat keras komputer dengan pengguna.
+A N A L O G I  SE DE R HA N A :  T UBUH MA N USI A
+Bayangkan komputer seperti tubuh m anusia. Hardware adalah raga fisik (tangan, mata, kaki),
+sedangkan Sistem Operasi adalah ny awa dan sistem  saraf pusatny a. Tanpa Sistem Operasi, laptop
+atau ponsel semahal apa pun hanyalah benda mati yang tidak bisa menjalankan aplikasi.
+Bagaimana Sistem Operasi Dibangunkan? (Proses Booting)
+Saat komputer baru dinyalakan, CPU belum berisi program apa pun. Proses menyalakan komputer dan
+membangunkan Sistem Operasi hingga siap bekerja disebut Booting. Terdapat 5 langkah penting saat
+proses Booting:
+U J I  N Y A L I  P RO G RA M M E R 0 1
+1. Jelaskan perbedaan mendasar antara Hardware dan Software beserta masing-masing 3 contohny a!
+2. Mengapa aplikasi seperti Microsoft Word atau game tidak bisa langsung dijalankan di komputer y ang
+belum memiliki Sistem Operasi?
+3. Apa y ang terjadi pada tahap POST  saat komputer baru saja diny alakan (booting)?
+Day a (Power) Dihidupkan: Aliran listrik masuk untuk membangunkan seluruh komponen perangkat
+keras.
+1
+POST  (Power On Self Test): Komputer melakukan uji mandiri untuk mengecek apakah RAM,
+keyboard, dan penyimpanan normal.
+2
+Mem uat BIOS (Basic Input Output System ): Program dasar pada motherboard dijalankan untuk
+mencari lokasi Sistem Operasi.
+3
+Mem uat Sistem  Operasi: Sistem Operasi diangkut dari penyimpanan (SSD/HDD) ke dalam memori
+utama (RAM) dan CPU.
+4
+Pengalihan Kontrol: Perangkat keras menyerahkan kendali penuh kepada Sistem Operasi hingga
+layar utama siap digunakan.
+5
+· 4 ·
+
+=== PAGE 8 ===
+B A B
+II
+Model Lapisan Bawang &
+Jenis Sistem Operasi
+Abstraksi Arsitektur Komputer dan Ragam Platform OS
+
+=== PAGE 9 ===
+BAB II: LAPISAN BAWANG & JENIS SO
+T U J U A N  P E MBE L A J A R A N Q U E S T  0 2
+Memahami abstraksi Model Lapisan Bawang (Onion Layer Model) pada sistem komputer.
+Membedakan jenis-jenis Sistem Operasi: Desktop, Mobile, Embedded, dan Server OS.
+4. Penjelasan Model Lapisan Bawang Sistem Operasi
+Arsitektur sistem komputer digambarkan seperti irisan bawang yang berlapis-lapis dari inti terdalam
+hingga kulit terluar. Pengguna (manusia) tidak menyentuh mesin hardware secara langsung, melainkan
+berinteraksi melewati lapisan demi lapisan:
+Applications
+Shell
+Kernel
+Hardware
+Utilities
+Termi nal s
+Pri nters
+Di sks
+APPLICATIONS
+OPERATING
+SYSTEM
+HARDWARE
+Gambar: Abstraksi Model Lapisan Bawang Sistem Operasi (Dari I nti Hardware hingga Applications)
+1. HA RDWA RE (I NT I  T ERDA LA M)
+Perangkat fisik mesin komputer seperti
+Terminals (lay ar/konsol), Printers (pencetak),
+dan Disks (peny impanan).
+2. KERNEL (LA PI SA N KE-2)
+Inti dari Sistem Operasi y ang berhubungan
+langsung untuk mengatur dan mengontrol kerja
+Hardware.
+3. SHELL (LA PI SA N KE-3)
+Kulit luar Sistem Operasi y ang membungkus
+Kernel sebagai antarmuka tempat pengguna
+memberi perintah.
+4. A PPLI CA T I ONS & UT I LI T I ES
+(T ERLUA R)
+Program aplikasi dan program bantu (utilities)
+y ang berinteraksi langsung dengan manusia.
+A N A L O G I  R E ST O R A N
+Hardware = Kompor & alat masak di dapur • Kernel = Kepala Koki yang memasak langsung di
+kompor • Shell = Pelay an/Buku Menu yang mencatat pesanan • Applications = Hidangan yang
+dinikmati pelanggan.
+· 6 ·
+
+=== PAGE 10 ===
+5. Jenis-Jenis Sistem Operasi
+Sistem Operasi dirancang berbeda-beda menyesuaikan ukuran perangkat, daya listrik, dan tujuan
+penggunaannya. Berikut adalah empat jenis Sistem Operasi utama yang wajib kamu kenali:
+Jenis Sistem
+Operasi Fungsi & Karakteristik Utam a Contoh Ny ata
+1. Desktop OS Dirancang untuk komputer pribadi
+(PC/Laptop) guna menunjang pekerjaan
+sekolah, desain grafis, pemrograman, dan
+tugas perkantoran dengan tampilan lay ar
+lebar.
+Windows (1 0/1 1 ), macOS,
+Linux  (Ubuntu, Fedora),
+ChromeOS
+2. Mobile OS Dirancang khusus untuk perangkat bergerak
+(Smartphone/Tablet) dengan nav igasi lay ar
+sentuh, manajemen hemat baterai, serta
+dukungan sensor gerak & GPS.
+Android, iOS, iPadOS,
+Harmony OS
+3. Em bedded OS Sistem operasi berukuran kecil y ang
+"tertanam" di dalam chip perangkat elektronik
+khusus. Hany a menjalankan satu fungsi
+spesifik secara otomatis dan hemat day a.
+OS pada Smart TV , mesin ATM,
+mesin cuci digital, smartw atch,
+rem mobil (ABS), router Wi-Fi
+4. Serv er OS Dirancang untuk komputer pusat (server)
+y ang melay ani ribuan komputer pengguna
+(client) sekaligus selama 24 jam nonstop
+dengan stabilitas dan keamanan tinggi.
+Ubuntu Serv er, RedHat
+Enterprise Linux , Windows
+Serv er, Debian
+C A R A  C E P A T  ME MBE DA K A N  E MBE DDE D O S
+Jika sebuah alat elektronik memiliki layar digital atau tombol pintar tetapi bukan HP dan bukan
+Laptop (misalnya mesin ATM, kasir minimarket, atau mesin cuci otomatis), maka alat tersebut
+menggunakan Em bedded OS.
+S CA N  M E
+P O R T A L  DI G I T A L
+Eksplorasi Interaktif Sistem Operasi
+Pindai kode QR di samping untuk membuka media pembelajaran interaktif mengenai
+arsitektur Sistem Komputer Kelas X.
+informatika-learning.vercel.app
+U J I  N Y A L I  P RO G RA M M E R 0 2
+1. Urutkan 4 lapisan pada Model Lapisan Bawang mulai dari y ang paling dekat dengan mesin hingga
+y ang paling dekat dengan manusia!
+2. Sebutkan jenis Sistem Operasi y ang digunakan pada: (a) Mesin ATM Bank, (b) Komputer Pusat Data
+Sekolah, dan (c) Tablet gambar!
+· 7 ·
+
+=== PAGE 11 ===
+B A B
+III
+Peran, Fungsi &
+Masalah Sistem Operasi
+Cara Kerja di Balik Layar dan Kendala Sehari-hari
+
+=== PAGE 12 ===
+BAB III: FUNGSI & MASALAH SO
+T U J U A N  P E MBE L A J A R A N Q U E S T  0 3
+Memahami 5 peran utama Sistem Operasi dalam mengelola memori, proses (Round Robin), kernel
+hardware, antarmuka pengguna, dan utilitas.
+Mengidentifikasi berbagai masalah y ang sering terjadi pada Sistem Operasi beserta peny ebabny a.
+6. Peran dan Fungsi Utama Sistem Operasi
+a. Memori → b. Proses (Round Robin) → c. Kernel I/O → d. UI → e. Utilitas
+F UN G SI  A
+Pengelolaan Memori (Memory Management)
+Setiap aplikasi y ang dibuka harus dimuat ke dalam RAM. Sistem Operasi bertugas m em baca dan
+m enulis data ke/dari suatu alam at m em ori, melacak kapasitas RAM, dan menentukan jatah
+memori tiap aplikasi.
+Analogi Resepsionis Hotel: Sistem Operasi mencatat Aplikasi A di kamar 001 dan Aplikasi B di kamar
+002 agar datany a tidak saling menimpa, lalu mengosongkan kamar saat aplikasi ditutup.
+F UN G SI  B
+Pengelolaan Proses (Multitasking & Penjadwalan Round Robin)
+Saat kita membuka bany ak aplikasi sekaligus (Multitasking), bagian Sistem Operasi bernama Scheduler
+membagi waktu kerja CPU secara bergiliran (T im e Sharing) menggunakan algoritma Round Robin:
+Setiap aplikasi diberi jatah waktu kecil y ang sama (Time Quantum / Time Slice, misalny a 2 m ilidetik).
+Jika waktu habis dan tugas belum selesai, aplikasi wajib mengantre kembali ke belakang dan CPU beralih
+melay ani aplikasi berikutny a.
+// Simulasi Penjadwalan CPU Metode Round Robin (Time Quantum = 2 ms)
+ANTREAN_RAM : [Spotify (6 ms), WhatsApp (2 ms), Word (4 ms)]
+1.  Giliran 1 (0-2 ms) : CPU memproses Spotify → sisa 4 ms (Pindah ke belakang)
+2.  Giliran 2 (2-4 ms) : CPU memproses WhatsApp → sisa 0 ms (SELESAI!)
+3.  Giliran 3 (4-6 ms) : CPU memproses Word → sisa 2 ms (Pindah ke belakang)
+4.  // Berputar ribuan kali per detik sehingga semua aplikasi tampak berjalan serentak!
+T A HUK A H K A MU?  ( MUL T I T A SK I N G  V S T I ME  SHA R I N G  V S P I P E L I N I N G )
+Multitasking adalah kemampuan menjalankan banyak aplikasi sekaligus; T im e Sharing adalah
+teknik membagi jatah waktu CPU secara bergiliran; sedangkan Pipelining adalah teknik "ban berjalan"
+di dalam komponen internal CPU untuk mengeksekusi tahapan instruksi secara estafet.
+· 9 ·
+
+=== PAGE 13 ===
+F UN G SI  C
+Pengelolaan Antarmuka dengan Kernel Hardware (Siklus Input-Proses-Output)
+Perangkat keras dari berbagai merek (printer Canon, mouse Logitech, kartu grafis NVIDIA) berbicara
+menggunakan bahasa mesin y ang rumit. Kernel bersama Dev ice Driv er bertugas menjadi penerjemah
+antara aplikasi dan hardware.
+Contoh Siklus IPO: Saat kamu mengetik huruf A  di key board (Input) pada Microsoft Word, Sistem
+Operasi menangkap siny al listrik tersebut untuk diolah CPU dan RAM (Proses), lalu memerintahkan
+lay ar monitor menampilkan huruf A  (Output).
+F UN G SI  D
+Pengelolaan Interaksi dengan Pengguna (User Interface / UI)
+Tanpa antarmuka pengguna, manusia akan kesulitan memberi perintah ke komputer. Sistem Operasi
+meny ediakan dua jenis User Interface:
+1. I NST RUKSI  SI MBOLI K / GUI
+Graphical User Interface: Berinteraksi
+menggunakan ikon gambar, jendela (window),
+menu, klik kursor mouse, atau sentuhan jari.
+Contoh: Tampilan desktop Windows dan lay ar
+beranda Android.
+2. I NST RUKSI  T EKST UA L / CLI
+Com m and Line Interface: Berinteraksi
+dengan mengetikkan baris perintah teks secara
+langsung melalui key board. Contoh: Command
+Prompt (CMD), PowerShell, dan Terminal Linux.
+F UN G SI  E
+Penyediaan Utilitas (Utilities), Pengelolaan File & Keamanan
+Sistem Operasi meny ediakan program bantu bawaan (utilities) untuk merawat sistem komputer dan
+mengelola pengarsipan:
+• Pengelolaan File: Meny impan (save), meny alin (copy), mengurutkan (sort), memindahkan,
+menamai, dan menghapus (delete) file/folder lewat File Explorer.
+• Pem antauan & Keam anan: Memantau kinerja RAM/CPU lewat Task Manager, mengatur akun kata
+sandi (password), perlindungan Firewall, serta koneksi jaringan Wi-Fi/LAN.
+R I N G K A SA N  5  P E R A N  SI ST E M O P E R A SI
+Ingat 5 kata kunci peran Sistem Operasi: (1) Mengatur alam at RAM, (2) Menggilir kerja CPU
+(Round Robin), (3) Menerjem ahkan Kernel Hardware, (4) Meny ediakan tam pilan
+GUI/CLI, dan (5) Meny ediakan Utilitas File & Keam anan.
+· 10 ·
+
+=== PAGE 14 ===
+7. Masalah-Masalah dalam Sistem Operasi
+Dalam pemakaian sehari-hari, Sistem Operasi dapat mengalami gangguan akibat beban berlebih, konflik
+perangkat lunak, maupun kerusakan komponen. Berikut adalah 6 masalah utama dalam Sistem
+Operasi:
+1. HA NG / FREEZE (NOT  RESPONDI NG)
+Gejala: Tampilan aplikasi membeku dan kursor
+tidak bisa diklik.
+Peny ebab: Aplikasi memproses beban terlalu
+berat atau mengalami bug sehingga gagal
+membalas siny al panggilan dari Sistem Operasi.
+2. DEA DLOCK (SA LI NG MENGUNCI )
+Gejala: Dua atau lebih program berhenti total di
+saat bersamaan.
+Peny ebab: Aplikasi A dan Aplikasi B saling
+menunggu sumber day a (RAM/file) y ang sedang
+dipakai satu sama lain, seperti 2 mobil
+berhadapan di jembatan sempit.
+3. T HRA SHI NG (KEHA BI SA N RA M)
+Gejala: Komputer menjadi sangat lambat ("lola")
+dan lag parah saat pindah aplikasi.
+Peny ebab: Terlalu bany ak aplikasi berat dibuka
+hingga melampaui kapasitas RAM, membuat SO
+kelelahan memindahkan data bolak-balik antara
+RAM dan SSD/HDD.
+4. SY ST EM CRA SH / BSOD / BOOT LOOP
+Gejala: Lay ar biru (Blue Screen of Death) di
+Windows lalu restart sendiri, atau HP berhenti di
+logo (Bootloop).
+Peny ebab: Kerusakan fatal pada lapisan
+Kernel, file sistem rusak saat booting, atau
+kerusakan fisik RAM/peny impanan.
+5 . MA SA LA H DRI V ER HA RDWA RE
+Gejala: Printer baru tidak terdeteksi, suara
+speaker hilang, atau Wi-Fi mati.
+Peny ebab: Sistem Operasi belum memiliki atau
+kehilangan program penerjemah (Dev ice
+Driv er) y ang cocok untuk perangkat keras
+tersebut.
+6. I NFEKSI  MA LWA RE & V I RUS
+Gejala: Muncul iklan sendiri, file terkunci, atau
+pemakaian CPU/RAM 100% tanpa sebab.
+Peny ebab: Masukny a program jahat (virus,
+trojan, ransomware) y ang meny usup ke celah
+keamanan Sistem Operasi untuk membajak
+sistem.
+SO L USI  P E R T O L O N G A N  P E R T A MA  SA A T  SI ST E M O P E R A SI  BE R MA SA L A H
+Jika sebuah aplikasi mengalami Not Responding atau Deadlock, pengguna dapat membuka utilitas T ask
+Manager ( Ctrl + Shift + Esc  di Windows), memilih aplikasi yang macet, lalu menekan tombol End
+T ask agar Sistem Operasi menghentikan proses tersebut dan membebaskan ruang di RAM.
+· 11 ·
+
+=== PAGE 15 ===
+LATIHAN MANDIRI
+Setelah mempelajari ketujuh materi Sistem Operasi, kerjakan empat soal evaluasi berikut untuk menguji
+pemahamanmu!
+L A T I HA N  1  — SI K L US I N P UT -P R O SE S-O UT P UT  &  BO O T I N G
+Jelaskan apa y ang terjadi di dalam Sistem Komputer (mulai dari perangkat Input, peran Sistem Operasi
+& CPU, hingga perangkat Output) ketika kamu menekan tombol Print  untuk mencetak dokumen ke
+printer!
+L A T I HA N  2  — MO DE L  L A P I SA N  BA W A N G  &  J E N I S SI ST E M O P E R A SI
+Mengapa pada Model Lapisan Bawang posisi Kernel berada tepat di luar Hardware, sedangkan
+Applications berada di lapisan paling luar? Jelaskan menggunakan bahasamu sendiri!
+L A T I HA N  3  — P E N J A DW A L A N  P R O SE S ( MUL T I T A SK I N G  R O UN D R O BI N )
+Sebuah CPU melay ani 3 aplikasi dengan metode Round Robin (jatah waktu Time Slice = 3 m ilidetik):
+Aplikasi A butuh 6 ms, Aplikasi B butuh 3 ms, dan Aplikasi C butuh 9 ms. Aplikasi manakah y ang
+akan selesai paling pertama dan paling terakhir? Jelaskan alasanny a!
+L A T I HA N  4 — A N A L I SI S MA SA L A H SI ST E M O P E R A SI
+Raka membuka aplikasi edit v ideo, game berat, dan 25 tab browser secara bersamaan di laptop y ang
+hany a memiliki RAM 4 GB. Tiba-tiba perpindahan lay ar menjadi sangat lambat dan patah-patah. Disebut
+masalah apakah kondisi ini, dan bagaimana cara mengatasiny a?
+· 12 ·
+
+=== PAGE 16 ===
+KAMUS ISTILAH
+Daftar istilah penting seputar Sistem Komputer dan Sistem Operasi yang wajib kamu pahami.
+Booting
+Proses menghidupkan komputer dan memuat Sistem
+Operasi ke RAM hingga siap digunakan.
+CLI
+Command Line Interface; antarmuka pengguna
+berbasis ketikan perintah teks (seperti CMD/Terminal).
+Deadlock
+Kondisi macet ketika dua program atau lebih saling
+menunggu sumber day a y ang sedang dipakai satu sama
+lain.
+Dev ice Driv er
+Program penerjemah khusus agar Sistem Operasi dapat
+mengenali dan mengendalikan hardware tertentu.
+Em bedded OS
+Sistem Operasi khusus y ang tertanam pada chip
+perangkat elektronik (Smart TV, ATM, mesin cuci).
+GUI
+Graphical User Interface; antarmuka pengguna berbasis
+v isual menggunakan ikon, menu, dan kursor.
+Hardware
+Komponen fisik sistem komputer y ang dapat dilihat dan
+disentuh secara langsung.
+Kernel
+Inti terdalam dari Sistem Operasi y ang berhubungan
+langsung dan mengendalikan perangkat keras.
+Multitasking
+Kemampuan Sistem Operasi menjalankan beberapa
+aplikasi secara bersamaan.
+Pipelining
+Teknik di dalam prosesor (CPU) untuk memproses
+tahapan instruksi secara tumpang tindih (estafet).
+RAM
+Random Access Memory ; memori kerja sementara
+untuk meny impan data aplikasi y ang sedang aktif
+dibuka.
+Round Robin
+Algoritma penjadwalan CPU y ang membagi jatah
+waktu (Time Slice) secara adil dan bergiliran ke tiap
+proses.
+Shell
+Lapisan Sistem Operasi y ang membungkus Kernel dan
+menjadi perantara instruksi dari pengguna.
+T hrashing
+Kondisi menurunny a performa komputer secara drastis
+akibat kapasitas RAM y ang penuh.
+· 13 ·
+
+=== PAGE 17 ===
+DAFTAR PUSTAKA
+Kementerian Pendidikan, Kebuday aan, Riset, dan Teknologi. (2021). Informatika untuk SMA Kelas X
+(Bab 4: Sistem Komputer). Jakarta: Pusat Kurikulum dan Perbukuan.
+Badan Standar, Kurikulum, dan Asesmen Pendidikan (BSKAP). (2022). Panduan Mata Pelajaran
+Informatika Fase E (Kelas X). Jakarta: Kemendikbudristek.
+Silberschatz, A., Galv in, P. B., & Gagne, G. (2018). Operating System Concepts (10th ed.). Hoboken, NJ:
+John Wiley  & Sons.
+Tanenbaum, A. S., & Bos, H. (2015). Modern Operating Systems (4th ed.). Boston: Pearson Education.
+Stallings, W. (2018). Operating Systems: Internals and Design Principles (9th ed.). London: Pearson.
+GeeksforGeeks. (2025). Functions of Operating System & Round Robin Scheduling. Diakses dari
+https://www.geeksforgeeks.org/
+· 14 ·
+
+=== PAGE 18 ===
+PROFIL PENYUSUN
+Ilyas Fandhi Anggara, S.Kom
+Guru Informatika • SMA Negeri 4 Y ogyakarta
+Seorang pendidik yang percaya bahwa konsep sistem komputer dan pemrograman yang
+abstrak dapat dipahami dengan menyenangkan oleh setiap siswa melalui analogi
+kontekstual, simulasi kelas, dan pemanfaatan media pembelajaran digital.
+Email  ily asfandhianggara@gmail.com
+Website  e-portofolio-fandhi.v ercel.app
+Lokasi  Y ogy akarta, Indonesia
+S CA N  M E
+E - P O R T F O L I O  P E NUL I S
+Kunjungi Website Belajar
+Seluruh materi ajar, modul interaktif, dan latihan dari buku saku ini tersedia lengkap di
+portal e-portfolio.
+e-portofolio-fandhi.vercel.app
+“Hardware memberi komputer raga,
+Sistem Operasi memberinya nyawa untuk melayani
+manusia.”
+— IL Y A S  F A N DH I A N G G A R A
+✦  ✦  ✦
+Kenali Sistemmu, Kuasai Teknologimu
+Dengan memahami bagaimana Sistem Operasi bekerja di balik layar, kamu tidak hanya menjadi
+pengguna teknologi, tetapi juga pemecah masalah yang cerdas.
+· 15 ·
+
