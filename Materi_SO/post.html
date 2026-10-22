@@ -1,0 +1,1635 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Post-Test: Sistem Operasi (Operating System) — RuangInformatika</title>
+    <link rel="shortcut icon" href="../images/Logo Patbhe.png" type="image/x-icon" />
+
+    <!-- Anti-FOUC script: set tema seawal mungkin -->
+    <script>
+      if (localStorage.getItem("theme") === "dark" || (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
+    </script>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
+
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              brandDark: "#0b1120",
+              brandNavy: "#0f172a",
+              brandGray: "#1e293b",
+              textGray: "#8896a7",
+            },
+            fontFamily: {
+              sans: ["Plus Jakarta Sans", "sans-serif"],
+              mono: ["JetBrains Mono", "monospace"],
+            },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      .tilt-card {
+        transform-style: preserve-3d;
+      }
+      .tilt-card-content {
+        transform: translateZ(30px);
+      }
+      main {
+        background: transparent;
+      }
+
+      /* ── Reading Progress ── */
+      #readProgress {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #06b6d4, #0284c7, #10b981);
+        z-index: 999;
+        transition: width 0.1s ease-out;
+        width: 0%;
+        box-shadow: 0 0 12px rgba(6, 182, 212, 0.6);
+      }
+
+      /* ── Page Hero ── */
+      .page-hero {
+        position: relative;
+        padding: 56px 0 36px;
+        overflow: hidden;
+      }
+      .page-hero-glow {
+        position: absolute;
+        top: -100px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 700px;
+        height: 400px;
+        background: radial-gradient(ellipse, rgba(6, 182, 212, 0.16) 0%, rgba(14, 165, 233, 0.08) 40%, transparent 70%);
+        filter: blur(40px);
+        pointer-events: none;
+      }
+      .page-hero-inner {
+        max-width: 1024px;
+        margin: 0 auto;
+        padding: 0 24px;
+        position: relative;
+        z-index: 10;
+      }
+
+      /* ── Question Card ── */
+      .question-card {
+        transition: all 0.3s ease;
+      }
+      .question-card.correct {
+        border-color: rgba(16, 185, 129, 0.6) !important;
+        background: rgba(16, 185, 129, 0.05) !important;
+      }
+      .question-card.wrong {
+        border-color: rgba(244, 63, 94, 0.6) !important;
+        background: rgba(244, 63, 94, 0.05) !important;
+      }
+
+      /* ── Option Label ── */
+      .option-label {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 14px 18px;
+        border-radius: 14px;
+        border: 1px solid rgba(226, 232, 240, 0.9);
+        background: #ffffff;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        user-select: none;
+      }
+      .dark .option-label {
+        border-color: rgba(255, 255, 255, 0.08);
+        background: rgba(255, 255, 255, 0.03);
+      }
+      .option-label:hover {
+        background: rgba(6, 182, 212, 0.06);
+        border-color: rgba(6, 182, 212, 0.4);
+      }
+      .option-label input[type="radio"] {
+        display: none;
+      }
+      .option-label .option-marker {
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        border: 2px solid rgba(148, 163, 184, 0.6);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        margin-top: 1px;
+        font-size: 11px;
+        font-weight: 700;
+        color: transparent;
+        transition: all 0.2s ease;
+      }
+      .dark .option-label .option-marker {
+        border-color: rgba(255, 255, 255, 0.25);
+      }
+      .option-label input[type="radio"]:checked ~ .option-marker {
+        border-color: #06b6d4;
+        background: #06b6d4;
+        color: #ffffff;
+      }
+      .option-label.selected {
+        background: rgba(6, 182, 212, 0.08);
+        border-color: #06b6d4;
+      }
+      .option-label.disabled {
+        cursor: not-allowed;
+        pointer-events: none;
+      }
+      .option-label.review-correct {
+        background: rgba(16, 185, 129, 0.12) !important;
+        border-color: rgba(16, 185, 129, 0.6) !important;
+      }
+      .option-label.review-correct .option-marker {
+        background: #10b981;
+        border-color: #10b981;
+        color: #ffffff;
+      }
+      .option-label.review-wrong {
+        background: rgba(244, 63, 94, 0.12) !important;
+        border-color: rgba(244, 63, 94, 0.6) !important;
+      }
+      .option-label.review-wrong .option-marker {
+        background: #f43f5e;
+        border-color: #f43f5e;
+        color: white;
+      }
+
+      .progress-bar-fill {
+        transition: width 0.4s ease;
+      }
+
+      /* ── Animations ── */
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(15px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .fade-in-up {
+        animation: fadeInUp 0.5s ease forwards;
+      }
+
+      @keyframes scorePulse {
+        0% {
+          transform: scale(0.8);
+          opacity: 0;
+        }
+        50% {
+          transform: scale(1.05);
+        }
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+      .score-pulse {
+        animation: scorePulse 0.6s ease forwards;
+      }
+
+      @keyframes spin {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      .spinner {
+        animation: spin 1s linear infinite;
+      }
+
+      /* ── Slide Transitions ── */
+      @keyframes slideInRight {
+        from {
+          opacity: 0;
+          transform: translateX(40px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+      @keyframes slideInLeft {
+        from {
+          opacity: 0;
+          transform: translateX(-40px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+      .slide-in-right {
+        animation: slideInRight 0.35s cubic-bezier(0.22, 0.61, 0.36, 1);
+      }
+      .slide-in-left {
+        animation: slideInLeft 0.35s cubic-bezier(0.22, 0.61, 0.36, 1);
+      }
+
+      /* ── Timer Widget ── */
+      #timer-widget {
+        transition: all 0.3s ease;
+      }
+      .timer-safe {
+        color: #0284c7;
+        border-color: rgba(2, 132, 199, 0.4) !important;
+        background: rgba(2, 132, 199, 0.08) !important;
+      }
+      .dark .timer-safe {
+        color: #38bdf8;
+      }
+      .timer-warning {
+        color: #d97706;
+        border-color: rgba(217, 119, 6, 0.5) !important;
+        background: rgba(217, 119, 6, 0.08) !important;
+      }
+      .dark .timer-warning {
+        color: #fbbf24;
+      }
+      .timer-danger {
+        color: #e11d48;
+        border-color: rgba(225, 29, 72, 0.6) !important;
+        background: rgba(225, 29, 72, 0.1) !important;
+        animation: timerPulse 1s ease-in-out infinite;
+      }
+      .dark .timer-danger {
+        color: #f43f5e;
+      }
+      @keyframes timerPulse {
+        0%,
+        100% {
+          box-shadow: 0 0 0 0 rgba(244, 63, 94, 0.6);
+        }
+        50% {
+          box-shadow: 0 0 0 10px rgba(244, 63, 94, 0);
+        }
+      }
+
+      /* ── Anti-Cheat ── */
+      body.quiz-active {
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        -webkit-touch-callout: none;
+      }
+      body.quiz-active input,
+      body.quiz-active textarea {
+        -webkit-user-select: text !important;
+        user-select: text !important;
+      }
+
+      #copy-toast {
+        position: fixed;
+        bottom: 24px;
+        left: 50%;
+        transform: translateX(-50%) translateY(120px);
+        background: rgba(225, 29, 72, 0.95);
+        color: white;
+        padding: 12px 20px;
+        border-radius: 12px;
+        font-size: 14px;
+        font-weight: 600;
+        box-shadow: 0 10px 30px rgba(225, 29, 72, 0.4);
+        z-index: 9998;
+        opacity: 0;
+        transition: all 0.3s ease;
+        pointer-events: none;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        max-width: 90vw;
+      }
+      #copy-toast.show {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+
+      #cheat-warning {
+        backdrop-filter: blur(10px);
+      }
+      @keyframes warningShake {
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+        20% {
+          transform: translateX(-8px);
+        }
+        40% {
+          transform: translateX(8px);
+        }
+        60% {
+          transform: translateX(-5px);
+        }
+        80% {
+          transform: translateX(5px);
+        }
+      }
+      .warning-shake {
+        animation: warningShake 0.5s ease;
+      }
+
+      .violation-badge {
+        transition: all 0.3s ease;
+      }
+      .violation-badge.pulse {
+        animation: violationPulse 0.6s ease;
+      }
+      @keyframes violationPulse {
+        0% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.25);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+    </style>
+  </head>
+
+  <body class="bg-slate-50 dark:bg-brandDark text-slate-800 dark:text-slate-100 font-sans antialiased min-h-screen flex flex-col selection:bg-cyan-500 selection:text-white">
+    <div id="readProgress"></div>
+
+    <!-- ============================================================
+         1. TOP NAVBAR
+         ============================================================ -->
+    <header class="sticky top-0 z-50 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+        <a href="../index.html" class="flex items-center gap-3.5 group">
+          <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-cyan-600 to-sky-400 p-0.5 shadow-md shadow-cyan-500/20 group-hover:scale-105 transition-transform">
+            <div class="w-full h-full bg-white dark:bg-slate-900 rounded-[14px] flex items-center justify-center overflow-hidden">
+              <img src="../images/Logo Patbhe.png" alt="Logo SMAN 4 Yogyakarta" class="w-7 h-7 object-contain" />
+            </div>
+          </div>
+          <div>
+            <div class="flex items-center gap-1.5">
+              <span class="font-black text-xl text-slate-900 dark:text-white tracking-tight">Ruang<span class="text-cyan-600 dark:text-cyan-400">Informatika</span></span>
+            </div>
+            <span class="text-[10px] uppercase font-bold tracking-widest text-slate-500 dark:text-slate-400 block">SMAN 4 YOGYAKARTA</span>
+          </div>
+        </a>
+
+        <div class="flex items-center gap-3">
+          <a
+            href="materi.html#lembarkerja"
+            class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200 transition-colors"
+          >
+            <i class="fa-solid fa-arrow-left"></i>
+            <span>Kembali ke Modul</span>
+          </a>
+
+          <button
+            id="themeToggleBtn"
+            type="button"
+            class="w-10 h-10 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-amber-400 flex items-center justify-center transition-all focus:outline-none shadow-sm cursor-pointer border border-slate-200/60 dark:border-slate-700"
+            aria-label="Toggle Theme"
+          >
+            <i class="fa-solid fa-moon dark:hidden text-sm"></i>
+            <i class="fa-solid fa-sun hidden dark:inline text-sm"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Hero Section -->
+    <div class="page-hero">
+      <div class="page-hero-glow"></div>
+      <div class="page-hero-inner text-center">
+        <div
+          class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-100 dark:bg-cyan-950/70 border border-cyan-200 dark:border-cyan-800/80 text-cyan-800 dark:text-cyan-300 text-xs font-bold font-mono tracking-wider shadow-sm mb-4"
+        >
+          <i class="fa-solid fa-clipboard-check text-cyan-600 dark:text-cyan-400"></i>
+          <span>ASESMEN AKHIR • POST-TEST RESMI</span>
+        </div>
+        <h1 class="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 dark:text-white tracking-tight leading-tight mb-4">
+          Post-Test: <span class="bg-gradient-to-r from-cyan-600 via-sky-500 to-teal-400 bg-clip-text text-transparent">Sistem Operasi</span>
+        </h1>
+        <p class="text-sm sm:text-base text-slate-600 dark:text-slate-300 max-w-2xl mx-auto leading-relaxed">
+          Uji ketercapaian kompetensimu mengenai Arsitektur Kernel, Manajemen Multitasking &amp; Memori RAM, antarmuka CLI vs GUI, serta baris perintah Linux secara mandiri.
+        </p>
+      </div>
+    </div>
+
+    <!-- Main Content Container -->
+    <main class="max-w-4xl mx-auto px-4 sm:px-6 pb-16 relative z-10 w-full">
+      <!-- ════════════════════════════════════════════════
+           SECTION 1: FORM IDENTITAS SISWA
+           ════════════════════════════════════════════════ -->
+      <div id="posttest-form-section" class="space-y-6">
+        <div class="bg-gradient-to-br from-cyan-500/10 via-sky-500/5 to-transparent border border-cyan-500/30 rounded-3xl p-6 sm:p-8 shadow-xl">
+          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-100 dark:bg-cyan-950/80 border border-cyan-300 dark:border-cyan-700 text-cyan-800 dark:text-cyan-300 text-xs font-bold font-mono mb-4">
+            <i class="fa-solid fa-graduation-cap"></i>
+            <span>TAHAP EVALUASI SISWA • FASE E INFORMATIKA</span>
+          </div>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight mb-3">Konfirmasi Peserta Post-Test</h2>
+          <p class="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed max-w-2xl">
+            Selesaikan <strong class="text-slate-900 dark:text-white">10 butir soal pilihan ganda</strong> dengan teliti. Nilai akhir dan analisis pemahamanmu akan langsung ditampilkan dan tercatat ke sistem evaluasi guru.
+          </p>
+        </div>
+
+        <!-- 3 Info Stat Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div class="flex items-center gap-3.5 p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
+            <div class="w-11 h-11 rounded-xl bg-cyan-100 dark:bg-cyan-950/80 text-cyan-600 dark:text-cyan-400 flex items-center justify-center font-bold text-lg shrink-0">
+              <i class="fa-solid fa-list-ol"></i>
+            </div>
+            <div>
+              <p class="text-[11px] text-slate-500 dark:text-slate-400 uppercase tracking-wider font-bold">Jumlah Soal</p>
+              <p class="text-slate-900 dark:text-white font-bold text-sm">10 Pilihan Ganda</p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-3.5 p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
+            <div class="w-11 h-11 rounded-xl bg-sky-100 dark:bg-sky-950/80 text-sky-600 dark:text-sky-400 flex items-center justify-center font-bold text-lg shrink-0">
+              <i class="fa-solid fa-clock"></i>
+            </div>
+            <div>
+              <p class="text-[11px] text-slate-500 dark:text-slate-400 uppercase tracking-wider font-bold">Batas Waktu</p>
+              <p class="text-slate-900 dark:text-white font-bold text-sm">10 Menit Ujian</p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-3.5 p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
+            <div class="w-11 h-11 rounded-xl bg-rose-100 dark:bg-rose-950/80 text-rose-600 dark:text-rose-400 flex items-center justify-center font-bold text-lg shrink-0">
+              <i class="fa-solid fa-shield-halved"></i>
+            </div>
+            <div>
+              <p class="text-[11px] text-slate-500 dark:text-slate-400 uppercase tracking-wider font-bold">Sistem Keamanan</p>
+              <p class="text-slate-900 dark:text-white font-bold text-sm">Anti-Curang (Maks 3x)</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Input Form Identitas Siswa -->
+        <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl p-6 sm:p-8 space-y-6">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2"> Nama Lengkap Siswa <span class="text-rose-500">*</span> </label>
+              <input
+                type="text"
+                id="posttest-nama"
+                placeholder="Contoh: Muhammad Hilmi...."
+                class="w-full bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-slate-900 dark:text-white font-semibold text-sm focus:outline-none focus:border-cyan-500 transition shadow-inner"
+              />
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2"> Nomor Presensi (Absen) <span class="text-rose-500">*</span> </label>
+              <input
+                type="number"
+                id="posttest-absen"
+                placeholder="Contoh: 18"
+                min="1"
+                max="36"
+                class="w-full bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-slate-900 dark:text-white font-semibold text-sm focus:outline-none focus:border-cyan-500 transition shadow-inner"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2"> Kelas Terdaftar </label>
+            <div class="w-full bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-slate-700 dark:text-slate-300 font-mono text-sm flex items-center justify-between">
+              <span class="font-bold">X-E6 (Fase E • SMA Negeri 4 Yogyakarta)</span>
+              <span class="text-xs px-2.5 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 font-bold">Terverifikasi</span>
+            </div>
+          </div>
+
+          <!-- Petunjuk Penting -->
+          <div class="p-4 sm:p-5 rounded-2xl bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800/40 text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed space-y-2">
+            <div class="font-bold text-amber-800 dark:text-amber-300 flex items-center gap-2">
+              <i class="fa-solid fa-triangle-exclamation text-amber-500"></i>
+              <span>Aturan Pengerjaan Post-Test:</span>
+            </div>
+            <ul class="list-disc list-inside space-y-1 text-xs">
+              <li>Waktu pengerjaan adalah <strong>10 menit</strong>. Jika waktu habis, jawaban otomatis tersubmit.</li>
+              <li>Dilarang membuka tab lain, berpindah jendela aplikasi, atau meminimalkan browser. Sistem akan mencatat pelanggaran hingga maksimal <strong>3 kali</strong> sebelum ujian otomatis dikumpulkan.</li>
+              <li>Aksi klik kanan, salin teks (Copy-Paste), dan pemotongan teks dinonaktifkan demi integritas asesmen.</li>
+            </ul>
+          </div>
+
+          <!-- Warning Box -->
+          <div id="posttest-form-warning" class="hidden p-4 rounded-xl bg-rose-50 dark:bg-rose-950/30 border border-rose-300 dark:border-rose-700 text-rose-800 dark:text-rose-200 text-xs font-bold flex items-center gap-2">
+            <i class="fa-solid fa-circle-exclamation text-base text-rose-500"></i>
+            <span id="posttest-form-warning-text">Lengkapi nama dan nomor presensi terlebih dahulu!</span>
+          </div>
+
+          <button
+            type="button"
+            onclick="startPostTest()"
+            class="w-full py-4 rounded-2xl bg-gradient-to-r from-cyan-600 via-sky-600 to-teal-500 hover:from-cyan-500 hover:to-teal-400 text-white font-bold text-base shadow-lg shadow-cyan-600/25 hover:shadow-cyan-600/35 hover:scale-[1.01] active:scale-[0.99] transition-all cursor-pointer flex items-center justify-center gap-3"
+          >
+            <i class="fa-solid fa-rocket text-lg"></i>
+            <span>Mulai Pengerjaan Post-Test</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ════════════════════════════════════════════════
+           SECTION 2: CBT QUIZ ENGINE INTERAKTIF
+           ════════════════════════════════════════════════ -->
+      <div id="posttest-quiz-section" class="hidden space-y-6">
+        <!-- Sticky Header Bar -->
+        <div class="bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border border-slate-200 dark:border-slate-800 rounded-2xl p-4 sm:p-5 flex items-center justify-between flex-wrap gap-4 shadow-md sticky top-2 z-40">
+          <div class="flex items-center gap-3">
+            <div class="w-11 h-11 rounded-xl bg-cyan-100 dark:bg-cyan-950/80 text-cyan-600 dark:text-cyan-400 flex items-center justify-center text-lg font-bold shrink-0">
+              <i class="fa-solid fa-user-check"></i>
+            </div>
+            <div>
+              <p class="text-[10px] text-slate-500 dark:text-slate-400 uppercase tracking-wider font-bold">Peserta Ujian</p>
+              <p class="text-slate-900 dark:text-white font-bold text-sm sm:text-base"><span id="display-nama">-</span> • Absen <span id="display-absen">-</span></p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <!-- Violation Badge -->
+            <span
+              id="violation-badge"
+              class="violation-badge hidden items-center gap-1.5 px-3 py-1.5 rounded-full bg-rose-100 dark:bg-rose-950/80 border border-rose-300 dark:border-rose-700 text-rose-700 dark:text-rose-300 text-xs font-bold font-mono"
+            >
+              <i class="fa-solid fa-triangle-exclamation"></i>
+              <span>Pelanggaran: <strong id="violation-count-display">0</strong>/3</span>
+            </span>
+
+            <button type="button" onclick="cancelPostTest()" class="text-xs text-slate-500 hover:text-rose-500 dark:hover:text-rose-400 transition flex items-center gap-1.5 font-bold cursor-pointer">
+              <i class="fa-solid fa-rotate-left"></i> Ganti Identitas
+            </button>
+          </div>
+        </div>
+
+        <!-- Sticky Progress Bar Container -->
+        <div id="progress-container" class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-sm">
+          <div class="flex items-center justify-between mb-2 flex-wrap gap-2 text-xs">
+            <span class="font-bold text-slate-900 dark:text-white flex items-center gap-2"> <i class="fa-solid fa-microchip text-cyan-600 dark:text-cyan-400"></i> Progres Jawaban </span>
+            <span class="font-bold">
+              <span id="answered-count" class="text-cyan-600 dark:text-cyan-400 font-mono text-sm">0</span>
+              <span class="text-slate-400 font-mono"> / 10 Soal Terjawab</span>
+            </span>
+          </div>
+
+          <div class="w-full h-2.5 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
+            <div id="progress-fill" class="progress-bar-fill h-full bg-gradient-to-r from-cyan-600 via-sky-500 to-teal-400 w-0 rounded-full"></div>
+          </div>
+        </div>
+
+        <!-- Question Cards Container -->
+        <div id="question-stage" class="relative">
+          <div id="questions-container" class="space-y-4">
+            <!-- Dynamically populated questions -->
+          </div>
+        </div>
+
+        <!-- Navigation Controls -->
+        <div id="nav-controls" class="flex items-center justify-between gap-4 pt-2">
+          <button
+            type="button"
+            id="btn-prev"
+            onclick="prevQuestion()"
+            class="px-5 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs sm:text-sm font-bold transition flex items-center gap-2 cursor-pointer border border-slate-200 dark:border-slate-700"
+          >
+            <i class="fa-solid fa-arrow-left"></i> Soal Sebelumnya
+          </button>
+
+          <div class="text-xs font-mono font-bold text-slate-500 dark:text-slate-400">Nomor <span id="current-q-number" class="text-cyan-600 dark:text-cyan-400 text-sm">1</span> dari <span id="total-q">10</span></div>
+
+          <button
+            type="button"
+            id="btn-next"
+            onclick="nextQuestion()"
+            class="px-5 py-2.5 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white text-xs sm:text-sm font-bold shadow-md shadow-cyan-600/20 transition flex items-center gap-2 cursor-pointer"
+          >
+            Soal Berikutnya <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </div>
+
+        <!-- Question Dots Indicator (1-10) -->
+        <div id="question-dots" class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 flex flex-wrap items-center justify-center gap-2 shadow-sm">
+          <!-- Dynamically populated dots -->
+        </div>
+
+        <!-- Submit Section -->
+        <div id="submit-section" class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 text-center space-y-4 shadow-sm">
+          <div class="space-y-1">
+            <h4 class="font-bold text-slate-900 dark:text-white text-base">Sudah Selesai Mengerjakan Seluruh Soal?</h4>
+            <p class="text-xs text-slate-500 dark:text-slate-400">Pastikan 10 butir soal telah terjawab sebelum mengumpulkan ke server penilaian.</p>
+          </div>
+
+          <div id="submit-warning" class="hidden p-3 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-700 text-amber-800 dark:text-amber-200 text-xs font-bold max-w-md mx-auto">
+            <i class="fa-solid fa-triangle-exclamation mr-1.5"></i> <span id="submit-warning-text"></span>
+          </div>
+
+          <button
+            type="button"
+            id="btn-submit"
+            onclick="submitPostTest()"
+            class="px-8 py-3.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-sm shadow-md shadow-emerald-600/30 hover:scale-[1.02] active:scale-[0.98] transition cursor-pointer"
+          >
+            <i class="fa-solid fa-cloud-arrow-up mr-2"></i> Kumpulkan Post-Test Sekarang
+          </button>
+        </div>
+      </div>
+
+      <!-- ════════════════════════════════════════════════
+           SECTION 3: HASIL ASESMEN & PEMBAHASAN
+           ════════════════════════════════════════════════ -->
+      <div id="posttest-result-section" class="hidden space-y-8">
+        <div class="bg-gradient-to-br from-cyan-500/15 via-sky-500/5 to-transparent border-2 border-cyan-500/40 rounded-3xl p-8 sm:p-10 text-center shadow-2xl relative overflow-hidden">
+          <!-- Pulse Score Circle -->
+          <div class="score-pulse inline-flex items-center justify-center w-36 h-36 rounded-full bg-white dark:bg-slate-900 border-4 border-cyan-500 mb-5 shadow-xl relative">
+            <div>
+              <div id="final-score" class="text-5xl font-black text-cyan-600 dark:text-cyan-400 leading-none font-mono">0</div>
+              <div class="text-xs text-slate-400 font-bold tracking-wider uppercase mt-1">/ 100</div>
+            </div>
+          </div>
+
+          <h2 id="score-title" class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white mb-2 tracking-tight">-</h2>
+          <p id="score-message" class="text-sm sm:text-base text-slate-600 dark:text-slate-300 max-w-lg mx-auto leading-relaxed">-</p>
+
+          <div id="auto-submit-notice" class="hidden mt-4 mx-auto max-w-md bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-700 rounded-xl px-4 py-3">
+            <p class="text-amber-800 dark:text-amber-200 text-xs font-bold"><i class="fa-solid fa-triangle-exclamation mr-2"></i><span id="auto-submit-reason"></span></p>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4 max-w-md mx-auto mt-6">
+            <div class="bg-white/80 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-sm">
+              <div class="text-emerald-600 dark:text-emerald-400 text-3xl font-black font-mono" id="correct-count">0</div>
+              <div class="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-bold mt-1">Jawaban Benar</div>
+            </div>
+            <div class="bg-white/80 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-sm">
+              <div class="text-rose-600 dark:text-rose-400 text-3xl font-black font-mono" id="wrong-count">0</div>
+              <div class="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-bold mt-1">Jawaban Salah</div>
+            </div>
+          </div>
+
+          <!-- Save to Google Sheets Status -->
+          <div id="save-status" class="hidden mt-6 inline-flex items-center gap-2 text-xs font-bold px-4 py-2 rounded-full border shadow-sm">
+            <span id="save-status-text">Menyimpan nilai ke spreadsheet...</span>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="flex flex-wrap items-center justify-center gap-4 mt-8 pt-6 border-t border-slate-200 dark:border-slate-800">
+            <button
+              type="button"
+              onclick="retryPostTest()"
+              class="px-6 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs sm:text-sm font-bold border border-slate-200 dark:border-slate-700 transition flex items-center gap-2 cursor-pointer"
+            >
+              <i class="fa-solid fa-rotate-right"></i> Ulangi Post-Test
+            </button>
+            <a href="materi.html#lembarkerja" class="px-6 py-3 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white text-xs sm:text-sm font-bold shadow-md shadow-cyan-600/30 transition flex items-center gap-2">
+              <i class="fa-solid fa-book-open"></i> Kembali ke Modul Belajar
+            </a>
+          </div>
+        </div>
+
+        <!-- Review & Pembahasan Lengkap -->
+        <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl overflow-hidden">
+          <button type="button" onclick="toggleReview()" class="w-full p-6 text-left flex items-center justify-between border-b border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition cursor-pointer">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-cyan-100 dark:bg-cyan-950/80 text-cyan-600 dark:text-cyan-400 flex items-center justify-center font-bold">
+                <i class="fa-solid fa-clipboard-question text-lg"></i>
+              </div>
+              <div>
+                <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white">Kunci Jawaban &amp; Rekap Pengerjaan</h3>
+                <p class="text-xs text-slate-500 dark:text-slate-400">Klik untuk melihat rekap jawaban yang benar pada setiap nomor soal.</p>
+              </div>
+            </div>
+            <i id="review-chevron" class="fa-solid fa-chevron-down text-slate-400 transition-transform duration-300"></i>
+          </button>
+
+          <div id="review-body" class="p-6 space-y-5 hidden">
+            <!-- Dynamically populated review cards -->
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Floating Timer Widget (Top-Right) -->
+    <div id="timer-widget" class="hidden fixed top-24 right-4 sm:right-8 z-50 px-4 py-2.5 rounded-2xl border-2 backdrop-blur-xl shadow-2xl flex items-center gap-3 timer-safe bg-white/90 dark:bg-slate-900/90">
+      <div id="timer-icon-wrap" class="w-8 h-8 rounded-xl flex items-center justify-center shrink-0">
+        <i id="timer-icon" class="fa-solid fa-stopwatch text-base"></i>
+      </div>
+      <div>
+        <p class="text-[9px] uppercase font-bold tracking-widest opacity-75">Sisa Waktu</p>
+        <span id="timer-display" class="font-mono text-base sm:text-lg font-black tracking-wider">10:00</span>
+      </div>
+    </div>
+
+    <!-- Anti-Cheat Warning Modal -->
+    <div id="cheat-warning" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
+      <div id="cheat-warning-card" class="bg-white dark:bg-slate-900 border-2 border-rose-500 rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl text-center space-y-4">
+        <div class="w-16 h-16 rounded-2xl bg-rose-100 dark:bg-rose-950/80 text-rose-600 dark:text-rose-400 flex items-center justify-center text-3xl mx-auto shadow-md">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+        </div>
+        <h3 class="text-xl font-bold text-slate-900 dark:text-white">Peringatan Pelanggaran!</h3>
+        <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+          Kamu terdeteksi berpindah jendela/tab! Pelanggaran ke-<strong id="cheat-violation-count" class="text-rose-600 dark:text-rose-400 text-base">1</strong> dari maksimal 3 kali.
+        </p>
+        <p class="text-[11px] text-slate-400">Jika mencapai 3 kali pelanggaran, ujian akan langsung dikumpulkan secara otomatis ke server guru.</p>
+        <button type="button" onclick="closeCheatWarning()" class="w-full py-3 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs sm:text-sm shadow-md transition cursor-pointer">
+          Saya Mengerti &amp; Lanjutkan Ujian
+        </button>
+      </div>
+    </div>
+
+    <!-- Copy/Paste Disabled Toast -->
+    <div id="copy-toast">
+      <i class="fa-solid fa-circle-xmark text-lg"></i>
+      <span id="copy-toast-text">Aksi ini dinonaktifkan selama ujian!</span>
+    </div>
+
+    <!-- Official Dark Footer -->
+    <footer class="bg-brandDark text-slate-400 text-xs py-8 border-t border-slate-800 text-center mt-auto">
+      <div class="max-w-7xl mx-auto px-4 space-y-2">
+        <p>© 2026 RuangInformatika SMA Negeri 4 Yogyakarta • CBT Engine Post-Test Sistem Operasi</p>
+        <p class="text-[11px] text-slate-500">Mata Pelajaran Informatika Fase E (Kelas X) • Kurikulum Merdeka</p>
+      </div>
+    </footer>
+
+    <!-- ============================================================
+         JAVASCRIPT CBT ENGINE (Persis Konsep Materi_VN/post.html)
+         ============================================================ -->
+    <script>
+      /* ── 1. Reading Progress Bar ── */
+      window.addEventListener("scroll", () => {
+        const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const p = document.getElementById("readProgress");
+        if (!p) return;
+        p.style.width = height > 0 ? (winScroll / height) * 100 + "%" : "100%";
+      });
+
+      /* ── 2. Dark/Light Mode Toggle ── */
+      const themeToggleBtn = document.getElementById("themeToggleBtn");
+      if (themeToggleBtn) {
+        themeToggleBtn.addEventListener("click", () => {
+          if (document.documentElement.classList.contains("dark")) {
+            document.documentElement.classList.remove("dark");
+            localStorage.setItem("theme", "light");
+          } else {
+            document.documentElement.classList.add("dark");
+            localStorage.setItem("theme", "dark");
+          }
+        });
+      }
+
+      /* ── 3. Configuration & Endpoints ── */
+      const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyZtXDqSmaEj02yEJzaIkpPjhSWhCn9gcv1CfuGimu5Jc40l_TSZ3F-E2Rn22OgN5SY/exec";
+      const QUIZ_DURATION_SECONDS = 10 * 60; // 10 menit
+      const MAX_TAB_VIOLATIONS = 3;
+
+      /* ══════════════════════════════════════════════════
+         BANK SOAL RESMI: SISTEM OPERASI (10 SOAL LENGKAP)
+         ══════════════════════════════════════════════════ */
+            const QUESTIONS_BASE = [
+        {
+          q: "Urutan Model Lapisan Bawang dari inti terdalam (mesin) hingga lapisan terluar (pengguna) adalah ....",
+          options: [
+            "Hardware → Shell → Kernel → Applications",
+            "Kernel → Hardware → Shell → Applications",
+            "Hardware → Kernel → Shell → Applications",
+            "Applications → Shell → Kernel → Hardware",
+            "Hardware → Applications → Kernel → Shell"
+          ],
+          answer: 2
+        },
+        {
+          q: "Pada Model Lapisan Bawang, perbedaan fungsi antara Kernel dan Shell adalah ....",
+          options: [
+            "Kernel merawat file, sedangkan Shell menyimpan data fisik.",
+            "Kernel mengontrol langsung Hardware, sedangkan Shell menjadi antarmuka perintah pengguna.",
+            "Kernel tempat mengetik teks, sedangkan Shell mengatur listrik motherboard.",
+            "Kernel di lapisan terluar, sedangkan Shell di inti terdalam komputer.",
+            "Kernel khusus untuk HP, sedangkan Shell khusus untuk komputer."
+          ],
+          answer: 1
+        },
+        {
+          q: "Saat komputer baru dinyalakan (booting), sistem akan menjalankan tahap POST (Power On Self Test). Apakah fungsi dari tahap POST tersebut?",
+          options: [
+            "Menampilkan ikon gambar dan menu di layar desktop.",
+            "Membagi jatah waktu kerja CPU secara bergiliran untuk aplikasi.",
+            "Melakukan uji mandiri untuk mengecek apakah RAM, keyboard, dan penyimpanan berfungsi normal.",
+            "Menghapus virus dan malware yang menginfeksi Sistem Operasi.",
+            "Menyalin dokumen dari Flashdisk ke dalam memori utama (RAM)."
+          ],
+          answer: 2
+        },
+        {
+          q: "Saat pengguna menekan tombol Save di Microsoft Word untuk menyimpan file ke SSD/HDD (Disks), alur perintah melewati lapisan bawang adalah ....",
+          options: [
+            "Applications → Hardware (Disks)",
+            "Applications → Shell → Kernel → Hardware (Disks)",
+            "Hardware (Disks) → Shell → Kernel → Applications",
+            "Applications → Kernel → Hardware (Disks) → Shell",
+            "Shell → Applications → Hardware (Disks) → Kernel"
+          ],
+          answer: 1
+        },
+        {
+          q: "Mengapa aplikasi seperti game atau Canva tidak bisa dijalankan di komputer yang belum memiliki Sistem Operasi?",
+          options: [
+            "Karena penyimpanan SSD akan langsung penuh tanpa Sistem Operasi.",
+            "Karena aplikasi membutuhkan Sistem Operasi untuk mengelola hardware dan menjembatani perintah ke mesin.",
+            "Karena arus listrik tidak bisa masuk ke komputer tanpa Sistem Operasi.",
+            "Karena Canva dan game termasuk perangkat keras (hardware).",
+            "Karena layar monitor hanya menyala jika ada jaringan internet."
+          ],
+          answer: 1
+        },
+        {
+          q: "Sistem Operasi diibaratkan seperti \"Resepsionis Hotel\" yang membagi kamar untuk tiap aplikasi yang dibuka agar tidak saling bertabrakan. Ini adalah fungsi ....",
+          options: [
+            "Pengelolaan Memori: membagi alamat dan kapasitas RAM untuk tiap aplikasi.",
+            "Pengelolaan Keamanan: mengunci aplikasi dengan kata sandi.",
+            "Proses Booting: mengecek kondisi fisik RAM saat komputer menyala.",
+            "Pipelining: mengeksekusi instruksi di dalam CPU secara estafet.",
+            "Pengelolaan File: menghapus dokumen di dalam Harddisk."
+          ],
+          answer: 0
+        },
+        {
+          q: "Proses menyalakan komputer dan membangunkan Sistem Operasi hingga siap bekerja disebut Booting. Urutan 5 langkah proses Booting yang tepat adalah ....",
+          options: [
+            "Daya Dihidupkan → Memuat BIOS → POST → Memuat SO ke RAM → Pengalihan Kontrol",
+            "Daya Dihidupkan → POST → Memuat BIOS → Memuat SO ke RAM → Pengalihan Kontrol",
+            "POST → Daya Dihidupkan → Memuat SO ke RAM → Memuat BIOS → Pengalihan Kontrol",
+            "Memuat BIOS → POST → Daya Dihidupkan → Pengalihan Kontrol → Memuat SO ke RAM",
+            "Daya Dihidupkan → Memuat SO ke RAM → POST → Memuat BIOS → Pengalihan Kontrol"
+          ],
+          answer: 1
+        },
+        {
+          q: "Apakah yang dimaksud dengan Sistem Operasi (Operating System) pada sistem komputer?",
+          options: [
+            "Komponen fisik komputer yang dapat dilihat dan disentuh secara langsung oleh pengguna.",
+            "Program aplikasi yang dirancang khusus untuk mengetik dokumen dan mengedit foto. ",
+            "Perangkat lunak sistem yang bertugas mengelola hardware, mengelola sumber daya software, serta menghubungkan perangkat keras dengan pengguna.",
+            "Kepingan memori sementara untuk menyimpan data aplikasi yang sedang aktif dibuka.",
+            "Alat elektronik khusus yang hanya menjalankan satu fungsi spesifik secara otomatis."
+          ],
+          answer: 2
+        },
+        {
+          q: "Pasangan yang tepat antara fitur Sistem Operasi dan contoh penggunaannya adalah ....",
+          options: [
+            "GUI: Mengetik perintah teks di Command Prompt (CMD).",
+            "CLI: Mengklik ikon aplikasi dengan kursor mouse atau sentuhan jari.",
+            "File Explorer: Memantau persentase suhu dan beban kerja CPU.",
+            "Utilitas Keamanan & Pemantauan: Mengatur Firewall, password, dan mengecek RAM di Task Manager.",
+            "Device Driver: Menyalin (copy) dan menghapus (delete) folder tugas."
+          ],
+          answer: 3
+        },
+        {
+          q: "Saat pengguna membuka banyak aplikasi sekaligus (Multitasking), bagaimana cara kerja algoritma Round Robin (Time Sharing) dalam menjadwalkan kerja CPU?",
+          options: [
+            "Menyelesaikan satu aplikasi sampai tuntas terlebih dahulu baru memproses aplikasi lainnya.",
+            "Membagi jatah waktu kecil yang sama (Time Slice) secara adil dan bergiliran ke setiap aplikasi yang mengantre di RAM.",
+            "Mematikan paksa aplikasi yang berukuran besar agar CPU tidak kelelahan.",
+            "Memindahkan seluruh tugas pengolahan data dari CPU ke dalam Flashdisk.",
+            "Mengunci dua aplikasi secara bersamaan agar tidak menggunakan CPU (Deadlock)."
+          ],
+          answer: 1
+        }
+      ];
+
+      /* ══════════════════════════════════════════════════
+         STATE VARIABLES
+         ══════════════════════════════════════════════════ */
+      let QUESTIONS = [];
+      let studentData = { nama: "", absen: "" };
+      let answers = [];
+      let currentIndex = 0;
+      let timerInterval = null;
+      let timeRemaining = QUIZ_DURATION_SECONDS;
+      let tabViolations = 0;
+      let isSubmitted = false;
+      let testStartTime = null;
+
+      /* ── Shuffle Array Helper ── */
+      function shuffleArray(arr) {
+        const copy = [...arr];
+        for (let i = copy.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [copy[i], copy[j]] = [copy[j], copy[i]];
+        }
+        return copy;
+      }
+
+      function buildShuffledQuiz() {
+        const shuffledQ = shuffleArray(QUESTIONS_BASE);
+        return shuffledQ.map((item) => {
+          const originalOptions = item.options.map((text, idx) => ({ text, isCorrect: idx === item.answer }));
+          const shuffledOptions = shuffleArray(originalOptions);
+          const newAnswer = shuffledOptions.findIndex((o) => o.isCorrect);
+          return {
+            q: item.q,
+            options: shuffledOptions.map((o) => o.text),
+            answer: newAnswer,
+            // no explanation
+          };
+        });
+      }
+
+      /* ══════════════════════════════════════════════════
+         START POST-TEST
+         ══════════════════════════════════════════════════ */
+      function startPostTest() {
+        const namaInput = document.getElementById("posttest-nama");
+        const absenInput = document.getElementById("posttest-absen");
+        const warning = document.getElementById("posttest-form-warning");
+        const warningText = document.getElementById("posttest-form-warning-text");
+
+        const nama = (namaInput.value || "").trim();
+        const absen = (absenInput.value || "").trim();
+
+        if (!nama || !absen) {
+          warningText.textContent = "Harap masukkan nama lengkap dan nomor presensi kamu!";
+          warning.classList.remove("hidden");
+          return;
+        }
+
+        const absenNum = parseInt(absen, 10);
+        if (isNaN(absenNum) || absenNum < 1 || absenNum > 36) {
+          warningText.textContent = "Nomor presensi harus berupa angka antara 1 sampai 36!";
+          warning.classList.remove("hidden");
+          return;
+        }
+
+        warning.classList.add("hidden");
+        studentData = { nama, absen: absenNum };
+
+        document.getElementById("display-nama").textContent = studentData.nama;
+        document.getElementById("display-absen").textContent = studentData.absen;
+
+        QUESTIONS = buildShuffledQuiz();
+        answers = new Array(QUESTIONS.length).fill(null);
+        currentIndex = 0;
+        tabViolations = 0;
+        timeRemaining = QUIZ_DURATION_SECONDS;
+        testStartTime = Date.now();
+        isSubmitted = false;
+
+        document.getElementById("posttest-form-section").classList.add("hidden");
+        document.getElementById("posttest-quiz-section").classList.remove("hidden");
+        document.getElementById("timer-widget").classList.remove("hidden");
+        document.getElementById("total-q").textContent = QUESTIONS.length;
+
+        document.body.classList.add("quiz-active");
+
+        renderQuestions();
+        renderDots();
+        showQuestion(0, null);
+        updateProgress();
+        updateNavButtons();
+        updateTimerDisplay();
+
+        attachAntiCheat();
+        startTimer();
+
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function cancelPostTest() {
+        if (!confirm("Batalkan sesi ujian dan kembali ke pengisian identitas? Progres yang sedang dikerjakan akan hilang.")) return;
+        stopTimer();
+        detachAntiCheat();
+        document.body.classList.remove("quiz-active");
+        document.getElementById("timer-widget").classList.add("hidden");
+        document.getElementById("posttest-quiz-section").classList.add("hidden");
+        document.getElementById("posttest-form-section").classList.remove("hidden");
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      /* ══════════════════════════════════════════════════
+         RENDER QUESTIONS & DOTS
+         ══════════════════════════════════════════════════ */
+      function renderQuestions() {
+        const container = document.getElementById("questions-container");
+        container.innerHTML = "";
+
+        QUESTIONS.forEach((item, idx) => {
+          const card = document.createElement("div");
+          card.id = "q-card-" + idx;
+          card.className = "question-card bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 space-y-6 shadow-xl hidden";
+
+          const header = document.createElement("div");
+          header.className = "flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800";
+          header.innerHTML = `
+            <div class="flex items-center gap-2">
+              <span class="w-8 h-8 rounded-xl bg-cyan-100 dark:bg-cyan-950/80 text-cyan-600 dark:text-cyan-400 font-bold text-xs flex items-center justify-center font-mono">${idx + 1}</span>
+              <span class="text-xs font-bold text-slate-500 uppercase tracking-wider font-mono">Soal Pilihan Ganda</span>
+            </div>
+            <span class="text-xs font-mono font-bold px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Bobot: 10 Poin</span>
+          `;
+          card.appendChild(header);
+
+          const qText = document.createElement("p");
+          qText.className = "text-base sm:text-lg font-bold text-slate-900 dark:text-white leading-relaxed";
+          qText.innerHTML = item.q;
+          card.appendChild(qText);
+
+          const optsWrap = document.createElement("div");
+          optsWrap.className = "space-y-3 pt-2";
+
+          const letters = ["A", "B", "C", "D", "E"];
+          item.options.forEach((optText, optIdx) => {
+            const label = document.createElement("label");
+            label.className = "option-label";
+            label.setAttribute("data-q", idx);
+            label.setAttribute("data-opt", optIdx);
+
+            label.innerHTML = `
+              <input type="radio" name="opt-q-${idx}" value="${optIdx}">
+              <span class="option-marker">${letters[optIdx]}</span>
+              <span class="text-xs sm:text-sm text-slate-700 dark:text-slate-200 font-medium leading-relaxed flex-1 pt-0.5">${optText}</span>
+            `;
+
+            label.addEventListener("click", (e) => {
+              if (isSubmitted) return;
+              e.preventDefault();
+              selectOption(idx, optIdx);
+            });
+
+            optsWrap.appendChild(label);
+          });
+
+          card.appendChild(optsWrap);
+          container.appendChild(card);
+        });
+      }
+
+      function renderDots() {
+        const dotsContainer = document.getElementById("question-dots");
+        dotsContainer.innerHTML = "";
+
+        QUESTIONS.forEach((_, idx) => {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.id = "dot-" + idx;
+          btn.textContent = idx + 1;
+          btn.className =
+            "w-9 h-9 rounded-xl text-xs font-bold font-mono transition-all border flex items-center justify-center cursor-pointer bg-slate-100 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-cyan-500";
+          btn.addEventListener("click", () => jumpToQuestion(idx));
+          dotsContainer.appendChild(btn);
+        });
+      }
+
+      function showQuestion(index, direction) {
+        QUESTIONS.forEach((_, i) => {
+          const card = document.getElementById("q-card-" + i);
+          if (card) {
+            card.classList.add("hidden");
+            card.classList.remove("slide-in-right", "slide-in-left");
+          }
+        });
+
+        const activeCard = document.getElementById("q-card-" + index);
+        if (activeCard) {
+          activeCard.classList.remove("hidden");
+          if (direction === "next") activeCard.classList.add("slide-in-right");
+          else if (direction === "prev") activeCard.classList.add("slide-in-left");
+        }
+
+        currentIndex = index;
+        document.getElementById("current-q-number").textContent = index + 1;
+        updateNavButtons();
+        updateDotsUI();
+      }
+
+      function jumpToQuestion(idx) {
+        if (idx === currentIndex) return;
+        const dir = idx > currentIndex ? "next" : "prev";
+        showQuestion(idx, dir);
+      }
+
+      function nextQuestion() {
+        if (currentIndex < QUESTIONS.length - 1) {
+          showQuestion(currentIndex + 1, "next");
+        }
+      }
+
+      function prevQuestion() {
+        if (currentIndex > 0) {
+          showQuestion(currentIndex - 1, "prev");
+        }
+      }
+
+      function selectOption(qIdx, optIdx) {
+        if (isSubmitted) return;
+
+        answers[qIdx] = optIdx;
+
+        const card = document.getElementById("q-card-" + qIdx);
+        if (card) {
+          card.querySelectorAll(".option-label").forEach((lbl) => {
+            lbl.classList.remove("selected");
+            const radio = lbl.querySelector("input[type='radio']");
+            if (radio) radio.checked = false;
+          });
+
+          const selectedLabel = card.querySelector(`.option-label[data-opt="${optIdx}"]`);
+          if (selectedLabel) {
+            selectedLabel.classList.add("selected");
+            const radio = selectedLabel.querySelector("input[type='radio']");
+            if (radio) radio.checked = true;
+          }
+        }
+
+        updateProgress();
+        updateDotsUI();
+      }
+
+      function updateProgress() {
+        const answered = answers.filter((a) => a !== null).length;
+        document.getElementById("answered-count").textContent = answered;
+        const percent = (answered / QUESTIONS.length) * 100;
+        document.getElementById("progress-fill").style.width = percent + "%";
+      }
+
+      function updateNavButtons() {
+        const btnPrev = document.getElementById("btn-prev");
+        const btnNext = document.getElementById("btn-next");
+        if (!btnPrev || !btnNext) return;
+
+        btnPrev.disabled = currentIndex === 0;
+        btnPrev.style.opacity = currentIndex === 0 ? "0.5" : "1";
+
+        btnNext.disabled = currentIndex === QUESTIONS.length - 1;
+        btnNext.style.opacity = currentIndex === QUESTIONS.length - 1 ? "0.5" : "1";
+      }
+
+      function updateDotsUI() {
+        QUESTIONS.forEach((_, idx) => {
+          const dot = document.getElementById("dot-" + idx);
+          if (!dot) return;
+
+          const isAnswered = answers[idx] !== null;
+          const isCurrent = idx === currentIndex;
+
+          dot.className = "w-9 h-9 rounded-xl text-xs font-bold font-mono transition-all border flex items-center justify-center cursor-pointer ";
+
+          if (isCurrent) {
+            dot.className += "bg-cyan-600 text-white border-cyan-400 shadow-md shadow-cyan-600/30 ring-2 ring-cyan-500/30 scale-105";
+          } else if (isAnswered) {
+            dot.className += "bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border-emerald-500/40";
+          } else {
+            dot.className += "bg-slate-100 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-cyan-500";
+          }
+        });
+      }
+
+      /* ══════════════════════════════════════════════════
+         TIMER LOGIC
+         ══════════════════════════════════════════════════ */
+      function startTimer() {
+        updateTimerDisplay();
+        timerInterval = setInterval(() => {
+          timeRemaining--;
+          updateTimerDisplay();
+          if (timeRemaining <= 0) {
+            stopTimer();
+            autoSubmit("⏰ Waktu ujian habis! Jawaban kamu telah otomatis dikumpulkan.");
+          }
+        }, 1000);
+      }
+
+      function stopTimer() {
+        if (timerInterval) {
+          clearInterval(timerInterval);
+          timerInterval = null;
+        }
+      }
+
+      function updateTimerDisplay() {
+        const display = document.getElementById("timer-display");
+        const widget = document.getElementById("timer-widget");
+        const iconWrap = document.getElementById("timer-icon-wrap");
+        const icon = document.getElementById("timer-icon");
+        if (!display) return;
+
+        const m = Math.floor(Math.max(0, timeRemaining) / 60);
+        const s = Math.max(0, timeRemaining) % 60;
+        display.textContent = `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+
+        widget.classList.remove("timer-safe", "timer-warning", "timer-danger");
+        iconWrap.classList.remove("bg-sky-500/15", "bg-amber-500/15", "bg-rose-500/15");
+        icon.classList.remove("text-sky-500", "text-amber-500", "text-rose-500");
+
+        if (timeRemaining <= 60) {
+          widget.classList.add("timer-danger");
+          iconWrap.classList.add("bg-rose-500/15");
+          icon.classList.add("text-rose-500");
+        } else if (timeRemaining <= 180) {
+          widget.classList.add("timer-warning");
+          iconWrap.classList.add("bg-amber-500/15");
+          icon.classList.add("text-amber-500");
+        } else {
+          widget.classList.add("timer-safe");
+          iconWrap.classList.add("bg-sky-500/15");
+          icon.classList.add("text-sky-500");
+        }
+      }
+
+      /* ══════════════════════════════════════════════════
+         ANTI-CHEAT: TAB SWITCH MONITORING
+         ══════════════════════════════════════════════════ */
+      let visibilityHandler = null;
+
+      function attachAntiCheat() {
+        visibilityHandler = () => {
+          if (isSubmitted) return;
+          if (document.hidden) {
+            tabViolations++;
+            document.getElementById("violation-count-display").textContent = tabViolations;
+            const badge = document.getElementById("violation-badge");
+            badge.classList.remove("pulse");
+            void badge.offsetWidth;
+            badge.classList.add("pulse");
+            badge.classList.remove("hidden");
+            badge.classList.add("inline-flex");
+
+            if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
+
+            if (tabViolations >= MAX_TAB_VIOLATIONS) {
+              autoSubmit(`🚫 Terdeteksi ${MAX_TAB_VIOLATIONS}× berpindah jendela/tab! Ujian otomatis dikumpulkan.`);
+            } else {
+              showCheatWarning(tabViolations);
+            }
+          }
+        };
+        document.addEventListener("visibilitychange", visibilityHandler);
+
+        document.addEventListener("contextmenu", blockEvent);
+        document.addEventListener("copy", blockEvent);
+        document.addEventListener("cut", blockEvent);
+        document.addEventListener("paste", blockEvent);
+        document.addEventListener("selectstart", blockSelect);
+        document.addEventListener("keydown", blockKeys);
+      }
+
+      function detachAntiCheat() {
+        if (visibilityHandler) {
+          document.removeEventListener("visibilitychange", visibilityHandler);
+          visibilityHandler = null;
+        }
+        document.removeEventListener("contextmenu", blockEvent);
+        document.removeEventListener("copy", blockEvent);
+        document.removeEventListener("cut", blockEvent);
+        document.removeEventListener("paste", blockEvent);
+        document.removeEventListener("selectstart", blockSelect);
+        document.removeEventListener("keydown", blockKeys);
+      }
+
+      let toastTimeout = null;
+      function showCopyToast(text) {
+        const toast = document.getElementById("copy-toast");
+        if (!toast) return;
+        document.getElementById("copy-toast-text").textContent = text || "Aksi ini dinonaktifkan selama ujian!";
+        toast.classList.add("show");
+        clearTimeout(toastTimeout);
+        toastTimeout = setTimeout(() => toast.classList.remove("show"), 1800);
+      }
+
+      function blockEvent(e) {
+        if (isSubmitted) return;
+        e.preventDefault();
+        showCopyToast();
+        return false;
+      }
+
+      function blockSelect(e) {
+        if (isSubmitted) return;
+        const tag = (e.target.tagName || "").toUpperCase();
+        if (tag !== "INPUT" && tag !== "TEXTAREA") {
+          e.preventDefault();
+        }
+      }
+
+      function blockKeys(e) {
+        if (isSubmitted) return;
+        if (e.ctrlKey || e.metaKey) {
+          const k = (e.key || "").toLowerCase();
+          if (["c", "v", "x", "a", "p", "s", "u"].includes(k)) {
+            e.preventDefault();
+            showCopyToast();
+            return false;
+          }
+        }
+      }
+
+      function showCheatWarning(count) {
+        const overlay = document.getElementById("cheat-warning");
+        const card = document.getElementById("cheat-warning-card");
+        document.getElementById("cheat-violation-count").textContent = count;
+        overlay.classList.remove("hidden");
+        card.classList.remove("warning-shake");
+        void card.offsetWidth;
+        card.classList.add("warning-shake");
+      }
+
+      function closeCheatWarning() {
+        document.getElementById("cheat-warning").classList.add("hidden");
+      }
+
+      /* ══════════════════════════════════════════════════
+         SUBMISSION LOGIC
+         ══════════════════════════════════════════════════ */
+      function submitPostTest() {
+        if (isSubmitted) return;
+
+        const unanswered = answers.filter((a) => a === null).length;
+        if (unanswered > 0) {
+          const warning = document.getElementById("submit-warning");
+          const warningText = document.getElementById("submit-warning-text");
+          warningText.textContent = `Masih ada ${unanswered} nomor yang belum kamu jawab. Harap lengkapi semua soal sebelum mengumpulkan.`;
+          warning.classList.remove("hidden");
+          setTimeout(() => warning.classList.add("hidden"), 4000);
+
+          const firstEmpty = answers.findIndex((a) => a === null);
+          if (firstEmpty !== -1) {
+            jumpToQuestion(firstEmpty);
+          }
+          return;
+        }
+
+        performSubmit(false, null);
+      }
+
+      function autoSubmit(reason) {
+        if (isSubmitted) return;
+        performSubmit(true, reason);
+      }
+
+      function performSubmit(forced, reason) {
+        isSubmitted = true;
+        document.getElementById("btn-submit").disabled = true;
+        document.getElementById("btn-next").disabled = true;
+        document.getElementById("btn-prev").disabled = true;
+
+        stopTimer();
+        detachAntiCheat();
+        document.body.classList.remove("quiz-active");
+        document.getElementById("timer-widget").classList.add("hidden");
+        document.getElementById("cheat-warning").classList.add("hidden");
+
+        let correct = 0;
+        answers.forEach((ans, idx) => {
+          if (ans === QUESTIONS[idx].answer) correct++;
+        });
+        const score = correct * 10;
+
+        document.getElementById("final-score").textContent = score;
+        document.getElementById("correct-count").textContent = correct;
+        document.getElementById("wrong-count").textContent = QUESTIONS.length - correct;
+
+        let title = "";
+        let message = "";
+        if (score >= 80) {
+          title = "🌟 Luar Biasa!";
+          message = "Pemahamanmu tentang Konsep Sistem Operasi, Arsitektur Kernel, dan Manajemen Memori sangat matang! Pertahankan prestasimu.";
+        } else if (score >= 60) {
+          title = "👍 Kerja Bagus!";
+          message = "Pemahaman dasarmu tentang Sistem Operasi sudah baik. Pelajari kembali materi penjadwalan CPU dan perintah CLI untuk hasil sempurna.";
+        } else if (score >= 40) {
+          title = "💪 Tetap Semangat!";
+          message = "Masih ada konsep yang perlu diperjelas. Buka bagian pembahasan di bawah dan pelajari kembali siklus proses serta virtual memory.";
+        } else {
+          title = "📚 Ayo Belajar Lagi!";
+          message = "Jangan patah semangat! Pelajari kembali modul interaktif Sistem Operasi, lalu coba kerjakan kembali post-test ini.";
+        }
+        document.getElementById("score-title").textContent = title;
+        document.getElementById("score-message").textContent = message;
+
+        if (forced && reason) {
+          const notice = document.getElementById("auto-submit-notice");
+          document.getElementById("auto-submit-reason").textContent = reason;
+          notice.classList.remove("hidden");
+        } else {
+          document.getElementById("auto-submit-notice").classList.add("hidden");
+        }
+
+        document.querySelectorAll(".option-label").forEach((lbl) => lbl.classList.add("disabled"));
+
+        QUESTIONS.forEach((item, idx) => {
+          const card = document.getElementById("q-card-" + idx);
+          if (!card) return;
+          const labels = card.querySelectorAll(".option-label");
+          const userAns = answers[idx];
+          const correctAns = item.answer;
+
+          if (labels[correctAns]) labels[correctAns].classList.add("review-correct");
+          if (userAns !== correctAns && userAns !== null && labels[userAns]) {
+            labels[userAns].classList.add("review-wrong");
+            card.classList.add("wrong");
+          } else if (userAns === correctAns) {
+            card.classList.add("correct");
+          }
+        });
+
+        document.getElementById("posttest-quiz-section").classList.add("hidden");
+        document.getElementById("posttest-result-section").classList.remove("hidden");
+
+        const cleanNama = studentData.nama.toLowerCase().replace(/\s+/g, " ").trim();
+        const submitKey = "posttest_so_submitted_" + cleanNama + "_" + studentData.absen;
+        localStorage.setItem(submitKey, "true");
+
+        renderReview();
+
+        const durationSec = testStartTime ? Math.round((Date.now() - testStartTime) / 1000) : 0;
+        sendToGoogleSheets(correct, QUESTIONS.length - correct, score, durationSec);
+
+        setTimeout(() => {
+          document.getElementById("posttest-result-section").scrollIntoView({ behavior: "smooth", block: "start" });
+        }, 200);
+      }
+
+      /* ══════════════════════════════════════════════════
+         REVIEW & PEMBAHASAN DETAIL
+         ══════════════════════════════════════════════════ */
+      function renderReview() {
+        const body = document.getElementById("review-body");
+        body.innerHTML = "";
+
+        QUESTIONS.forEach((item, idx) => {
+          const userAns = answers[idx];
+          const correctAns = item.answer;
+          const isCorrect = userAns === correctAns;
+
+          const card = document.createElement("div");
+          card.className = "bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 rounded-2xl p-5 space-y-3.5 shadow-sm";
+
+          const header = document.createElement("div");
+          header.className = "flex items-start gap-3";
+          header.innerHTML = `
+            <div class="w-8 h-8 rounded-xl ${isCorrect ? "bg-emerald-100 dark:bg-emerald-950/80 border-emerald-300 dark:border-emerald-700 text-emerald-600 dark:text-emerald-400" : "bg-rose-100 dark:bg-rose-950/80 border-rose-300 dark:border-rose-700 text-rose-600 dark:text-rose-400"} border flex items-center justify-center font-bold text-xs shrink-0 font-mono shadow-sm">
+              ${isCorrect ? '<i class="fa-solid fa-check"></i>' : '<i class="fa-solid fa-xmark"></i>'}
+            </div>
+            <p class="text-sm font-bold text-slate-900 dark:text-white flex-1">${idx + 1}. ${item.q}</p>
+          `;
+          card.appendChild(header);
+
+          const optsWrap = document.createElement("div");
+          optsWrap.className = "space-y-2 pl-11 text-xs sm:text-sm";
+          const letters = ["A", "B", "C", "D", "E"];
+          item.options.forEach((opt, oi) => {
+            let cls = "text-slate-600 dark:text-slate-400";
+            let icon = '<i class="fa-regular fa-circle text-slate-400 mr-2 text-xs"></i>';
+            if (oi === correctAns) {
+              cls = "text-emerald-700 dark:text-emerald-300 font-bold bg-emerald-50 dark:bg-emerald-950/40 p-2.5 rounded-xl border border-emerald-300 dark:border-emerald-800";
+              icon = '<i class="fa-solid fa-circle-check text-emerald-600 dark:text-emerald-400 mr-2"></i>';
+            } else if (oi === userAns && !isCorrect) {
+              cls = "text-rose-700 dark:text-rose-300 font-bold bg-rose-50 dark:bg-rose-950/40 p-2.5 rounded-xl border border-rose-300 dark:border-rose-800 line-through";
+              icon = '<i class="fa-solid fa-circle-xmark text-rose-600 dark:text-rose-400 mr-2"></i>';
+            }
+
+            const p = document.createElement("div");
+            p.className = `flex items-start ${cls}`;
+            p.innerHTML = `<span class="font-mono font-bold mr-1.5 shrink-0">${letters[oi]}.</span> <span class="flex-1">${opt}</span>`;
+            optsWrap.appendChild(p);
+          });
+          card.appendChild(optsWrap);
+
+          // Penjelasan jawaban dihilangkan sesuai permintaan
+
+          body.appendChild(card);
+        });
+      }
+
+      function toggleReview() {
+        const body = document.getElementById("review-body");
+        const chevron = document.getElementById("review-chevron");
+        const isHidden = body.classList.contains("hidden");
+
+        if (isHidden) {
+          body.classList.remove("hidden");
+          chevron.style.transform = "rotate(180deg)";
+        } else {
+          body.classList.add("hidden");
+          chevron.style.transform = "rotate(0deg)";
+        }
+      }
+
+      /* ══════════════════════════════════════════════════
+         INTEGRASI GOOGLE SPREADSHEET
+         ══════════════════════════════════════════════════ */
+      async function sendToGoogleSheets(benar, salah, skor, durasi) {
+        const statusEl = document.getElementById("save-status");
+        const statusText = document.getElementById("save-status-text");
+
+        if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL.includes("......")) {
+          statusEl.classList.remove("hidden");
+          statusEl.className = "mt-5 inline-flex items-center gap-2 text-xs font-bold px-4 py-2 rounded-full bg-amber-100 dark:bg-amber-950/80 border border-amber-300 dark:border-amber-700 text-amber-800 dark:text-amber-300";
+          statusText.innerHTML = '<i class="fa-solid fa-triangle-exclamation mr-1"></i> URL backend belum dikonfigurasi.';
+          return;
+        }
+
+        statusEl.classList.remove("hidden");
+        statusEl.className = "mt-5 inline-flex items-center gap-2 text-xs font-bold px-4 py-2 rounded-full bg-sky-100 dark:bg-sky-950/80 border border-sky-300 dark:border-sky-700 text-sky-800 dark:text-sky-300";
+        statusText.innerHTML = '<i class="fa-solid fa-spinner spinner mr-1"></i> Menyimpan hasil ke Google Sheets...';
+
+        try {
+          const formData = new URLSearchParams();
+          formData.append("jenis", "POSTTEST-SISTEM-OPERASI");
+          formData.append("nama", studentData.nama);
+          formData.append("absen", studentData.absen);
+          formData.append("benar", benar);
+          formData.append("salah", salah);
+          formData.append("skor", skor);
+          formData.append("durasi", durasi);
+          formData.append("pelanggaran_tab", tabViolations);
+
+          console.log("📤 Mengirim data Post-Test Sistem Operasi...", Object.fromEntries(formData));
+
+          await fetch(APPS_SCRIPT_URL, {
+            method: "POST",
+            mode: "no-cors",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: formData.toString(),
+          });
+
+          statusEl.className = "mt-5 inline-flex items-center gap-2 text-xs font-bold px-4 py-2 rounded-full bg-emerald-100 dark:bg-emerald-950/80 border border-emerald-300 dark:border-emerald-700 text-emerald-800 dark:text-emerald-300";
+          statusText.innerHTML = '<i class="fa-solid fa-circle-check mr-1"></i> Nilai berhasil tersimpan ke spreadsheet guru!';
+          console.log("✅ Data Post-Test Sistem Operasi berhasil terkirim.");
+        } catch (err) {
+          statusEl.className = "mt-5 inline-flex items-center gap-2 text-xs font-bold px-4 py-2 rounded-full bg-rose-100 dark:bg-rose-950/80 border border-rose-300 dark:border-rose-700 text-rose-800 dark:text-rose-300";
+          statusText.innerHTML = '<i class="fa-solid fa-circle-xmark mr-1"></i> Gagal menyimpan (periksa koneksi internet)';
+          console.error("Save error:", err);
+        }
+      }
+
+      /* ══════════════════════════════════════════════════
+         RETRY POST-TEST
+         ══════════════════════════════════════════════════ */
+      function retryPostTest() {
+        if (!confirm("Yakin ingin mengulang Post-Test? Urutan butir soal dan opsi jawaban akan diacak kembali.")) return;
+
+        isSubmitted = false;
+        answers = new Array(QUESTIONS.length).fill(null);
+        currentIndex = 0;
+        tabViolations = 0;
+        timeRemaining = QUIZ_DURATION_SECONDS;
+        testStartTime = Date.now();
+
+        document.getElementById("posttest-result-section").classList.add("hidden");
+        document.getElementById("posttest-quiz-section").classList.remove("hidden");
+        document.getElementById("btn-submit").disabled = false;
+        document.getElementById("btn-next").disabled = false;
+        document.getElementById("btn-prev").disabled = false;
+        document.getElementById("save-status").classList.add("hidden");
+        document.getElementById("save-status-text").innerHTML = "";
+        document.getElementById("auto-submit-notice").classList.add("hidden");
+        document.getElementById("violation-badge").classList.add("hidden");
+        document.getElementById("violation-count-display").textContent = "0";
+
+        document.getElementById("review-body").innerHTML = "";
+        document.getElementById("review-body").classList.add("hidden");
+        document.getElementById("review-chevron").style.transform = "rotate(0deg)";
+
+        QUESTIONS = buildShuffledQuiz();
+        answers = new Array(QUESTIONS.length).fill(null);
+        renderQuestions();
+        renderDots();
+        showQuestion(0, null);
+        updateProgress();
+        updateNavButtons();
+        updateTimerDisplay();
+
+        document.body.classList.add("quiz-active");
+        attachAntiCheat();
+        startTimer();
+        document.getElementById("timer-widget").classList.remove("hidden");
+
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    </script>
+  </body>
+</html>

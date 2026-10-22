@@ -1475,23 +1475,6 @@
               </div>
             </div>
           </div>
-
-          <!-- Pertanyaan Sintesis / Kesimpulan -->
-          <div class="bg-black/30 border border-white/10 rounded-2xl p-5 space-y-2.5">
-            <div class="flex items-center gap-2">
-              <i class="fa-solid fa-scale-balanced text-amber-400 text-sm"></i>
-              <label class="text-xs font-bold text-white">Sintesis Konsep: Apa perbedaan mendasar antara Hardware dan Software menurut kelompokmu?</label>
-            </div>
-            <textarea
-              id="a0_diff"
-              class="cbt-input-sm text-xs"
-              style="min-height: 64px"
-              placeholder="Tuliskan kesimpulan perbedaan utama antara hardware dan software dalam 1-2 kalimat..."
-            ></textarea>
-            <p class="text-[11px] text-gray-400 italic">
-              <i class="fa-solid fa-circle-info text-sky-400 mr-1"></i>Petunjuk: Pikirkan mengenai aspek fisik (bisa disentuh atau tidak) dan perannya dalam menjalankan komputer.
-            </p>
-          </div>
         </div>
 
         <!-- ============ AKTIVITAS 2 ============ -->
@@ -2546,7 +2529,6 @@
           a0_sw1_nama: getVal("a0_sw1_nama"),
           a0_sw2_nama: getVal("a0_sw2_nama"),
           a0_sw3_nama: getVal("a0_sw3_nama"),
-          a0_diff: getVal("a0_diff"),
           sim_input: optLabel(optVal("sim_input")),
           sim_ram: optLabel(optVal("sim_ram")),
           sim_cu: optLabel(optVal("sim_cu")),
@@ -2664,24 +2646,6 @@
             ],
             colW,
           );
-
-          if (data.a0_diff && data.a0_diff !== "-") {
-            const padX = 6;
-            const bodySize = 8.5;
-            const diffLines = measure(data.a0_diff, bodySize, "normal", innerW - 12);
-            const blockH = Math.max(diffLines.length * lh(bodySize) + 8, 16);
-            ensureSpace(blockH + 12);
-            drawCard(margin, y, contentW, blockH + 6, { accent: C.sky, borderColor: [40, 100, 130] });
-            setFont("bold", 8.5, C.sky);
-            doc.text("Sintesis: Perbedaan Hardware vs Software", margin + padX + 2, y + 5.5);
-            setFont("normal", bodySize, C.text);
-            let dy = y + 10;
-            diffLines.forEach((l) => {
-              doc.text(l, margin + padX + 2, dy);
-              dy += lh(bodySize);
-            });
-            y += blockH + 10;
-          }
         }
 
         /* ── 5. AKTIVITAS 2A ── */
@@ -2954,8 +2918,7 @@
         "a0_hw3_nama",
         "a0_sw1_nama",
         "a0_sw2_nama",
-        "a0_sw3_nama",
-        "a0_diff"
+        "a0_sw3_nama"
       ];
 
       document.addEventListener("DOMContentLoaded", () => {
@@ -3723,8 +3686,7 @@
       function getActivityProgress() {
         const hwCount = [1, 2, 3].filter((i) => (document.getElementById(`a0_hw${i}_nama`)?.value || "").trim().length > 0).length;
         const swCount = [1, 2, 3].filter((i) => (document.getElementById(`a0_sw${i}_nama`)?.value || "").trim().length > 0).length;
-        const diffText = (document.getElementById("a0_diff")?.value || "").trim();
-        const a1Done = hwCount >= 2 && swCount >= 2 && diffText.length >= 10;
+        const a1Done = hwCount >= 2 && swCount >= 2;
 
         const a2A = ["a1_1", "a1_2", "a1_3", "a1_4", "a1_5", "a1_6"];
         const a2B = ["a1b_1", "a1b_2", "a1b_3", "a1b_4", "a1b_5"];

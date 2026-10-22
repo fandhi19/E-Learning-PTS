@@ -1,1693 +1,1703 @@
 <!doctype html>
 <html lang="id">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>LKPD Arsitektur Von Neumann &amp; Dinamika I-P-O | Experiential Learning</title>
+    <title>LKPD Misi Eksplorasi Game: Sistem Komputer &amp; Sistem Operasi | Kelas X</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet" />
     <style>
-      :root {
-        --navy: #0f172a;
-        --navy-2: #1e293b;
-        --purple: #7c3aed;
-        --purple-2: #a78bfa;
-        --purple-tint: #f5f3ff;
-        --purple-border: #ddd6fe;
-        --sky: #0284c7;
-        --sky-2: #38bdf8;
-        --sky-tint: #eff6ff;
-        --sky-border: #bfdbfe;
-        --green: #059669;
-        --green-tint: #ecfdf5;
-        --green-border: #a7f3d0;
-        --amber: #d97706;
-        --amber-tint: #fffbeb;
-        --amber-border: #fde68a;
-        --rose: #e11d48;
-        --rose-tint: #fff1f2;
-        --rose-border: #fecdd3;
-        --cyan: #0891b2;
-        --cyan-tint: #ecfeff;
-        --cyan-border: #a5f3fc;
-        --card-bg: #f8fafc;
-        --border: #e2e8f0;
-        --border-strong: #cbd5e1;
-        --text: #1e293b;
-        --text-muted: #64748b;
-        --page-pad: 13mm;
-      }
-      *,
-      *::before,
-      *::after {
-        box-sizing: border-box;
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
-      }
-      html,
-      body {
-        margin: 0;
-        padding: 0;
-      }
-      body {
-        font-family:
-          "Plus Jakarta Sans",
-          -apple-system,
-          BlinkMacSystemFont,
-          "Segoe UI",
-          Roboto,
-          sans-serif;
-        color: var(--text);
-        font-size: 11px;
-        line-height: 1.5;
-        -webkit-font-smoothing: antialiased;
-        background: #cbd5e1;
-      }
-      @media screen {
-        body {
-          padding: 28px 0;
+        :root {
+            --navy: #0f172a;
+            --navy-2: #1e293b;
+            --purple: #7c3aed;
+            --purple-2: #a78bfa;
+            --purple-tint: #f5f3ff;
+            --purple-border: #ddd6fe;
+            --sky: #0284c7;
+            --sky-2: #38bdf8;
+            --sky-tint: #eff6ff;
+            --sky-border: #bfdbfe;
+            --green: #059669;
+            --green-tint: #ecfdf5;
+            --green-border: #a7f3d0;
+            --amber: #d97706;
+            --amber-tint: #fffbeb;
+            --amber-border: #fde68a;
+            --rose: #e11d48;
+            --rose-tint: #fff1f2;
+            --rose-border: #fecdd3;
+            --cyan: #0891b2;
+            --cyan-tint: #ecfeff;
+            --cyan-border: #a5f3fc;
+            --card-bg: #f8fafc;
+            --border: #e2e8f0;
+            --border-strong: #cbd5e1;
+            --text: #1e293b;
+            --text-muted: #64748b;
+            --page-pad: 13mm;
         }
-      }
-      @page {
-        size: A4 portrait;
-        margin: 0;
-      }
-      .page {
-        width: 210mm;
-        height: 297mm;
-        padding: var(--page-pad);
-        background: #ffffff;
-        margin: 0 auto 12mm;
-        box-shadow: 0 12px 40px -12px rgba(15, 23, 42, 0.28);
-        display: flex;
-        flex-direction: column;
-        position: relative;
-        overflow: hidden;
-        page-break-after: always;
-        break-after: page;
-      }
-      .page:last-of-type {
-        page-break-after: auto;
-        break-after: auto;
-      }
-      @media print {
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+
         html,
         body {
-          background: #ffffff;
-          padding: 0;
+            margin: 0;
+            padding: 0;
         }
+
+        body {
+            font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            color: var(--text);
+            font-size: 11px;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            background: #cbd5e1;
+        }
+
+        @media screen {
+            body {
+                padding: 28px 0;
+            }
+        }
+
+        @page {
+            size: A4 portrait;
+            margin: 0;
+        }
+
         .page {
-          margin: 0;
-          box-shadow: none;
+            width: 210mm;
+            height: 297mm;
+            padding: var(--page-pad);
+            background: #ffffff;
+            margin: 0 auto 12mm;
+            box-shadow: 0 12px 40px -12px rgba(15, 23, 42, 0.28);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            page-break-after: always;
+            break-after: page;
         }
-      }
-      h1,
-      h2,
-      h3,
-      h4 {
-        margin: 0;
-        color: var(--navy);
-        font-weight: 700;
-        letter-spacing: -0.01em;
-        line-height: 1.25;
-      }
-      p {
-        margin: 0;
-      }
-      strong {
-        font-weight: 700;
-        color: var(--navy);
-      }
-      code {
-        font-family: "JetBrains Mono", monospace;
-        font-size: 10px;
-        font-weight: 600;
-        background: #ffffff;
-        padding: 1px 5px;
-        border-radius: 4px;
-        border: 1px solid var(--border);
-        color: var(--navy);
-      }
 
-      /* FOOTER */
-      .page-footer {
-        margin-top: auto;
-        padding-top: 8px;
-        border-top: 1px solid var(--border);
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 12px;
-        font-size: 8.5px;
-        color: var(--text-muted);
-      }
-      .pf-brand {
-        font-weight: 700;
-        color: var(--purple);
-      }
-      .pf-page {
-        font-weight: 700;
-        color: var(--navy-2);
-      }
+            .page:last-of-type {
+                page-break-after: auto;
+                break-after: auto;
+            }
 
-      /* BRAND BAR */
-      .brand-bar {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding-bottom: 8px;
-        border-bottom: 1px solid var(--border);
-        margin-bottom: 14px;
-      }
-      .brand-mark {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-      }
-      .brand-logo {
-        width: 22px;
-        height: 22px;
-        border-radius: 6px;
-        background: linear-gradient(135deg, var(--purple), var(--sky));
-        color: #ffffff;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 9px;
-        font-weight: 800;
-        box-shadow: 0 3px 8px -2px rgba(124, 58, 237, 0.5);
-      }
-      .brand-name {
-        font-size: 11px;
-        font-weight: 800;
-        color: var(--navy);
-        text-transform: uppercase;
-        letter-spacing: 0.02em;
-      }
-      .brand-school {
-        font-size: 9px;
-        font-weight: 500;
-        color: var(--text-muted);
-        text-transform: uppercase;
-        letter-spacing: 0.06em;
-      }
+        @media print {
+            html,
+            body {
+                background: #ffffff;
+                padding: 0;
+            }
 
-      /* HERO */
-      .hero {
-        position: relative;
-        background: linear-gradient(135deg, #0f172a 0%, #4c1d95 100%);
-        border-radius: 14px;
-        padding: 22px 24px 20px;
-        color: #ffffff;
-        overflow: hidden;
-        margin-bottom: 12px;
-      }
-      .hero::before {
-        content: "";
-        position: absolute;
-        top: -70px;
-        right: -70px;
-        width: 280px;
-        height: 280px;
-        border-radius: 50%;
-        background: radial-gradient(circle, rgba(167, 139, 250, 0.4), transparent 65%);
-        pointer-events: none;
-      }
-      .hero::after {
-        content: "";
-        position: absolute;
-        bottom: -90px;
-        right: 40px;
-        width: 220px;
-        height: 220px;
-        border-radius: 50%;
-        border: 1.5px dashed rgba(255, 255, 255, 0.14);
-        pointer-events: none;
-      }
-      .hero-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        padding: 4px 11px;
-        background: rgba(255, 255, 255, 0.12);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        border-radius: 999px;
-        font-size: 8.5px;
-        font-weight: 700;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-        color: #ddd6fe;
-        margin-bottom: 14px;
-        position: relative;
-        z-index: 1;
-      }
-      .hero-badge::before {
-        content: "";
-        width: 6px;
-        height: 6px;
-        border-radius: 50%;
-        background: #4ade80;
-        box-shadow: 0 0 8px #4ade80;
-      }
-      .hero-grid {
-        display: grid;
-        grid-template-columns: 1fr auto;
-        gap: 16px;
-        align-items: end;
-        position: relative;
-        z-index: 1;
-      }
-      .hero-title {
-        font-size: 52px;
-        font-weight: 800;
-        letter-spacing: -0.045em;
-        line-height: 0.92;
-        color: #ffffff;
-      }
-      .hero-subtitle {
-        font-size: 13px;
-        font-weight: 700;
-        letter-spacing: 0.04em;
-        color: #c4b5fd;
-        text-transform: uppercase;
-        margin-top: 8px;
-      }
-      .hero-rule {
-        width: 44px;
-        height: 3px;
-        border-radius: 999px;
-        background: linear-gradient(90deg, #a78bfa, #38bdf8);
-        margin: 10px 0;
-      }
-      .hero-line {
-        font-size: 11.5px;
-        font-weight: 500;
-        color: #cbd5e1;
-      }
-      .hero-line-soft {
-        font-size: 9.5px;
-        font-style: italic;
-        font-weight: 400;
-        color: #94a3b8;
-        margin-top: 3px;
-      }
-      .hero-class {
-        text-align: right;
-        display: flex;
-        flex-direction: column;
-        align-items: flex-end;
-      }
-      .hero-class-value {
-        font-size: 40px;
-        font-weight: 800;
-        letter-spacing: -0.03em;
-        line-height: 1;
-        color: #a78bfa;
-      }
-      .hero-class-label {
-        font-size: 8.5px;
-        font-weight: 600;
-        letter-spacing: 0.14em;
-        color: #94a3b8;
-        text-transform: uppercase;
-        margin-top: 6px;
-      }
+            .page {
+                margin: 0;
+                box-shadow: none;
+            }
+        }
 
-      /* TARGET CARD */
-      .target-card {
-        position: relative;
-        background: var(--card-bg);
-        border: 1px solid var(--border);
-        border-left: 4px solid var(--green);
-        border-radius: 10px;
-        padding: 12px 16px 12px 14px;
-        margin-bottom: 10px;
-      }
-      .target-head {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        margin-bottom: 8px;
-      }
-      .target-head-dot {
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        background: var(--green);
-        box-shadow: 0 0 0 3px var(--green-tint);
-      }
-      .target-head-title {
-        font-size: 10px;
-        font-weight: 800;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-        color: var(--green);
-      }
-      .target-list {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-      }
-      .target-list li {
-        display: flex;
-        gap: 10px;
-        align-items: flex-start;
-        font-size: 10.5px;
-        line-height: 1.5;
-        color: var(--text);
-      }
-      .tp-num {
-        flex-shrink: 0;
-        width: 20px;
-        height: 20px;
-        border-radius: 6px;
-        background: var(--green-tint);
-        border: 1px solid var(--green-border);
-        color: var(--green);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-family: "JetBrains Mono", monospace;
-        font-size: 9.5px;
-        font-weight: 700;
-        margin-top: 1px;
-      }
+        h1,
+        h2,
+        h3,
+        h4 {
+            margin: 0;
+            color: var(--navy);
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            line-height: 1.25;
+        }
 
-      /* INFO GRID */
-      .grid-info-2 {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 8px;
-        margin-bottom: 10px;
-      }
-      .info-card {
-        position: relative;
-        background: var(--card-bg);
-        border: 1px solid var(--border);
-        border-radius: 10px;
-        padding: 10px 12px 12px;
-        overflow: hidden;
-      }
-      .info-card::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 3px;
-        background: var(--accent);
-      }
-      .info-card.info-sky {
-        --accent: var(--sky);
-      }
-      .info-card.info-purple {
-        --accent: var(--purple);
-      }
-      .info-card.info-amber {
-        --accent: var(--amber);
-      }
-      .info-card.info-green {
-        --accent: var(--green);
-      }
-      .info-label {
-        display: block;
-        font-size: 7.5px;
-        font-weight: 700;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-        color: var(--text-muted);
-        margin-bottom: 3px;
-      }
-      .info-value {
-        display: block;
-        font-size: 11px;
-        font-weight: 700;
-        color: var(--navy);
-        line-height: 1.3;
-      }
+        p {
+            margin: 0;
+        }
 
-      /* CARD */
-      .card {
-        background: var(--card-bg);
-        border: 1px solid var(--border);
-        border-radius: 10px;
-        padding: 12px 14px;
-        margin-bottom: 10px;
-      }
-      .card-strip {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        padding-bottom: 8px;
-        border-bottom: 1px solid var(--border);
-        margin-bottom: 10px;
-      }
-      .card-dots {
-        display: flex;
-        gap: 4px;
-        flex-shrink: 0;
-      }
-      .card-dots span {
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-      }
-      .card-dots span:nth-child(1) {
-        background: #fda4af;
-      }
-      .card-dots span:nth-child(2) {
-        background: #fcd34d;
-      }
-      .card-dots span:nth-child(3) {
-        background: #6ee7b7;
-      }
-      .card-strip-label {
-        font-size: 9.5px;
-        font-weight: 700;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        color: var(--accent, var(--purple));
-      }
+        strong {
+            font-weight: 700;
+            color: var(--navy);
+        }
 
-      /* CONTEXT COLORS */
-      .ctx-green {
-        --accent: var(--green);
-        --accent-tint: var(--green-tint);
-        --accent-border: var(--green-border);
-        --accent-shadow: rgba(5, 150, 105, 0.3);
-      }
-      .ctx-sky {
-        --accent: var(--sky);
-        --accent-tint: var(--sky-tint);
-        --accent-border: var(--sky-border);
-        --accent-shadow: rgba(2, 132, 199, 0.3);
-      }
-      .ctx-amber {
-        --accent: var(--amber);
-        --accent-tint: var(--amber-tint);
-        --accent-border: var(--amber-border);
-        --accent-shadow: rgba(217, 119, 6, 0.3);
-      }
-      .ctx-purple {
-        --accent: var(--purple);
-        --accent-tint: var(--purple-tint);
-        --accent-border: var(--purple-border);
-        --accent-shadow: rgba(124, 58, 237, 0.3);
-      }
-      .ctx-cyan {
-        --accent: var(--cyan);
-        --accent-tint: var(--cyan-tint);
-        --accent-border: var(--cyan-border);
-        --accent-shadow: rgba(8, 145, 178, 0.3);
-      }
+        code {
+            font-family: "JetBrains Mono", monospace;
+            font-size: 10px;
+            font-weight: 600;
+            background: #ffffff;
+            padding: 1px 5px;
+            border-radius: 4px;
+            border: 1px solid var(--border);
+            color: var(--navy);
+        }
 
-      /* SECTION HEAD */
-      .section-head {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        padding: 9px 14px 9px 12px;
-        background: var(--accent-tint);
-        border: 1px solid var(--accent-border);
-        border-left: 4px solid var(--accent);
-        border-radius: 10px;
-        margin-bottom: 10px;
-      }
-      .sh-num {
-        width: 36px;
-        height: 36px;
-        flex-shrink: 0;
-        border-radius: 50%;
-        background: var(--accent);
-        color: #ffffff;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 12px;
-        font-weight: 800;
-        position: relative;
-        box-shadow: 0 4px 10px -3px var(--accent-shadow);
-      }
-      .sh-num::after {
-        content: "";
-        position: absolute;
-        inset: 3px;
-        border-radius: 50%;
-        border: 1.5px solid rgba(255, 255, 255, 0.42);
-      }
-      .sh-text {
-        flex: 1;
-        min-width: 0;
-      }
-      .sh-text h2 {
-        font-size: 12.5px;
-        font-weight: 800;
-        text-transform: uppercase;
-        color: var(--navy);
-        margin-bottom: 2px;
-      }
-      .sh-text p {
-        font-size: 9.5px;
-        font-weight: 500;
-        color: var(--text-muted);
-      }
+        /* FOOTER */
+        .page-footer {
+            margin-top: auto;
+            padding-top: 8px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            font-size: 8.5px;
+            color: var(--text-muted);
+        }
 
-      /* STEP */
-      .step-row {
-        display: flex;
-        gap: 10px;
-        padding: 6px 0;
-        border-bottom: 1px dashed var(--border);
-        font-size: 10.5px;
-        line-height: 1.5;
-        align-items: flex-start;
-      }
-      .step-row:last-child {
-        border-bottom: none;
-      }
-      .step-num {
-        flex-shrink: 0;
-        width: 19px;
-        height: 19px;
-        border-radius: 50%;
-        background: var(--accent-tint, var(--purple-tint));
-        border: 1px solid var(--accent-border, var(--purple-border));
-        color: var(--accent, var(--purple));
-        font-size: 9.5px;
-        font-weight: 800;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-family: "JetBrains Mono", monospace;
-        margin-top: 1px;
-      }
-      .step-body {
-        flex: 1;
-      }
+        .pf-brand {
+            font-weight: 700;
+            color: var(--purple);
+        }
 
-      /* ROLE GRID */
-      .role-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 7px;
-        margin: 6px 0;
-      }
-      .role-card {
-        display: flex;
-        gap: 9px;
-        align-items: flex-start;
-        padding: 8px 10px;
-        background: #ffffff;
-        border: 1px solid var(--border);
-        border-left: 3px solid var(--accent, var(--purple));
-        border-radius: 8px;
-        font-size: 10px;
-        line-height: 1.4;
-      }
-      .role-num {
-        flex-shrink: 0;
-        width: 20px;
-        height: 20px;
-        border-radius: 50%;
-        background: var(--accent, var(--purple));
-        color: #ffffff;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-family: "JetBrains Mono", monospace;
-        font-size: 9.5px;
-        font-weight: 700;
-      }
-      .role-card strong {
-        color: var(--navy);
-        display: block;
-        font-size: 10px;
-      }
-      .role-card .role-desc {
-        font-size: 9px;
-        color: var(--text-muted);
-        line-height: 1.35;
-      }
+        .pf-page {
+            font-weight: 700;
+            color: var(--navy-2);
+        }
 
-      /* DATA TABLE */
-      .data-table {
-        width: 100%;
-        border-collapse: separate;
-        border-spacing: 0;
-        font-size: 10.5px;
-        border: 1px solid var(--purple-border);
-        border-radius: 8px;
-        overflow: hidden;
-      }
-      .data-table th {
-        background: var(--purple-tint);
-        color: var(--purple);
-        font-weight: 800;
-        text-transform: uppercase;
-        letter-spacing: 0.06em;
-        font-size: 9px;
-        padding: 7px 10px;
-        text-align: left;
-      }
-      .data-table td {
-        padding: 8px 10px;
-        border-top: 1px dashed var(--border-strong);
-        vertical-align: top;
-        line-height: 1.5;
-      }
-      .data-table td:first-child {
-        font-weight: 700;
-        color: var(--navy);
-        width: 32%;
-        border-right: 1px dashed var(--border-strong);
-        background: #fafbff;
-      }
-      .data-table tr.alt td:first-child {
-        background: #f5f3ff;
-      }
-      .data-table .dotted {
-        display: block;
-        min-height: 12px;
-        border-bottom: 1.5px dotted var(--border-strong);
-      }
-      .data-table.green {
-        border-color: var(--green-border);
-      }
-      .data-table.green th {
-        background: var(--green-tint);
-        color: var(--green);
-      }
-      .data-table.green td:first-child {
-        border-right-color: var(--green-border);
-      }
+        /* BRAND BAR */
+        .brand-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 14px;
+        }
 
-      /* NOTES BOX */
-      .notes-box {
-        background: var(--purple-tint);
-        border: 1px solid var(--purple-border);
-        border-radius: 10px;
-        padding: 10px 12px 12px;
-        margin-top: 6px;
-      }
-      .notes-list {
-        list-style: none;
-        padding: 0;
-        margin: 4px 0 0;
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
-      }
-      .notes-list li {
-        display: flex;
-        gap: 9px;
-        align-items: flex-start;
-        font-size: 10.5px;
-        line-height: 1.45;
-        color: var(--text);
-      }
-      .note-tag {
-        flex-shrink: 0;
-        width: 20px;
-        height: 20px;
-        border-radius: 50%;
-        background: var(--purple);
-        color: #ffffff;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-family: "JetBrains Mono", monospace;
-        font-size: 9px;
-        font-weight: 700;
-        margin-top: 1px;
-        box-shadow: 0 3px 8px -2px rgba(124, 58, 237, 0.4);
-      }
-      .note-tag.tag-g {
-        background: var(--sky);
-      }
-      .note-tag.tag-h {
-        background: var(--green);
-      }
-      .note-tag.tag-a {
-        background: var(--amber);
-      }
+        .brand-mark {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
 
-      /* CHECKLIST PILL */
-      .checklist-pill {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        padding: 3px 10px;
-        border-radius: 999px;
-        background: var(--accent-tint, var(--purple-tint));
-        border: 1px solid var(--accent-border, var(--purple-border));
-        color: var(--accent, var(--purple));
-        font-size: 8.5px;
-        font-weight: 800;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-        margin-bottom: 8px;
-      }
-      .checklist-pill::before {
-        content: "";
-        width: 6px;
-        height: 6px;
-        border-radius: 50%;
-        background: var(--accent, var(--purple));
-      }
+        .brand-logo {
+            width: 22px;
+            height: 22px;
+            border-radius: 6px;
+            background: linear-gradient(135deg, var(--purple), var(--sky));
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 9px;
+            font-weight: 800;
+            box-shadow: 0 3px 8px -2px rgba(124, 58, 237, 0.5);
+        }
 
-      /* CHECKLIST */
-      .checklist {
-        margin-top: 10px;
-        padding-top: 10px;
-        border-top: 1px dashed var(--border-strong);
-      }
-      .checklist ul {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
-      }
-      .checklist li {
-        display: flex;
-        gap: 9px;
-        align-items: flex-start;
-        font-size: 10.5px;
-        color: var(--text);
-        line-height: 1.45;
-      }
-      .check-box {
-        flex-shrink: 0;
-        width: 15px;
-        height: 15px;
-        border-radius: 4px;
-        background: var(--accent-tint, var(--purple-tint));
-        border: 1.5px solid var(--accent-border, var(--purple-border));
-        margin-top: 1px;
-      }
+        .brand-name {
+            font-size: 11px;
+            font-weight: 800;
+            color: var(--navy);
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+        }
 
-      /* IDENTITY */
-      .identity-card {
-        padding: 14px 16px 16px;
-        background: var(--card-bg);
-        border: 1px solid var(--border);
-        border-left: 4px solid var(--purple);
-        border-radius: 10px;
-        margin-bottom: 10px;
-      }
-      .identity-head {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding-bottom: 8px;
-        border-bottom: 1px solid var(--border);
-        margin-bottom: 12px;
-      }
-      .identity-head-left {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-      }
-      .identity-head-title {
-        font-size: 11.5px;
-        font-weight: 800;
-        letter-spacing: 0.02em;
-        text-transform: uppercase;
-        color: var(--navy);
-      }
-      .identity-head-dot {
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        background: var(--purple);
-        box-shadow: 0 0 0 3px var(--purple-tint);
-      }
-      .identity-head-hint {
-        font-size: 9px;
-        font-weight: 500;
-        font-style: italic;
-        color: var(--text-muted);
-      }
-      .id-row {
-        display: grid;
-        grid-template-columns: 80px 1fr 80px;
-        gap: 12px;
-        align-items: center;
-        margin-bottom: 10px;
-      }
-      .id-row:last-child {
-        margin-bottom: 0;
-      }
-      .id-badge {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        padding: 5px 10px;
-        border-radius: 6px;
-        font-size: 8.5px;
-        font-weight: 800;
-        letter-spacing: 0.06em;
-        text-transform: uppercase;
-        color: #ffffff;
-        background: var(--purple);
-      }
-      .id-field {
-        display: flex;
-        flex-direction: column;
-        gap: 3px;
-      }
-      .id-field label {
-        font-size: 8px;
-        font-weight: 600;
-        color: var(--text-muted);
-      }
-      .id-line {
-        height: 11px;
-        border-bottom: 1px dashed var(--border-strong);
-      }
+        .brand-school {
+            font-size: 9px;
+            font-weight: 500;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
 
-      /* INSTRUCTION STRIP */
-      .instruction-strip {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        padding: 9px 14px;
-        background: linear-gradient(135deg, var(--purple) 0%, #4c1d95 100%);
-        border-radius: 10px;
-        color: #ffffff;
-        font-size: 9.5px;
-        font-weight: 700;
-        text-align: center;
-        box-shadow: 0 6px 16px -6px rgba(124, 58, 237, 0.5);
-      }
-      .instruction-strip .dot-sep {
-        width: 4px;
-        height: 4px;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.5);
-        flex-shrink: 0;
-      }
+        /* HERO */
+        .hero {
+            position: relative;
+            background: linear-gradient(135deg, #0f172a 0%, #4c1d95 100%);
+            border-radius: 14px;
+            padding: 20px 24px 18px;
+            color: #ffffff;
+            overflow: hidden;
+            margin-bottom: 12px;
+        }
 
-      /* ANSWER BOX */
-      .answer-box {
-        position: relative;
-        background: #ffffff;
-        border: 1.5px dashed var(--border-strong);
-        border-radius: 8px;
-        padding: 8px 12px 10px;
-        margin-top: 6px;
-        min-height: 52px;
-      }
-      .answer-box .ab-hint {
-        display: block;
-        font-size: 8px;
-        font-weight: 700;
-        color: var(--text-muted);
-        font-style: italic;
-        letter-spacing: 0.04em;
-        margin-bottom: 4px;
-        text-transform: uppercase;
-      }
-      .answer-box .ab-lines {
-        height: 36px;
-        background-image: repeating-linear-gradient(to bottom, transparent 0 17px, #e2e8f0 17px 18px);
-      }
-      .answer-box.tall {
-        min-height: 76px;
-      }
-      .answer-box.tall .ab-lines {
-        height: 56px;
-      }
-      .answer-box.xl {
-        min-height: 100px;
-      }
-      .answer-box.xl .ab-lines {
-        height: 80px;
-      }
+            .hero::before {
+                content: "";
+                position: absolute;
+                top: -70px;
+                right: -70px;
+                width: 280px;
+                height: 280px;
+                border-radius: 50%;
+                background: radial-gradient(circle, rgba(167, 139, 250, 0.4), transparent 65%);
+                pointer-events: none;
+            }
 
-      /* BLANK */
-      .blank {
-        display: inline-block;
-        min-width: 120px;
-        border-bottom: 1.5px dashed var(--border-strong);
-        padding: 1px 8px;
-        margin: 0 4px;
-        font-family: "JetBrains Mono", monospace;
-        font-size: 10.5px;
-        font-weight: 700;
-        color: var(--purple);
-        text-align: center;
-        vertical-align: middle;
-      }
-      .blank.sm {
-        min-width: 70px;
-      }
-      .blank.md {
-        min-width: 100px;
-      }
-      .blank.lg {
-        min-width: 150px;
-      }
-      .blank.xl {
-        min-width: 210px;
-      }
+            .hero::after {
+                content: "";
+                position: absolute;
+                bottom: -90px;
+                right: 40px;
+                width: 220px;
+                height: 220px;
+                border-radius: 50%;
+                border: 1.5px dashed rgba(255, 255, 255, 0.14);
+                pointer-events: none;
+            }
 
-      /* MINI INFO */
-      .mini-info {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        padding: 3px 10px;
-        border-radius: 999px;
-        font-size: 8.5px;
-        font-weight: 700;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-      }
-      .mini-info.mi-amber {
-        background: var(--amber-tint);
-        color: var(--amber);
-        border: 1px solid var(--amber-border);
-      }
-      .mini-info.mi-green {
-        background: var(--green-tint);
-        color: var(--green);
-        border: 1px solid var(--green-border);
-      }
-      .mini-info.mi-sky {
-        background: var(--sky-tint);
-        color: var(--sky);
-        border: 1px solid var(--sky-border);
-      }
-      .mini-info.mi-purple {
-        background: var(--purple-tint);
-        color: var(--purple);
-        border: 1px solid var(--purple-border);
-      }
-      .mini-info.mi-cyan {
-        background: var(--cyan-tint);
-        color: var(--cyan);
-        border: 1px solid var(--cyan-border);
-      }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 11px;
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 999px;
+            font-size: 8.5px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #ddd6fe;
+            margin-bottom: 12px;
+            position: relative;
+            z-index: 1;
+        }
 
-      /* QA ITEM */
-      .qa-item {
-        background: #ffffff;
-        border: 1px solid var(--border);
-        border-left: 3px solid var(--accent, var(--purple));
-        border-radius: 6px;
-        padding: 9px 11px;
-        margin-bottom: 7px;
-      }
-      .qa-item .qa-q {
-        font-size: 10.5px;
-        line-height: 1.45;
-        color: var(--text);
-        margin-bottom: 5px;
-        padding-left: 22px;
-        position: relative;
-      }
-      .qa-num {
-        position: absolute;
-        left: 0;
-        top: 1px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 17px;
-        height: 17px;
-        border-radius: 50%;
-        background: var(--accent, var(--purple));
-        color: #ffffff;
-        font-size: 9.5px;
-        font-weight: 800;
-      }
+            .hero-badge::before {
+                content: "";
+                width: 6px;
+                height: 6px;
+                border-radius: 50%;
+                background: #4ade80;
+                box-shadow: 0 0 8px #4ade80;
+            }
 
-      .mini-head {
-        font-size: 9px;
-        font-weight: 800;
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-        margin: 8px 0 5px;
-      }
-      .mini-head.c-amber {
-        color: var(--amber);
-      }
-      .mini-head.c-sky {
-        color: var(--sky);
-      }
-      .mini-head.c-purple {
-        color: var(--purple);
-      }
-      .mini-head.c-green {
-        color: var(--green);
-      }
-      .mini-head.c-cyan {
-        color: var(--cyan);
-      }
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 16px;
+            align-items: end;
+            position: relative;
+            z-index: 1;
+        }
 
-      .hint-note {
-        font-size: 9.5px;
-        font-style: italic;
-        color: var(--text-muted);
-        margin-top: 4px;
-      }
+        .hero-title {
+            font-size: 52px;
+            font-weight: 800;
+            letter-spacing: -0.045em;
+            line-height: 0.92;
+            color: #ffffff;
+        }
 
-      /* FLOW MINI */
-      .flow-mini {
-        text-align: center;
-        margin: 8px 0 6px;
-      }
+        .hero-subtitle {
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            color: #c4b5fd;
+            text-transform: uppercase;
+            margin-top: 8px;
+        }
+
+        .hero-rule {
+            width: 44px;
+            height: 3px;
+            border-radius: 999px;
+            background: linear-gradient(90deg, #a78bfa, #38bdf8);
+            margin: 10px 0;
+        }
+
+        .hero-line {
+            font-size: 11.5px;
+            font-weight: 500;
+            color: #cbd5e1;
+        }
+
+        .hero-line-soft {
+            font-size: 9.5px;
+            font-style: italic;
+            font-weight: 400;
+            color: #94a3b8;
+            margin-top: 3px;
+        }
+
+        .hero-class {
+            text-align: right;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+        .hero-class-value {
+            font-size: 40px;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 1;
+            color: #a78bfa;
+        }
+
+        .hero-class-label {
+            font-size: 8.5px;
+            font-weight: 600;
+            letter-spacing: 0.14em;
+            color: #94a3b8;
+            text-transform: uppercase;
+            margin-top: 6px;
+        }
+
+        /* TARGET CARD */
+        .target-card {
+            position: relative;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--green);
+            border-radius: 10px;
+            padding: 12px 16px 12px 14px;
+            margin-bottom: 10px;
+        }
+
+        .target-head {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .target-head-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--green);
+            box-shadow: 0 0 0 3px var(--green-tint);
+        }
+
+        .target-head-title {
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--green);
+        }
+
+        .target-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+            .target-list li {
+                display: flex;
+                gap: 10px;
+                align-items: flex-start;
+                font-size: 10px;
+                line-height: 1.4;
+                color: var(--text);
+            }
+
+        .tp-num {
+            flex-shrink: 0;
+            width: 18px;
+            height: 18px;
+            border-radius: 5px;
+            background: var(--green-tint);
+            border: 1px solid var(--green-border);
+            color: var(--green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: "JetBrains Mono", monospace;
+            font-size: 9px;
+            font-weight: 700;
+            margin-top: 1px;
+        }
+
+        /* INFO GRID */
+        .grid-info-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .info-card {
+            position: relative;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 10px 12px 12px;
+            overflow: hidden;
+        }
+
+            .info-card::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 3px;
+                background: var(--accent);
+            }
+
+            .info-card.info-sky {
+                --accent: var(--sky);
+            }
+
+            .info-card.info-purple {
+                --accent: var(--purple);
+            }
+
+            .info-card.info-amber {
+                --accent: var(--amber);
+            }
+
+            .info-card.info-green {
+                --accent: var(--green);
+            }
+
+        .info-label {
+            display: block;
+            font-size: 7.5px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 3px;
+        }
+
+        .info-value {
+            display: block;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--navy);
+            line-height: 1.3;
+        }
+
+        /* CARD */
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px 14px;
+            margin-bottom: 10px;
+        }
+
+        .card-strip {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 10px;
+        }
+
+        .card-dots {
+            display: flex;
+            gap: 4px;
+            flex-shrink: 0;
+        }
+
+            .card-dots span {
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+            }
+
+                .card-dots span:nth-child(1) {
+                    background: #fda4af;
+                }
+
+                .card-dots span:nth-child(2) {
+                    background: #fcd34d;
+                }
+
+                .card-dots span:nth-child(3) {
+                    background: #6ee7b7;
+                }
+
+        .card-strip-label {
+            font-size: 9.5px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--accent, var(--purple));
+        }
+
+        /* CONTEXT COLORS */
+        .ctx-green {
+            --accent: var(--green);
+            --accent-tint: var(--green-tint);
+            --accent-border: var(--green-border);
+            --accent-shadow: rgba(5, 150, 105, 0.3);
+        }
+
+        .ctx-sky {
+            --accent: var(--sky);
+            --accent-tint: var(--sky-tint);
+            --accent-border: var(--sky-border);
+            --accent-shadow: rgba(2, 132, 199, 0.3);
+        }
+
+        .ctx-amber {
+            --accent: var(--amber);
+            --accent-tint: var(--amber-tint);
+            --accent-border: var(--amber-border);
+            --accent-shadow: rgba(217, 119, 6, 0.3);
+        }
+
+        .ctx-purple {
+            --accent: var(--purple);
+            --accent-tint: var(--purple-tint);
+            --accent-border: var(--purple-border);
+            --accent-shadow: rgba(124, 58, 237, 0.3);
+        }
+
+        .ctx-cyan {
+            --accent: var(--cyan);
+            --accent-tint: var(--cyan-tint);
+            --accent-border: var(--cyan-border);
+            --accent-shadow: rgba(8, 145, 178, 0.3);
+        }
+
+        .ctx-rose {
+            --accent: var(--rose);
+            --accent-tint: var(--rose-tint);
+            --accent-border: var(--rose-border);
+            --accent-shadow: rgba(225, 29, 72, 0.3);
+        }
+
+        /* SECTION HEAD */
+        .section-head {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 9px 14px 9px 12px;
+            background: var(--accent-tint);
+            border: 1px solid var(--accent-border);
+            border-left: 4px solid var(--accent);
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        .sh-num {
+            width: 36px;
+            height: 36px;
+            flex-shrink: 0;
+            border-radius: 50%;
+            background: var(--accent);
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 800;
+            position: relative;
+            box-shadow: 0 4px 10px -3px var(--accent-shadow);
+        }
+
+            .sh-num::after {
+                content: "";
+                position: absolute;
+                inset: 3px;
+                border-radius: 50%;
+                border: 1.5px solid rgba(255, 255, 255, 0.42);
+            }
+
+        .sh-text {
+            flex: 1;
+            min-width: 0;
+        }
+
+            .sh-text h2 {
+                font-size: 12.5px;
+                font-weight: 800;
+                text-transform: uppercase;
+                color: var(--navy);
+                margin-bottom: 2px;
+            }
+
+            .sh-text p {
+                font-size: 9.5px;
+                font-weight: 500;
+                color: var(--text-muted);
+            }
+
+        /* STEP */
+        .step-row {
+            display: flex;
+            gap: 10px;
+            padding: 6px 0;
+            border-bottom: 1px dashed var(--border);
+            font-size: 10.5px;
+            line-height: 1.5;
+            align-items: flex-start;
+        }
+
+            .step-row:last-child {
+                border-bottom: none;
+            }
+
+        .step-num {
+            flex-shrink: 0;
+            width: 19px;
+            height: 19px;
+            border-radius: 50%;
+            background: var(--accent-tint, var(--purple-tint));
+            border: 1px solid var(--accent-border, var(--purple-border));
+            color: var(--accent, var(--purple));
+            font-size: 9.5px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: "JetBrains Mono", monospace;
+            margin-top: 1px;
+        }
+
+        .step-body {
+            flex: 1;
+        }
+
+        /* DATA TABLE */
+        .data-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            font-size: 10.5px;
+            border: 1px solid var(--purple-border);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+            .data-table th {
+                background: var(--purple-tint);
+                color: var(--purple);
+                font-weight: 800;
+                text-transform: uppercase;
+                letter-spacing: 0.06em;
+                font-size: 9px;
+                padding: 7px 10px;
+                text-align: left;
+            }
+
+            .data-table td {
+                padding: 7px 10px;
+                border-top: 1px dashed var(--border-strong);
+                vertical-align: top;
+                line-height: 1.5;
+            }
+
+                .data-table td:first-child {
+                    font-weight: 700;
+                    color: var(--navy);
+                    width: 26%;
+                    border-right: 1px dashed var(--border-strong);
+                    background: #fafbff;
+                }
+
+            .data-table tr.alt td:first-child {
+                background: #f5f3ff;
+            }
+
+            .data-table .dotted {
+                display: block;
+                min-height: 12px;
+                border-bottom: 1.5px dotted var(--border-strong);
+            }
+
+            .data-table.green {
+                border-color: var(--green-border);
+            }
+
+                .data-table.green th {
+                    background: var(--green-tint);
+                    color: var(--green);
+                }
+
+                .data-table.green td:first-child {
+                    border-right-color: var(--green-border);
+                }
+
+        /* NOTES BOX */
+        .notes-box {
+            background: var(--purple-tint);
+            border: 1px solid var(--purple-border);
+            border-radius: 10px;
+            padding: 10px 12px 12px;
+            margin-top: 6px;
+        }
+
+        .notes-list {
+            list-style: none;
+            padding: 0;
+            margin: 4px 0 0;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+            .notes-list li {
+                display: flex;
+                gap: 9px;
+                align-items: flex-start;
+                font-size: 10.5px;
+                line-height: 1.45;
+                color: var(--text);
+            }
+
+        .note-tag {
+            flex-shrink: 0;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--purple);
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: "JetBrains Mono", monospace;
+            font-size: 9px;
+            font-weight: 700;
+            margin-top: 1px;
+            box-shadow: 0 3px 8px -2px rgba(124, 58, 237, 0.4);
+        }
+
+            .note-tag.tag-g {
+                background: var(--sky);
+            }
+
+            .note-tag.tag-h {
+                background: var(--green);
+            }
+
+            .note-tag.tag-a {
+                background: var(--amber);
+            }
+
+            .note-tag.tag-r {
+                background: var(--rose);
+            }
+
+        /* CHECKLIST PILL */
+        .checklist-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 3px 10px;
+            border-radius: 999px;
+            background: var(--accent-tint, var(--purple-tint));
+            border: 1px solid var(--accent-border, var(--purple-border));
+            color: var(--accent, var(--purple));
+            font-size: 8.5px;
+            font-weight: 800;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+            .checklist-pill::before {
+                content: "";
+                width: 6px;
+                height: 6px;
+                border-radius: 50%;
+                background: var(--accent, var(--purple));
+            }
+
+        /* CHECKLIST */
+        .checklist {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px dashed var(--border-strong);
+        }
+
+            .checklist ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+                display: flex;
+                flex-direction: column;
+                gap: 6px;
+            }
+
+            .checklist li {
+                display: flex;
+                gap: 9px;
+                align-items: flex-start;
+                font-size: 10.5px;
+                color: var(--text);
+                line-height: 1.45;
+            }
+
+        .check-box {
+            flex-shrink: 0;
+            width: 15px;
+            height: 15px;
+            border-radius: 4px;
+            background: var(--accent-tint, var(--purple-tint));
+            border: 1.5px solid var(--accent-border, var(--purple-border));
+            margin-top: 1px;
+        }
+
+        /* IDENTITY */
+        .identity-card {
+            padding: 14px 16px 16px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--purple);
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        .identity-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 12px;
+        }
+
+        .identity-head-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .identity-head-title {
+            font-size: 11.5px;
+            font-weight: 800;
+            letter-spacing: 0.02em;
+            text-transform: uppercase;
+            color: var(--navy);
+        }
+
+        .identity-head-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--purple);
+            box-shadow: 0 0 0 3px var(--purple-tint);
+        }
+
+        .identity-head-hint {
+            font-size: 9px;
+            font-weight: 500;
+            font-style: italic;
+            color: var(--text-muted);
+        }
+
+        .id-row {
+            display: grid;
+            grid-template-columns: 80px 1fr 80px;
+            gap: 12px;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+            .id-row:last-child {
+                margin-bottom: 0;
+            }
+
+        .id-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 8.5px;
+            font-weight: 800;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: #ffffff;
+            background: var(--purple);
+        }
+
+        .id-field {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+            .id-field label {
+                font-size: 8px;
+                font-weight: 600;
+                color: var(--text-muted);
+            }
+
+        .id-line {
+            height: 11px;
+            border-bottom: 1px dashed var(--border-strong);
+        }
+
+        /* ANSWER BOX */
+        .answer-box {
+            position: relative;
+            background: #ffffff;
+            border: 1.5px dashed var(--border-strong);
+            border-radius: 8px;
+            padding: 8px 12px 10px;
+            margin-top: 6px;
+            min-height: 52px;
+        }
+
+            .answer-box .ab-hint {
+                display: block;
+                font-size: 8px;
+                font-weight: 700;
+                color: var(--text-muted);
+                font-style: italic;
+                letter-spacing: 0.04em;
+                margin-bottom: 4px;
+                text-transform: uppercase;
+            }
+
+            .answer-box .ab-lines {
+                height: 36px;
+                background-image: repeating-linear-gradient(to bottom, transparent 0 17px, #e2e8f0 17px 18px);
+            }
+
+            .answer-box.tall {
+                min-height: 76px;
+            }
+
+                .answer-box.tall .ab-lines {
+                    height: 56px;
+                }
+
+            .answer-box.xl {
+                min-height: 100px;
+            }
+
+                .answer-box.xl .ab-lines {
+                    height: 80px;
+                }
+
+        /* BLANK */
+        .blank {
+            display: inline-block;
+            min-width: 120px;
+            border-bottom: 1.5px dashed var(--border-strong);
+            padding: 1px 8px;
+            margin: 0 4px;
+            font-family: "JetBrains Mono", monospace;
+            font-size: 10.5px;
+            font-weight: 700;
+            color: var(--purple);
+            text-align: center;
+            vertical-align: middle;
+        }
+
+            .blank.sm {
+                min-width: 70px;
+            }
+
+            .blank.md {
+                min-width: 100px;
+            }
+
+            .blank.lg {
+                min-width: 150px;
+            }
+
+            .blank.xl {
+                min-width: 210px;
+            }
+
+        /* MINI INFO */
+        .mini-info {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 3px 10px;
+            border-radius: 999px;
+            font-size: 8.5px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+            .mini-info.mi-amber {
+                background: var(--amber-tint);
+                color: var(--amber);
+                border: 1px solid var(--amber-border);
+            }
+
+            .mini-info.mi-green {
+                background: var(--green-tint);
+                color: var(--green);
+                border: 1px solid var(--green-border);
+            }
+
+            .mini-info.mi-sky {
+                background: var(--sky-tint);
+                color: var(--sky);
+                border: 1px solid var(--sky-border);
+            }
+
+            .mini-info.mi-purple {
+                background: var(--purple-tint);
+                color: var(--purple);
+                border: 1px solid var(--purple-border);
+            }
+
+            .mini-info.mi-cyan {
+                background: var(--cyan-tint);
+                color: var(--cyan);
+                border: 1px solid var(--cyan-border);
+            }
+
+            .mini-info.mi-rose {
+                background: var(--rose-tint);
+                color: var(--rose);
+                border: 1px solid var(--rose-border);
+            }
+
+        /* QA ITEM */
+        .qa-item {
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--accent, var(--purple));
+            border-radius: 6px;
+            padding: 9px 11px;
+            margin-bottom: 7px;
+        }
+
+            .qa-item .qa-q {
+                font-size: 10.5px;
+                line-height: 1.45;
+                color: var(--text);
+                margin-bottom: 5px;
+                padding-left: 22px;
+                position: relative;
+            }
+
+        .qa-num {
+            position: absolute;
+            left: 0;
+            top: 1px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 17px;
+            height: 17px;
+            border-radius: 50%;
+            background: var(--accent, var(--purple));
+            color: #ffffff;
+            font-size: 9.5px;
+            font-weight: 800;
+        }
+
+        .mini-head {
+            font-size: 9px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin: 8px 0 5px;
+        }
+
+            .mini-head.c-amber {
+                color: var(--amber);
+            }
+
+            .mini-head.c-sky {
+                color: var(--sky);
+            }
+
+            .mini-head.c-purple {
+                color: var(--purple);
+            }
+
+            .mini-head.c-green {
+                color: var(--green);
+            }
+
+            .mini-head.c-cyan {
+                color: var(--cyan);
+            }
+
+            .mini-head.c-rose {
+                color: var(--rose);
+            }
+
+        .hint-note {
+            font-size: 9.5px;
+            font-style: italic;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* FLOW MINI */
+        .flow-mini {
+            text-align: center;
+            margin: 8px 0 6px;
+        }
     </style>
-  </head>
+</head>
 
-  <body>
+<body>
     <!-- ========== PAGE 1 — COVER ========== -->
     <section class="page">
-      <div class="brand-bar">
-        <div class="brand-mark">
-          <div class="brand-logo">R</div>
-          <span class="brand-name">RuangInformatika</span>
-        </div>
-        <span class="brand-school">SMA Negeri 4 Yogyakarta</span>
-      </div>
-
-      <div class="hero">
-        <div class="hero-badge">LKPD Digital — Experiential Learning (Siklus Kolb)</div>
-        <div class="hero-grid">
-          <div>
-            <h1 class="hero-title">LKPD</h1>
-            <div class="hero-subtitle">Arsitektur Von Neumann</div>
-            <div class="hero-rule"></div>
-            <p class="hero-line">Menjelajahi Cara Kerja Komputer</p>
-            <p class="hero-line-soft">Dinamika Input – Process – Output (IPO) &middot; Informatika &middot; Kelas X SMA</p>
-          </div>
-          <div class="hero-class">
-            <div class="hero-class-value">X</div>
-            <div class="hero-class-label">SMA &middot; Fase E</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="target-card">
-        <div class="target-head">
-          <span class="target-head-dot"></span>
-          <span class="target-head-title">🎯 Tujuan Pembelajaran</span>
-        </div>
-        <ul class="target-list">
-          <li>
-            <span class="tp-num">1</span>
-            <span><strong>Menjelaskan fungsi komponen utama Arsitektur Von Neumann</strong> melalui pengamatan diagram dengan benar minimal 4 dari 5 komponen.</span>
-          </li>
-          <li>
-            <span class="tp-num">2</span>
-            <span><strong>Menyimulasikan dinamika Input–Process–Output (IPO)</strong> melalui kegiatan simulasi alur kerja komputer dengan benar pada tiga skenario yang diberikan.</span>
-          </li>
-        </ul>
-      </div>
-
-      <div class="grid-info-2">
-        <div class="info-card info-sky">
-          <span class="info-label">Alokasi Waktu</span>
-          <span class="info-value">70 Menit</span>
-        </div>
-        <div class="info-card info-purple">
-          <span class="info-label">Pendekatan</span>
-          <span class="info-value">Experiential Learning (Kolb)</span>
-        </div>
-        <div class="info-card info-amber">
-          <span class="info-label">Mata Pelajaran</span>
-          <span class="info-value">Informatika &middot; Kelas X</span>
-        </div>
-        <div class="info-card info-green">
-          <span class="info-label">Bentuk Kegiatan</span>
-          <span class="info-value">Simulasi, Diskusi, Pengamatan</span>
-        </div>
-      </div>
-
-      <div class="identity-card">
-        <div class="identity-head">
-          <div class="identity-head-left">
-            <span class="identity-head-dot"></span>
-            <span class="identity-head-title">Identitas Peserta Didik</span>
-          </div>
-          <span class="identity-head-hint">Isi data dirimu</span>
-        </div>
-        <div class="id-row">
-          <span class="id-badge">Nama</span>
-          <div class="id-field">
-            <label>Nama Lengkap</label>
-            <div class="id-line"></div>
-          </div>
-          <div class="id-field">
-            <label>No. Absen</label>
-            <div class="id-line"></div>
-          </div>
-        </div>
-        <div class="id-row">
-          <span class="id-badge">Kelas</span>
-          <div class="id-field">
-            <label>Kelas</label>
-            <div class="id-line"></div>
-          </div>
-          <div class="id-field">
-            <label>Kelompok</label>
-            <div class="id-line"></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="notes-box">
-        <span class="checklist-pill" style="--accent: var(--purple); --accent-tint: #ffffff; --accent-border: var(--purple-border)">📋 Petunjuk Pengerjaan</span>
-        <ul class="notes-list">
-          <li>
-            <span class="note-tag">1</span><span>Ikuti <strong>empat tahap kegiatan</strong> dalam LKPD secara berurutan.</span>
-          </li>
-          <li>
-            <span class="note-tag tag-g">2</span><span>Lakukan <strong>simulasi dan pengamatan</strong> bersama kelompok.</span>
-          </li>
-          <li>
-            <span class="note-tag tag-h">3</span><span>Tuliskan jawaban berdasarkan <strong>pengalaman dan hasil diskusi</strong>.</span>
-          </li>
-          <li>
-            <span class="note-tag tag-a">4</span><span>Gunakan konsep yang telah dipelajari untuk menyelesaikan <strong>kasus pada tahap penerapan</strong>.</span>
-          </li>
-        </ul>
-      </div>
-
-      <footer class="page-footer">
-        <span class="pf-brand">RuangInformatika</span>
-        <span>LKPD &middot; SMA Negeri 4 Yogyakarta &middot; Pak Ilyas</span>
-        <span class="pf-page">Halaman 1 / 7</span>
-      </footer>
-    </section>
-
-    <!-- ========== PAGE 2 — TAHAP 1 ========== -->
-    <section class="page">
-      <header class="section-head ctx-amber">
-        <span class="sh-num">01</span>
-        <div class="sh-text">
-          <h2>Tahap 1 &mdash; Concrete Experience</h2>
-          <p>Pengalaman Nyata &middot; Alokasi 10 Menit</p>
-        </div>
-      </header>
-
-      <div class="card ctx-amber">
-        <div class="card-strip">
-          <div class="card-dots"><span></span><span></span><span></span></div>
-          <span class="card-strip-label">Aktivitas — Menjadi Bagian dari Komputer</span>
-        </div>
-        <p style="font-size: 10.5px; line-height: 1.6; margin-bottom: 6px">
-          Bayangkan kamu menggunakan komputer untuk menghitung hasil penjumlahan <strong>5 + 3</strong>. Kamu memasukkan angka dan komputer menampilkan hasilnya, yaitu <strong>8</strong>. Sekarang, simulasikan proses tersebut bersama
-          kelompokmu!
-        </p>
-
-        <div class="mini-head c-amber">Pembagian Peran</div>
-        <div class="role-grid">
-          <div class="role-card" style="--accent: var(--amber)">
-            <span class="role-num">1</span>
-            <div>
-              <strong>Pengguna</strong>
-              <div class="role-desc">Memasukkan angka 5 dan 3</div>
+        <div class="brand-bar">
+            <div class="brand-mark">
+                <div class="brand-logo">R</div>
+                <span class="brand-name">RuangInformatika</span>
             </div>
-          </div>
-          <div class="role-card" style="--accent: var(--sky)">
-            <span class="role-num">2</span>
-            <div>
-              <strong>Memori</strong>
-              <div class="role-desc">Menyimpan data dan instruksi</div>
+            <span class="brand-school">SMA Negeri 4 Yogyakarta</span>
+        </div>
+
+        <div class="hero">
+            <div class="hero-badge">LKPD Digital — Misi Eksplorasi Game</div>
+            <div class="hero-grid">
+                <div>
+                    <h1 class="hero-title">LKPD</h1>
+                    <div class="hero-subtitle">Sistem Komputer &amp; Sistem Operasi</div>
+                    <div class="hero-rule"></div>
+                    <p class="hero-line">Misi Eksplorasi Game — Mengenal Sistem Operasi</p>
+                    <p class="hero-line-soft">Booting &middot; Onion Layer &middot; Jenis OS &middot; Peran OS &middot; Informatika Kelas X</p>
+                </div>
+                <div class="hero-class">
+                    <div class="hero-class-value">X</div>
+                    <div class="hero-class-label">SMA &middot; Fase E</div>
+                </div>
             </div>
-          </div>
-          <div class="role-card" style="--accent: var(--purple)">
-            <span class="role-num">3</span>
-            <div>
-              <strong>CPU</strong>
-              <div class="role-desc">Menjalankan instruksi penjumlahan</div>
+        </div>
+
+        <div class="target-card">
+            <div class="target-head">
+                <span class="target-head-dot"></span>
+                <span class="target-head-title">🎯 Tujuan Pembelajaran</span>
             </div>
-          </div>
-          <div class="role-card" style="--accent: var(--green)">
-            <span class="role-num">4</span>
-            <div>
-              <strong>Output</strong>
-              <div class="role-desc">Menampilkan hasil perhitungan</div>
+            <ul class="target-list">
+                <li>
+                    <span class="tp-num">1</span><span>Menjelaskan pengertian Sistem Operasi dan mengurutkan tahapan proses <em>booting</em>.</span>
+                </li>
+                <li>
+                    <span class="tp-num">2</span><span>Menganalisis struktur <strong>Model Lapisan Bawang (Onion Layer Model)</strong> pada sistem komputer.</span>
+                </li>
+                <li><span class="tp-num">3</span><span>Membedakan jenis-jenis Sistem Operasi (Desktop, Mobile, Embedded, Server).</span></li>
+                <li>
+                    <span class="tp-num">4</span><span>Menjelaskan <strong>5 peran utama Sistem Operasi</strong> (memori, proses, kernel, antarmuka, utilitas).</span>
+                </li>
+            </ul>
+        </div>
+
+        <div class="grid-info-2">
+            <div class="info-card info-sky">
+                <span class="info-label">Alokasi Waktu</span>
+                <span class="info-value">90 Menit</span>
             </div>
-          </div>
-        </div>
-        <p class="hint-note">Jika anggota lebih banyak, tambahkan peran <strong>Control Unit (CU)</strong> dan <strong>ALU</strong>. Jika lebih sedikit, satu peserta boleh merangkap peran.</p>
-      </div>
-
-      <div class="card ctx-amber">
-        <div class="card-strip">
-          <div class="card-dots"><span></span><span></span><span></span></div>
-          <span class="card-strip-label">Langkah Simulasi</span>
-        </div>
-        <div class="step-row" style="--accent: var(--amber); --accent-tint: var(--amber-tint); --accent-border: var(--amber-border)">
-          <span class="step-num">1</span>
-          <div class="step-body">Pengguna menyerahkan angka <code>5</code> dan <code>3</code> beserta instruksi penjumlahan.</div>
-        </div>
-        <div class="step-row" style="--accent: var(--amber); --accent-tint: var(--amber-tint); --accent-border: var(--amber-border)">
-          <span class="step-num">2</span>
-          <div class="step-body">Memori menyimpan data dan instruksi yang diperlukan.</div>
-        </div>
-        <div class="step-row" style="--accent: var(--amber); --accent-tint: var(--amber-tint); --accent-border: var(--amber-border)">
-          <span class="step-num">3</span>
-          <div class="step-body">CPU menjalankan instruksi; dalam simulasi, ALU melakukan operasi penjumlahan.</div>
-        </div>
-        <div class="step-row" style="--accent: var(--amber); --accent-tint: var(--amber-tint); --accent-border: var(--amber-border)">
-          <span class="step-num">4</span>
-          <div class="step-body">Output menampilkan hasil perhitungan.</div>
-        </div>
-      </div>
-
-      <div class="card ctx-amber">
-        <div class="card-strip">
-          <div class="card-dots"><span></span><span></span><span></span></div>
-          <span class="card-strip-label">📝 Catatan Pengalaman</span>
-        </div>
-        <p style="font-size: 10.5px; margin-bottom: 4px">Apa yang kamu amati ketika simulasi berlangsung?</p>
-        <div class="answer-box tall">
-          <span class="ab-hint">Tulis catatan pengamatanmu</span>
-          <div class="ab-lines"></div>
-        </div>
-      </div>
-
-      <footer class="page-footer">
-        <span class="pf-brand">RuangInformatika</span>
-        <span>LKPD &middot; SMA Negeri 4 Yogyakarta &middot; Pak Ilyas</span>
-        <span class="pf-page">Halaman 2 / 7</span>
-      </footer>
-    </section>
-
-    <!-- ========== PAGE 3 — TAHAP 2 ========== -->
-    <section class="page">
-      <header class="section-head ctx-sky">
-        <span class="sh-num">02</span>
-        <div class="sh-text">
-          <h2>Tahap 2 &mdash; Reflective Observation</h2>
-          <p>Refleksi &middot; Alokasi 8 Menit</p>
-        </div>
-      </header>
-
-      <div class="card ctx-sky">
-        <div class="card-strip">
-          <div class="card-dots"><span></span><span></span><span></span></div>
-          <span class="card-strip-label">Pertanyaan Refleksi Kelompok</span>
-        </div>
-        <p style="font-size: 10.5px; margin-bottom: 8px">Setelah melakukan simulasi, diskusikan pengalamanmu dengan kelompok.</p>
-
-        <div class="qa-item">
-          <p class="qa-q"><span class="qa-num">1</span>Bagaimana angka yang dimasukkan dapat berubah menjadi hasil perhitungan?</p>
-          <div class="answer-box tall">
-            <span class="ab-hint">Jawaban kelompok</span>
-            <div class="ab-lines"></div>
-          </div>
-        </div>
-
-        <div class="qa-item">
-          <p class="qa-q"><span class="qa-num">2</span>Apa yang mungkin terjadi jika komputer menerima data, tetapi tidak melakukan proses pengolahan?</p>
-          <div class="answer-box tall">
-            <span class="ab-hint">Jawaban kelompok</span>
-            <div class="ab-lines"></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="card ctx-sky">
-        <div class="card-strip">
-          <div class="card-dots"><span></span><span></span><span></span></div>
-          <span class="card-strip-label">🔍 Temuan Awal Kelompok</span>
-        </div>
-        <p style="font-size: 10.5px; margin-bottom: 4px">Menurut kelompokmu, apa saja yang diperlukan komputer untuk menerima, mengolah, dan menghasilkan data?</p>
-        <div class="answer-box xl">
-          <span class="ab-hint">Tulis temuan awal kelompok</span>
-          <div class="ab-lines"></div>
-        </div>
-      </div>
-
-      <div class="notes-box">
-        <span class="checklist-pill" style="--accent: var(--sky); --accent-tint: #ffffff; --accent-border: var(--sky-border)">💬 Tips Diskusi</span>
-        <ul class="notes-list">
-          <li>
-            <span class="note-tag tag-g">1</span><span>Ceritakan dulu <strong>pengalaman langsungmu</strong> saat memerankan salah satu komponen.</span>
-          </li>
-          <li>
-            <span class="note-tag tag-g">2</span><span>Hubungkan pengalaman itu dengan <strong>peran asli komponen</strong> di komputer.</span>
-          </li>
-          <li>
-            <span class="note-tag tag-g">3</span><span>Tulis dengan <strong>bahasa kelompokmu sendiri</strong>, tidak perlu sama persis dengan buku.</span>
-          </li>
-        </ul>
-      </div>
-
-      <footer class="page-footer">
-        <span class="pf-brand">RuangInformatika</span>
-        <span>LKPD &middot; SMA Negeri 4 Yogyakarta &middot; Pak Ilyas</span>
-        <span class="pf-page">Halaman 3 / 7</span>
-      </footer>
-    </section>
-
-    <!-- ========== PAGE 4 — TAHAP 3 AKTIVITAS 1 ========== -->
-    <section class="page">
-      <header class="section-head ctx-purple">
-        <span class="sh-num">03</span>
-        <div class="sh-text">
-          <h2>Tahap 3 &mdash; Abstract Conceptualization</h2>
-          <p>Konsep Ilmiah &middot; Alokasi 22 Menit &middot; Bagian 1 dari 2</p>
-        </div>
-      </header>
-
-      <div class="card ctx-purple">
-        <p style="font-size: 10.5px; line-height: 1.6">
-          Berdasarkan pengalaman simulasi, pelajari <strong>diagram Arsitektur Von Neumann</strong> dan bahan ajar yang diberikan guru. Hubungkan pengalamanmu dengan fungsi komponen komputer yang sebenarnya.
-        </p>
-      </div>
-
-      <div class="card ctx-purple">
-        <div class="card-strip">
-          <div class="card-dots"><span></span><span></span><span></span></div>
-          <span class="card-strip-label">Aktivitas 1 — Mengenal Komponen Arsitektur Von Neumann</span>
-        </div>
-        <p style="font-size: 10.5px; margin-bottom: 8px">Lengkapi tabel berikut berdasarkan hasil pengamatan dan bahan ajar.</p>
-
-        <table class="data-table">
-          <thead>
-            <tr>
-              <th>Komponen</th>
-              <th>Fungsi</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Input</td>
-              <td><span class="dotted"></span><span class="dotted" style="margin-top: 6px"></span></td>
-            </tr>
-            <tr class="alt">
-              <td>Memori</td>
-              <td><span class="dotted"></span><span class="dotted" style="margin-top: 6px"></span></td>
-            </tr>
-            <tr>
-              <td>Control Unit (CU)</td>
-              <td><span class="dotted"></span><span class="dotted" style="margin-top: 6px"></span></td>
-            </tr>
-            <tr class="alt">
-              <td>Arithmetic Logic Unit (ALU)</td>
-              <td><span class="dotted"></span><span class="dotted" style="margin-top: 6px"></span></td>
-            </tr>
-            <tr>
-              <td>Output</td>
-              <td><span class="dotted"></span><span class="dotted" style="margin-top: 6px"></span></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div class="notes-box">
-        <span class="checklist-pill" style="--accent: var(--purple); --accent-tint: #ffffff; --accent-border: var(--purple-border)">📖 Cara Mengisi Tabel</span>
-        <ul class="notes-list">
-          <li><span class="note-tag">1</span><span>Amati diagram Arsitektur Von Neumann yang ditampilkan guru.</span></li>
-          <li><span class="note-tag">2</span><span>Tulis fungsi tiap komponen dengan kalimat singkat (1–2 baris).</span></li>
-          <li>
-            <span class="note-tag">3</span><span>Kaitkan dengan pengalaman simulasi <code>5 + 3 = 8</code> sebelumnya.</span>
-          </li>
-        </ul>
-      </div>
-
-      <footer class="page-footer">
-        <span class="pf-brand">RuangInformatika</span>
-        <span>LKPD &middot; SMA Negeri 4 Yogyakarta &middot; Pak Ilyas</span>
-        <span class="pf-page">Halaman 4 / 7</span>
-      </footer>
-    </section>
-
-    <!-- ========== PAGE 5 — TAHAP 3 AKTIVITAS 2 ========== -->
-    <section class="page">
-      <header class="section-head ctx-purple">
-        <span class="sh-num">03</span>
-        <div class="sh-text">
-          <h2>Tahap 3 &mdash; Abstract Conceptualization</h2>
-          <p>Konsep Ilmiah &middot; Alokasi 22 Menit &middot; Bagian 2 dari 2</p>
-        </div>
-      </header>
-
-      <div class="card ctx-purple">
-        <div class="card-strip">
-          <div class="card-dots"><span></span><span></span><span></span></div>
-          <span class="card-strip-label">Aktivitas 2 — Menghubungkan Konsep dengan Pengalaman</span>
-        </div>
-        <p style="font-size: 10.5px; margin-bottom: 6px">Lengkapi alur berikut berdasarkan simulasi penjumlahan sebelumnya.</p>
-
-        <div class="flow-mini">
-          <span class="mini-info mi-amber">Input</span>
-          <span style="color: var(--purple); font-weight: 800; margin: 0 4px">→</span>
-          <span class="mini-info mi-purple">Proses</span>
-          <span style="color: var(--purple); font-weight: 800; margin: 0 4px">→</span>
-          <span class="mini-info mi-green">Output</span>
-        </div>
-
-        <div style="display: flex; flex-direction: column; gap: 7px; margin-top: 6px; font-size: 10.5px">
-          <div><strong style="color: var(--amber)">Input:</strong> <span class="blank xl"></span></div>
-          <div><strong style="color: var(--purple)">Proses:</strong> <span class="blank xl"></span></div>
-          <div><strong style="color: var(--green)">Output:</strong> <span class="blank xl"></span></div>
-        </div>
-      </div>
-
-      <div class="card ctx-purple">
-        <div class="card-strip">
-          <div class="card-dots"><span></span><span></span><span></span></div>
-          <span class="card-strip-label">Pertanyaan Konsep</span>
-        </div>
-
-        <div class="qa-item">
-          <p class="qa-q"><span class="qa-num">1</span>Apa perbedaan fungsi <strong>memori</strong> dengan <strong>CPU</strong>?</p>
-          <div class="answer-box tall">
-            <span class="ab-hint">Jawaban kelompok</span>
-            <div class="ab-lines"></div>
-          </div>
-        </div>
-
-        <div class="qa-item">
-          <p class="qa-q"><span class="qa-num">2</span>Bagaimana hubungan komponen-komponen tersebut dalam mendukung proses komputasi?</p>
-          <div class="answer-box tall">
-            <span class="ab-hint">Jawaban kelompok</span>
-            <div class="ab-lines"></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="card ctx-purple">
-        <div class="card-strip">
-          <div class="card-dots"><span></span><span></span><span></span></div>
-          <span class="card-strip-label">📌 Kesimpulan Konsep</span>
-        </div>
-        <p style="font-size: 10.5px; margin-bottom: 4px">Tuliskan dengan bahasamu sendiri bagaimana komputer menerima, mengolah, dan menghasilkan data.</p>
-        <div class="answer-box tall">
-          <span class="ab-hint">Tulis kesimpulan konsep kelompok</span>
-          <div class="ab-lines"></div>
-        </div>
-      </div>
-
-      <footer class="page-footer">
-        <span class="pf-brand">RuangInformatika</span>
-        <span>LKPD &middot; SMA Negeri 4 Yogyakarta &middot; Pak Ilyas</span>
-        <span class="pf-page">Halaman 5 / 7</span>
-      </footer>
-    </section>
-
-    <!-- ========== PAGE 6 — TAHAP 4 ========== -->
-    <section class="page">
-      <header class="section-head ctx-green">
-        <span class="sh-num">04</span>
-        <div class="sh-text">
-          <h2>Tahap 4 &mdash; Active Experimentation</h2>
-          <p>Penerapan &middot; Alokasi 15 Menit</p>
-        </div>
-      </header>
-
-      <div class="card ctx-green">
-        <div class="card-strip">
-          <div class="card-dots"><span></span><span></span><span></span></div>
-          <span class="card-strip-label">💡 Tantangan — Menghitung Total Belanja</span>
-        </div>
-        <p style="font-size: 10.5px; line-height: 1.65; margin-bottom: 8px">
-          Sekarang, gunakan konsep yang telah kamu pelajari untuk menyelesaikan <strong>kasus baru</strong>. Sebuah program kasir menerima dua data harga barang, yaitu <strong>Rp5.000</strong> dan <strong>Rp3.000</strong>. Program
-          menjumlahkan kedua harga tersebut dan menampilkan <strong>total belanja</strong>.
-        </p>
-
-        <div class="mini-head c-green">Tugas 1 — Tentukan Dinamika IPO</div>
-        <table class="data-table green">
-          <thead>
-            <tr>
-              <th style="width: 32%">Tahapan</th>
-              <th>Hasil Analisis</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Input</td>
-              <td><span class="dotted"></span></td>
-            </tr>
-            <tr class="alt">
-              <td>Process</td>
-              <td><span class="dotted"></span></td>
-            </tr>
-            <tr>
-              <td>Output</td>
-              <td><span class="dotted"></span></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div class="card ctx-green">
-        <div class="card-strip">
-          <div class="card-dots"><span></span><span></span><span></span></div>
-          <span class="card-strip-label">Tugas 2 — Hubungkan dengan Komponen Komputer</span>
-        </div>
-        <p style="font-size: 10.5px; margin-bottom: 4px">Jelaskan secara singkat peran <strong>CPU</strong> dan <strong>memori</strong> dalam kasus tersebut.</p>
-        <div class="answer-box tall">
-          <span class="ab-hint">Tulis penjelasan singkat peran CPU &amp; memori</span>
-          <div class="ab-lines"></div>
-        </div>
-      </div>
-
-      <div class="card ctx-green">
-        <div class="card-strip">
-          <div class="card-dots"><span></span><span></span><span></span></div>
-          <span class="card-strip-label">Tugas 3 — Uji Penerapanmu</span>
-        </div>
-        <p style="font-size: 10.5px; line-height: 1.55; margin-bottom: 6px">Peragakan alur kasus tersebut menggunakan kartu atau peran anggota kelompok. Pastikan data yang masuk, proses penjumlahan, dan hasil yang ditampilkan sesuai.</p>
-
-        <div style="padding: 8px 11px; background: #ffffff; border: 1px dashed var(--border-strong); border-radius: 8px">
-          <div style="font-size: 10px; font-weight: 700; color: var(--navy); margin-bottom: 6px">Apakah simulasi kelompokmu menghasilkan total belanja yang benar?</div>
-          <div style="display: flex; gap: 22px; font-size: 11px; font-weight: 600">
-            <label style="display: flex; align-items: center; gap: 8px">
-              <span class="check-box" style="--accent: var(--green); --accent-tint: var(--green-tint); --accent-border: var(--green-border)"></span>
-              <span>Ya</span>
-            </label>
-            <label style="display: flex; align-items: center; gap: 8px">
-              <span class="check-box" style="--accent: var(--rose); --accent-tint: var(--rose-tint); --accent-border: var(--rose-border)"></span>
-              <span>Belum</span>
-            </label>
-          </div>
-        </div>
-
-        <p style="font-size: 10.5px; margin: 8px 0 0">Jika belum, bagian mana yang perlu diperbaiki?</p>
-        <div class="answer-box">
-          <span class="ab-hint">Tulis bagian yang perlu diperbaiki</span>
-          <div class="ab-lines"></div>
-        </div>
-      </div>
-
-      <footer class="page-footer">
-        <span class="pf-brand">RuangInformatika</span>
-        <span>LKPD &middot; SMA Negeri 4 Yogyakarta &middot; Pak Ilyas</span>
-        <span class="pf-page">Halaman 6 / 7</span>
-      </footer>
-    </section>
-
-    <!-- ========== PAGE 7 — REFLEKSI & KESIMPULAN ========== -->
-    <section class="page">
-      <header class="section-head ctx-cyan">
-        <span class="sh-num">05</span>
-        <div class="sh-text">
-          <h2>Refleksi Akhir Individu</h2>
-          <p>Refleksi Mandiri &middot; Alokasi 5 Menit</p>
-        </div>
-      </header>
-
-      <div class="card ctx-cyan">
-        <div class="card-strip">
-          <div class="card-dots"><span></span><span></span><span></span></div>
-          <span class="card-strip-label">Jawablah Secara Mandiri</span>
-        </div>
-
-        <div class="qa-item">
-          <p class="qa-q"><span class="qa-num">1</span>Apa pemahaman baru yang kamu peroleh setelah mengalami simulasi dan mempelajari konsep Arsitektur Von Neumann?</p>
-          <div class="answer-box">
-            <span class="ab-hint">Tulis refleksimu</span>
-            <div class="ab-lines"></div>
-          </div>
-        </div>
-
-        <div class="qa-item">
-          <p class="qa-q"><span class="qa-num">2</span>Bagaimana konsep IPO membantumu memahami cara kerja komputer?</p>
-          <div class="answer-box">
-            <span class="ab-hint">Tulis refleksimu</span>
-            <div class="ab-lines"></div>
-          </div>
-        </div>
-
-        <div class="qa-item">
-          <p class="qa-q"><span class="qa-num">3</span>Bagian mana yang masih ingin kamu pelajari lebih lanjut?</p>
-          <div class="answer-box">
-            <span class="ab-hint">Tulis refleksimu</span>
-            <div class="ab-lines"></div>
-          </div>
-        </div>
-      </div>
-
-      <header class="section-head ctx-purple">
-        <span class="sh-num">06</span>
-        <div class="sh-text">
-          <h2>Kesimpulan Pembelajaran</h2>
-          <p>Lengkapi pernyataan berikut</p>
-        </div>
-      </header>
-
-      <div class="card ctx-purple">
-        <div class="step-row" style="--accent: var(--purple); --accent-tint: var(--purple-tint); --accent-border: var(--purple-border)">
-          <span class="step-num">1</span>
-          <div class="step-body">
-            Arsitektur Von Neumann melibatkan komponen-komponen yang berfungsi untuk
-            <span class="blank xl"></span>
-          </div>
-        </div>
-
-        <div class="step-row" style="--accent: var(--purple); --accent-tint: var(--purple-tint); --accent-border: var(--purple-border)">
-          <span class="step-num">2</span>
-          <div class="step-body">
-            Dinamika IPO merupakan proses ketika komputer menerima
-            <span class="blank md"></span>, melakukan <span class="blank md"></span>, dan menghasilkan
-            <span class="blank md"></span>
-          </div>
-        </div>
-
-        <div class="step-row" style="--accent: var(--purple); --accent-tint: var(--purple-tint); --accent-border: var(--purple-border); border-bottom: none">
-          <span class="step-num">3</span>
-          <div class="step-body">
-            Melalui kegiatan simulasi, saya memahami bahwa
-            <div class="answer-box" style="margin-top: 6px">
-              <span class="ab-hint">Tulis kesimpulanmu</span>
-              <div class="ab-lines"></div>
+            <div class="info-card info-purple">
+                <span class="info-label">Pendekatan</span>
+                <span class="info-value">Game-Based Exploration</span>
             </div>
-          </div>
+            <div class="info-card info-amber">
+                <span class="info-label">Mata Pelajaran</span>
+                <span class="info-value">Informatika &middot; Kelas X</span>
+            </div>
+            <div class="info-card info-green">
+                <span class="info-label">Bentuk Kegiatan</span>
+                <span class="info-value">Eksplorasi Game, Diskusi, Analisis</span>
+            </div>
         </div>
 
-        <div class="checklist">
-          <span class="checklist-pill">✨ Checklist Refleksi</span>
-          <ul>
-            <li><span class="check-box"></span><span>Sudah menuliskan refleksi mandiri dengan jujur</span></li>
-            <li><span class="check-box"></span><span>Sudah melengkapi seluruh pernyataan kesimpulan</span></li>
-            <li><span class="check-box"></span><span>Sudah memahami peran tiap komponen dalam siklus IPO</span></li>
-          </ul>
+        <div class="identity-card">
+            <div class="identity-head">
+                <div class="identity-head-left">
+                    <span class="identity-head-dot"></span>
+                    <span class="identity-head-title">Identitas Peserta Didik</span>
+                </div>
+                <span class="identity-head-hint">Isi data dirimu</span>
+            </div>
+            <div class="id-row">
+                <span class="id-badge">Nama</span>
+                <div class="id-field">
+                    <label>Nama Lengkap / Kelompok</label>
+                    <div class="id-line"></div>
+                </div>
+                <div class="id-field">
+                    <label>No. Absen</label>
+                    <div class="id-line"></div>
+                </div>
+            </div>
+            <div class="id-row">
+                <span class="id-badge">Kelas</span>
+                <div class="id-field">
+                    <label>Kelas</label>
+                    <div class="id-line"></div>
+                </div>
+                <div class="id-field">
+                    <label>Kelompok</label>
+                    <div class="id-line"></div>
+                </div>
+            </div>
+            <div class="id-row">
+                <span class="id-badge" style="background: var(--green)">Skor</span>
+                <div class="id-field">
+                    <label>Skor Akhir di Dalam Game (Poin)</label>
+                    <div class="id-line"></div>
+                </div>
+                <div class="id-field">
+                    <label>Level</label>
+                    <div class="id-line"></div>
+                </div>
+            </div>
         </div>
-      </div>
 
-      <div class="notes-box" style="margin-top: 8px; text-align: center; background: linear-gradient(135deg, #4c1d95, #7c3aed); border: none">
-        <p style="font-size: 11px; font-weight: 700; color: #ffffff; line-height: 1.5">🎉 Terima kasih! Kamu telah belajar melalui pengalaman, refleksi, pemahaman konsep, dan penerapan.</p>
-      </div>
+        <div class="notes-box">
+            <span class="checklist-pill" style="--accent: var(--purple); --accent-tint: #ffffff; --accent-border: var(--purple-border)">📋 Petunjuk Pengerjaan (Aturan Main)</span>
+            <ul class="notes-list">
+                <li>
+                    <span class="note-tag">1</span><span>Buka dan mainkan <strong>Game Pembelajaran Sistem Operasi</strong> melalui perangkat komputer/HP sesuai arahan guru.</span>
+                </li>
+                <li>
+                    <span class="note-tag tag-g">2</span><span>LKPD ini adalah <strong>Jurnal Misi (Quest Log)</strong>-mu. Jawaban dari misi tersimpan di dalam materi, petunjuk, maupun tantangan di dalam game.</span>
+                </li>
+                <li><span class="note-tag tag-h">3</span><span>Jelajahi setiap tahapan di dalam game, temukan informasi kuncinya, lalu tuliskan jawabanmu pada lembar ini dengan tepat!</span></li>
+            </ul>
+        </div>
 
-      <footer class="page-footer">
-        <span class="pf-brand">RuangInformatika</span>
-        <span>LKPD &middot; SMA Negeri 4 Yogyakarta &middot; Pak Ilyas</span>
-        <span class="pf-page">Halaman 7 / 7</span>
-      </footer>
+        <footer class="page-footer">
+            <span class="pf-brand">RuangInformatika</span>
+            <span>LKPD &middot; SMA Negeri 4 Yogyakarta &middot; Pak Ilyas</span>
+            <span class="pf-page">Halaman 1 / 7</span>
+        </footer>
     </section>
-  </body>
+
+    <!-- ========== PAGE 2 — MISI 1 ========== -->
+    <section class="page">
+        <header class="section-head ctx-sky">
+            <span class="sh-num">01</span>
+            <div class="sh-text">
+                <h2>Misi 1 &mdash; Pengertian OS &amp; Tahapan Booting</h2>
+                <p>Konsep Booting &middot; Alokasi 12 Menit</p>
+            </div>
+        </header>
+
+        <div class="card ctx-sky">
+            <div class="card-strip">
+                <div class="card-dots"><span></span><span></span><span></span></div>
+                <span class="card-strip-label">Pengertian &amp; Fungsi Utama OS</span>
+            </div>
+            <p style="font-size: 10.5px; margin-bottom: 4px">Cari tahu bagaimana Sistem Operasi mulai bekerja saat komputer pertama kali dinyalakan!</p>
+            <div class="qa-item">
+                <p class="qa-q"><span class="qa-num">1</span>Apa pengertian dan fungsi utama dari Sistem Operasi (OS)?</p>
+                <div class="answer-box tall">
+                    <span class="ab-hint">Jawabanmu</span>
+                    <div class="ab-lines"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card ctx-sky">
+            <div class="card-strip">
+                <div class="card-dots"><span></span><span></span><span></span></div>
+                <span class="card-strip-label">Urutan 5 Langkah Proses Booting</span>
+            </div>
+            <p style="font-size: 10.5px; margin-bottom: 6px">Lengkapi alur tahapan booting yang kamu temukan di dalam game dari langkah ke-1 hingga ke-5:</p>
+
+            <div class="step-row" style="--accent: var(--sky); --accent-tint: var(--sky-tint); --accent-border: var(--sky-border)">
+                <span class="step-num">1</span>
+                <div class="step-body"><strong>Daya (Power) Dihidupkan</strong></div>
+            </div>
+            <div class="step-row" style="--accent: var(--sky); --accent-tint: var(--sky-tint); --accent-border: var(--sky-border)">
+                <span class="step-num">2</span>
+                <div class="step-body"><span class="blank xl"></span></div>
+            </div>
+            <div class="step-row" style="--accent: var(--sky); --accent-tint: var(--sky-tint); --accent-border: var(--sky-border)">
+                <span class="step-num">3</span>
+                <div class="step-body"><span class="blank xl"></span></div>
+            </div>
+            <div class="step-row" style="--accent: var(--sky); --accent-tint: var(--sky-tint); --accent-border: var(--sky-border)">
+                <span class="step-num">4</span>
+                <div class="step-body"><span class="blank xl"></span></div>
+            </div>
+            <div class="step-row" style="--accent: var(--sky); --accent-tint: var(--sky-tint); --accent-border: var(--sky-border)">
+                <span class="step-num">5</span>
+                <div class="step-body"><strong>Pengalihan Kontrol ke Sistem Operasi</strong></div>
+            </div>
+
+            <div style="margin-top: 10px; padding-top: 8px; border-top: 1px dashed var(--border-strong)">
+                <p style="font-size: 10.5px; margin-bottom: 4px"><strong>Apa fungsi dari tahap POST (Power On Self Test)?</strong></p>
+                <div class="answer-box">
+                    <span class="ab-hint">Jawabanmu</span>
+                    <div class="ab-lines"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="notes-box">
+            <span class="checklist-pill" style="--accent: var(--sky); --accent-tint: #ffffff; --accent-border: var(--sky-border)">💬 Tips Misi 1</span>
+            <ul class="notes-list">
+                <li>
+                    <span class="note-tag tag-g">1</span><span>Perhatikan <strong>urutan proses</strong> saat komputer dinyalakan — jangan terbalik.</span>
+                </li>
+                <li>
+                    <span class="note-tag tag-g">2</span><span><strong>POST</strong> adalah pengecekan awal perangkat keras sebelum OS dimuat.</span>
+                </li>
+                <li><span class="note-tag tag-g">3</span><span>Baca materi di dalam game dengan teliti agar urutan booting tepat.</span></li>
+            </ul>
+        </div>
+
+        <footer class="page-footer">
+            <span class="pf-brand">RuangInformatika</span>
+            <span>LKPD &middot; SMA Negeri 4 Yogyakarta &middot; Pak Ilyas</span>
+            <span class="pf-page">Halaman 2 / 7</span>
+        </footer>
+    </section>
+
+    <!-- ========== PAGE 3 — MISI 2 ========== -->
+    <section class="page">
+        <header class="section-head ctx-purple">
+            <span class="sh-num">02</span>
+            <div class="sh-text">
+                <h2>Misi 2 &mdash; Model Lapisan Bawang</h2>
+                <p>Onion Layer Model &middot; Alokasi 10 Menit</p>
+            </div>
+        </header>
+
+        <div class="card ctx-purple">
+            <div class="card-strip">
+                <div class="card-dots"><span></span><span></span><span></span></div>
+                <span class="card-strip-label">Mengupas Lapisan Sistem Operasi</span>
+            </div>
+            <p style="font-size: 10.5px; margin-bottom: 6px">Temukan diagram <strong>Lapisan Bawang Sistem Operasi</strong> di dalam game, lalu lengkapi urutan lapisannya dari bagian paling dalam (inti) hingga paling luar!</p>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th style="width: 22%">Urutan Lapisan</th>
+                        <th style="width: 22%">Nama Lapisan</th>
+                        <th style="width: 56%">Peran / Penjelasan Singkat &amp; Contoh</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="font-size: 9.5px">Lapisan Ke-1<br /><span style="font-weight: 500; color: var(--text-muted)">(Inti Terdalam)</span></td>
+                        <td><strong style="color: var(--purple)">H</strong><span class="dotted" style="min-width: 100px"></span></td>
+                        <td style="font-size: 9.5px; color: var(--text-muted); font-style: italic">Berisi perangkat fisik seperti Terminals, Printers, dan Disks.</td>
+                    </tr>
+                    <tr class="alt">
+                        <td style="font-size: 9.5px">Lapisan Ke-2</td>
+                        <td><strong style="color: var(--purple)">K</strong><span class="dotted" style="min-width: 100px"></span></td>
+                        <td><span class="dotted"></span><span class="dotted" style="margin-top: 5px"></span></td>
+                    </tr>
+                    <tr>
+                        <td style="font-size: 9.5px">Lapisan Ke-3</td>
+                        <td><strong style="color: var(--purple)">S</strong><span class="dotted" style="min-width: 100px"></span></td>
+                        <td><span class="dotted"></span><span class="dotted" style="margin-top: 5px"></span></td>
+                    </tr>
+                    <tr class="alt">
+                        <td style="font-size: 9.5px">Lapisan Ke-4<br /><span style="font-weight: 500; color: var(--text-muted)">(Paling Luar)</span></td>
+                        <td><strong style="color: var(--purple)">A</strong><span class="dotted" style="min-width: 60px"></span><strong style="color: var(--purple)"> &amp; U</strong><span class="dotted" style="min-width: 60px"></span></td>
+                        <td><span class="dotted"></span><span class="dotted" style="margin-top: 5px"></span></td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="hint-note">💡 Petunjuk: Inisial <strong>H</strong>, <strong>K</strong>, <strong>S</strong>, <strong>A</strong>, <strong>U</strong> adalah huruf awal dari nama lapisan.</p>
+        </div>
+
+        <div class="notes-box">
+            <span class="checklist-pill" style="--accent: var(--purple); --accent-tint: #ffffff; --accent-border: var(--purple-border)">📖 Tips Misi 2</span>
+            <ul class="notes-list">
+                <li>
+                    <span class="note-tag">1</span><span><strong>Lapisan terdalam (inti)</strong> adalah perangkat fisik yang bisa disentuh.</span>
+                </li>
+                <li>
+                    <span class="note-tag">2</span><span>Semakin ke luar, lapisan semakin dekat dengan <strong>pengguna</strong>.</span>
+                </li>
+                <li><span class="note-tag">3</span><span>Setiap lapisan punya peran berbeda — jangan tertukar urutannya.</span></li>
+            </ul>
+        </div>
+
+        <footer class="page-footer">
+            <span class="pf-brand">RuangInformatika</span>
+            <span>LKPD &middot; SMA Negeri 4 Yogyakarta &middot; Pak Ilyas</span>
+            <span class="pf-page">Halaman 3 / 7</span>
+        </footer>
+    </section>
+
+    <!-- ========== PAGE 4 — MISI 3 ========== -->
+    <section class="page">
+        <header class="section-head ctx-cyan">
+            <span class="sh-num">03</span>
+            <div class="sh-text">
+                <h2>Misi 3 &mdash; Berburu 4 Jenis Sistem Operasi</h2>
+                <p>Klasifikasi OS &middot; Alokasi 10 Menit</p>
+            </div>
+        </header>
+
+        <div class="card ctx-cyan">
+            <div class="card-strip">
+                <div class="card-dots"><span></span><span></span><span></span></div>
+                <span class="card-strip-label">4 Jenis Sistem Operasi &amp; Karakteristiknya</span>
+            </div>
+            <p style="font-size: 10.5px; margin-bottom: 6px">Di dalam game terdapat 4 jenis Sistem Operasi. Pasangkan dan lengkapi karakteristik serta contoh nyatanya pada tabel berikut!</p>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th style="width: 22%">Jenis OS</th>
+                        <th style="width: 45%">Perangkat &amp; Karakteristik</th>
+                        <th style="width: 33%">Contoh OS / Perangkat</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Desktop OS</td>
+                        <td><span class="dotted"></span><span class="dotted" style="margin-top: 5px"></span></td>
+                        <td><span class="dotted"></span></td>
+                    </tr>
+                    <tr class="alt">
+                        <td>Mobile OS</td>
+                        <td><span class="dotted"></span><span class="dotted" style="margin-top: 5px"></span></td>
+                        <td><span class="dotted"></span></td>
+                    </tr>
+                    <tr>
+                        <td>Embedded OS</td>
+                        <td><span class="dotted"></span><span class="dotted" style="margin-top: 5px"></span></td>
+                        <td><span class="dotted"></span></td>
+                    </tr>
+                    <tr class="alt">
+                        <td>Server OS</td>
+                        <td><span class="dotted"></span><span class="dotted" style="margin-top: 5px"></span></td>
+                        <td><span class="dotted"></span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="notes-box">
+            <span class="checklist-pill" style="--accent: var(--cyan); --accent-tint: #ffffff; --accent-border: var(--cyan-border)">🔍 Tips Misi 3</span>
+            <ul class="notes-list">
+                <li>
+                    <span class="note-tag tag-g">1</span><span>Perhatikan <strong>konteks penggunaan</strong> setiap jenis OS — di perangkat apa OS itu dipasang?</span>
+                </li>
+                <li>
+                    <span class="note-tag tag-g">2</span><span><strong>Desktop</strong> untuk PC/laptop; <strong>Mobile</strong> untuk smartphone/tablet.</span>
+                </li>
+                <li>
+                    <span class="note-tag tag-g">3</span><span><strong>Embedded</strong> untuk perangkat khusus (IoT, mesin); <strong>Server</strong> untuk layanan jaringan.</span>
+                </li>
+            </ul>
+        </div>
+
+        <footer class="page-footer">
+            <span class="pf-brand">RuangInformatika</span>
+            <span>LKPD &middot; SMA Negeri 4 Yogyakarta &middot; Pak Ilyas</span>
+            <span class="pf-page">Halaman 4 / 7</span>
+        </footer>
+    </section>
+
+    <!-- ========== PAGE 5 — MISI 4 BAGIAN 1 ========== -->
+    <section class="page">
+        <header class="section-head ctx-green">
+            <span class="sh-num">04</span>
+            <div class="sh-text">
+                <h2>Misi 4 &mdash; Di Balik Layar Sistem Operasi</h2>
+                <p>5 Peran &amp; Fungsi Utama &middot; Bagian 1 dari 2 &middot; Alokasi 12 Menit</p>
+            </div>
+        </header>
+
+        <div class="card ctx-green">
+            <div class="card-strip">
+                <div class="card-dots"><span></span><span></span><span></span></div>
+                <span class="card-strip-label">1 &middot; Pengelolaan Memori (Memory Management)</span>
+            </div>
+            <div class="qa-item" style="--accent: var(--green)">
+                <p class="qa-q"><span class="qa-num">1</span>Bagaimana cara Sistem Operasi mengatur data aplikasi di dalam RAM agar tidak saling bertabrakan?</p>
+                <div class="answer-box tall">
+                    <span class="ab-hint">Jawabanmu</span>
+                    <div class="ab-lines"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card ctx-green">
+            <div class="card-strip">
+                <div class="card-dots"><span></span><span></span><span></span></div>
+                <span class="card-strip-label">2 &middot; Pengelolaan Proses &amp; Multitasking Round Robin</span>
+            </div>
+            <div class="qa-item" style="--accent: var(--green)">
+                <p class="qa-q">
+                    <span class="qa-num">2</span>Mengapa komputer dengan 1 CPU bisa menjalankan Spotify, Word, dan Browser secara bersamaan (Multitasking)? Jelaskan cara kerja metode <strong>Round Robin (Time Sharing)</strong>!
+                </p>
+                <div class="answer-box xl">
+                    <span class="ab-hint">Jelaskan mekanisme Round Robin</span>
+                    <div class="ab-lines"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="notes-box">
+            <span class="checklist-pill" style="--accent: var(--green); --accent-tint: #ffffff; --accent-border: var(--green-border)">💡 Tips Misi 4 (Bagian 1)</span>
+            <ul class="notes-list">
+                <li>
+                    <span class="note-tag tag-h">1</span><span><strong>Memory Management</strong> mengatur alokasi &amp; dealokasi RAM agar aplikasi tidak saling bertabrakan.</span>
+                </li>
+                <li>
+                    <span class="note-tag tag-h">2</span><span><strong>Round Robin</strong> membagi waktu CPU secara bergiliran (time sharing) ke setiap proses.</span>
+                </li>
+                <li><span class="note-tag tag-h">3</span><span>Hubungkan penjelasan dengan pengalamanmu saat bermain game atau membuka banyak aplikasi.</span></li>
+            </ul>
+        </div>
+
+        <footer class="page-footer">
+            <span class="pf-brand">RuangInformatika</span>
+            <span>LKPD &middot; SMA Negeri 4 Yogyakarta &middot; Pak Ilyas</span>
+            <span class="pf-page">Halaman 5 / 7</span>
+        </footer>
+    </section>
+
+    <!-- ========== PAGE 6 — MISI 4 BAGIAN 2 ========== -->
+    <section class="page">
+        <header class="section-head ctx-green">
+            <span class="sh-num">04</span>
+            <div class="sh-text">
+                <h2>Misi 4 &mdash; Di Balik Layar Sistem Operasi</h2>
+                <p>5 Peran &amp; Fungsi Utama &middot; Bagian 2 dari 2 &middot; Alokasi 12 Menit</p>
+            </div>
+        </header>
+
+        <div class="card ctx-green">
+            <div class="card-strip">
+                <div class="card-dots"><span></span><span></span><span></span></div>
+                <span class="card-strip-label">3 &middot; Pengelolaan Antarmuka Kernel Hardware (Siklus IPO)</span>
+            </div>
+            <p style="font-size: 10.5px; margin-bottom: 6px">Jelaskan bagaimana Sistem Operasi bekerja sama dengan hardware saat kamu menekan tombol huruf di keyboard hingga huruf tersebut tampil di layar monitor!</p>
+            <div style="display: flex; flex-direction: column; gap: 7px; font-size: 10.5px">
+                <div><strong style="color: var(--amber)">Input:</strong> <span class="blank xl"></span></div>
+                <div><strong style="color: var(--purple)">Proses:</strong> <span class="blank xl"></span></div>
+                <div><strong style="color: var(--green)">Output:</strong> <span class="blank xl"></span></div>
+            </div>
+        </div>
+
+        <div class="card ctx-green">
+            <div class="card-strip">
+                <div class="card-dots"><span></span><span></span><span></span></div>
+                <span class="card-strip-label">4 &middot; Pengelolaan Interaksi dengan Pengguna (User Interface)</span>
+            </div>
+            <p style="font-size: 10.5px; margin-bottom: 6px">Tuliskan perbedaan antara kedua antarmuka berikut beserta contohnya yang ada di game:</p>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px">
+                <div style="background: #ffffff; border: 1px solid var(--border); border-left: 3px solid var(--purple); border-radius: 8px; padding: 8px 10px">
+                    <div class="mini-head c-purple" style="margin-top: 0">GUI &mdash; Instruksi Simbolik</div>
+                    <div style="font-size: 9.5px; margin-bottom: 4px">Deskripsi: <span class="blank md"></span></div>
+                    <div style="font-size: 9.5px">Contoh: <span class="blank md"></span></div>
+                </div>
+                <div style="background: #ffffff; border: 1px solid var(--border); border-left: 3px solid var(--sky); border-radius: 8px; padding: 8px 10px">
+                    <div class="mini-head c-sky" style="margin-top: 0">CLI &mdash; Instruksi Tekstual</div>
+                    <div style="font-size: 9.5px; margin-bottom: 4px">Deskripsi: <span class="blank md"></span></div>
+                    <div style="font-size: 9.5px">Contoh: <span class="blank md"></span></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card ctx-green">
+            <div class="card-strip">
+                <div class="card-dots"><span></span><span></span><span></span></div>
+                <span class="card-strip-label">5 &middot; Penyediaan Utilitas &amp; Pengelolaan File</span>
+            </div>
+            <p style="font-size: 10.5px; margin-bottom: 4px">Sebutkan minimal 3 aktivitas pengelolaan file atau program utilitas yang disediakan oleh Sistem Operasi!</p>
+            <div style="display: flex; flex-direction: column; gap: 6px; font-size: 10.5px">
+                <div><strong style="color: var(--green)">1.</strong> <span class="blank xl"></span></div>
+                <div><strong style="color: var(--green)">2.</strong> <span class="blank xl"></span></div>
+                <div><strong style="color: var(--green)">3.</strong> <span class="blank xl"></span></div>
+            </div>
+        </div>
+
+        <div class="notes-box">
+            <span class="checklist-pill" style="--accent: var(--green); --accent-tint: #ffffff; --accent-border: var(--green-border)">💡 Tips Misi 4 (Bagian 2)</span>
+            <ul class="notes-list">
+                <li>
+                    <span class="note-tag tag-h">1</span><span><strong>IPO</strong> menggambarkan alur <em>Input → Proses → Output</em> antara pengguna dan hardware.</span>
+                </li>
+                <li>
+                    <span class="note-tag tag-h">2</span><span><strong>GUI</strong> menggunakan ikon/simbol (klik); <strong>CLI</strong> menggunakan teks perintah.</span>
+                </li>
+                <li>
+                    <span class="note-tag tag-h">3</span><span><strong>Utilitas</strong> membantu pengelolaan file, backup, kompresi, dan pembersihan sistem.</span>
+                </li>
+            </ul>
+        </div>
+
+        <footer class="page-footer">
+            <span class="pf-brand">RuangInformatika</span>
+            <span>LKPD &middot; SMA Negeri 4 Yogyakarta &middot; Pak Ilyas</span>
+            <span class="pf-page">Halaman 6 / 7</span>
+        </footer>
+    </section>
+
+    <!-- ========== PAGE 7 — REFLEKSI ========== -->
+    <section class="page">
+        <header class="section-head ctx-purple">
+            <span class="sh-num">05</span>
+            <div class="sh-text">
+                <h2>Refleksi &amp; Bukti Penyelesaian Game</h2>
+                <p>Refleksi Mandiri &middot; Alokasi 5 Menit</p>
+            </div>
+        </header>
+
+        <div class="card ctx-purple">
+            <div class="card-strip">
+                <div class="card-dots"><span></span><span></span><span></span></div>
+                <span class="card-strip-label">Jawablah Secara Mandiri</span>
+            </div>
+
+            <div class="qa-item" style="--accent: var(--purple)">
+                <p class="qa-q"><span class="qa-num">1</span>Bagian mana di dalam game yang menurutmu <strong>paling seru</strong> atau paling membantumu memahami cara kerja Sistem Operasi? Mengapa?</p>
+                <div class="answer-box tall">
+                    <span class="ab-hint">Tulis refleksimu</span>
+                    <div class="ab-lines"></div>
+                </div>
+            </div>
+
+            <div class="qa-item" style="--accent: var(--purple)">
+                <p class="qa-q"><span class="qa-num">2</span>Tuliskan <strong>1 hal baru</strong> yang baru kamu ketahui hari ini setelah menyelesaikan game dan LKPD ini!</p>
+                <div class="answer-box tall">
+                    <span class="ab-hint">Tulis temuan barumu</span>
+                    <div class="ab-lines"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card ctx-purple">
+            <div class="card-strip">
+                <div class="card-dots"><span></span><span></span><span></span></div>
+                <span class="card-strip-label">📌 Ringkasan Perjalanan Misi</span>
+            </div>
+            <div class="step-row" style="--accent: var(--purple); --accent-tint: var(--purple-tint); --accent-border: var(--purple-border)">
+                <span class="step-num">1</span>
+                <div class="step-body"><strong>Misi 1:</strong> Memahami pengertian OS dan 5 tahap booting.</div>
+            </div>
+            <div class="step-row" style="--accent: var(--purple); --accent-tint: var(--purple-tint); --accent-border: var(--purple-border)">
+                <span class="step-num">2</span>
+                <div class="step-body"><strong>Misi 2:</strong> Membedah Model Lapisan Bawang (Onion Layer).</div>
+            </div>
+            <div class="step-row" style="--accent: var(--purple); --accent-tint: var(--purple-tint); --accent-border: var(--purple-border)">
+                <span class="step-num">3</span>
+                <div class="step-body"><strong>Misi 3:</strong> Mengklasifikasikan 4 jenis Sistem Operasi.</div>
+            </div>
+            <div class="step-row" style="--accent: var(--purple); --accent-tint: var(--purple-tint); --accent-border: var(--purple-border)">
+                <span class="step-num">4</span>
+                <div class="step-body"><strong>Misi 4:</strong> Menganalisis 5 peran utama Sistem Operasi.</div>
+            </div>
+
+            <div class="checklist">
+                <span class="checklist-pill">✨ Checklist Refleksi</span>
+                <ul>
+                    <li><span class="check-box"></span><span>Sudah menyelesaikan seluruh 4 misi di dalam game</span></li>
+                    <li><span class="check-box"></span><span>Sudah melengkapi semua jawaban di LKPD ini</span></li>
+                    <li><span class="check-box"></span><span>Sudah menuliskan refleksi mandiri dengan jujur</span></li>
+                    <li><span class="check-box"></span><span>Sudah memahami peran tiap komponen &amp; dinamika sistem operasi</span></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="notes-box" style="margin-top: 8px; text-align: center; background: linear-gradient(135deg, #4c1d95, #7c3aed); border: none">
+            <p style="font-size: 11px; font-weight: 700; color: #ffffff; line-height: 1.5">🎉 Terima kasih! Kamu telah menyelesaikan Misi Eksplorasi Game: Sistem Komputer &amp; Sistem Operasi. Teruslah menjelajah dan belajar! 🚀</p>
+        </div>
+
+        <footer class="page-footer">
+            <span class="pf-brand">RuangInformatika</span>
+            <span>LKPD &middot; SMA Negeri 4 Yogyakarta &middot; Pak Ilyas</span>
+            <span class="pf-page">Halaman 7 / 7</span>
+        </footer>
+    </section>
+</body>
 </html>

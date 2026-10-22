@@ -3,1182 +3,1266 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Stack & Queue - RuangInformatika</title>
+    <title>Stack &amp; Queue — RuangInformatika</title>
     <link rel="shortcut icon" href="images/Logo Patbhe.png" type="image/x-icon" />
+
+    <!-- Anti-FOUC script: set tema seawal mungkin -->
+    <script>
+      if (
+        localStorage.getItem("theme") === "dark" ||
+        (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches)
+      ) {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
+    </script>
 
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
-
-    <!-- FontAwesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-
-    <!-- Vanilla Tilt -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
 
     <script>
       tailwind.config = {
+        darkMode: "class",
         theme: {
           extend: {
             fontFamily: {
               sans: ["Plus Jakarta Sans", "sans-serif"],
-              mono: ["JetBrains Mono", "ui-monospace", "monospace"],
+              mono: ["JetBrains Mono", "monospace"],
             },
             colors: {
-              brandDark: "#080c10",
-              brandGray: "#111820",
-              brandGreen: "#00e676",
-              textGray: "#8896a7",
+              brandPrimary: "#0284c7",
+              brandDark: "#0f172a",
+              brandTeal: "#06b6d4",
+              brandSoft: "#f8fafc",
             },
           },
         },
       };
     </script>
 
-    <!-- MASTER CSS -->
-    <link rel="stylesheet" href="style.css" />
-
     <style>
-      .tilt-card {
-        transform-style: preserve-3d;
+      .reveal {
+        opacity: 0;
+        transform: translateY(24px);
+        transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
       }
-      .tilt-card-content {
-        transform: translateZ(30px);
+      .reveal.visible {
+        opacity: 1;
+        transform: translateY(0);
       }
+      .delay-100 { transition-delay: 100ms; }
+      .delay-200 { transition-delay: 200ms; }
+      .delay-300 { transition-delay: 300ms; }
 
-      /* Konten utama transparan agar grid body tembus */
-      main {
-        background: transparent;
-      }
-
-      /* ── Page Hero ── */
-      .page-hero {
-        position: relative;
-        padding: 64px 0 40px;
-        overflow: hidden;
-      }
-      .page-hero-glow {
+      .hero-glow-1 {
         position: absolute;
-        top: -100px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 700px;
-        height: 400px;
-        background: radial-gradient(ellipse, rgba(0, 230, 118, 0.1) 0%, rgba(56, 189, 248, 0.05) 40%, transparent 70%);
-        filter: blur(40px);
+        top: -120px;
+        left: -80px;
+        width: 500px;
+        height: 500px;
+        background: radial-gradient(circle, rgba(6, 182, 212, 0.12) 0%, rgba(2, 132, 199, 0.04) 50%, transparent 70%);
+        filter: blur(50px);
         pointer-events: none;
+        z-index: 0;
       }
-      .page-hero-inner {
-        max-width: 1024px;
-        margin: 0 auto;
-        padding: 0 24px;
-        position: relative;
-        z-index: 10;
-      }
-      .page-hero-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        padding: 6px 14px;
-        border-radius: 999px;
-        background: var(--bg-glass);
-        border: 1px solid var(--border-green);
-        font-size: 0.78rem;
-        font-weight: 700;
-        color: var(--green);
-        margin-bottom: 18px;
-        backdrop-filter: blur(8px);
-        text-transform: uppercase;
-        letter-spacing: 0.06em;
-      }
-      .page-hero-title {
-        font-size: clamp(2rem, 4.5vw, 3rem);
-        font-weight: 800;
-        line-height: 1.15;
-        letter-spacing: -0.03em;
-        margin-bottom: 16px;
-      }
-      .page-hero-title .gradient-text {
-        background: linear-gradient(135deg, #00e676 0%, #38bdf8 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-      }
-      .page-hero-desc {
-        font-size: 1rem;
-        line-height: 1.7;
-        color: var(--text-muted);
-        max-width: 640px;
+      .hero-glow-2 {
+        position: absolute;
+        top: 40px;
+        right: -60px;
+        width: 550px;
+        height: 550px;
+        background: radial-gradient(circle, rgba(14, 165, 233, 0.14) 0%, rgba(16, 185, 129, 0.05) 50%, transparent 70%);
+        filter: blur(60px);
+        pointer-events: none;
+        z-index: 0;
       }
 
-      /* ── Tab pills ── */
-      .tab-nav-pills {
-        display: flex;
-        gap: 8px;
-        padding: 6px;
-        background: rgba(255, 255, 255, 0.02);
-        border: 1px solid var(--border);
-        border-radius: var(--radius-md);
-        overflow-x: auto;
-        backdrop-filter: blur(12px);
+      #mobileDrawer {
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       }
-      .tab-btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        padding: 11px 20px;
-        border-radius: 10px;
-        font-size: 0.875rem;
-        font-weight: 600;
-        color: var(--text-muted);
-        background: transparent;
-        border: none;
-        cursor: pointer;
-        transition: all 0.25s ease;
-        white-space: nowrap;
-        font-family: var(--font-sans);
-      }
-      .tab-btn:hover {
-        color: var(--text-primary);
-        background: rgba(255, 255, 255, 0.04);
-      }
-      .tab-btn.active {
-        color: var(--green);
-        background: var(--green-dim);
-        box-shadow:
-          0 0 20px rgba(0, 230, 118, 0.15),
-          inset 0 0 0 1px rgba(0, 230, 118, 0.25);
-      }
-
-      /* ── Glow responsif ── */
-      main .bg-brandGreen\/5 {
-        width: 90vw;
-        max-width: 600px;
-        height: 50vw;
-        max-height: 300px;
-      }
-
-      /* Responsive fonts mobile */
-      @media (max-width: 640px) {
-        body {
-          font-size: 1rem;
-        }
-        h1 {
-          font-size: 1.875rem !important;
-          line-height: 1.2 !important;
-        }
-        h2 {
-          font-size: 1.5rem !important;
-        }
-        h3 {
-          font-size: 1.25rem !important;
-        }
-        .text-4xl {
-          font-size: 1.875rem !important;
-        }
-        .text-3xl {
-          font-size: 1.5rem !important;
-        }
-        .text-2xl {
-          font-size: 1.25rem !important;
-        }
-        .text-xl {
-          font-size: 1.125rem !important;
-        }
-        .text-lg {
-          font-size: 1rem !important;
-        }
+      #mobileDrawer.closed {
+        transform: translateX(100%);
       }
     </style>
   </head>
 
-  <body class="bg-grid text-white font-sans antialiased overflow-x-hidden flex flex-col min-h-screen">
-    <!-- Navigation -->
-    <nav class="navbar">
-      <div class="navbar-inner">
-        <a href="index.html" class="navbar-logo">
-          <div class="navbar-logo-icon"><i class="fa-solid fa-code"></i></div>
-          <span class="navbar-logo-text">RuangInformatika</span>
+  <body class="bg-brandSoft dark:bg-slate-950 text-slate-700 dark:text-slate-200 font-sans antialiased overflow-x-hidden selection:bg-cyan-500 selection:text-white transition-colors duration-300">
+    <!-- Reading Progress Bar -->
+    <div id="readProgress" class="fixed top-0 left-0 h-1 bg-gradient-to-r from-cyan-500 via-sky-500 to-teal-500 z-[999] transition-all duration-150" style="width: 0%"></div>
+
+    <!-- ============================================================
+         1. TOP NAVBAR
+         ============================================================ -->
+    <header class="sticky top-0 z-50 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md border-b border-slate-100 dark:border-slate-800 transition-colors duration-300">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+        <!-- Brand Logo -->
+        <a href="index.html" class="flex items-center gap-3.5 group">
+          <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-cyan-600 to-sky-400 p-0.5 shadow-md shadow-cyan-500/20 group-hover:scale-105 transition-transform">
+            <div class="w-full h-full bg-white dark:bg-slate-900 rounded-[14px] flex items-center justify-center overflow-hidden">
+              <img src="images/Logo Patbhe.png" alt="Logo SMAN 4 Yogyakarta" class="w-7 h-7 object-contain" onerror="this.src='images/Logo Patbhe.png'" />
+            </div>
+          </div>
+          <div>
+            <div class="flex items-center gap-1.5">
+              <span class="font-black text-xl text-slate-900 dark:text-white tracking-tight">Ruang<span class="text-cyan-600 dark:text-cyan-400">Informatika</span></span>
+            </div>
+            <span class="text-[10px] uppercase font-bold tracking-widest text-slate-600 dark:text-slate-400 block">SMAN 4 YOGYAKARTA</span>
+          </div>
         </a>
-        <div class="navbar-links">
-          <a href="index.html" class="nav-link">Dashboard</a>
-          <a href="index.html#materi" class="nav-link">Daftar Materi</a>
-          <a href="leaderboard.html" class="nav-link">Leaderboard</a>
-          <a href="forum.html" class="nav-link">Forum Diskusi</a>
+
+        <!-- Desktop Navigation Links -->
+        <nav class="hidden lg:flex items-center gap-8 text-sm font-semibold text-slate-600 dark:text-slate-300">
+          <a href="index.html" class="hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors">Beranda</a>
+          <a href="index.html#materi" class="text-cyan-600 dark:text-cyan-400 font-bold transition-colors">Modul Belajar</a>
+          <a href="leaderboard.html" class="hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors flex items-center gap-1.5">
+            Leaderboard
+            <span class="px-1.5 py-0.5 text-[10px] font-bold rounded-full bg-amber-100 dark:bg-amber-900/60 text-amber-700 dark:text-amber-300 font-mono">Rank</span>
+          </a>
+          <a href="forum.html" class="hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors">Forum Diskusi</a>
+        </nav>
+
+        <!-- Right Side: Dark Mode Toggle & CTA Button -->
+        <div class="flex items-center gap-3">
+          <!-- Theme Toggle Button -->
+          <button
+            id="themeToggleBtn"
+            type="button"
+            class="w-10 h-10 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-amber-400 flex items-center justify-center transition-all focus:outline-none shadow-sm cursor-pointer border border-slate-200/60 dark:border-slate-700"
+            aria-label="Ganti Tema Gelap / Terang"
+            title="Ganti Mode Gelap / Terang"
+          >
+            <i class="fa-solid fa-moon dark:hidden text-sm"></i>
+            <i class="fa-solid fa-sun hidden dark:inline text-sm"></i>
+          </button>
+
+          <!-- CTA Button (Desktop) -->
+          <a
+            href="kisi.html"
+            class="hidden sm:inline-flex items-center gap-2.5 px-6 py-2.5 rounded-full bg-gradient-to-r from-cyan-600 to-sky-600 hover:from-cyan-500 hover:to-sky-500 text-white font-bold text-sm shadow-md shadow-cyan-600/20 hover:shadow-cyan-600/30 hover:scale-[1.02] active:scale-[0.98] transition-all"
+          >
+            <i class="fa-solid fa-bullseye text-xs"></i>
+            <span>Bedah Kisi-Kisi</span>
+          </a>
+
+          <!-- Mobile Menu Hamburger -->
+          <button
+            type="button"
+            id="hamburgerBtn"
+            class="lg:hidden w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-700 dark:text-slate-300 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors"
+            aria-label="Buka Menu"
+          >
+            <i class="fa-solid fa-bars text-lg"></i>
+          </button>
         </div>
-        <button class="nav-badge"><i class="fa-solid fa-chalkboard-user"></i> Kelas XE6</button>
-        <button class="hamburger-btn" id="hamburgerBtn" aria-label="Menu">
-          <i class="fa-solid fa-bars"></i>
+      </div>
+    </header>
+
+    <!-- Mobile Drawer Overlay -->
+    <div id="drawerOverlay" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden transition-opacity"></div>
+    <div id="mobileDrawer" class="fixed top-0 right-0 w-72 h-full bg-white dark:bg-slate-900 shadow-2xl z-50 p-6 flex flex-col justify-between border-l border-slate-100 dark:border-slate-800 closed">
+      <div>
+        <div class="flex items-center justify-between pb-6 border-b border-slate-100 dark:border-slate-800">
+          <div class="flex items-center gap-2">
+            <span class="font-extrabold text-lg text-slate-900 dark:text-white">Ruang<span class="text-cyan-600 dark:text-cyan-400">Informatika</span></span>
+          </div>
+          <button id="closeDrawerBtn" class="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <nav class="flex flex-col gap-3 pt-6 text-sm font-semibold text-slate-700 dark:text-slate-200">
+          <a href="index.html" class="p-2.5 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/80 flex items-center gap-3">
+            <i class="fa-solid fa-house"></i> Beranda
+          </a>
+          <a href="index.html#materi" class="p-2.5 rounded-xl bg-cyan-50 dark:bg-cyan-950/60 text-cyan-700 dark:text-cyan-300 flex items-center gap-3" onclick="closeDrawer()">
+            <i class="fa-solid fa-cubes text-cyan-600 dark:text-cyan-400"></i> Modul Belajar
+          </a>
+          <a href="leaderboard.html" class="p-2.5 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/80 flex items-center gap-3">
+            <i class="fa-solid fa-trophy text-amber-500"></i> Leaderboard Kelas
+          </a>
+          <a href="forum.html" class="p-2.5 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/80 flex items-center gap-3">
+            <i class="fa-solid fa-comments text-sky-500"></i> Forum Diskusi
+          </a>
+          <a href="kisi.html" class="p-2.5 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/80 flex items-center gap-3">
+            <i class="fa-solid fa-bullseye text-rose-500"></i> Bedah Kisi-Kisi
+          </a>
+        </nav>
+      </div>
+
+      <div class="pt-6 border-t border-slate-100 dark:border-slate-800 space-y-3">
+        <!-- Drawer Theme Toggle -->
+        <button
+          id="drawerThemeToggleBtn"
+          type="button"
+          class="w-full py-2.5 px-3 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold text-xs flex items-center justify-center gap-2.5 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+        >
+          <span class="dark:hidden"><i class="fa-solid fa-moon text-slate-600 mr-1.5"></i> Mode Gelap</span>
+          <span class="hidden dark:inline"><i class="fa-solid fa-sun text-amber-400 mr-1.5"></i> Mode Terang</span>
+        </button>
+
+        <a
+          href="kisi.html"
+          onclick="closeDrawer()"
+          class="w-full py-2.5 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs flex items-center justify-center gap-2 transition-colors shadow-md shadow-cyan-600/20"
+        >
+          <span>Bedah Kisi-Kisi PTS</span>
+          <i class="fa-solid fa-arrow-right text-xs"></i>
+        </a>
+        <div class="text-center text-[11px] text-slate-400 dark:text-slate-500 font-mono">Kelas XE6 SMAN 4 Yogyakarta</div>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         2. HERO SECTION
+         ============================================================ -->
+    <section class="relative pt-10 pb-16 lg:pt-14 lg:pb-20 overflow-hidden bg-gradient-to-b from-white via-cyan-50/20 to-brandSoft dark:from-slate-950 dark:via-slate-900/40 dark:to-slate-950 transition-colors duration-300">
+      <div class="hero-glow-1"></div>
+      <div class="hero-glow-2"></div>
+
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <!-- Breadcrumb & Back Button -->
+        <div class="mb-6 reveal">
+          <a
+            href="index.html"
+            class="inline-flex items-center gap-2 text-xs font-semibold text-slate-500 dark:text-slate-400 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors"
+          >
+            <i class="fa-solid fa-arrow-left"></i>
+            <span>Kembali ke Beranda Utama</span>
+          </a>
+        </div>
+
+        <div class="text-center max-w-3xl mx-auto space-y-4 reveal">
+          <span class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-100/80 dark:bg-cyan-950/60 border border-cyan-200 dark:border-cyan-800/60 text-cyan-800 dark:text-cyan-300 text-xs font-bold uppercase tracking-wider font-mono">
+            <i class="fa-solid fa-layer-group text-cyan-600 dark:text-cyan-400"></i> MODUL 02 &bull; STRUKTUR DATA
+          </span>
+
+          <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 dark:text-white tracking-tight leading-tight">
+            Stack &amp; <span class="bg-gradient-to-r from-cyan-600 via-sky-500 to-teal-500 bg-clip-text text-transparent">Queue</span>
+          </h1>
+
+          <p class="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed max-w-2xl mx-auto">
+            Pelajari konsep fundamental struktur data tumpukan (LIFO) dan antrean (FIFO), cara kerja operasi Push, Pop, Enqueue, Dequeue, serta visualisasi simulasinya secara langsung.
+          </p>
+
+          <!-- 4 Meta Pill Badges -->
+          <div class="flex flex-wrap items-center justify-center gap-2.5 pt-2">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs font-semibold text-slate-700 dark:text-slate-300 shadow-sm">
+              <i class="fa-solid fa-list-check text-cyan-500"></i> 10 Soal Latihan
+            </span>
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs font-semibold text-slate-700 dark:text-slate-300 shadow-sm">
+              <i class="fa-regular fa-clock text-sky-500"></i> Durasi: 30 Menit
+            </span>
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs font-semibold text-slate-700 dark:text-slate-300 shadow-sm">
+              <i class="fa-solid fa-flask text-teal-500"></i> Live Simulator
+            </span>
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs font-semibold text-slate-700 dark:text-slate-300 shadow-sm">
+              <i class="fa-solid fa-play text-emerald-500"></i> Video MP4 Edukasi
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         3. MAIN CONTENT (4 TABS)
+         ============================================================ -->
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 relative z-10">
+      
+      <!-- TAB NAVIGATION BUTTONS (Modern 4-Pill Switcher) -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 p-1.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 max-w-xl mx-auto mb-10 shadow-sm">
+        <button
+          onclick="openTab(event, 'bacaan')"
+          id="tab-btn-bacaan"
+          class="tab-btn active py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all cursor-pointer bg-cyan-600 text-white shadow-md shadow-cyan-600/20"
+        >
+          <i class="fa-solid fa-book-open"></i>
+          <span>Materi Baca</span>
+        </button>
+        <button
+          onclick="openTab(event, 'simulasi')"
+          id="tab-btn-simulasi"
+          class="tab-btn py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all cursor-pointer text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+        >
+          <i class="fa-solid fa-flask"></i>
+          <span>Simulasi</span>
+        </button>
+        <button
+          onclick="openTab(event, 'video')"
+          id="tab-btn-video"
+          class="tab-btn py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all cursor-pointer text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+        >
+          <i class="fa-solid fa-play"></i>
+          <span>Video</span>
+        </button>
+        <button
+          onclick="openTab(event, 'latihan')"
+          id="tab-btn-latihan"
+          class="tab-btn py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all cursor-pointer text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+        >
+          <i class="fa-solid fa-pen-to-square"></i>
+          <span>Latihan Soal</span>
         </button>
       </div>
 
-      <!-- Mobile Drawer -->
-      <div class="mobile-menu" id="mobileMenu">
-        <a href="index.html" class="mobile-nav-link"> <i class="fa-solid fa-house" style="margin-right: 10px"></i> Dashboard </a>
-        <a href="index.html#materi" class="mobile-nav-link"> <i class="fa-solid fa-book-open" style="margin-right: 10px"></i> Daftar Materi </a>
-        <a href="leaderboard.html" class="mobile-nav-link"> <i class="fa-solid fa-trophy" style="margin-right: 10px"></i> Leaderboard </a>
-        <a href="forum.html" class="mobile-nav-link"> <i class="fa-solid fa-comments" style="margin-right: 10px"></i> Forum Diskusi </a>
-        <div style="padding: 12px 16px">
-          <button class="nav-badge" style="width: 100%; justify-content: center"><i class="fa-solid fa-chalkboard-user"></i> Kelas XE6 — SMAN 4 Yogyakarta</button>
+      <!-- ================== TAB 1: MATERI BACAAN ================== -->
+      <div id="bacaan" class="tab-content block space-y-10">
+        <!-- 1. PENGERTIAN STRUKTUR DATA -->
+        <div class="tilt-card bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 md:p-10 border border-slate-100 dark:border-slate-800 shadow-xl shadow-slate-200/50 dark:shadow-black/40 hover:border-cyan-300 dark:hover:border-cyan-600 transition-colors" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
+          <div class="space-y-4">
+            <div class="w-12 h-12 rounded-2xl bg-cyan-50 dark:bg-cyan-950/60 text-cyan-600 dark:text-cyan-400 flex items-center justify-center text-xl font-bold border border-cyan-200/50 dark:border-cyan-800/50">
+              <i class="fa-solid fa-layer-group"></i>
+            </div>
+            <h3 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Pengertian Struktur Data</h3>
+            <p class="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed">
+              <strong class="text-slate-900 dark:text-white">Struktur data</strong> adalah tata cara penyimpanan, pengorganisasian, dan pengelolaan kumpulan data di dalam memori komputer sehingga data tersebut dapat diakses dan dimanipulasi dengan efektif dan efisien.
+            </p>
+            <div class="bg-slate-50 dark:bg-slate-800/60 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 text-xs sm:text-sm text-slate-700 dark:text-slate-300 space-y-2">
+              <p class="font-bold text-slate-900 dark:text-white text-sm mb-2">Contoh Sederhana dalam Kehidupan Nyata:</p>
+              <ul class="list-disc list-inside space-y-1.5 text-slate-600 dark:text-slate-300">
+                <li><strong class="text-cyan-600 dark:text-cyan-400">Daftar presensi siswa:</strong> Data nama disusun dalam urutan alfabetis tertentu.</li>
+                <li><strong class="text-cyan-600 dark:text-cyan-400">Tumpukan piring bersih:</strong> Piring disusun bertumpuk vertikal dari bawah ke atas.</li>
+                <li><strong class="text-cyan-600 dark:text-cyan-400">Antrean loket kantin:</strong> Siswa dilayani berdasarkan siapa yang datang terlebih dahulu.</li>
+              </ul>
+              <p class="pt-2 text-slate-500 dark:text-slate-400 italic">Stack dan Queue adalah dua model struktur data fundamental yang memiliki aturan urutan ketat dalam memasukkan dan mengeluarkan elemen.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- STACK & QUEUE DETAIL -->
+        <div class="space-y-8">
+          <!-- STACK CARD -->
+          <div class="tilt-card bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 md:p-10 border border-slate-100 dark:border-slate-800 shadow-xl shadow-slate-200/50 dark:shadow-black/40 hover:border-cyan-300 dark:hover:border-cyan-600 transition-colors" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
+            <div class="space-y-6">
+              <div class="flex items-center gap-3.5">
+                <div class="w-12 h-12 rounded-2xl bg-cyan-50 dark:bg-cyan-950/60 text-cyan-600 dark:text-cyan-400 flex items-center justify-center text-xl font-bold border border-cyan-200/50 dark:border-cyan-800/50">
+                  <i class="fa-solid fa-bars-staggered"></i>
+                </div>
+                <div>
+                  <h3 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Stack (Tumpukan)</h3>
+                  <span class="text-xs font-mono font-bold text-cyan-600 dark:text-cyan-400">Prinsip LIFO: Last In, First Out</span>
+                </div>
+              </div>
+
+              <div class="bg-cyan-50 dark:bg-cyan-950/60 p-3.5 rounded-2xl text-xs sm:text-sm text-cyan-800 dark:text-cyan-300 font-mono font-bold text-center border border-cyan-200 dark:border-cyan-800">
+                LIFO: Elemen yang terakhir masuk akan menjadi yang pertama keluar
+              </div>
+
+              <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                Pada struktur data Stack, seluruh operasi penyisipan dan penghapusan data hanya dapat dilakukan pada satu ujung yang sama, yaitu <strong class="text-slate-900 dark:text-white">bagian paling atas (TOP)</strong>.
+              </p>
+
+              <!-- Analogi Tumpukan Piring -->
+              <div class="bg-slate-50 dark:bg-slate-800/60 p-5 sm:p-6 rounded-2xl border border-slate-200 dark:border-slate-700 space-y-4">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-slate-200 dark:border-slate-700 pb-3">
+                  <h4 class="font-bold text-slate-900 dark:text-white text-sm sm:text-base flex items-center gap-2">🥞 Analogi Stack: Tumpukan Piring</h4>
+                  <span class="text-xs bg-cyan-100 dark:bg-cyan-950/80 text-cyan-800 dark:text-cyan-300 border border-cyan-200 dark:border-cyan-800 px-2.5 py-1 rounded-lg font-mono font-bold">1 Ujung Akses (TOP)</span>
+                </div>
+
+                <div class="max-w-md mx-auto space-y-2 pt-2">
+                  <div class="flex items-center justify-center gap-3 text-cyan-600 dark:text-cyan-400 text-xs font-mono font-bold mb-3">
+                    <span>&darr; Push (Masuk)</span>
+                    <span class="text-slate-300 dark:text-slate-700">|</span>
+                    <span>&uarr; Pop (Keluar)</span>
+                  </div>
+
+                  <div class="bg-cyan-50 dark:bg-cyan-950/60 border-2 border-cyan-500 text-cyan-800 dark:text-cyan-200 p-3.5 rounded-xl text-xs sm:text-sm font-mono font-bold flex justify-between items-center shadow-md">
+                    <span>Piring C</span>
+                    <span class="text-[10px] bg-cyan-600 text-white font-extrabold px-2 py-0.5 rounded-md">TOP (Paling Atas)</span>
+                  </div>
+                  <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 p-3 rounded-xl text-xs sm:text-sm font-mono flex justify-between items-center">
+                    <span>Piring B</span>
+                    <span class="text-[10px] text-slate-400">Tengah</span>
+                  </div>
+                  <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 p-3 rounded-xl text-xs sm:text-sm font-mono flex justify-between items-center">
+                    <span>Piring A</span>
+                    <span class="text-[10px] text-slate-400">BOTTOM (Dasar)</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Operasi Utama Stack -->
+              <div class="space-y-3">
+                <h4 class="font-bold text-slate-900 dark:text-white text-sm sm:text-base">Operasi Utama pada Stack:</h4>
+                <ul class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 space-y-2">
+                  <li class="bg-slate-50 dark:bg-slate-800/60 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700">
+                    <strong class="text-cyan-600 dark:text-cyan-400 font-mono">1. Push:</strong> Menambahkan elemen baru ke posisi paling atas (TOP) tumpukan.
+                  </li>
+                  <li class="bg-slate-50 dark:bg-slate-800/60 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700">
+                    <strong class="text-cyan-600 dark:text-cyan-400 font-mono">2. Pop:</strong> Mengambil atau menghapus elemen dari posisi paling atas (TOP).
+                  </li>
+                  <li class="bg-slate-50 dark:bg-slate-800/60 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700">
+                    <strong class="text-cyan-600 dark:text-cyan-400 font-mono">3. Peek / Top:</strong> Membaca nilai elemen teratas tanpa menghapusnya dari tumpukan.
+                  </li>
+                  <li class="bg-slate-50 dark:bg-slate-800/60 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700">
+                    <strong class="text-cyan-600 dark:text-cyan-400 font-mono">4. IsEmpty:</strong> Memeriksa apakah tumpukan dalam kondisi kosong (<code class="text-cyan-600 font-bold">true</code>).
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- QUEUE CARD -->
+          <div class="tilt-card bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 md:p-10 border border-slate-100 dark:border-slate-800 shadow-xl shadow-slate-200/50 dark:shadow-black/40 hover:border-cyan-300 dark:hover:border-cyan-600 transition-colors" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
+            <div class="space-y-6">
+              <div class="flex items-center gap-3.5">
+                <div class="w-12 h-12 rounded-2xl bg-teal-50 dark:bg-teal-950/60 text-teal-600 dark:text-teal-400 flex items-center justify-center text-xl font-bold border border-teal-200/50 dark:border-teal-800/50">
+                  <i class="fa-solid fa-people-line"></i>
+                </div>
+                <div>
+                  <h3 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Queue (Antrean)</h3>
+                  <span class="text-xs font-mono font-bold text-teal-600 dark:text-teal-400">Prinsip FIFO: First In, First Out</span>
+                </div>
+              </div>
+
+              <div class="bg-teal-50 dark:bg-teal-950/60 p-3.5 rounded-2xl text-xs sm:text-sm text-teal-800 dark:text-teal-300 font-mono font-bold text-center border border-teal-200 dark:border-teal-800">
+                FIFO: Elemen yang pertama masuk akan menjadi yang pertama keluar
+              </div>
+
+              <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                Pada struktur data Queue, terdapat dua ujung berbeda: elemen baru masuk di bagian belakang (<strong class="text-slate-900 dark:text-white">REAR</strong>) dan elemen keluar dari bagian depan (<strong class="text-slate-900 dark:text-white">FRONT</strong>).
+              </p>
+
+              <!-- Analogi Antrean Tiket -->
+              <div class="bg-slate-50 dark:bg-slate-800/60 p-5 sm:p-6 rounded-2xl border border-slate-200 dark:border-slate-700 space-y-4">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-slate-200 dark:border-slate-700 pb-3">
+                  <h4 class="font-bold text-slate-900 dark:text-white text-sm sm:text-base flex items-center gap-2">🎟️ Analogi Queue: Antrean Pembelian Tiket</h4>
+                  <span class="text-xs bg-teal-100 dark:bg-teal-950/80 text-teal-800 dark:text-teal-300 border border-teal-200 dark:border-teal-800 px-2.5 py-1 rounded-lg font-mono font-bold">2 Ujung Akses (Front &amp; Rear)</span>
+                </div>
+
+                <div class="space-y-3 pt-2">
+                  <div class="flex items-center justify-between text-xs font-mono font-bold">
+                    <span class="text-rose-600 dark:text-rose-400">&larr; DEQUEUE (Keluar Pertama / Front)</span>
+                    <span class="text-emerald-600 dark:text-emerald-400">ENQUEUE (Masuk Akhir / Rear) &larr;</span>
+                  </div>
+
+                  <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 font-mono text-xs sm:text-sm">
+                    <div class="bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-800 text-rose-800 dark:text-rose-200 p-4 rounded-xl text-center shadow-sm">
+                      <div class="text-[10px] text-rose-600 dark:text-rose-400 font-bold uppercase tracking-wider mb-1">FRONT (Depan)</div>
+                      <div class="font-bold">Elemen A</div>
+                    </div>
+                    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 p-4 rounded-xl text-center shadow-sm">
+                      <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">TENGAH</div>
+                      <div>Elemen B</div>
+                    </div>
+                    <div class="bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-200 p-4 rounded-xl text-center shadow-sm">
+                      <div class="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold uppercase tracking-wider mb-1">REAR (Belakang)</div>
+                      <div class="font-bold">Elemen C</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Operasi Utama Queue -->
+              <div class="space-y-3">
+                <h4 class="font-bold text-slate-900 dark:text-white text-sm sm:text-base">Operasi Utama pada Queue:</h4>
+                <ul class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 space-y-2">
+                  <li class="bg-slate-50 dark:bg-slate-800/60 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700">
+                    <strong class="text-teal-600 dark:text-teal-400 font-mono">1. Enqueue:</strong> Menambahkan data ke posisi paling belakang antrean (REAR).
+                  </li>
+                  <li class="bg-slate-50 dark:bg-slate-800/60 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700">
+                    <strong class="text-teal-600 dark:text-teal-400 font-mono">2. Dequeue:</strong> Mengeluarkan data dari posisi paling depan antrean (FRONT).
+                  </li>
+                  <li class="bg-slate-50 dark:bg-slate-800/60 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700">
+                    <strong class="text-teal-600 dark:text-teal-400 font-mono">3. Front:</strong> Melihat nilai elemen terdepan tanpa menghapusnya.
+                  </li>
+                  <li class="bg-slate-50 dark:bg-slate-800/60 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700">
+                    <strong class="text-teal-600 dark:text-teal-400 font-mono">4. Rear:</strong> Melihat nilai elemen paling belakang antrean.
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- DALAM PEMROGRAMAN -->
+        <div class="tilt-card bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 md:p-10 border border-slate-100 dark:border-slate-800 shadow-xl shadow-slate-200/50 dark:shadow-black/40 hover:border-cyan-300 dark:hover:border-cyan-600 transition-colors" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
+          <div class="space-y-6">
+            <div class="flex items-center gap-3.5 border-b border-slate-100 dark:border-slate-800 pb-5">
+              <div class="w-12 h-12 rounded-2xl bg-cyan-50 dark:bg-cyan-950/60 text-cyan-600 dark:text-cyan-400 flex items-center justify-center text-xl font-bold border border-cyan-200/50 dark:border-cyan-800/50">
+                <i class="fa-solid fa-code"></i>
+              </div>
+              <div>
+                <h3 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Stack &amp; Queue dalam Pemrograman</h3>
+                <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">Penerapan nyata dan simulasi eksekusi logika kode</p>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs sm:text-sm">
+              <div class="bg-slate-50 dark:bg-slate-800/60 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 space-y-3">
+                <h4 class="font-bold text-slate-900 dark:text-white text-base flex items-center gap-2">
+                  <span class="text-cyan-600 dark:text-cyan-400 font-mono font-black">STACK</span> = [10, 20, 30]
+                </h4>
+                <p class="text-slate-600 dark:text-slate-300">Anggap elemen <code class="text-cyan-600 dark:text-cyan-400 font-mono font-bold">30</code> berada di posisi paling atas (TOP).</p>
+                <div class="bg-white dark:bg-slate-900 p-4 rounded-xl font-mono text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+                  Operasi: <span class="text-cyan-600 dark:text-cyan-400 font-bold">Pop()</span><br />
+                  Data Keluar: <span class="text-rose-500 font-bold">30</span><br />
+                  Sisa Stack: <span class="text-emerald-500 font-bold">[10, 20]</span>
+                </div>
+                <p class="text-slate-500 dark:text-slate-400 leading-relaxed"><strong class="text-slate-800 dark:text-slate-200">Contoh Nyata:</strong> Fitur Undo/Redo di teks editor, riwayat tombol Back di browser, dan Call Stack pemanggilan fungsi rekursif.</p>
+              </div>
+
+              <div class="bg-slate-50 dark:bg-slate-800/60 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 space-y-3">
+                <h4 class="font-bold text-slate-900 dark:text-white text-base flex items-center gap-2">
+                  <span class="text-teal-600 dark:text-teal-400 font-mono font-black">QUEUE</span> = [10, 20, 30]
+                </h4>
+                <p class="text-slate-600 dark:text-slate-300">Anggap elemen <code class="text-teal-600 dark:text-teal-400 font-mono font-bold">10</code> berada di posisi paling depan (FRONT).</p>
+                <div class="bg-white dark:bg-slate-900 p-4 rounded-xl font-mono text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+                  Operasi: <span class="text-teal-600 dark:text-teal-400 font-bold">Dequeue()</span><br />
+                  Data Keluar: <span class="text-rose-500 font-bold">10</span><br />
+                  Sisa Queue: <span class="text-emerald-500 font-bold">[20, 30]</span>
+                </div>
+                <p class="text-slate-500 dark:text-slate-400 leading-relaxed"><strong class="text-slate-800 dark:text-slate-200">Contoh Nyata:</strong> Antrean antrian cetak printer (Spooler), penjadwalan proses task CPU (FCFS), dan antrean transfer paket data jaringan.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- KESIMPULAN RINGKAS -->
+        <div class="bg-gradient-to-r from-cyan-50 via-sky-50 to-teal-50 dark:from-slate-900 dark:via-slate-900/90 dark:to-cyan-950/40 border border-cyan-100/80 dark:border-cyan-900/40 rounded-3xl p-6 sm:p-8 space-y-6 shadow-xl">
+          <h3 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2.5">
+            <i class="fa-solid fa-lightbulb text-amber-500"></i> Kesimpulan Perbandingan
+          </h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs sm:text-sm">
+            <div class="bg-white dark:bg-slate-800/80 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 space-y-2 shadow-sm">
+              <h4 class="text-cyan-600 dark:text-cyan-400 font-black text-lg">STACK = TUMPUKAN 🥞</h4>
+              <p class="text-slate-900 dark:text-white font-mono font-bold">Prinsip: LIFO (Last In, First Out)</p>
+              <p class="text-slate-600 dark:text-slate-300">Terakhir Masuk &rarr; Pertama Keluar</p>
+              <p class="text-slate-500 dark:text-slate-400 pt-1"><strong class="text-slate-800 dark:text-slate-200">Operasi:</strong> Push, Pop, Peek, IsEmpty</p>
+            </div>
+            <div class="bg-white dark:bg-slate-800/80 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 space-y-2 shadow-sm">
+              <h4 class="text-teal-600 dark:text-teal-400 font-black text-lg">QUEUE = ANTREAN 🧑‍🤝‍🧑</h4>
+              <p class="text-slate-900 dark:text-white font-mono font-bold">Prinsip: FIFO (First In, First Out)</p>
+              <p class="text-slate-600 dark:text-slate-300">Pertama Masuk &rarr; Pertama Keluar</p>
+              <p class="text-slate-500 dark:text-slate-400 pt-1"><strong class="text-slate-800 dark:text-slate-200">Operasi:</strong> Enqueue, Dequeue, Front, Rear</p>
+            </div>
+          </div>
         </div>
       </div>
-    </nav>
 
-    <!-- Main Content Wrapper -->
-    <div class="flex-grow relative">
-      <!-- Page Hero -->
-      <header class="page-hero">
-        <div class="page-hero-glow"></div>
-        <div class="page-hero-inner">
-          <div class="reveal">
-            <div class="page-hero-badge"><i class="fa-solid fa-layer-group"></i> Modul 02</div>
-            <h1 class="page-hero-title">
-              Struktur Data:<br />
-              <span class="gradient-text">Stack &amp; Queue</span>
-            </h1>
-            <p class="page-hero-desc">Pahami cara komputer mengorganisasi data. Dari tumpukan riwayat browser hingga antrean print dokumen — lengkap dengan simulasi interaktif.</p>
-          </div>
-        </div>
-      </header>
-
-      <main class="max-w-5xl mx-auto px-6 pb-12 relative z-10">
-        <!-- Navigation Tabs (Pills) -->
-        <div class="tab-nav-pills reveal mb-8">
-          <button onclick="openTab(event, 'bacaan')" class="tab-btn active"><i class="fa-solid fa-book-open"></i> Materi Baca</button>
-          <button onclick="openTab(event, 'simulasi')" class="tab-btn"><i class="fa-solid fa-flask"></i> Simulasi Interaktif</button>
-          <button onclick="openTab(event, 'video')" class="tab-btn"><i class="fa-solid fa-play"></i> Video Penjelasan</button>
-          <button onclick="openTab(event, 'latihan')" class="tab-btn"><i class="fa-solid fa-pen-to-square"></i> Latihan Soal</button>
-        </div>
-
-        <!-- TAB 1: MATERI BACAAN -->
-        <div id="bacaan" class="tab-content block space-y-8">
-          <!-- 1. PENGERTIAN STRUKTUR DATA -->
-          <div class="tilt-card bg-brandGray border border-white/5 rounded-3xl p-8 md:p-10 hover:border-brandGreen/30 transition-colors" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
-            <div class="tilt-card-content">
-              <div class="w-14 h-14 rounded-2xl bg-brandGreen/10 flex items-center justify-center text-brandGreen text-2xl font-bold mb-6 border border-brandGreen/20">
-                <i class="fa-solid fa-layer-group"></i>
-              </div>
-              <h3 class="text-2xl md:text-3xl font-bold mb-4">Pengertian Struktur Data</h3>
-              <p class="text-gray-300 text-lg leading-relaxed mb-4">
-                <strong class="text-white">Struktur data</strong> adalah cara untuk menyimpan, mengatur, dan mengelola data sehingga data tersebut dapat digunakan dengan lebih mudah dan efisien.
-              </p>
-              <div class="bg-white/5 p-6 rounded-xl border border-white/5 text-gray-300 text-base space-y-2">
-                <p class="font-semibold text-white text-lg mb-3">Contoh Sederhana dalam Kehidupan Sehari-hari:</p>
-                <ul class="list-disc list-inside space-y-2">
-                  <li><strong class="text-brandGreen">Daftar nama siswa:</strong> Data disusun dalam urutan tertentu.</li>
-                  <li><strong class="text-brandGreen">Tumpukan buku:</strong> Buku disusun bertumpuk.</li>
-                  <li><strong class="text-brandGreen">Antrean siswa di kantin:</strong> Siswa menunggu berdasarkan urutan kedatangan.</li>
-                </ul>
-                <p class="pt-2 text-gray-400 italic text-base">Nah, Stack dan Queue merupakan contoh struktur data yang memiliki aturan tertentu dalam memasukkan dan mengambil data.</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- STACK & QUEUE -->
-          <div class="space-y-8">
-            <!-- STACK CARD -->
-            <div class="tilt-card bg-brandGray border border-white/5 rounded-3xl p-8 md:p-10 hover:border-brandGreen/30 transition-colors" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
-              <div class="tilt-card-content space-y-6">
-                <div class="flex items-center gap-4">
-                  <div class="w-14 h-14 rounded-2xl bg-brandGreen/10 flex items-center justify-center text-brandGreen text-2xl font-bold border border-brandGreen/20">
-                    <i class="fa-solid fa-bars-staggered"></i>
-                  </div>
-                  <h3 class="text-3xl font-bold">Stack (Tumpukan)</h3>
-                </div>
-                <div class="bg-white/5 p-4 rounded-xl text-lg text-brandGreen font-mono text-center border border-white/5">LIFO: Last In, First Out</div>
-                <p class="text-gray-300 text-lg leading-relaxed">
-                  Data yang <strong class="text-white">terakhir masuk</strong> akan menjadi data yang <strong class="text-white">pertama keluar</strong> (Yang terakhir masuk → keluar terlebih dahulu).
-                </p>
-
-                <div class="bg-white/5 p-6 rounded-xl border border-white/10 space-y-4">
-                  <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
-                    <h4 class="font-semibold text-white text-xl flex items-center gap-2">🥞 Analogi Stack (Tumpukan Piring)</h4>
-                    <span class="text-sm bg-brandGreen/20 text-brandGreen border border-brandGreen/30 px-3 py-1 rounded font-mono">LIFO (Last In, First Out)</span>
-                  </div>
-                  <p class="text-gray-300 text-base leading-relaxed">Proses masuk dan keluar data hanya dilakukan dari satu pintu: <strong class="text-white">bagian paling atas (TOP)</strong>.</p>
-
-                  <div class="bg-black/30 p-6 rounded-xl border border-white/5 space-y-3">
-                    <div class="flex items-center justify-center gap-3 text-brandGreen text-base font-mono mb-2">
-                      <span>↓ Push (Masuk)</span>
-                      <span class="text-white/20">|</span>
-                      <span>↑ Pop (Keluar)</span>
-                    </div>
-
-                    <div class="max-w-md mx-auto space-y-2">
-                      <div class="bg-brandGreen/20 border border-brandGreen text-white p-3 rounded-lg text-base font-mono flex justify-between items-center shadow-lg shadow-brandGreen/5">
-                        <span class="font-bold">Piring C</span>
-                        <span class="text-sm bg-brandGreen text-black font-bold px-2 py-0.5 rounded">TOP</span>
-                      </div>
-                      <div class="bg-white/5 border border-white/10 text-white/80 p-3 rounded-lg text-base font-mono flex justify-between items-center">
-                        <span>Piring B</span>
-                        <span class="text-sm text-white/40">Tengah</span>
-                      </div>
-                      <div class="bg-white/5 border border-white/5 text-white/40 p-3 rounded-lg text-base font-mono flex justify-between items-center">
-                        <span>Piring A</span>
-                        <span class="text-sm text-white/30">BOTTOM (Pertama ditaruh)</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="space-y-3 pt-2">
-                  <h4 class="font-bold text-white text-xl">Operasi Utama pada Stack:</h4>
-                  <ul class="text-gray-300 text-base space-y-3">
-                    <li class="bg-white/5 p-4 rounded-lg border border-white/5"><strong class="text-brandGreen font-mono">1. Push:</strong> Menambahkan data ke bagian atas Stack (Contoh: Push A, Push B, Push C).</li>
-                    <li class="bg-white/5 p-4 rounded-lg border border-white/5"><strong class="text-brandGreen font-mono">2. Pop:</strong> Mengambil/menghapus data paling atas (C keluar terlebih dahulu).</li>
-                    <li class="bg-white/5 p-4 rounded-lg border border-white/5"><strong class="text-brandGreen font-mono">3. Peek / Top:</strong> Melihat data paling atas tanpa menghapusnya (Hasilnya: C).</li>
-                    <li class="bg-white/5 p-4 rounded-lg border border-white/5">
-                      <strong class="text-brandGreen font-mono">4. IsEmpty:</strong> Memeriksa apakah Stack kosong (Menghasilkan <code class="text-brandGreen">True</code> jika kosong).
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-
-            <!-- QUEUE CARD -->
-            <div class="tilt-card bg-brandGray border border-white/5 rounded-3xl p-8 md:p-10 hover:border-brandGreen/30 transition-colors" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
-              <div class="tilt-card-content space-y-6">
-                <div class="flex items-center gap-4">
-                  <div class="w-14 h-14 rounded-2xl bg-brandGreen/10 flex items-center justify-center text-brandGreen text-2xl font-bold border border-brandGreen/20">
-                    <i class="fa-solid fa-users-line"></i>
-                  </div>
-                  <h3 class="text-3xl font-bold">Queue (Antrean)</h3>
-                </div>
-                <div class="bg-white/5 p-4 rounded-xl text-lg text-brandGreen font-mono text-center border border-white/5">FIFO: First In, First Out</div>
-                <p class="text-gray-300 text-lg leading-relaxed">
-                  Data yang <strong class="text-white">pertama masuk</strong> akan menjadi data yang <strong class="text-white">pertama keluar</strong> (Yang datang duluan → dilayani duluan).
-                </p>
-
-                <div class="bg-white/5 p-6 rounded-xl border border-white/10 space-y-4">
-                  <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
-                    <h4 class="font-bold text-white text-xl">🎟️ Analogi & Operasi Queue (Antrean)</h4>
-                    <span class="text-sm bg-blue-500/20 text-blue-400 border border-blue-500/30 px-3 py-1 rounded font-mono">FIFO (First In, First Out)</span>
-                  </div>
-
-                  <div class="bg-black/40 p-5 rounded-xl border border-white/5 space-y-3">
-                    <div class="flex items-center justify-between text-sm font-mono text-gray-300">
-                      <span class="text-red-400 font-bold flex items-center gap-1">← DEQUEUE (Keluar Pertama)</span>
-                      <span class="text-emerald-400 font-bold flex items-center gap-1">ENQUEUE (Masuk Akhir) ←</span>
-                    </div>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 font-mono text-base">
-                      <div class="bg-red-500/10 border border-red-500/30 text-white p-4 rounded-lg text-center">
-                        <div class="text-xs text-red-400 font-bold uppercase tracking-wider mb-1">FRONT</div>
-                        <div class="font-bold">Elemen A</div>
-                      </div>
-                      <div class="bg-white/5 border border-white/10 text-white/70 p-4 rounded-lg text-center">
-                        <div class="text-xs text-white/40 font-bold uppercase tracking-wider mb-1">ANTREAN</div>
-                        <div>Elemen B</div>
-                      </div>
-                      <div class="bg-emerald-500/10 border border-emerald-500/30 text-white p-4 rounded-lg text-center">
-                        <div class="text-xs text-emerald-400 font-bold uppercase tracking-wider mb-1">REAR</div>
-                        <div class="font-bold">Elemen C</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="space-y-3 pt-2">
-                  <h4 class="font-bold text-white text-xl">Operasi Utama pada Queue:</h4>
-                  <ul class="text-gray-300 text-base space-y-3">
-                    <li class="bg-white/5 p-4 rounded-lg border border-white/5"><strong class="text-brandGreen font-mono">1. Enqueue:</strong> Menambahkan data ke belakang Queue (A → B → C).</li>
-                    <li class="bg-white/5 p-4 rounded-lg border border-white/5"><strong class="text-brandGreen font-mono">2. Dequeue:</strong> Mengambil/menghapus data dari depan Queue (A keluar terlebih dahulu).</li>
-                    <li class="bg-white/5 p-4 rounded-lg border border-white/5"><strong class="text-brandGreen font-mono">3. Front:</strong> Melihat data paling depan Queue (Front = A).</li>
-                    <li class="bg-white/5 p-4 rounded-lg border border-white/5"><strong class="text-brandGreen font-mono">4. Rear:</strong> Melihat data paling belakang Queue (Rear = C).</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- CONTOH KEHIDUPAN SEHARI-HARI -->
-          <div class="space-y-8">
-            <div class="tilt-card bg-brandGray border border-white/5 rounded-3xl p-8 md:p-10 hover:border-brandGreen/30 transition-colors" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
-              <div class="tilt-card-content">
-                <h3 class="text-2xl md:text-3xl font-bold mb-6 flex items-center gap-2 text-white"><i class="fa-solid fa-clock-rotate-left text-brandGreen"></i> Contoh Stack dalam Kehidupan</h3>
-                <ul class="space-y-4 text-gray-300 text-lg">
-                  <li class="flex items-start gap-3">
-                    <span class="text-2xl">📚</span>
-                    <div><strong class="text-white">Tumpukan buku:</strong> Buku terakhir yang ditaruh di atas akan diambil terlebih dahulu.</div>
-                  </li>
-                  <li class="flex items-start gap-3">
-                    <span class="text-2xl">🍽️</span>
-                    <div><strong class="text-white">Tumpukan piring:</strong> Piring terakhir ditaruh menjadi piring pertama yang diambil.</div>
-                  </li>
-                  <li class="flex items-start gap-3">
-                    <span class="text-2xl">↩️</span>
-                    <div>
-                      <strong class="text-white">Tombol Undo:</strong> Mengetik <code class="text-brandGreen font-mono">A → B → C</code>. Saat Undo ditekan, <code class="text-brandGreen font-mono">C</code> dibatalkan terlebih dahulu.
-                    </div>
-                  </li>
-                  <li class="flex items-start gap-3">
-                    <span class="text-2xl">🌐</span>
-                    <div><strong class="text-white">Tombol Back Browser:</strong> Halaman terakhir yang dikunjungi (<code class="text-brandGreen font-mono">Google → YouTube → Wikipedia</code>) akan ditinggalkan terlebih dahulu.</div>
-                  </li>
-                </ul>
-              </div>
-            </div>
-
-            <div class="tilt-card bg-brandGray border border-white/5 rounded-3xl p-8 md:p-10 hover:border-brandGreen/30 transition-colors" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
-              <div class="tilt-card-content">
-                <h3 class="text-2xl md:text-3xl font-bold mb-6 flex items-center gap-2 text-white"><i class="fa-solid fa-people-carry-box text-brandGreen"></i> Contoh Queue dalam Kehidupan</h3>
-                <ul class="space-y-4 text-gray-300 text-lg">
-                  <li class="flex items-start gap-3">
-                    <span class="text-2xl">🏧</span>
-                    <div><strong class="text-white">Antrean ATM:</strong> Orang yang datang lebih dahulu akan dilayani lebih dahulu.</div>
-                  </li>
-                  <li class="flex items-start gap-3">
-                    <span class="text-2xl">🏥</span>
-                    <div><strong class="text-white">Antrean pendaftaran:</strong> Pasien yang datang lebih awal mendapat giliran lebih dahulu.</div>
-                  </li>
-                  <li class="flex items-start gap-3">
-                    <span class="text-2xl">🍔</span>
-                    <div><strong class="text-white">Antrean makanan:</strong> <code class="text-brandGreen font-mono">Andi → Budi → Citra → Deni</code>. Andi dilayani pertama.</div>
-                  </li>
-                  <li class="flex items-start gap-3">
-                    <span class="text-2xl">🖨️</span>
-                    <div><strong class="text-white">Antrean pencetak dokumen:</strong> Dokumen A, B, C, D dicetak printer sesuai urutan masuk.</div>
-                  </li>
-                  <li class="flex items-start gap-3">
-                    <span class="text-2xl">💻</span>
-                    <div><strong class="text-white">Sistem Komputer:</strong> Mengatur pemrosesan tugas yang antre secara berurutan.</div>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-
-          <!-- PERBEDAAN & PERBANDINGAN -->
-          <div class="tilt-card bg-brandGray border border-white/5 rounded-3xl p-8 md:p-10 hover:border-brandGreen/30 transition-colors" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
-            <div class="tilt-card-content space-y-6">
-              <div class="flex items-center gap-4">
-                <div class="w-14 h-14 rounded-2xl bg-brandGreen/10 flex items-center justify-center text-brandGreen text-2xl font-bold border border-brandGreen/20">
-                  <i class="fa-solid fa-code-compare"></i>
-                </div>
-                <div>
-                  <h3 class="text-2xl md:text-3xl font-bold">Perbedaan & Perbandingan Ringkas</h3>
-                  <p class="text-gray-400 text-base">Tabel komparasi prinsip dan logika data Stack vs Queue</p>
-                </div>
-              </div>
-
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="bg-white/5 p-6 rounded-2xl border border-white/10">
-                  <h4 class="text-xl font-bold text-brandGreen mb-4">Stack (Tumpukan) 🥞</h4>
-                  <ul class="text-gray-300 text-base space-y-2">
-                    <li><strong class="text-white">Prinsip:</strong> LIFO (Last In, First Out)</li>
-                    <li><strong class="text-white">Data keluar:</strong> Data terakhir masuk</li>
-                    <li><strong class="text-white">Menambah data:</strong> Dari atas (Push)</li>
-                    <li><strong class="text-white">Mengambil data:</strong> Dari atas (Pop)</li>
-                    <li><strong class="text-white">Analogi utama:</strong> Tumpukan piring / buku</li>
-                  </ul>
-                </div>
-                <div class="bg-white/5 p-6 rounded-2xl border border-white/10">
-                  <h4 class="text-xl font-bold text-blue-400 mb-4">Queue (Antrean) 🧑‍🤝‍🧑</h4>
-                  <ul class="text-gray-300 text-base space-y-2">
-                    <li><strong class="text-white">Prinsip:</strong> FIFO (First In, First Out)</li>
-                    <li><strong class="text-white">Data keluar:</strong> Data pertama masuk</li>
-                    <li><strong class="text-white">Menambah data:</strong> Dari belakang (Enqueue)</li>
-                    <li><strong class="text-white">Mengambil data:</strong> Dari depan (Dequeue)</li>
-                    <li><strong class="text-white">Analogi utama:</strong> Antrean kasir / kantin</li>
-                  </ul>
-                </div>
-              </div>
-
-              <div class="bg-white/5 p-6 rounded-2xl border border-white/5 space-y-4">
-                <h4 class="font-bold text-white text-xl">Contoh Simulasi Data Masuk: <code class="text-brandGreen font-mono">A → B → C</code></h4>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-base">
-                  <div class="bg-black/30 p-5 rounded-xl border border-white/5">
-                    <span class="text-brandGreen font-bold block mb-2 text-lg">Jika menggunakan STACK (LIFO):</span>
-                    <p class="text-gray-300 mb-2">Masuk: A → B → C</p>
-                    <p class="text-white font-mono bg-white/5 p-3 rounded">Keluar: C → B → A</p>
-                  </div>
-                  <div class="bg-black/30 p-5 rounded-xl border border-white/5">
-                    <span class="text-brandGreen font-bold block mb-2 text-lg">Jika menggunakan QUEUE (FIFO):</span>
-                    <p class="text-gray-300 mb-2">Masuk: A → B → C</p>
-                    <p class="text-white font-mono bg-white/5 p-3 rounded">Keluar: A → B → C</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- DALAM PEMROGRAMAN -->
-          <div class="tilt-card bg-brandGray border border-white/5 rounded-3xl p-8 md:p-10 hover:border-brandGreen/30 transition-colors" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
-            <div class="tilt-card-content space-y-6">
-              <div class="flex items-center gap-4">
-                <div class="w-14 h-14 rounded-2xl bg-brandGreen/10 flex items-center justify-center text-brandGreen text-2xl font-bold border border-brandGreen/20">
-                  <i class="fa-solid fa-code"></i>
-                </div>
-                <div>
-                  <h3 class="text-2xl md:text-3xl font-bold">Stack & Queue dalam Pemrograman</h3>
-                  <p class="text-gray-400 text-base">Penerapan nyata dan simulasi eksekusi logika kode</p>
-                </div>
-              </div>
-
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-base">
-                <div class="bg-black/40 p-6 rounded-2xl border border-white/5 space-y-3">
-                  <h4 class="font-bold text-white text-xl flex items-center gap-2"><span class="text-brandGreen font-mono">STACK</span> = [10, 20, 30]</h4>
-                  <p class="text-gray-300">Anggap <code class="text-brandGreen">30</code> berada di posisi paling atas (TOP).</p>
-                  <div class="bg-white/5 p-4 rounded-xl font-mono text-gray-300">
-                    Jika dilakukan: <span class="text-brandGreen font-bold">Pop()</span><br />
-                    Maka yang keluar: <span class="text-white font-bold">30</span><br />
-                    Sisa Stack: <span class="text-brandGreen">[10, 20]</span>
-                  </div>
-                  <p class="text-gray-400 pt-1"><strong class="text-white">Kegunaan Pemrograman:</strong> Undo/Redo, riwayat fungsi, navigasi Back, pengecekan tanda kurung.</p>
-                </div>
-
-                <div class="bg-black/40 p-6 rounded-2xl border border-white/5 space-y-3">
-                  <h4 class="font-bold text-white text-xl flex items-center gap-2"><span class="text-brandGreen font-mono">QUEUE</span> = [10, 20, 30]</h4>
-                  <p class="text-gray-300">Anggap <code class="text-brandGreen">10</code> berada di posisi depan (FRONT).</p>
-                  <div class="bg-white/5 p-4 rounded-xl font-mono text-gray-300">
-                    Jika dilakukan: <span class="text-brandGreen font-bold">Dequeue()</span><br />
-                    Maka yang keluar: <span class="text-white font-bold">10</span><br />
-                    Sisa Queue: <span class="text-brandGreen">[20, 30]</span>
-                  </div>
-                  <p class="text-gray-400 pt-1"><strong class="text-white">Kegunaan Pemrograman:</strong> Antrean printer, antrean tugas CPU, pemrosesan data berurutan.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- KESIMPULAN -->
-          <div class="tilt-card bg-gradient-to-r from-brandGreen/10 via-brandGray to-brandGray border border-brandGreen/30 rounded-3xl p-8 md:p-10 transition-colors">
-            <div class="tilt-card-content space-y-6">
-              <h3 class="text-2xl md:text-3xl font-bold text-white flex items-center gap-3"><i class="fa-solid fa-lightbulb text-brandGreen"></i> Kesimpulan (Cara Mudah Mengingat)</h3>
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-base">
-                <div class="bg-black/40 p-6 rounded-2xl border border-white/5 space-y-2">
-                  <h4 class="text-brandGreen font-bold text-2xl">STACK = TUMPUKAN 🥞</h4>
-                  <p class="text-white font-mono text-lg">Prinsip: LIFO (Last In, First Out)</p>
-                  <p class="text-gray-300">Terakhir masuk → Pertama keluar</p>
-                  <p class="text-gray-300 pt-2"><strong class="text-white">Operasi Utama:</strong> Push → Pop → Peek</p>
-                </div>
-                <div class="bg-black/40 p-6 rounded-2xl border border-white/5 space-y-2">
-                  <h4 class="text-brandGreen font-bold text-2xl">QUEUE = ANTREAN 🧑‍🤝‍🧑</h4>
-                  <p class="text-white font-mono text-lg">Prinsip: FIFO (First In, First Out)</p>
-                  <p class="text-gray-300">Pertama masuk → Pertama keluar</p>
-                  <p class="text-gray-300 pt-2"><strong class="text-white">Operasi Utama:</strong> Enqueue → Dequeue → Front/Rear</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- TAB SIMULASI -->
-        <div id="simulasi" class="tab-content hidden space-y-8">
-          <div class="bg-white/5 p-6 md:p-8 rounded-2xl border border-white/10 space-y-6">
-            <div class="flex flex-col md:flex-row md:items-center md:justify-between border-b border-white/10 pb-4 gap-2">
-              <div>
-                <h3 class="text-2xl font-bold text-white flex items-center gap-2">🥞 Simulasi Stack (LIFO)</h3>
-                <p class="text-gray-300 text-base">Data yang terakhir masuk akan menjadi yang pertama keluar.</p>
-              </div>
-              <span class="text-sm bg-brandGreen/20 text-brandGreen px-3 py-1 rounded font-mono border border-brandGreen/30">Top Access Only</span>
-            </div>
-
-            <div class="flex flex-col md:flex-row gap-3">
-              <input type="text" id="stackInput" placeholder="Masukkan nilai (misal: Piring A)" class="bg-black/40 border border-white/10 rounded-lg px-5 py-3 text-base text-white focus:outline-none focus:border-brandGreen flex-1" />
-              <div class="flex gap-3">
-                <button onclick="pushStack()" class="bg-brandGreen text-black font-bold px-6 py-3 rounded-lg text-base hover:opacity-90 transition flex items-center gap-2">↓ Push</button>
-                <button onclick="popStack()" class="bg-red-500/20 text-red-400 border border-red-500/30 font-bold px-6 py-3 rounded-lg text-base hover:bg-red-500/30 transition flex items-center gap-2">↑ Pop</button>
-              </div>
-            </div>
-
-            <div id="stackStatus" class="text-base font-mono text-brandGreen min-h-[1.5rem]"></div>
-
-            <div class="bg-black/30 p-6 rounded-xl border border-white/5 min-h-[200px] flex flex-col-reverse gap-3 items-center justify-start overflow-hidden">
-              <div id="stackContainer" class="w-full max-w-md flex flex-col-reverse gap-3"></div>
-            </div>
-          </div>
-
-          <div class="bg-white/5 p-6 md:p-8 rounded-2xl border border-white/10 space-y-6">
-            <div class="flex flex-col md:flex-row md:items-center md:justify-between border-b border-white/10 pb-4 gap-2">
-              <div>
-                <h3 class="text-2xl font-bold text-white flex items-center gap-2">🎟️ Simulasi Queue (FIFO)</h3>
-                <p class="text-gray-300 text-base">Data yang pertama masuk akan menjadi yang pertama keluar.</p>
-              </div>
-              <span class="text-sm bg-blue-500/20 text-blue-400 px-3 py-1 rounded font-mono border border-blue-500/30">First In First Out</span>
-            </div>
-
-            <div class="flex flex-col md:flex-row gap-3">
-              <input type="text" id="queueInput" placeholder="Masukkan nilai (misal: Orang A)" class="bg-black/40 border border-white/10 rounded-lg px-5 py-3 text-base text-white focus:outline-none focus:border-blue-400 flex-1" />
-              <div class="flex gap-3">
-                <button onclick="enqueue()" class="bg-blue-500 text-white font-bold px-6 py-3 rounded-lg text-base hover:opacity-90 transition flex items-center gap-2">Enqueue →</button>
-                <button onclick="dequeue()" class="bg-red-500/20 text-red-400 border border-red-500/30 font-bold px-6 py-3 rounded-lg text-base hover:bg-red-500/30 transition flex items-center gap-2">← Dequeue</button>
-              </div>
-            </div>
-
-            <div id="queueStatus" class="text-base font-mono text-blue-400 min-h-[1.5rem]"></div>
-
-            <div class="bg-black/30 p-6 rounded-xl border border-white/5 min-h-[100px] flex items-center justify-start overflow-x-auto">
-              <div id="queueContainer" class="flex gap-3 w-full items-center"></div>
-            </div>
-          </div>
-        </div>
-
-        <!-- TAB VIDEO -->
-        <div id="video" class="tab-content hidden">
-          <div class="bg-brandGray border border-white/5 rounded-3xl p-6 md:p-10 space-y-10">
+      <!-- ================== TAB 2: SIMULASI INTERAKTIF ================== -->
+      <div id="simulasi" class="tab-content hidden space-y-8">
+        <!-- Live Stack Simulator -->
+        <div class="bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-xl shadow-slate-200/50 dark:shadow-black/40 space-y-6">
+          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-slate-100 dark:border-slate-800 pb-4 gap-2">
             <div>
-              <h3 class="text-4xl md:text-5xl font-bold mb-3 text-white">Video Pembelajaran Stack dan Queue</h3>
-              <p class="text-xl md:text-2xl text-gray-300 leading-relaxed">Pelajari visualisasi konsep dan prinsip dasar Stack dan Queue melalui video singkat di bawah ini.</p>
+              <h3 class="text-lg sm:text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                🥞 Live Simulator Stack (LIFO)
+              </h3>
+              <p class="text-slate-500 dark:text-slate-400 text-xs sm:text-sm">Elemen yang terakhir masuk akan menjadi yang pertama keluar.</p>
+            </div>
+            <span class="text-xs bg-cyan-50 dark:bg-cyan-950/60 text-cyan-700 dark:text-cyan-300 px-3 py-1.5 rounded-full font-mono font-bold border border-cyan-200 dark:border-cyan-800">
+              Top Access Only
+            </span>
+          </div>
+
+          <div class="flex flex-col sm:flex-row gap-3">
+            <input
+              type="text"
+              id="stackInput"
+              placeholder="Masukkan nilai elemen (contoh: Piring D)"
+              class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan-500 flex-1 shadow-inner"
+            />
+            <div class="flex gap-2.5">
+              <button
+                onclick="pushStack()"
+                class="bg-cyan-600 hover:bg-cyan-500 text-white font-bold px-5 py-2.5 rounded-xl text-xs sm:text-sm transition-all shadow-md shadow-cyan-600/20 flex items-center gap-1.5 cursor-pointer"
+              >
+                <i class="fa-solid fa-arrow-down"></i> Push
+              </button>
+              <button
+                onclick="popStack()"
+                class="bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/50 dark:hover:bg-rose-900/50 text-rose-600 dark:text-rose-300 border border-rose-200 dark:border-rose-800 font-bold px-5 py-2.5 rounded-xl text-xs sm:text-sm transition-all flex items-center gap-1.5 cursor-pointer"
+              >
+                <i class="fa-solid fa-arrow-up"></i> Pop
+              </button>
+            </div>
+          </div>
+
+          <div id="stackStatus" class="text-xs font-mono font-bold text-cyan-600 dark:text-cyan-400 min-h-[1.5rem]"></div>
+
+          <div class="bg-slate-50 dark:bg-slate-800/60 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 min-h-[220px] flex flex-col-reverse gap-3 items-center justify-start overflow-hidden">
+            <div id="stackContainer" class="w-full max-w-md flex flex-col-reverse gap-3"></div>
+          </div>
+        </div>
+
+        <!-- Live Queue Simulator -->
+        <div class="bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-xl shadow-slate-200/50 dark:shadow-black/40 space-y-6">
+          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-slate-100 dark:border-slate-800 pb-4 gap-2">
+            <div>
+              <h3 class="text-lg sm:text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                🎟️ Live Simulator Queue (FIFO)
+              </h3>
+              <p class="text-slate-500 dark:text-slate-400 text-xs sm:text-sm">Elemen yang pertama masuk akan menjadi yang pertama keluar.</p>
+            </div>
+            <span class="text-xs bg-teal-50 dark:bg-teal-950/60 text-teal-700 dark:text-teal-300 px-3 py-1.5 rounded-full font-mono font-bold border border-teal-200 dark:border-teal-800">
+              Front &amp; Rear Access
+            </span>
+          </div>
+
+          <div class="flex flex-col sm:flex-row gap-3">
+            <input
+              type="text"
+              id="queueInput"
+              placeholder="Masukkan nilai elemen (contoh: Siswa D)"
+              class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500 flex-1 shadow-inner"
+            />
+            <div class="flex gap-2.5">
+              <button
+                onclick="enqueue()"
+                class="bg-teal-600 hover:bg-teal-500 text-white font-bold px-5 py-2.5 rounded-xl text-xs sm:text-sm transition-all shadow-md shadow-teal-600/20 flex items-center gap-1.5 cursor-pointer"
+              >
+                Enqueue <i class="fa-solid fa-arrow-right"></i>
+              </button>
+              <button
+                onclick="dequeue()"
+                class="bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/50 dark:hover:bg-rose-900/50 text-rose-600 dark:text-rose-300 border border-rose-200 dark:border-rose-800 font-bold px-5 py-2.5 rounded-xl text-xs sm:text-sm transition-all flex items-center gap-1.5 cursor-pointer"
+              >
+                <i class="fa-solid fa-arrow-left"></i> Dequeue
+              </button>
+            </div>
+          </div>
+
+          <div id="queueStatus" class="text-xs font-mono font-bold text-teal-600 dark:text-teal-400 min-h-[1.5rem]"></div>
+
+          <div class="bg-slate-50 dark:bg-slate-800/60 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 min-h-[120px] flex items-center justify-start overflow-x-auto">
+            <div id="queueContainer" class="flex gap-3 w-full items-center"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================== TAB 3: VIDEO PENJELASAN ================== -->
+      <div id="video" class="tab-content hidden">
+        <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-xl shadow-slate-200/50 dark:shadow-black/40 p-6 sm:p-8 md:p-10 space-y-8 transition-colors">
+          <div>
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-50 dark:bg-cyan-950/60 border border-cyan-200 dark:border-cyan-800 text-xs font-bold text-cyan-700 dark:text-cyan-300 mb-3">
+              <i class="fa-solid fa-circle-play text-cyan-500"></i> Video MP4 Edukasi
+            </div>
+            <h3 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Video Pembelajaran Stack &amp; Queue</h3>
+            <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-1.5 leading-relaxed">Pelajari visualisasi konsep dan prinsip kerja Stack &amp; Queue melalui rekaman simulasi animasi di bawah ini:</p>
+          </div>
+
+          <div class="bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-2xl p-5 sm:p-6 flex flex-col md:flex-row gap-6 items-start">
+            <div class="w-full md:w-2/5 lg:w-1/3 max-w-xs mx-auto md:mx-0 shrink-0">
+              <div class="aspect-[9/16] w-full rounded-2xl overflow-hidden bg-slate-950 border border-slate-200 dark:border-slate-700 shadow-lg">
+                <video class="w-full h-full object-contain" controls preload="metadata">
+                  <source src="video/stack dan queue.mp4" type="video/mp4" />
+                  Browser kamu tidak mendukung pemutaran video.
+                </video>
+              </div>
             </div>
 
-            <div class="grid grid-cols-1 gap-8">
-              <div class="bg-black/40 border border-white/10 rounded-2xl p-6 md:p-8 flex flex-col md:flex-row gap-6 items-start">
-                <div class="w-full md:w-2/5 lg:w-1/3 max-w-sm mx-auto md:mx-0 flex-shrink-0">
-                  <div class="aspect-[9/16] w-full rounded-xl overflow-hidden bg-black border border-white/10 shadow-lg">
-                    <video class="w-full h-full object-contain" controls preload="metadata">
-                      <source src="video/stack dan queue.mp4" type="video/mp4" />
-                      Browser kamu tidak mendukung pemutaran video.
-                    </video>
-                  </div>
-                </div>
+            <div class="flex-1 space-y-5">
+              <div>
+                <h4 class="text-lg sm:text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2.5">
+                  <span class="bg-cyan-100 dark:bg-cyan-950/80 text-cyan-700 dark:text-cyan-300 text-xs font-mono font-bold px-2.5 py-1 rounded-lg border border-cyan-200 dark:border-cyan-800">1</span>
+                  Stack vs Queue
+                </h4>
+                <p class="text-xs sm:text-sm text-cyan-600 dark:text-cyan-400 font-semibold mt-1">LIFO (Last In, First Out) vs FIFO (First In, First Out)</p>
+              </div>
 
-                <div class="flex-1 space-y-6">
-                  <div>
-                    <h4 class="text-2xl md:text-3xl font-bold text-white flex items-center gap-3">
-                      <span class="bg-emerald-500/20 text-emerald-400 text-base px-3 py-1 rounded border border-emerald-500/30">1</span>
-                      Stack vs Queue
-                    </h4>
-                    <p class="text-lg text-emerald-400 font-medium mt-2">LIFO (Last In, First Out) vs FIFO (First In, First Out)</p>
-                  </div>
+              <div class="space-y-3 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                <p><strong class="text-slate-900 dark:text-white">📚 Stack (Tumpukan):</strong> Menggunakan prinsip <span class="text-cyan-600 dark:text-cyan-400 font-bold font-mono">LIFO</span>. Elemen yang <b>terakhir masuk</b> akan menjadi yang <b>pertama keluar</b>.</p>
+                <p><strong class="text-slate-900 dark:text-white">🚶‍♂️ Queue (Antrean):</strong> Menggunakan prinsip <span class="text-teal-600 dark:text-teal-400 font-bold font-mono">FIFO</span>. Elemen yang <b>pertama masuk</b> akan menjadi yang <b>pertama keluar</b>.</p>
+              </div>
 
-                  <div class="space-y-3 text-lg md:text-xl text-gray-300 leading-relaxed">
-                    <p><b class="text-white">📚 Stack (Tumpukan):</b> Menggunakan prinsip <span class="text-emerald-400 font-semibold">LIFO</span>. Elemen yang <b>terakhir masuk</b> akan menjadi yang <b>pertama keluar</b>.</p>
-                    <p><b class="text-white">🚶‍♂️ Queue (Antrean):</b> Menggunakan prinsip <span class="text-emerald-400 font-semibold">FIFO</span>. Elemen yang <b>pertama masuk</b> akan menjadi yang <b>pertama keluar</b>.</p>
-                  </div>
-
-                  <div class="bg-white/5 border border-white/10 rounded-xl p-5 text-lg md:text-xl text-gray-300 space-y-3">
-                    <span class="block text-white font-semibold">💡 Analogi Murid:</span>
-                    <ul class="list-disc list-inside space-y-2 text-base md:text-lg">
-                      <li><b class="text-white">Stack:</b> Seperti tumpukan piring—piring teratas yang baru saja ditaruh adalah piring pertama yang akan diambil.</li>
-                      <li><b class="text-white">Queue:</b> Seperti antrean kasir—orang yang datang paling awal akan dilayani dan keluar paling awal.</li>
-                    </ul>
-                  </div>
-
-                  <div class="grid grid-cols-3 gap-3 text-center text-sm md:text-base">
-                    <div class="bg-white/5 border border-white/10 rounded-xl p-3">
-                      <span class="block text-emerald-400 font-bold text-base md:text-lg">PUSH</span>
-                      <span class="text-gray-400 text-xs md:text-sm">Memasukkan Data</span>
-                    </div>
-                    <div class="bg-white/5 border border-white/10 rounded-xl p-3">
-                      <span class="block text-emerald-400 font-bold text-base md:text-lg">PEEK</span>
-                      <span class="text-gray-400 text-xs md:text-sm">Mengintip Data</span>
-                    </div>
-                    <div class="bg-white/5 border border-white/10 rounded-xl p-3">
-                      <span class="block text-emerald-400 font-bold text-base md:text-lg">POP</span>
-                      <span class="text-gray-400 text-xs md:text-sm">Mengeluarkan Data</span>
-                    </div>
-                  </div>
-
-                  <div class="overflow-x-auto rounded-xl border border-white/10">
-                    <table class="w-full text-left text-sm md:text-base text-gray-300">
-                      <thead class="bg-white/10 text-white font-semibold border-b border-white/10">
-                        <tr>
-                          <th class="p-3">Fitur</th>
-                          <th class="p-3 text-emerald-400">Stack</th>
-                          <th class="p-3 text-emerald-400">Queue</th>
-                        </tr>
-                      </thead>
-                      <tbody class="divide-y divide-white/5 bg-black/20">
-                        <tr>
-                          <td class="p-3 font-semibold text-white">Prinsip</td>
-                          <td class="p-3">LIFO (Last In, First Out)</td>
-                          <td class="p-3">FIFO (First In, First Out)</td>
-                        </tr>
-                        <tr>
-                          <td class="p-3 font-semibold text-white">Hasil Output</td>
-                          <td class="p-3">Terbalik (Reversed)</td>
-                          <td class="p-3">Sesuai Urutan (In Order)</td>
-                        </tr>
-                        <tr>
-                          <td class="p-3 font-semibold text-white">Fokus PEEK</td>
-                          <td class="p-3">Teratas (Top)</td>
-                          <td class="p-3">Terdepan (Front)</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
+              <div class="p-4 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 text-xs text-slate-600 dark:text-slate-300 leading-relaxed shadow-sm">
+                💡 <strong>Tips Membedakan di Ujian:</strong> Bayangkan tumpukan piring untuk <em>Stack</em> (hanya bagian atas yang bisa diambil langsung) dan antrean loket tiket untuk <em>Queue</em> (yang datang duluan keluar duluan).
               </div>
             </div>
           </div>
         </div>
+      </div>
 
-        <!-- TAB LATIHAN SOAL -->
-        <div id="latihan" class="tab-content hidden">
-          <div class="bg-brandGray border border-white/5 rounded-3xl p-6 md:p-8">
-            <div class="flex flex-col md:flex-row items-start md:items-center justify-between mb-8 gap-4 border-b border-white/10 pb-6">
-              <div>
-                <h3 class="text-2xl md:text-3xl font-bold mb-2">Latihan Structure Data: Stack & Queue</h3>
-                <p class="text-gray-300 text-base">Uji pemahamanmu tentang memori Stack & Queue secara mandiri.</p>
+      <!-- ================== TAB 4: LATIHAN SOAL ================== -->
+      <div id="latihan" class="tab-content hidden">
+        <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-xl shadow-slate-200/50 dark:shadow-black/40 p-6 sm:p-8 transition-colors">
+          <div class="flex flex-col md:flex-row items-start md:items-center justify-between mb-8 gap-4 border-b border-slate-100 dark:border-slate-800 pb-6">
+            <div>
+              <h3 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mb-1">Latihan Struktur Data: Stack &amp; Queue</h3>
+              <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium">Uji pemahaman operasi tumpukan dan antrean secara mandiri.</p>
+            </div>
+            <span class="text-xs font-bold text-cyan-700 dark:text-cyan-300 bg-cyan-50 dark:bg-cyan-950/60 border border-cyan-200 dark:border-cyan-800 px-4 py-2 rounded-full font-mono">
+              <i class="fa-solid fa-list-check mr-1.5"></i> 10 Soal Pilihan Ganda
+            </span>
+          </div>
+
+          <div id="quiz-container" class="space-y-6">
+            <!-- Soal 1 -->
+            <div class="bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 p-5 sm:p-6 rounded-2xl space-y-4" id="q-block-1">
+              <p class="text-sm sm:text-base text-slate-800 dark:text-slate-100 font-medium leading-relaxed">
+                <span class="text-cyan-600 dark:text-cyan-400 font-bold mr-2 font-mono">1.</span>
+                Struktur data digunakan untuk menyimpan, mengatur, dan mengelola data agar dapat digunakan dengan lebih mudah dan efisien. Manakah yang termasuk contoh struktur data <strong>Stack</strong> dalam kehidupan sehari-hari?
+              </p>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+                <label class="flex items-center gap-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-3.5 rounded-xl cursor-pointer hover:border-cyan-500 hover:bg-cyan-50/40 dark:hover:bg-slate-700/60 transition shadow-sm">
+                  <input type="radio" name="q1" value="A" class="w-4 h-4 accent-cyan-600" />
+                  <span class="text-xs sm:text-sm text-slate-700 dark:text-slate-200">A. Antrean siswa di kantin</span>
+                </label>
+                <label class="flex items-center gap-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-3.5 rounded-xl cursor-pointer hover:border-cyan-500 hover:bg-cyan-50/40 dark:hover:bg-slate-700/60 transition shadow-sm">
+                  <input type="radio" name="q1" value="B" class="w-4 h-4 accent-cyan-600" />
+                  <span class="text-xs sm:text-sm text-slate-700 dark:text-slate-200">B. Antrean kendaraan di gerbang sekolah</span>
+                </label>
+                <label class="flex items-center gap-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-3.5 rounded-xl cursor-pointer hover:border-cyan-500 hover:bg-cyan-50/40 dark:hover:bg-slate-700/60 transition shadow-sm">
+                  <input type="radio" name="q1" value="C" class="w-4 h-4 accent-cyan-600" />
+                  <span class="text-xs sm:text-sm text-slate-700 dark:text-slate-200">C. Tumpukan buku di meja</span>
+                </label>
+                <label class="flex items-center gap-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-3.5 rounded-xl cursor-pointer hover:border-cyan-500 hover:bg-cyan-50/40 dark:hover:bg-slate-700/60 transition shadow-sm">
+                  <input type="radio" name="q1" value="D" class="w-4 h-4 accent-cyan-600" />
+                  <span class="text-xs sm:text-sm text-slate-700 dark:text-slate-200">D. Antrean dokumen pada printer</span>
+                </label>
               </div>
-              <span class="text-sm font-bold text-brandGreen bg-brandGreen/10 px-4 py-2 rounded-full border border-brandGreen/20"> <i class="fa-solid fa-layer-group mr-1"></i> 10 Soal Pilihan Ganda </span>
+              <div id="explain-1" class="hidden p-4 rounded-xl text-xs sm:text-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 mt-3 text-slate-700 dark:text-slate-300"></div>
             </div>
 
-            <div id="quiz-container" class="space-y-8">
-              <!-- Soal 1 -->
-              <div class="bg-white/5 border border-white/10 p-6 rounded-2xl space-y-4" id="q-block-1">
-                <p class="text-lg text-gray-200 font-medium leading-relaxed">
-                  <span class="text-brandGreen font-bold mr-2">1.</span>
-                  Struktur data digunakan untuk menyimpan, mengatur, dan mengelola data agar dapat digunakan dengan lebih mudah dan efisien. Manakah yang termasuk contoh struktur data <strong>Stack</strong> dalam kehidupan sehari-hari?
-                </p>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
-                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
-                    <input type="radio" name="q1" value="A" class="w-5 h-5 accent-brandGreen" />
-                    <span class="text-base text-gray-200">A. Antrean siswa di kantin</span>
-                  </label>
-                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
-                    <input type="radio" name="q1" value="B" class="w-5 h-5 accent-brandGreen" />
-                    <span class="text-base text-gray-200">B. Antrean kendaraan di gerbang sekolah</span>
-                  </label>
-                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
-                    <input type="radio" name="q1" value="C" class="w-5 h-5 accent-brandGreen" />
-                    <span class="text-base text-gray-200">C. Tumpukan buku di meja</span>
-                  </label>
-                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
-                    <input type="radio" name="q1" value="D" class="w-5 h-5 accent-brandGreen" />
-                    <span class="text-base text-gray-200">D. Antrean dokumen pada printer</span>
-                  </label>
-                </div>
-                <div id="explain-1" class="hidden p-4 rounded-xl text-base bg-black/40 border border-white/10 mt-3 text-gray-300"></div>
+            <!-- Soal 2 -->
+            <div class="bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 p-5 sm:p-6 rounded-2xl space-y-4" id="q-block-2">
+              <p class="text-sm sm:text-base text-slate-800 dark:text-slate-100 font-medium leading-relaxed">
+                <span class="text-cyan-600 dark:text-cyan-400 font-bold mr-2 font-mono">2.</span>
+                Stack menggunakan prinsip operasi...
+              </p>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+                <label class="flex items-center gap-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-3.5 rounded-xl cursor-pointer hover:border-cyan-500 hover:bg-cyan-50/40 dark:hover:bg-slate-700/60 transition shadow-sm">
+                  <input type="radio" name="q2" value="A" class="w-4 h-4 accent-cyan-600" />
+                  <span class="text-xs sm:text-sm text-slate-700 dark:text-slate-200">A. FIFO (First In First Out)</span>
+                </label>
+                <label class="flex items-center gap-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-3.5 rounded-xl cursor-pointer hover:border-cyan-500 hover:bg-cyan-50/40 dark:hover:bg-slate-700/60 transition shadow-sm">
+                  <input type="radio" name="q2" value="B" class="w-4 h-4 accent-cyan-600" />
+                  <span class="text-xs sm:text-sm text-slate-700 dark:text-slate-200">B. LIFO (Last In First Out)</span>
+                </label>
+                <label class="flex items-center gap-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-3.5 rounded-xl cursor-pointer hover:border-cyan-500 hover:bg-cyan-50/40 dark:hover:bg-slate-700/60 transition shadow-sm">
+                  <input type="radio" name="q2" value="C" class="w-4 h-4 accent-cyan-600" />
+                  <span class="text-xs sm:text-sm text-slate-700 dark:text-slate-200">C. FILO dan FIFO bersamaan</span>
+                </label>
+                <label class="flex items-center gap-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-3.5 rounded-xl cursor-pointer hover:border-cyan-500 hover:bg-cyan-50/40 dark:hover:bg-slate-700/60 transition shadow-sm">
+                  <input type="radio" name="q2" value="D" class="w-4 h-4 accent-cyan-600" />
+                  <span class="text-xs sm:text-sm text-slate-700 dark:text-slate-200">D. Random In Random Out</span>
+                </label>
               </div>
+              <div id="explain-2" class="hidden p-4 rounded-xl text-xs sm:text-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 mt-3 text-slate-700 dark:text-slate-300"></div>
+            </div>
 
-              <!-- Soal 2 -->
-              <div class="bg-white/5 border border-white/10 p-6 rounded-2xl space-y-4" id="q-block-2">
-                <p class="text-lg text-gray-200 font-medium leading-relaxed">
-                  <span class="text-brandGreen font-bold mr-2">2.</span>
-                  Stack menggunakan prinsip...
-                </p>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
-                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
-                    <input type="radio" name="q2" value="A" class="w-5 h-5 accent-brandGreen" />
-                    <span class="text-base text-gray-200">A. FIFO</span>
-                  </label>
-                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
-                    <input type="radio" name="q2" value="B" class="w-5 h-5 accent-brandGreen" />
-                    <span class="text-base text-gray-200">B. LIFO</span>
-                  </label>
-                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
-                    <input type="radio" name="q2" value="C" class="w-5 h-5 accent-brandGreen" />
-                    <span class="text-base text-gray-200">C. FILO dan FIFO secara bersamaan</span>
-                  </label>
-                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
-                    <input type="radio" name="q2" value="D" class="w-5 h-5 accent-brandGreen" />
-                    <span class="text-base text-gray-200">D. Random In, Random Out</span>
-                  </label>
-                </div>
-                <div id="explain-2" class="hidden p-4 rounded-xl text-base bg-black/40 border border-white/10 mt-3 text-gray-300"></div>
-              </div>
-
-              <!-- Soal 3 -->
-              <div class="bg-white/5 border border-white/10 p-6 rounded-2xl space-y-4" id="q-block-3">
-                <p class="text-lg text-gray-200 font-medium leading-relaxed">
-                  <span class="text-brandGreen font-bold mr-2">3.</span>
-                  Diketahui sebuah Stack:
-                </p>
-                <pre class="bg-black/50 p-4 rounded-xl text-brandGreen font-mono text-base my-2 border border-white/10 inline-block">
+            <!-- Soal 3 -->
+            <div class="bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 p-5 sm:p-6 rounded-2xl space-y-4" id="q-block-3">
+              <p class="text-sm sm:text-base text-slate-800 dark:text-slate-100 font-medium leading-relaxed">
+                <span class="text-cyan-600 dark:text-cyan-400 font-bold mr-2 font-mono">3.</span>
+                Diketahui sebuah Stack:
+              </p>
+              <pre class="bg-white dark:bg-slate-900 p-3.5 rounded-xl text-cyan-600 dark:text-cyan-400 font-mono text-xs border border-slate-200 dark:border-slate-700 inline-block">
 ┌───┐
 │ C │ ← TOP
 ├───┤
 │ B │
 ├───┤
 │ A │
-└───┘</pre
-                >
-                <p class="text-base text-gray-300">Jika dilakukan operasi <code class="text-brandGreen">Pop()</code>, data yang keluar adalah...</p>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
-                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
-                    <input type="radio" name="q3" value="A" class="w-5 h-5 accent-brandGreen" />
-                    <span class="text-base text-gray-200">A. A</span>
-                  </label>
-                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
-                    <input type="radio" name="q3" value="B" class="w-5 h-5 accent-brandGreen" />
-                    <span class="text-base text-gray-200">B. B</span>
-                  </label>
-                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
-                    <input type="radio" name="q3" value="C" class="w-5 h-5 accent-brandGreen" />
-                    <span class="text-base text-gray-200">C. C</span>
-                  </label>
-                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
-                    <input type="radio" name="q3" value="D" class="w-5 h-5 accent-brandGreen" />
-                    <span class="text-base text-gray-200">D. Semua data</span>
-                  </label>
-                </div>
-                <div id="explain-3" class="hidden p-4 rounded-xl text-base bg-black/40 border border-white/10 mt-3 text-gray-300"></div>
+└───┘</pre>
+              <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300">Jika dilakukan operasi <code class="text-cyan-600 dark:text-cyan-400 font-bold font-mono">Pop()</code>, data yang keluar adalah...</p>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+                <label class="flex items-center gap-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-3.5 rounded-xl cursor-pointer hover:border-cyan-500 hover:bg-cyan-50/40 dark:hover:bg-slate-700/60 transition shadow-sm">
+                  <input type="radio" name="q3" value="A" class="w-4 h-4 accent-cyan-600" />
+                  <span class="text-xs sm:text-sm text-slate-700 dark:text-slate-200">A. A</span>
+                </label>
+                <label class="flex items-center gap-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-3.5 rounded-xl cursor-pointer hover:border-cyan-500 hover:bg-cyan-50/40 dark:hover:bg-slate-700/60 transition shadow-sm">
+                  <input type="radio" name="q3" value="B" class="w-4 h-4 accent-cyan-600" />
+                  <span class="text-xs sm:text-sm text-slate-700 dark:text-slate-200">B. B</span>
+                </label>
+                <label class="flex items-center gap-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-3.5 rounded-xl cursor-pointer hover:border-cyan-500 hover:bg-cyan-50/40 dark:hover:bg-slate-700/60 transition shadow-sm">
+                  <input type="radio" name="q3" value="C" class="w-4 h-4 accent-cyan-600" />
+                  <span class="text-xs sm:text-sm text-slate-700 dark:text-slate-200">C. C</span>
+                </label>
+                <label class="flex items-center gap-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-3.5 rounded-xl cursor-pointer hover:border-cyan-500 hover:bg-cyan-50/40 dark:hover:bg-slate-700/60 transition shadow-sm">
+                  <input type="radio" name="q3" value="D" class="w-4 h-4 accent-cyan-600" />
+                  <span class="text-xs sm:text-sm text-slate-700 dark:text-slate-200">D. Semua data</span>
+                </label>
               </div>
+              <div id="explain-3" class="hidden p-4 rounded-xl text-xs sm:text-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 mt-3 text-slate-700 dark:text-slate-300"></div>
+            </div>
 
-              <!-- Soal 4 -->
-              <div class="bg-white/5 border border-white/10 p-6 rounded-2xl space-y-4" id="q-block-4">
-                <p class="text-lg text-gray-200 font-medium leading-relaxed">
-                  <span class="text-brandGreen font-bold mr-2">4.</span>
-                  Sebuah Stack awalnya kosong. Kemudian dilakukan operasi: <code>Push(10)</code>, <code>Push(20)</code>, <code>Push(30)</code>. Bagaimana urutan data dalam Stack dari bawah ke atas?
-                </p>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
-                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
-                    <input type="radio" name="q4" value="A" class="w-5 h-5 accent-brandGreen" />
-                    <span class="text-base text-gray-200">A. 30 → 20 → 10</span>
-                  </label>
-                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
-                    <input type="radio" name="q4" value="B" class="w-5 h-5 accent-brandGreen" />
-                    <span class="text-base text-gray-200">B. 10 → 20 → 30</span>
-                  </label>
-                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
-                    <input type="radio" name="q4" value="C" class="w-5 h-5 accent-brandGreen" />
-                    <span class="text-base text-gray-200">C. 20 → 10 → 30</span>
-                  </label>
-                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
-                    <input type="radio" name="q4" value="D" class="w-5 h-5 accent-brandGreen" />
-                    <span class="text-base text-gray-200">D. 10 → 30 → 20</span>
-                  </label>
-                </div>
-                <div id="explain-4" class="hidden p-4 rounded-xl text-base bg-black/40 border border-white/10 mt-3 text-gray-300"></div>
+            <!-- Soal 4 -->
+            <div class="bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 p-5 sm:p-6 rounded-2xl space-y-4" id="q-block-4">
+              <p class="text-sm sm:text-base text-slate-800 dark:text-slate-100 font-medium leading-relaxed">
+                <span class="text-cyan-600 dark:text-cyan-400 font-bold mr-2 font-mono">4.</span>
+                Sebuah Stack awalnya kosong. Kemudian dilakukan operasi berurutan: <code class="font-mono">Push(10)</code>, <code class="font-mono">Push(20)</code>, <code class="font-mono">Push(30)</code>. Bagaimana urutan data dalam Stack dari dasar (bawah) ke atas?
+              </p>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+                <label class="flex items-center gap-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-3.5 rounded-xl cursor-pointer hover:border-cyan-500 hover:bg-cyan-50/40 dark:hover:bg-slate-700/60 transition shadow-sm">
+                  <input type="radio" name="q4" value="A" class="w-4 h-4 accent-cyan-600" />
+                  <span class="text-xs sm:text-sm text-slate-700 dark:text-slate-200">A. 30 &rarr; 20 &rarr; 10</span>
+                </label>
+                <label class="flex items-center gap-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-3.5 rounded-xl cursor-pointer hover:border-cyan-500 hover:bg-cyan-50/40 dark:hover:bg-slate-700/60 transition shadow-sm">
+                  <input type="radio" name="q4" value="B" class="w-4 h-4 accent-cyan-600" />
+                  <span class="text-xs sm:text-sm text-slate-700 dark:text-slate-200">B. 10 &rarr; 20 &rarr; 30</span>
+                </label>
+                <label class="flex items-center gap-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-3.5 rounded-xl cursor-pointer hover:border-cyan-500 hover:bg-cyan-50/40 dark:hover:bg-slate-700/60 transition shadow-sm">
+                  <input type="radio" name="q4" value="C" class="w-4 h-4 accent-cyan-600" />
+                  <span class="text-xs sm:text-sm text-slate-700 dark:text-slate-200">C. 20 &rarr; 10 &rarr; 30</span>
+                </label>
+                <label class="flex items-center gap-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-3.5 rounded-xl cursor-pointer hover:border-cyan-500 hover:bg-cyan-50/40 dark:hover:bg-slate-700/60 transition shadow-sm">
+                  <input type="radio" name="q4" value="D" class="w-4 h-4 accent-cyan-600" />
+                  <span class="text-xs sm:text-sm text-slate-700 dark:text-slate-200">D. 10 &rarr; 30 &rarr; 20</span>
+                </label>
               </div>
+              <div id="explain-4" class="hidden p-4 rounded-xl text-xs sm:text-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 mt-3 text-slate-700 dark:text-slate-300"></div>
+            </div>
 
-              <!-- Soal 5 -->
-              <div class="bg-white/5 border border-white/10 p-6 rounded-2xl space-y-4" id="q-block-5">
-                <p class="text-lg text-gray-200 font-medium leading-relaxed">
-                  <span class="text-brandGreen font-bold mr-2">5.</span>
-                  Perhatikan Stack berikut:
-                </p>
-                <pre class="bg-black/50 p-4 rounded-xl text-brandGreen font-mono text-base my-2 border border-white/10 inline-block">
+            <!-- Soal 5 -->
+            <div class="bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 p-5 sm:p-6 rounded-2xl space-y-4" id="q-block-5">
+              <p class="text-sm sm:text-base text-slate-800 dark:text-slate-100 font-medium leading-relaxed">
+                <span class="text-cyan-600 dark:text-cyan-400 font-bold mr-2 font-mono">5.</span>
+                Perhatikan Stack berikut:
+              </p>
+              <pre class="bg-white dark:bg-slate-900 p-3.5 rounded-xl text-cyan-600 dark:text-cyan-400 font-mono text-xs border border-slate-200 dark:border-slate-700 inline-block">
 ┌────┐
 │ 50 │ ← TOP
 ├────┤
 │ 30 │
 ├────┤
 │ 10 │
-└────┘</pre
-                >
-                <p class="text-base text-gray-300">Jika dilakukan operasi <code class="text-brandGreen">Peek()</code>, apa yang terjadi?</p>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
-                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
-                    <input type="radio" name="q5" value="A" class="w-5 h-5 accent-brandGreen" />
-                    <span class="text-base text-gray-200">A. 50 keluar dari Stack</span>
-                  </label>
-                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
-                    <input type="radio" name="q5" value="B" class="w-5 h-5 accent-brandGreen" />
-                    <span class="text-base text-gray-200">B. 10 keluar dari Stack</span>
-                  </label>
-                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
-                    <input type="radio" name="q5" value="C" class="w-5 h-5 accent-brandGreen" />
-                    <span class="text-base text-gray-200">C. 30 keluar dari Stack</span>
-                  </label>
-                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
-                    <input type="radio" name="q5" value="D" class="w-5 h-5 accent-brandGreen" />
-                    <span class="text-base text-gray-200">D. 50 dilihat tetapi tetap berada di Stack</span>
-                  </label>
-                </div>
-                <div id="explain-5" class="hidden p-4 rounded-xl text-base bg-black/40 border border-white/10 mt-3 text-gray-300"></div>
+└────┘</pre>
+              <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300">Jika dilakukan operasi <code class="text-cyan-600 dark:text-cyan-400 font-bold font-mono">Peek()</code>, apa yang terjadi?</p>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+                <label class="flex items-center gap-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-3.5 rounded-xl cursor-pointer hover:border-cyan-500 hover:bg-cyan-50/40 dark:hover:bg-slate-700/60 transition shadow-sm">
+                  <input type="radio" name="q5" value="A" class="w-4 h-4 accent-cyan-600" />
+                  <span class="text-xs sm:text-sm text-slate-700 dark:text-slate-200">A. 50 keluar dari Stack</span>
+                </label>
+                <label class="flex items-center gap-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-3.5 rounded-xl cursor-pointer hover:border-cyan-500 hover:bg-cyan-50/40 dark:hover:bg-slate-700/60 transition shadow-sm">
+                  <input type="radio" name="q5" value="B" class="w-4 h-4 accent-cyan-600" />
+                  <span class="text-xs sm:text-sm text-slate-700 dark:text-slate-200">B. 10 keluar dari Stack</span>
+                </label>
+                <label class="flex items-center gap-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-3.5 rounded-xl cursor-pointer hover:border-cyan-500 hover:bg-cyan-50/40 dark:hover:bg-slate-700/60 transition shadow-sm">
+                  <input type="radio" name="q5" value="C" class="w-4 h-4 accent-cyan-600" />
+                  <span class="text-xs sm:text-sm text-slate-700 dark:text-slate-200">C. 30 keluar dari Stack</span>
+                </label>
+                <label class="flex items-center gap-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-3.5 rounded-xl cursor-pointer hover:border-cyan-500 hover:bg-cyan-50/40 dark:hover:bg-slate-700/60 transition shadow-sm">
+                  <input type="radio" name="q5" value="D" class="w-4 h-4 accent-cyan-600" />
+                  <span class="text-xs sm:text-sm text-slate-700 dark:text-slate-200">D. 50 dilihat nilainya tetapi tetap berada di Stack</span>
+                </label>
               </div>
+              <div id="explain-5" class="hidden p-4 rounded-xl text-xs sm:text-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 mt-3 text-slate-700 dark:text-slate-300"></div>
+            </div>
 
-              <!-- Soal 6 -->
-              <div class="bg-white/5 border border-white/10 p-6 rounded-2xl space-y-4" id="q-block-6">
-                <p class="text-lg text-gray-200 font-medium leading-relaxed">
-                  <span class="text-brandGreen font-bold mr-2">6.</span>
-                  Queue menggunakan prinsip...
-                </p>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
-                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
-                    <input type="radio" name="q6" value="A" class="w-5 h-5 accent-brandGreen" />
-                    <span class="text-base text-gray-200">A. LIFO</span>
-                  </label>
-                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
-                    <input type="radio" name="q6" value="B" class="w-5 h-5 accent-brandGreen" />
-                    <span class="text-base text-gray-200">B. FIFO</span>
-                  </label>
-                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
-                    <input type="radio" name="q6" value="C" class="w-5 h-5 accent-brandGreen" />
-                    <span class="text-base text-gray-200">C. Last In, Last Out</span>
-                  </label>
-                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
-                    <input type="radio" name="q6" value="D" class="w-5 h-5 accent-brandGreen" />
-                    <span class="text-base text-gray-200">D. Random In, First Out</span>
-                  </label>
-                </div>
-                <div id="explain-6" class="hidden p-4 rounded-xl text-base bg-black/40 border border-white/10 mt-3 text-gray-300"></div>
+            <!-- Soal 6 -->
+            <div class="bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 p-5 sm:p-6 rounded-2xl space-y-4" id="q-block-6">
+              <p class="text-sm sm:text-base text-slate-800 dark:text-slate-100 font-medium leading-relaxed">
+                <span class="text-cyan-600 dark:text-cyan-400 font-bold mr-2 font-mono">6.</span>
+                Queue menggunakan prinsip operasi...
+              </p>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+                <label class="flex items-center gap-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-3.5 rounded-xl cursor-pointer hover:border-cyan-500 hover:bg-cyan-50/40 dark:hover:bg-slate-700/60 transition shadow-sm">
+                  <input type="radio" name="q6" value="A" class="w-4 h-4 accent-cyan-600" />
+                  <span class="text-xs sm:text-sm text-slate-700 dark:text-slate-200">A. LIFO</span>
+                </label>
+                <label class="flex items-center gap-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-3.5 rounded-xl cursor-pointer hover:border-cyan-500 hover:bg-cyan-50/40 dark:hover:bg-slate-700/60 transition shadow-sm">
+                  <input type="radio" name="q6" value="B" class="w-4 h-4 accent-cyan-600" />
+                  <span class="text-xs sm:text-sm text-slate-700 dark:text-slate-200">B. FIFO</span>
+                </label>
+                <label class="flex items-center gap-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-3.5 rounded-xl cursor-pointer hover:border-cyan-500 hover:bg-cyan-50/40 dark:hover:bg-slate-700/60 transition shadow-sm">
+                  <input type="radio" name="q6" value="C" class="w-4 h-4 accent-cyan-600" />
+                  <span class="text-xs sm:text-sm text-slate-700 dark:text-slate-200">C. Last In Last Out</span>
+                </label>
+                <label class="flex items-center gap-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-3.5 rounded-xl cursor-pointer hover:border-cyan-500 hover:bg-cyan-50/40 dark:hover:bg-slate-700/60 transition shadow-sm">
+                  <input type="radio" name="q6" value="D" class="w-4 h-4 accent-cyan-600" />
+                  <span class="text-xs sm:text-sm text-slate-700 dark:text-slate-200">D. Random In First Out</span>
+                </label>
               </div>
+              <div id="explain-6" class="hidden p-4 rounded-xl text-xs sm:text-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 mt-3 text-slate-700 dark:text-slate-300"></div>
+            </div>
 
-              <!-- Soal 7 -->
-              <div class="bg-white/5 border border-white/10 p-6 rounded-2xl space-y-4" id="q-block-7">
-                <p class="text-lg text-gray-200 font-medium leading-relaxed">
-                  <span class="text-brandGreen font-bold mr-2">7.</span>
-                  Diketahui sebuah Queue:
-                </p>
-                <pre class="bg-black/50 p-4 rounded-xl text-brandGreen font-mono text-base my-2 border border-white/10 inline-block">
+            <!-- Soal 7 -->
+            <div class="bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 p-5 sm:p-6 rounded-2xl space-y-4" id="q-block-7">
+              <p class="text-sm sm:text-base text-slate-800 dark:text-slate-100 font-medium leading-relaxed">
+                <span class="text-cyan-600 dark:text-cyan-400 font-bold mr-2 font-mono">7.</span>
+                Diketahui sebuah Queue:
+              </p>
+              <pre class="bg-white dark:bg-slate-900 p-3.5 rounded-xl text-teal-600 dark:text-teal-400 font-mono text-xs border border-slate-200 dark:border-slate-700 inline-block">
 FRONT
   ↓
 A → B → C
           ↑
-         REAR</pre
-                >
-                <p class="text-base text-gray-300">Jika dilakukan operasi <code class="text-brandGreen">Dequeue()</code>, data yang keluar adalah...</p>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
-                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
-                    <input type="radio" name="q7" value="A" class="w-5 h-5 accent-brandGreen" />
-                    <span class="text-base text-gray-200">A. A</span>
-                  </label>
-                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
-                    <input type="radio" name="q7" value="B" class="w-5 h-5 accent-brandGreen" />
-                    <span class="text-base text-gray-200">B. B</span>
-                  </label>
-                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
-                    <input type="radio" name="q7" value="C" class="w-5 h-5 accent-brandGreen" />
-                    <span class="text-base text-gray-200">C. C</span>
-                  </label>
-                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
-                    <input type="radio" name="q7" value="D" class="w-5 h-5 accent-brandGreen" />
-                    <span class="text-base text-gray-200">D. Semua data</span>
-                  </label>
-                </div>
-                <div id="explain-7" class="hidden p-4 rounded-xl text-base bg-black/40 border border-white/10 mt-3 text-gray-300"></div>
+         REAR</pre>
+              <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300">Jika dilakukan operasi <code class="text-teal-600 dark:text-teal-400 font-bold font-mono">Dequeue()</code>, data yang keluar adalah...</p>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+                <label class="flex items-center gap-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-3.5 rounded-xl cursor-pointer hover:border-cyan-500 hover:bg-cyan-50/40 dark:hover:bg-slate-700/60 transition shadow-sm">
+                  <input type="radio" name="q7" value="A" class="w-4 h-4 accent-cyan-600" />
+                  <span class="text-xs sm:text-sm text-slate-700 dark:text-slate-200">A. A</span>
+                </label>
+                <label class="flex items-center gap-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-3.5 rounded-xl cursor-pointer hover:border-cyan-500 hover:bg-cyan-50/40 dark:hover:bg-slate-700/60 transition shadow-sm">
+                  <input type="radio" name="q7" value="B" class="w-4 h-4 accent-cyan-600" />
+                  <span class="text-xs sm:text-sm text-slate-700 dark:text-slate-200">B. B</span>
+                </label>
+                <label class="flex items-center gap-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-3.5 rounded-xl cursor-pointer hover:border-cyan-500 hover:bg-cyan-50/40 dark:hover:bg-slate-700/60 transition shadow-sm">
+                  <input type="radio" name="q7" value="C" class="w-4 h-4 accent-cyan-600" />
+                  <span class="text-xs sm:text-sm text-slate-700 dark:text-slate-200">C. C</span>
+                </label>
+                <label class="flex items-center gap-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-3.5 rounded-xl cursor-pointer hover:border-cyan-500 hover:bg-cyan-50/40 dark:hover:bg-slate-700/60 transition shadow-sm">
+                  <input type="radio" name="q7" value="D" class="w-4 h-4 accent-cyan-600" />
+                  <span class="text-xs sm:text-sm text-slate-700 dark:text-slate-200">D. Semua data</span>
+                </label>
               </div>
-
-              <!-- Soal 8 -->
-              <div class="bg-white/5 border border-white/10 p-6 rounded-2xl space-y-4" id="q-block-8">
-                <p class="text-lg text-gray-200 font-medium leading-relaxed">
-                  <span class="text-brandGreen font-bold mr-2">8.</span>
-                  Sebuah Stack menerima data: <code>Push(A)</code>, <code>Push(B)</code>, <code>Push(C)</code>. Kemudian dilakukan: <code>Pop()</code>, <code>Pop()</code>. Urutan data yang keluar adalah...
-                </p>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
-                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
-                    <input type="radio" name="q8" value="A" class="w-5 h-5 accent-brandGreen" />
-                    <span class="text-base text-gray-200">A. A → B</span>
-                  </label>
-                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
-                    <input type="radio" name="q8" value="B" class="w-5 h-5 accent-brandGreen" />
-                    <span class="text-base text-gray-200">B. B → C</span>
-                  </label>
-                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
-                    <input type="radio" name="q8" value="C" class="w-5 h-5 accent-brandGreen" />
-                    <span class="text-base text-gray-200">C. C → B</span>
-                  </label>
-                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
-                    <input type="radio" name="q8" value="D" class="w-5 h-5 accent-brandGreen" />
-                    <span class="text-base text-gray-200">D. C → A</span>
-                  </label>
-                </div>
-                <div id="explain-8" class="hidden p-4 rounded-xl text-base bg-black/40 border border-white/10 mt-3 text-gray-300"></div>
-              </div>
-
-              <!-- Soal 9 -->
-              <div class="bg-white/5 border border-white/10 p-6 rounded-2xl space-y-4" id="q-block-9">
-                <p class="text-lg text-gray-200 font-medium leading-relaxed">
-                  <span class="text-brandGreen font-bold mr-2">9.</span>
-                  Sebuah Queue menerima data dalam urutan: <code>Andi → Budi → Citra → Deni</code>. Kemudian dilakukan <code>Dequeue()</code> sebanyak 2 kali. Siapa saja yang keluar dari Queue?
-                </p>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
-                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
-                    <input type="radio" name="q9" value="A" class="w-5 h-5 accent-brandGreen" />
-                    <span class="text-base text-gray-200">A. Citra dan Deni</span>
-                  </label>
-                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
-                    <input type="radio" name="q9" value="B" class="w-5 h-5 accent-brandGreen" />
-                    <span class="text-base text-gray-200">B. Deni dan Citra</span>
-                  </label>
-                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
-                    <input type="radio" name="q9" value="C" class="w-5 h-5 accent-brandGreen" />
-                    <span class="text-base text-gray-200">C. Andi dan Budi</span>
-                  </label>
-                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
-                    <input type="radio" name="q9" value="D" class="w-5 h-5 accent-brandGreen" />
-                    <span class="text-base text-gray-200">D. Budi dan Citra</span>
-                  </label>
-                </div>
-                <div id="explain-9" class="hidden p-4 rounded-xl text-base bg-black/40 border border-white/10 mt-3 text-gray-300"></div>
-              </div>
-
-              <!-- Soal 10 -->
-              <div class="bg-white/5 border border-white/10 p-6 rounded-2xl space-y-4" id="q-block-10">
-                <p class="text-lg text-gray-200 font-medium leading-relaxed">
-                  <span class="text-brandGreen font-bold mr-2">10.</span>
-                  Perhatikan dua situasi berikut:<br />
-                  <em>Situasi 1:</em> Siswa sedang mengantre untuk membeli makanan di kantin. Siswa yang datang terlebih dahulu dilayani terlebih dahulu.<br />
-                  <em>Situasi 2:</em> Guru menumpuk beberapa buku di meja. Buku yang terakhir diletakkan akan diambil terlebih dahulu.<br /><br />
-                  Struktur data yang tepat untuk Situasi 1 dan Situasi 2 secara berurutan adalah...
-                </p>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
-                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
-                    <input type="radio" name="q10" value="A" class="w-5 h-5 accent-brandGreen" />
-                    <span class="text-base text-gray-200">A. Stack dan Stack</span>
-                  </label>
-                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
-                    <input type="radio" name="q10" value="B" class="w-5 h-5 accent-brandGreen" />
-                    <span class="text-base text-gray-200">B. Queue dan Queue</span>
-                  </label>
-                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
-                    <input type="radio" name="q10" value="C" class="w-5 h-5 accent-brandGreen" />
-                    <span class="text-base text-gray-200">C. Stack dan Queue</span>
-                  </label>
-                  <label class="flex items-center gap-3 bg-white/5 border border-white/5 p-4 rounded-xl cursor-pointer hover:bg-white/10 transition">
-                    <input type="radio" name="q10" value="D" class="w-5 h-5 accent-brandGreen" />
-                    <span class="text-base text-gray-200">D. Queue dan Stack</span>
-                  </label>
-                </div>
-                <div id="explain-10" class="hidden p-4 rounded-xl text-base bg-black/40 border border-white/10 mt-3 text-gray-300"></div>
-              </div>
-
-              <!-- Tombol Kirim -->
-              <div class="pt-4 flex flex-col md:flex-row items-center justify-between gap-4">
-                <button
-                  onclick="cekJawaban()"
-                  class="w-full md:w-auto bg-brandGreen text-black font-bold px-8 py-4 rounded-xl text-lg hover:bg-green-400 transition shadow-[0_0_15px_rgba(0,230,118,0.3)] flex items-center justify-center gap-2"
-                >
-                  <i class="fa-solid fa-paper-plane"></i> Cek Jawaban
-                </button>
-              </div>
-
-              <!-- Ringkasan Hasil -->
-              <div id="quiz-result" class="hidden p-6 rounded-2xl text-base leading-relaxed border mt-6"></div>
+              <div id="explain-7" class="hidden p-4 rounded-xl text-xs sm:text-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 mt-3 text-slate-700 dark:text-slate-300"></div>
             </div>
-          </div>
-        </div>
-      </main>
-    </div>
 
-    <!-- Footer -->
-    <footer class="footer">
-      <div class="container" style="max-width: 1280px; margin: 0 auto; padding: 0 24px">
-        <div class="footer-grid">
-          <div class="footer-brand">
-            <div class="footer-logo">
-              <div class="footer-logo-icon"><i class="fa-solid fa-code"></i></div>
-              <span class="footer-logo-text">RuangInformatika</span>
+            <!-- Soal 8 -->
+            <div class="bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 p-5 sm:p-6 rounded-2xl space-y-4" id="q-block-8">
+              <p class="text-sm sm:text-base text-slate-800 dark:text-slate-100 font-medium leading-relaxed">
+                <span class="text-cyan-600 dark:text-cyan-400 font-bold mr-2 font-mono">8.</span>
+                Sebuah Stack menerima data berurutan: <code class="font-mono">Push(A)</code>, <code class="font-mono">Push(B)</code>, <code class="font-mono">Push(C)</code>. Kemudian dilakukan: <code class="font-mono">Pop()</code>, <code class="font-mono">Pop()</code>. Urutan data yang keluar adalah...
+              </p>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+                <label class="flex items-center gap-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-3.5 rounded-xl cursor-pointer hover:border-cyan-500 hover:bg-cyan-50/40 dark:hover:bg-slate-700/60 transition shadow-sm">
+                  <input type="radio" name="q8" value="A" class="w-4 h-4 accent-cyan-600" />
+                  <span class="text-xs sm:text-sm text-slate-700 dark:text-slate-200">A. A &rarr; B</span>
+                </label>
+                <label class="flex items-center gap-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-3.5 rounded-xl cursor-pointer hover:border-cyan-500 hover:bg-cyan-50/40 dark:hover:bg-slate-700/60 transition shadow-sm">
+                  <input type="radio" name="q8" value="B" class="w-4 h-4 accent-cyan-600" />
+                  <span class="text-xs sm:text-sm text-slate-700 dark:text-slate-200">B. B &rarr; C</span>
+                </label>
+                <label class="flex items-center gap-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-3.5 rounded-xl cursor-pointer hover:border-cyan-500 hover:bg-cyan-50/40 dark:hover:bg-slate-700/60 transition shadow-sm">
+                  <input type="radio" name="q8" value="C" class="w-4 h-4 accent-cyan-600" />
+                  <span class="text-xs sm:text-sm text-slate-700 dark:text-slate-200">C. C &rarr; B</span>
+                </label>
+                <label class="flex items-center gap-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-3.5 rounded-xl cursor-pointer hover:border-cyan-500 hover:bg-cyan-50/40 dark:hover:bg-slate-700/60 transition shadow-sm">
+                  <input type="radio" name="q8" value="D" class="w-4 h-4 accent-cyan-600" />
+                  <span class="text-xs sm:text-sm text-slate-700 dark:text-slate-200">D. C &rarr; A</span>
+                </label>
+              </div>
+              <div id="explain-8" class="hidden p-4 rounded-xl text-xs sm:text-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 mt-3 text-slate-700 dark:text-slate-300"></div>
             </div>
-            <p class="footer-desc">Platform e-learning interaktif modern yang dirancang khusus untuk memfasilitasi gaya belajar visual dan praktik, memastikan pemahaman mendalam untuk menaklukkan soal-soal PTS.</p>
-          </div>
 
-          <div class="footer-col">
-            <h4 class="footer-heading">Pintasan Modul</h4>
-            <ul class="footer-links">
-              <li>
-                <a href="kisi.html" class="footer-link"><i class="fa-solid fa-chevron-right" style="font-size: 0.65rem"></i> Bedah Kisi-Kisi</a>
-              </li>
-              <li>
-                <a href="materi-bk.html" class="footer-link"><i class="fa-solid fa-chevron-right" style="font-size: 0.65rem"></i> Berpikir Komputasional</a>
-              </li>
-              <li>
-                <a href="materi-stack-queue.html" class="footer-link"><i class="fa-solid fa-chevron-right" style="font-size: 0.65rem"></i> Stack &amp; Queue</a>
-              </li>
-              <li>
-                <a href="materi-search-sort.html" class="footer-link"><i class="fa-solid fa-chevron-right" style="font-size: 0.65rem"></i> Searching &amp; Sorting</a>
-              </li>
-              <li>
-                <a href="Materi_AP/materi-algoritma.html" class="footer-link"><i class="fa-solid fa-chevron-right" style="font-size: 0.65rem"></i> Algoritma Pemrograman</a>
-              </li>
-            </ul>
-          </div>
+            <!-- Soal 9 -->
+            <div class="bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 p-5 sm:p-6 rounded-2xl space-y-4" id="q-block-9">
+              <p class="text-sm sm:text-base text-slate-800 dark:text-slate-100 font-medium leading-relaxed">
+                <span class="text-cyan-600 dark:text-cyan-400 font-bold mr-2 font-mono">9.</span>
+                Sebuah Queue menerima data dalam urutan: <code class="font-mono">Andi &rarr; Budi &rarr; Citra &rarr; Deni</code>. Kemudian dilakukan <code class="font-mono">Dequeue()</code> sebanyak 2 kali. Siapa saja yang keluar dari antrean Queue?
+              </p>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+                <label class="flex items-center gap-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-3.5 rounded-xl cursor-pointer hover:border-cyan-500 hover:bg-cyan-50/40 dark:hover:bg-slate-700/60 transition shadow-sm">
+                  <input type="radio" name="q9" value="A" class="w-4 h-4 accent-cyan-600" />
+                  <span class="text-xs sm:text-sm text-slate-700 dark:text-slate-200">A. Citra dan Deni</span>
+                </label>
+                <label class="flex items-center gap-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-3.5 rounded-xl cursor-pointer hover:border-cyan-500 hover:bg-cyan-50/40 dark:hover:bg-slate-700/60 transition shadow-sm">
+                  <input type="radio" name="q9" value="B" class="w-4 h-4 accent-cyan-600" />
+                  <span class="text-xs sm:text-sm text-slate-700 dark:text-slate-200">B. Deni dan Citra</span>
+                </label>
+                <label class="flex items-center gap-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-3.5 rounded-xl cursor-pointer hover:border-cyan-500 hover:bg-cyan-50/40 dark:hover:bg-slate-700/60 transition shadow-sm">
+                  <input type="radio" name="q9" value="C" class="w-4 h-4 accent-cyan-600" />
+                  <span class="text-xs sm:text-sm text-slate-700 dark:text-slate-200">C. Andi dan Budi</span>
+                </label>
+                <label class="flex items-center gap-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-3.5 rounded-xl cursor-pointer hover:border-cyan-500 hover:bg-cyan-50/40 dark:hover:bg-slate-700/60 transition shadow-sm">
+                  <input type="radio" name="q9" value="D" class="w-4 h-4 accent-cyan-600" />
+                  <span class="text-xs sm:text-sm text-slate-700 dark:text-slate-200">D. Budi dan Citra</span>
+                </label>
+              </div>
+              <div id="explain-9" class="hidden p-4 rounded-xl text-xs sm:text-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 mt-3 text-slate-700 dark:text-slate-300"></div>
+            </div>
 
-          <div class="footer-col">
-            <h4 class="footer-heading">Fitur &amp; Dukungan</h4>
-            <ul class="footer-links">
-              <li>
-                <a href="leaderboard.html" class="footer-link"><i class="fa-solid fa-trophy" style="color: var(--amber)"></i> Leaderboard Kelas</a>
-              </li>
-              <li>
-                <a href="forum.html" class="footer-link"><i class="fa-solid fa-comments" style="color: var(--blue)"></i> Forum Diskusi</a>
-              </li>
-              <li>
-                <a href="https://wa.me/6285282386260?text=Halo%20Pak%20Ilyas%2C%20saya%20ingin%20bertanya%20tentang%20materi%20Informatika." target="_blank" class="footer-link">
-                  <i class="fa-solid fa-chalkboard-user" style="color: var(--green)"></i> Hubungi Pak Ilyas
-                </a>
-              </li>
-            </ul>
-          </div>
-        </div>
+            <!-- Soal 10 -->
+            <div class="bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 p-5 sm:p-6 rounded-2xl space-y-4" id="q-block-10">
+              <p class="text-sm sm:text-base text-slate-800 dark:text-slate-100 font-medium leading-relaxed">
+                <span class="text-cyan-600 dark:text-cyan-400 font-bold mr-2 font-mono">10.</span>
+                Perhatikan dua situasi berikut:<br />
+                <em>Situasi 1:</em> Siswa sedang mengantre untuk membeli makanan di kantin. Siswa yang datang terlebih dahulu dilayani terlebih dahulu.<br />
+                <em>Situasi 2:</em> Guru menumpuk beberapa buku di meja. Buku yang terakhir diletakkan di atas akan diambil terlebih dahulu.<br /><br />
+                Struktur data yang tepat untuk Situasi 1 dan Situasi 2 secara berurutan adalah...
+              </p>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+                <label class="flex items-center gap-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-3.5 rounded-xl cursor-pointer hover:border-cyan-500 hover:bg-cyan-50/40 dark:hover:bg-slate-700/60 transition shadow-sm">
+                  <input type="radio" name="q10" value="A" class="w-4 h-4 accent-cyan-600" />
+                  <span class="text-xs sm:text-sm text-slate-700 dark:text-slate-200">A. Stack dan Stack</span>
+                </label>
+                <label class="flex items-center gap-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-3.5 rounded-xl cursor-pointer hover:border-cyan-500 hover:bg-cyan-50/40 dark:hover:bg-slate-700/60 transition shadow-sm">
+                  <input type="radio" name="q10" value="B" class="w-4 h-4 accent-cyan-600" />
+                  <span class="text-xs sm:text-sm text-slate-700 dark:text-slate-200">B. Queue dan Queue</span>
+                </label>
+                <label class="flex items-center gap-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-3.5 rounded-xl cursor-pointer hover:border-cyan-500 hover:bg-cyan-50/40 dark:hover:bg-slate-700/60 transition shadow-sm">
+                  <input type="radio" name="q10" value="C" class="w-4 h-4 accent-cyan-600" />
+                  <span class="text-xs sm:text-sm text-slate-700 dark:text-slate-200">C. Stack dan Queue</span>
+                </label>
+                <label class="flex items-center gap-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-3.5 rounded-xl cursor-pointer hover:border-cyan-500 hover:bg-cyan-50/40 dark:hover:bg-slate-700/60 transition shadow-sm">
+                  <input type="radio" name="q10" value="D" class="w-4 h-4 accent-cyan-600" />
+                  <span class="text-xs sm:text-sm text-slate-700 dark:text-slate-200">D. Queue dan Stack</span>
+                </label>
+              </div>
+              <div id="explain-10" class="hidden p-4 rounded-xl text-xs sm:text-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 mt-3 text-slate-700 dark:text-slate-300"></div>
+            </div>
 
-        <div class="footer-bottom">
-          <p class="footer-copy">&copy; 2026 RuangInformatika. Dikembangkan untuk kelas Informatika XE6 SMA Negeri 4 Yogyakarta.</p>
-          <div class="footer-socials">
-            <a href="https://github.com/fandhi19" target="_blank" class="footer-social" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
-            <a href="https://e-portofolio-fandhi.vercel.app/" target="_blank" class="footer-social" aria-label="Portfolio"><i class="fa-solid fa-globe"></i></a>
-            <a href="https://www.instagram.com/fandhidk17/" target="_blank" class="footer-social" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+            <!-- Submit Button -->
+            <div class="pt-4 flex flex-col md:flex-row items-center justify-between gap-4">
+              <button
+                onclick="cekJawaban()"
+                class="w-full md:w-auto bg-gradient-to-r from-cyan-600 to-sky-600 hover:from-cyan-500 hover:to-sky-500 text-white font-bold px-8 py-3.5 rounded-2xl text-sm shadow-md shadow-cyan-600/20 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer"
+              >
+                <i class="fa-solid fa-paper-plane"></i>
+                <span>Cek &amp; Verifikasi Jawaban</span>
+              </button>
+            </div>
+
+            <!-- Quiz Result Alert Container -->
+            <div id="quiz-result" class="hidden p-6 rounded-3xl text-sm leading-relaxed border mt-6 transition-all"></div>
           </div>
         </div>
       </div>
+
+    </main>
+
+    <!-- ============================================================
+         4. BOTTOM CALL-TO-ACTION BANNER
+         ============================================================ -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
+      <div class="bg-gradient-to-r from-cyan-50 via-sky-50 to-teal-50 dark:from-slate-900 dark:via-slate-900/90 dark:to-cyan-950/40 border border-cyan-100/80 dark:border-cyan-900/40 rounded-3xl p-8 sm:p-12 lg:p-14 shadow-lg shadow-cyan-500/5 dark:shadow-black/40 relative overflow-hidden reveal transition-colors duration-300">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
+          
+          <!-- Mockup Laptop di Sebelah Kiri -->
+          <div class="lg:col-span-5 flex items-center justify-center">
+            <div class="relative w-full max-w-sm tilt-card" data-tilt data-tilt-max="5">
+              <img
+                src="images/cta-laptop.png"
+                alt="Mockup Laptop RuangInformatika"
+                class="w-full h-auto object-contain drop-shadow-xl rounded-2xl"
+                onerror="this.src='images/hero-student.png'"
+              />
+            </div>
+          </div>
+
+          <!-- Teks Ajakan di Sebelah Kanan -->
+          <div class="lg:col-span-7 space-y-5 text-center lg:text-left">
+            <div class="inline-flex items-center gap-2 text-xs font-bold text-cyan-700 dark:text-cyan-400 uppercase tracking-wider font-mono">
+              <i class="fa-solid fa-sparkles text-cyan-500 dark:text-cyan-400"></i> Bimbingan Belajar Kelas XE6
+            </div>
+
+            <h2 class="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 dark:text-white tracking-tight leading-snug">
+              Ingin Tanya Logika <span class="text-cyan-600 dark:text-cyan-400">Stack &amp; Queue?</span>
+            </h2>
+
+            <p class="text-sm sm:text-base text-slate-600 dark:text-slate-300 max-w-xl mx-auto lg:mx-0 leading-relaxed">
+              Jika ada soal simulasi antrean atau tracing stack yang membuatmu ragu, jangan ragu bertanya langsung ke Pak Ilyas via WhatsApp atau posting di Forum Diskusi.
+            </p>
+
+            <!-- Pill Button Group -->
+            <div class="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-2">
+              <a
+                href="https://wa.me/6285282386260?text=Halo%20Pak%20Ilyas%2C%20saya%20ingin%20bertanya%20tentang%20materi%20Stack%20dan%20Queue."
+                target="_blank"
+                class="inline-flex items-center gap-2.5 px-6 py-3 rounded-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-sm shadow-md shadow-emerald-500/20 hover:scale-[1.02] transition-all"
+              >
+                <i class="fa-brands fa-whatsapp text-lg"></i>
+                <span>Tanya Pak Ilyas via WhatsApp</span>
+              </a>
+
+              <a
+                href="forum.html"
+                class="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700/80 border border-cyan-200 dark:border-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200 shadow-sm transition-all"
+              >
+                <i class="fa-solid fa-comments text-cyan-600 dark:text-cyan-400"></i>
+                <span>Buka Forum Diskusi Kelas</span>
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         5. FOOTER
+         ============================================================ -->
+    <footer class="bg-brandDark text-slate-300 pt-12 pb-8 border-t border-slate-800">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+        
+        <!-- Top 4 Info Chips -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs font-medium">
+          <div class="flex items-center gap-3 p-3.5 rounded-2xl bg-slate-900/80 border border-slate-800 text-slate-300">
+            <i class="fa-solid fa-location-dot text-cyan-400 text-base shrink-0"></i>
+            <span>SMA Negeri 4 Yogyakarta</span>
+          </div>
+
+          <a
+            href="https://wa.me/6285282386260"
+            target="_blank"
+            class="flex items-center gap-3 p-3.5 rounded-2xl bg-slate-900/80 border border-slate-800 text-slate-300 hover:text-cyan-400 hover:border-slate-700 transition-colors"
+          >
+            <i class="fa-solid fa-phone text-cyan-400 text-base shrink-0"></i>
+            <span>+62 852-8238-6260 (Pak Ilyas)</span>
+          </a>
+
+          <div class="flex items-center gap-3 p-3.5 rounded-2xl bg-slate-900/80 border border-slate-800 text-slate-300">
+            <i class="fa-solid fa-envelope text-cyan-400 text-base shrink-0"></i>
+            <span>informatika.patbhe@gmail.com</span>
+          </div>
+
+          <div class="flex items-center gap-3 p-3.5 rounded-2xl bg-slate-900/80 border border-slate-800 text-slate-300">
+            <i class="fa-solid fa-graduation-cap text-cyan-400 text-base shrink-0"></i>
+            <span>Kelas XE6 Informatika PATBHE</span>
+          </div>
+        </div>
+
+        <!-- Divider Line -->
+        <div class="h-px bg-slate-800"></div>
+
+        <!-- Bottom Copyright Line -->
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500 text-center sm:text-left">
+          <p>
+            <strong class="text-slate-300">RuangInformatika</strong> &nbsp;|&nbsp;
+            <span>Taklukkan Logika, Kuasai Informatika. SMAN 4 Yogyakarta.</span>
+          </p>
+          <div class="flex items-center gap-4 text-slate-400">
+            <a href="https://github.com/fandhi19" target="_blank" class="hover:text-cyan-400 transition-colors" title="GitHub"><i class="fa-brands fa-github text-base"></i></a>
+            <a href="https://e-portofolio-fandhi.vercel.app/" target="_blank" class="hover:text-cyan-400 transition-colors" title="Portfolio"><i class="fa-solid fa-globe text-base"></i></a>
+            <a href="https://www.instagram.com/fandhidk17/" target="_blank" class="hover:text-cyan-400 transition-colors" title="Instagram"><i class="fa-brands fa-instagram text-base"></i></a>
+          </div>
+        </div>
+
+      </div>
     </footer>
 
-    <!-- Scripts -->
+    <!-- ============================================================
+         6. JAVASCRIPT LOGIC
+         ============================================================ -->
     <script>
-      VanillaTilt.init(document.querySelectorAll(".tilt-card"), { max: 6, speed: 400, glare: true, "max-glare": 0.15 });
+      /* ── Reading Progress Bar ── */
+      window.addEventListener("scroll", () => {
+        const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrolled = (winScroll / height) * 100;
+        const p = document.getElementById("readProgress");
+        if (p) p.style.width = scrolled + "%";
+      });
 
-      /* ── Tab System (pill style) ── */
+      /* ── Vanilla Tilt ── */
+      if (typeof VanillaTilt !== "undefined") {
+        VanillaTilt.init(document.querySelectorAll(".tilt-card"), {
+          max: 6,
+          speed: 400,
+          glare: true,
+          "max-glare": 0.12,
+        });
+      }
+
+      /* ── Theme Toggle Logic ── */
+      const themeToggleBtn = document.getElementById("themeToggleBtn");
+      const drawerThemeToggleBtn = document.getElementById("drawerThemeToggleBtn");
+
+      function toggleTheme() {
+        const isDark = document.documentElement.classList.toggle("dark");
+        localStorage.setItem("theme", isDark ? "dark" : "light");
+      }
+
+      if (themeToggleBtn) {
+        themeToggleBtn.addEventListener("click", toggleTheme);
+      }
+      if (drawerThemeToggleBtn) {
+        drawerThemeToggleBtn.addEventListener("click", toggleTheme);
+      }
+
+      /* ── Mobile Drawer Toggle ── */
+      const hamburgerBtn = document.getElementById("hamburgerBtn");
+      const closeDrawerBtn = document.getElementById("closeDrawerBtn");
+      const mobileDrawer = document.getElementById("mobileDrawer");
+      const drawerOverlay = document.getElementById("drawerOverlay");
+
+      function openDrawer() {
+        if (!mobileDrawer || !drawerOverlay) return;
+        drawerOverlay.classList.remove("hidden");
+        setTimeout(() => mobileDrawer.classList.remove("closed"), 10);
+      }
+
+      function closeDrawer() {
+        if (!mobileDrawer || !drawerOverlay) return;
+        mobileDrawer.classList.add("closed");
+        setTimeout(() => drawerOverlay.classList.add("hidden"), 300);
+      }
+
+      if (hamburgerBtn) hamburgerBtn.addEventListener("click", openDrawer);
+      if (closeDrawerBtn) closeDrawerBtn.addEventListener("click", closeDrawer);
+      if (drawerOverlay) drawerOverlay.addEventListener("click", closeDrawer);
+
+      /* ── Tab Switcher ── */
       function openTab(evt, tabName) {
         const tabContents = document.getElementsByClassName("tab-content");
         for (let i = 0; i < tabContents.length; i++) {
           tabContents[i].classList.add("hidden");
           tabContents[i].classList.remove("block");
         }
+
         const tabBtns = document.getElementsByClassName("tab-btn");
         for (let i = 0; i < tabBtns.length; i++) {
-          tabBtns[i].classList.remove("active");
+          tabBtns[i].className = "tab-btn py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all cursor-pointer text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white";
         }
+
         document.getElementById(tabName).classList.remove("hidden");
         document.getElementById(tabName).classList.add("block");
-        evt.currentTarget.classList.add("active");
+
+        evt.currentTarget.className = "tab-btn active py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all cursor-pointer bg-cyan-600 text-white shadow-md shadow-cyan-600/20";
       }
 
-      let stackData = [];
-      let queueData = [];
+      /* ── Interactive Simulator Logic ── */
+      let stackData = ["Piring A", "Piring B", "Piring C"];
+      let queueData = ["Siswa A", "Siswa B", "Siswa C"];
 
       // --- LOGIC STACK ---
       function renderStack() {
         const container = document.getElementById("stackContainer");
+        if (!container) return;
         container.innerHTML = "";
 
         if (stackData.length === 0) {
-          container.innerHTML = '<div class="text-center text-gray-500 text-base py-8">Stack kosong</div>';
+          container.innerHTML = '<div class="text-center text-slate-400 text-xs sm:text-sm py-6 italic font-medium">Stack kosong (tidak ada elemen)</div>';
           return;
         }
 
         stackData.forEach((item, index) => {
           const isTop = index === stackData.length - 1;
           const el = document.createElement("div");
-          el.className = `p-4 rounded-lg border text-base font-mono flex justify-between items-center transition-all duration-300 ${
-            isTop ? "bg-brandGreen/20 border-brandGreen text-white shadow-lg shadow-brandGreen/10" : "bg-white/5 border-white/10 text-white/70"
+          el.className = `p-3.5 rounded-xl border text-xs sm:text-sm font-mono flex justify-between items-center transition-all duration-300 ${
+            isTop
+              ? "bg-cyan-50 dark:bg-cyan-950/60 border-2 border-cyan-500 text-cyan-800 dark:text-cyan-200 font-bold shadow-md shadow-cyan-500/10"
+              : "bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300"
           }`;
           el.innerHTML = `
-          <span>${item}</span>
-          ${isTop ? '<span class="text-sm bg-brandGreen text-black font-bold px-2 py-0.5 rounded">TOP</span>' : ""}
-        `;
+            <span class="font-bold">${item}</span>
+            ${isTop ? '<span class="text-[10px] bg-cyan-600 text-white font-extrabold px-2 py-0.5 rounded">TOP</span>' : '<span class="text-[10px] text-slate-400">Elemen ' + (index + 1) + "</span>"}
+          `;
           container.appendChild(el);
         });
       }
 
       function pushStack() {
         const input = document.getElementById("stackInput");
-        const value = input.value.trim() || `Item ${stackData.length + 1}`;
+        const value = input.value.trim() || `Piring ${String.fromCharCode(65 + stackData.length)}`;
 
         if (stackData.length >= 5) {
-          document.getElementById("stackStatus").innerText = "⚠️ Stack Overflow! (Maksimal 5 elemen)";
+          document.getElementById("stackStatus").innerText = "⚠️ Stack Overflow! (Maksimal 5 elemen tumpukan)";
           return;
         }
 
         stackData.push(value);
-        document.getElementById("stackStatus").innerText = `✅ Pushed "${value}" ke bagian TOP.`;
+        document.getElementById("stackStatus").innerText = `✅ Pushed "${value}" ke posisi paling atas (TOP).`;
         input.value = "";
         renderStack();
       }
 
       function popStack() {
         if (stackData.length === 0) {
-          document.getElementById("stackStatus").innerText = "⚠️ Stack Underflow! (Stack kosong)";
+          document.getElementById("stackStatus").innerText = "⚠️ Stack Underflow! (Stack sudah kosong)";
           return;
         }
 
         const popped = stackData.pop();
-        document.getElementById("stackStatus").innerText = `🗑️ Popped "${popped}" dari bagian TOP.`;
+        document.getElementById("stackStatus").innerText = `🗑️ Popped "${popped}" dikeluarkan dari posisi TOP.`;
         renderStack();
       }
 
       // --- LOGIC QUEUE ---
       function renderQueue() {
         const container = document.getElementById("queueContainer");
+        if (!container) return;
         container.innerHTML = "";
 
         if (queueData.length === 0) {
-          container.innerHTML = '<div class="w-full text-center text-gray-500 text-base py-4">Antrean kosong</div>';
+          container.innerHTML = '<div class="w-full text-center text-slate-400 text-xs sm:text-sm py-4 italic font-medium">Antrean kosong (tidak ada elemen)</div>';
           return;
         }
 
@@ -1187,8 +1271,12 @@ A → B → C
           const isRear = index === queueData.length - 1;
 
           const el = document.createElement("div");
-          el.className = `min-w-[140px] p-4 rounded-lg border text-base font-mono text-center flex-1 transition-all duration-300 ${
-            isFront ? "bg-red-500/10 border-red-500/40 text-white" : isRear ? "bg-emerald-500/10 border-emerald-500/40 text-white" : "bg-white/5 border-white/10 text-white/70"
+          el.className = `min-w-[130px] p-3.5 rounded-xl border text-xs sm:text-sm font-mono text-center flex-1 transition-all duration-300 shadow-sm ${
+            isFront
+              ? "bg-rose-50 dark:bg-rose-950/50 border-2 border-rose-500 text-rose-800 dark:text-rose-200"
+              : isRear
+              ? "bg-emerald-50 dark:bg-emerald-950/50 border-2 border-emerald-500 text-emerald-800 dark:text-emerald-200"
+              : "bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300"
           }`;
 
           let label = "ANTREAN";
@@ -1197,24 +1285,24 @@ A → B → C
           else if (isRear) label = "REAR (Masuk)";
 
           el.innerHTML = `
-          <div class="text-xs font-bold uppercase mb-2 ${isFront ? "text-red-400" : isRear ? "text-emerald-400" : "text-gray-400"}">${label}</div>
-          <div class="font-bold truncate">${item}</div>
-        `;
+            <div class="text-[10px] font-bold uppercase mb-1.5 ${isFront ? "text-rose-600 dark:text-rose-400" : isRear ? "text-emerald-600 dark:text-emerald-400" : "text-slate-400"}">${label}</div>
+            <div class="font-bold truncate">${item}</div>
+          `;
           container.appendChild(el);
         });
       }
 
       function enqueue() {
         const input = document.getElementById("queueInput");
-        const value = input.value.trim() || `Orang ${queueData.length + 1}`;
+        const value = input.value.trim() || `Siswa ${String.fromCharCode(65 + queueData.length)}`;
 
         if (queueData.length >= 5) {
-          document.getElementById("queueStatus").innerText = "⚠️ Queue Full! (Maksimal 5 elemen)";
+          document.getElementById("queueStatus").innerText = "⚠️ Queue Full! (Maksimal 5 elemen antrean)";
           return;
         }
 
         queueData.push(value);
-        document.getElementById("queueStatus").innerText = `✅ Enqueued "${value}" di posisi REAR.`;
+        document.getElementById("queueStatus").innerText = `✅ Enqueued "${value}" masuk di posisi REAR (belakang).`;
         input.value = "";
         renderQueue();
       }
@@ -1226,25 +1314,26 @@ A → B → C
         }
 
         const dequeued = queueData.shift();
-        document.getElementById("queueStatus").innerText = `🗑️ Dequeued "${dequeued}" dari posisi FRONT.`;
+        document.getElementById("queueStatus").innerText = `🗑️ Dequeued "${dequeued}" dilayani dan keluar dari posisi FRONT (depan).`;
         renderQueue();
       }
 
+      // Initial simulation render
       renderStack();
       renderQueue();
 
-      /* ── Quiz ── */
+      /* ── Quiz Evaluation ── */
       function cekJawaban() {
         const kunciJawaban = {
           q1: { ans: "C", label: "C — Tumpukan buku di meja", exp: "Tumpukan buku menerapkan prinsip LIFO (Last In, First Out). Buku yang terakhir diletakkan di atas biasanya menjadi buku yang pertama diambil." },
-          q2: { ans: "B", label: "B — LIFO", exp: "LIFO merupakan singkatan dari Last In, First Out (data terakhir masuk akan menjadi yang pertama keluar). Contoh: Masuk A→B→C, Keluar C→B→A." },
+          q2: { ans: "B", label: "B — LIFO", exp: "LIFO merupakan singkatan dari Last In, First Out (data terakhir masuk akan menjadi yang pertama keluar). Contoh: Masuk A &rarr; B &rarr; C, Keluar C &rarr; B &rarr; A." },
           q3: { ans: "C", label: "C — C", exp: "Operasi Pop() mengambil data dari posisi paling atas (TOP). Karena C berada di posisi TOP, C yang keluar terlebih dahulu." },
-          q4: { ans: "B", label: "B — 10 → 20 → 30", exp: "Data dimasukkan secara berurutan: Push(10) → 10; Push(20) → 10, 20; Push(30) → 10, 20, 30. Elemen 30 berada paling atas (TOP)." },
+          q4: { ans: "B", label: "B — 10 → 20 → 30", exp: "Data dimasukkan secara berurutan: Push(10) &rarr; 10; Push(20) &rarr; 10, 20; Push(30) &rarr; 10, 20, 30. Elemen 30 berada paling atas (TOP)." },
           q5: { ans: "D", label: "D — 50 dilihat tetapi tetap berada di Stack", exp: "Peek() digunakan untuk melihat data paling atas (TOP) tanpa menghapusnya dari Stack." },
           q6: { ans: "B", label: "B — FIFO", exp: "FIFO adalah First In, First Out (data pertama masuk akan keluar pertama), seperti antrean kantin." },
           q7: { ans: "A", label: "A — A", exp: "Dequeue() menghapus data dari bagian depan (Front) Queue. Karena A berada di posisi Front, A yang keluar." },
-          q8: { ans: "C", label: "C — C → B", exp: "Data masuk Stack: A → B → C. Karena LIFO, Pop() pertama mengeluarkan C, dan Pop() kedua mengeluarkan B." },
-          q9: { ans: "C", label: "C — Andi dan Budi", exp: "Queue menggunakan FIFO. Masuk: Andi → Budi → Citra → Deni. Dequeue() ke-1 mengeluarkan Andi, Dequeue() ke-2 mengeluarkan Budi." },
+          q8: { ans: "C", label: "C — C → B", exp: "Data masuk Stack: A &rarr; B &rarr; C. Karena LIFO, Pop() pertama mengeluarkan C, dan Pop() kedua mengeluarkan B." },
+          q9: { ans: "C", label: "C — Andi dan Budi", exp: "Queue menggunakan FIFO. Masuk: Andi &rarr; Budi &rarr; Citra &rarr; Deni. Dequeue() ke-1 mengeluarkan Andi, Dequeue() ke-2 mengeluarkan Budi." },
           q10: { ans: "D", label: "D — Queue dan Stack", exp: "Situasi 1 = Queue (FIFO: antrean kantin). Situasi 2 = Stack (LIFO: tumpukan buku)." },
         };
 
@@ -1263,15 +1352,18 @@ A → B → C
           if (selectedOption) {
             if (selectedOption.value === infoKey.ans) {
               skor += 10;
-              blockEl.className = "bg-green-500/10 border border-green-500/30 p-6 rounded-2xl space-y-4";
-              explainEl.innerHTML = `<strong class="text-green-400 block mb-1"><i class="fa-solid fa-circle-check mr-1"></i> Benar! (Jawaban: ${infoKey.label})</strong><span class="text-gray-300">${infoKey.exp}</span>`;
+              blockEl.className = "bg-emerald-50/80 dark:bg-emerald-950/40 border-2 border-emerald-500 p-5 sm:p-6 rounded-2xl space-y-4 transition-all shadow-sm";
+              explainEl.className = "p-4 rounded-xl text-xs sm:text-sm bg-white dark:bg-slate-900 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 mt-3 shadow-sm";
+              explainEl.innerHTML = `<strong class="text-emerald-700 dark:text-emerald-400 block mb-1 font-bold flex items-center gap-1.5"><i class="fa-solid fa-circle-check"></i> Jawaban Benar! (${infoKey.label})</strong><span>${infoKey.exp}</span>`;
             } else {
-              blockEl.className = "bg-red-500/10 border border-red-500/30 p-6 rounded-2xl space-y-4";
-              explainEl.innerHTML = `<strong class="text-red-400 block mb-1"><i class="fa-solid fa-circle-xmark mr-1"></i> Kurang Tepat (Jawaban Benar: ${infoKey.label})</strong><span class="text-gray-300">${infoKey.exp}</span>`;
+              blockEl.className = "bg-rose-50/80 dark:bg-rose-950/40 border-2 border-rose-500 p-5 sm:p-6 rounded-2xl space-y-4 transition-all shadow-sm";
+              explainEl.className = "p-4 rounded-xl text-xs sm:text-sm bg-white dark:bg-slate-900 border border-rose-200 dark:border-rose-800 text-rose-800 dark:text-rose-300 mt-3 shadow-sm";
+              explainEl.innerHTML = `<strong class="text-rose-700 dark:text-rose-400 block mb-1 font-bold flex items-center gap-1.5"><i class="fa-solid fa-circle-xmark"></i> Kurang Tepat (Kunci: ${infoKey.label})</strong><span>${infoKey.exp}</span>`;
             }
           } else {
-            blockEl.className = "bg-yellow-500/10 border border-yellow-500/30 p-6 rounded-2xl space-y-4";
-            explainEl.innerHTML = `<strong class="text-yellow-400 block mb-1"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Belum Dijawab (Jawaban Benar: ${infoKey.label})</strong><span class="text-gray-300">${infoKey.exp}</span>`;
+            blockEl.className = "bg-amber-50/80 dark:bg-amber-950/40 border-2 border-amber-500 p-5 sm:p-6 rounded-2xl space-y-4 transition-all shadow-sm";
+            explainEl.className = "p-4 rounded-xl text-xs sm:text-sm bg-white dark:bg-slate-900 border border-amber-200 dark:border-amber-800 text-amber-800 dark:text-amber-300 mt-3 shadow-sm";
+            explainEl.innerHTML = `<strong class="text-amber-700 dark:text-amber-400 block mb-1 font-bold flex items-center gap-1.5"><i class="fa-solid fa-triangle-exclamation"></i> Belum Dijawab (Kunci: ${infoKey.label})</strong><span>${infoKey.exp}</span>`;
           }
         }
 
@@ -1279,47 +1371,37 @@ A → B → C
         resultBox.classList.remove("hidden");
 
         if (skor >= 70) {
-          resultBox.className = "p-6 rounded-2xl text-base leading-relaxed border mt-6 bg-brandGreen/10 border-brandGreen/30 text-white";
+          resultBox.className = "p-6 sm:p-8 rounded-3xl text-sm leading-relaxed border mt-6 bg-emerald-50 dark:bg-emerald-950/60 border-emerald-300 dark:border-emerald-800 text-slate-800 dark:text-slate-100 shadow-xl";
           resultBox.innerHTML = `
-          <div class="flex items-center gap-3 mb-2">
-            <i class="fa-solid fa-trophy text-2xl text-brandGreen"></i>
-            <h4 class="text-xl font-bold">Hasil Latihan: ${skor} / 100</h4>
+          <div class="flex items-center gap-3.5 mb-3">
+            <div class="w-12 h-12 rounded-2xl bg-emerald-100 dark:bg-emerald-900/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-2xl shrink-0">
+              <i class="fa-solid fa-trophy"></i>
+            </div>
+            <div>
+              <h4 class="text-xl sm:text-2xl font-black text-emerald-700 dark:text-emerald-300 font-mono">Skor Latihan: ${skor} / 100</h4>
+              <p class="text-xs text-emerald-600 dark:text-emerald-400 font-bold uppercase tracking-wider">Luar Biasa, Pemahaman Mantap!</p>
+            </div>
           </div>
-          <p class="text-gray-300">Luar biasa! Kamu sudah menguasai konsep Stack (LIFO) dan Queue (FIFO) dengan sangat baik.</p>
+          <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300">Kamu sudah menguasai konsep Stack (LIFO) dan Queue (FIFO) beserta operasinya dengan sangat baik. Siap menaklukkan soal uraian PTS!</p>
         `;
         } else {
-          resultBox.className = "p-6 rounded-2xl text-base leading-relaxed border mt-6 bg-yellow-500/10 border-yellow-500/30 text-white";
+          resultBox.className = "p-6 sm:p-8 rounded-3xl text-sm leading-relaxed border mt-6 bg-amber-50 dark:bg-amber-950/60 border-amber-300 dark:border-amber-800 text-slate-800 dark:text-slate-100 shadow-xl";
           resultBox.innerHTML = `
-          <div class="flex items-center gap-3 mb-2">
-            <i class="fa-solid fa-graduation-cap text-2xl text-yellow-400"></i>
-            <h4 class="text-xl font-bold">Hasil Latihan: ${skor} / 100</h4>
+          <div class="flex items-center gap-3.5 mb-3">
+            <div class="w-12 h-12 rounded-2xl bg-amber-100 dark:bg-amber-900/60 text-amber-600 dark:text-amber-400 flex items-center justify-center text-2xl shrink-0">
+              <i class="fa-solid fa-graduation-cap"></i>
+            </div>
+            <div>
+              <h4 class="text-xl sm:text-2xl font-black text-amber-700 dark:text-amber-300 font-mono">Skor Latihan: ${skor} / 100</h4>
+              <p class="text-xs text-amber-600 dark:text-amber-400 font-bold uppercase tracking-wider">Perlu Latihan Tambahan</p>
+            </div>
           </div>
-          <p class="text-gray-300">Tetap semangat! Pelajari kembali pembahasan di tiap soal di atas untuk memperkuat pemahaman operasi Push, Pop, Dequeue, dan Peek.</p>
+          <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300">Tetap semangat! Pelajari kembali pembahasan di tiap soal di atas atau coba kembali tab Simulasi untuk mengamati operasi Push, Pop, Enqueue, dan Dequeue.</p>
         `;
         }
 
         resultBox.scrollIntoView({ behavior: "smooth" });
       }
-
-      /* ── Mobile Menu ── */
-      const hamburgerBtn = document.getElementById("hamburgerBtn");
-      const mobileMenu = document.getElementById("mobileMenu");
-
-      hamburgerBtn.addEventListener("click", () => {
-        mobileMenu.classList.toggle("open");
-        const icon = hamburgerBtn.querySelector("i");
-        icon.classList.toggle("fa-bars");
-        icon.classList.toggle("fa-xmark");
-      });
-
-      mobileMenu.querySelectorAll("a, button").forEach((item) => {
-        item.addEventListener("click", () => {
-          mobileMenu.classList.remove("open");
-          const icon = hamburgerBtn.querySelector("i");
-          icon.classList.add("fa-bars");
-          icon.classList.remove("fa-xmark");
-        });
-      });
 
       /* ── Scroll Reveal ── */
       const revealObserver = new IntersectionObserver(
@@ -1331,7 +1413,7 @@ A → B → C
             }
           });
         },
-        { threshold: 0.1 },
+        { threshold: 0.08 }
       );
       document.querySelectorAll(".reveal").forEach((el) => revealObserver.observe(el));
     </script>

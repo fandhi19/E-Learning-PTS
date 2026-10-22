@@ -1,0 +1,1787 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sistem Operasi (Operating System) — RuangInformatika</title>
+    <link rel="shortcut icon" href="../images/Logo Patbhe.png" type="image/x-icon" />
+
+    <!-- Anti-FOUC script: set tema seawal mungkin -->
+    <script>
+      if (
+        localStorage.getItem("theme") === "dark" ||
+        (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches)
+      ) {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
+    </script>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
+
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              brandDark: "#0b1120",
+              brandNavy: "#0f172a",
+              brandGray: "#1e293b",
+            },
+            fontFamily: {
+              sans: ["Plus Jakarta Sans", "sans-serif"],
+              mono: ["JetBrains Mono", "monospace"],
+            },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      /* Smooth transitions for theme toggle */
+      html.dark {
+        color-scheme: dark;
+      }
+      body {
+        transition: background-color 0.3s ease, color 0.3s ease;
+      }
+
+      /* Custom scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #94a3b8;
+        border-radius: 4px;
+      }
+      .dark ::-webkit-scrollbar-thumb {
+        background: #334155;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #64748b;
+      }
+
+      /* Reading Progress Bar */
+      #readProgress {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #06b6d4, #0ea5e9, #10b981);
+        z-index: 100;
+        width: 0%;
+        transition: width 0.1s ease;
+      }
+
+      /* Hero Glow Effects */
+      .hero-glow-1 {
+        position: absolute;
+        width: 600px;
+        height: 600px;
+        background: radial-gradient(circle, rgba(6, 182, 212, 0.15) 0%, rgba(14, 165, 233, 0.05) 50%, transparent 70%);
+        top: -150px;
+        right: -150px;
+        filter: blur(60px);
+        pointer-events: none;
+        z-index: 0;
+      }
+      .hero-glow-2 {
+        position: absolute;
+        width: 500px;
+        height: 500px;
+        background: radial-gradient(circle, rgba(16, 185, 129, 0.12) 0%, rgba(6, 182, 212, 0.05) 50%, transparent 70%);
+        bottom: -100px;
+        left: -100px;
+        filter: blur(60px);
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      /* Reveal animation on scroll */
+      .reveal {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .reveal.active {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* CLI Terminal */
+      .cli-terminal {
+        background: #090d16;
+        border: 1px solid rgba(56, 189, 248, 0.25);
+        border-radius: 18px;
+        font-family: 'JetBrains Mono', monospace;
+        box-shadow: 0 16px 36px rgba(0,0,0,0.4), 0 0 24px rgba(56, 189, 248, 0.06);
+      }
+      .cli-output {
+        max-height: 240px;
+        overflow-y: auto;
+      }
+
+      /* CPU Process Scheduler */
+      .process-block {
+        transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+    
+      /* ── Lembar Kerja Card Buttons (.lk-card) ── */
+      .lk-card {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        padding: 30px 26px;
+        border-radius: 24px;
+        border: 1px solid rgba(226, 232, 240, 0.9);
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        text-decoration: none;
+        overflow: hidden;
+        transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        cursor: pointer;
+        box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+      }
+      .dark .lk-card {
+        border-color: rgba(51, 65, 85, 0.8);
+        background: rgba(15, 23, 42, 0.85);
+        box-shadow: 0 8px 30px -4px rgba(0, 0, 0, 0.4);
+      }
+      .lk-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: var(--lk-accent, #06b6d4);
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.4s ease;
+      }
+      .lk-card:hover::before {
+        transform: scaleX(1);
+      }
+      .lk-card:hover {
+        transform: translateY(-6px);
+        border-color: var(--lk-accent, #06b6d4);
+        box-shadow: 0 20px 40px -15px rgba(6, 182, 212, 0.25), 0 0 0 1px var(--lk-accent, #06b6d4);
+      }
+      .dark .lk-card:hover {
+        box-shadow: 0 20px 40px -15px rgba(6, 182, 212, 0.3), 0 0 0 1px var(--lk-accent, #06b6d4);
+      }
+      .lk-card-icon {
+        width: 62px;
+        height: 62px;
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.65rem;
+        color: #ffffff;
+        background: var(--lk-accent-gradient, linear-gradient(135deg, #06b6d4, #0284c7));
+        box-shadow: 0 8px 24px -6px var(--lk-accent, #06b6d4);
+        transition: transform 0.35s ease;
+      }
+      .lk-card:hover .lk-card-icon {
+        transform: scale(1.08) rotate(-3deg);
+      }
+      .lk-card-title {
+        font-size: 1.45rem;
+        font-weight: 800;
+        color: #0f172a;
+        letter-spacing: -0.01em;
+        line-height: 1.2;
+      }
+      .dark .lk-card-title {
+        color: #ffffff;
+      }
+      .lk-card-desc {
+        font-size: 0.925rem;
+        color: #475569;
+        line-height: 1.6;
+        flex-grow: 1;
+      }
+      .dark .lk-card-desc {
+        color: #94a3b8;
+      }
+      .lk-card-cta {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.925rem;
+        font-weight: 700;
+        color: var(--lk-accent, #06b6d4);
+        margin-top: 6px;
+      }
+      .lk-card-cta i {
+        transition: transform 0.3s ease;
+      }
+      .lk-card:hover .lk-card-cta i {
+        transform: translateX(5px);
+      }
+      .lk-card-badge {
+        position: absolute;
+        top: 18px;
+        right: 18px;
+        font-size: 0.725rem;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        padding: 4px 12px;
+        border-radius: 999px;
+        text-transform: uppercase;
+        background: rgba(6, 182, 212, 0.1);
+        color: var(--lk-accent, #06b6d4);
+        border: 1px solid rgba(6, 182, 212, 0.2);
+      }
+      .lk-card.lk-lkpd {
+        --lk-accent: #10b981;
+        --lk-accent-gradient: linear-gradient(135deg, #10b981, #059669);
+      }
+      .lk-card.lk-lkpd .lk-card-badge {
+        background: rgba(16, 185, 129, 0.12);
+        color: #10b981;
+        border-color: rgba(16, 185, 129, 0.3);
+      }
+      .lk-card.lk-posttest {
+        --lk-accent: #0284c7;
+        --lk-accent-gradient: linear-gradient(135deg, #38bdf8, #0284c7);
+      }
+      .lk-card.lk-posttest .lk-card-badge {
+        background: rgba(2, 132, 199, 0.12);
+        color: #0284c7;
+        border-color: rgba(2, 132, 199, 0.3);
+      }
+
+    </style>
+  </head>
+
+  <body class="bg-slate-50 dark:bg-brandDark text-slate-800 dark:text-slate-100 font-sans antialiased min-h-screen flex flex-col selection:bg-cyan-500 selection:text-white">
+    <!-- Reading Progress Bar -->
+    <div id="readProgress"></div>
+
+    <!-- ============================================================
+         1. TOP NAVBAR (SMAN 4 Yogyakarta)
+         ============================================================ -->
+    <header class="sticky top-0 z-50 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md border-b border-slate-100 dark:border-slate-800 transition-colors duration-300">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+        <!-- Brand Logo -->
+        <a href="../index.html" class="flex items-center gap-3.5 group">
+          <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-cyan-600 to-sky-400 p-0.5 shadow-md shadow-cyan-500/20 group-hover:scale-105 transition-transform">
+            <div class="w-full h-full bg-white dark:bg-slate-900 rounded-[14px] flex items-center justify-center overflow-hidden">
+              <img src="../images/Logo Patbhe.png" alt="Logo SMAN 4 Yogyakarta" class="w-7 h-7 object-contain" />
+            </div>
+          </div>
+          <div>
+            <div class="flex items-center gap-1.5">
+              <span class="font-black text-xl text-slate-900 dark:text-white tracking-tight">Ruang<span class="text-cyan-600 dark:text-cyan-400">Informatika</span></span>
+            </div>
+            <span class="text-[10px] uppercase font-bold tracking-widest text-slate-600 dark:text-slate-400 block">SMAN 4 YOGYAKARTA</span>
+          </div>
+        </a>
+
+        <!-- Desktop Navigation Links -->
+        <nav class="hidden lg:flex items-center gap-8 text-sm font-semibold text-slate-600 dark:text-slate-300">
+          <a href="../index.html" class="hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors">Beranda</a>
+          <a href="../index.html#materi" class="text-cyan-600 dark:text-cyan-400 font-bold transition-colors">Modul Belajar</a>
+          <a href="../leaderboard.html" class="hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors flex items-center gap-1.5">
+            Leaderboard
+            <span class="px-1.5 py-0.5 text-[10px] font-bold rounded-full bg-amber-100 dark:bg-amber-900/60 text-amber-700 dark:text-amber-300 font-mono">Rank</span>
+          </a>
+          <a href="../forum.html" class="hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors">Forum Diskusi</a>
+        </nav>
+
+        <!-- Right Side: Dark Mode Toggle & CTA Button -->
+        <div class="flex items-center gap-3">
+          <!-- Theme Toggle Button -->
+          <button
+            id="themeToggleBtn"
+            type="button"
+            class="w-10 h-10 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-amber-400 flex items-center justify-center transition-all focus:outline-none shadow-sm cursor-pointer border border-slate-200/60 dark:border-slate-700"
+            aria-label="Ganti Tema Gelap / Terang"
+            title="Ganti Mode Gelap / Terang"
+          >
+            <i class="fa-solid fa-moon dark:hidden text-sm"></i>
+            <i class="fa-solid fa-sun hidden dark:inline text-sm"></i>
+          </button>
+
+          <!-- CTA Button (Desktop) -->
+          <a
+            href="../kisi.html"
+            class="hidden sm:inline-flex items-center gap-2.5 px-6 py-2.5 rounded-full bg-gradient-to-r from-cyan-600 to-sky-600 hover:from-cyan-500 hover:to-sky-500 text-white font-bold text-sm shadow-md shadow-cyan-600/20 hover:shadow-cyan-600/30 hover:scale-[1.02] active:scale-[0.98] transition-all"
+          >
+            <i class="fa-solid fa-bullseye text-xs"></i>
+            <span>Bedah Kisi-Kisi</span>
+          </a>
+
+          <!-- Mobile Menu Hamburger -->
+          <button
+            type="button"
+            id="hamburgerBtn"
+            class="lg:hidden w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-700 dark:text-slate-300 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors"
+            aria-label="Buka Menu"
+          >
+            <i class="fa-solid fa-bars text-lg"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Mobile Drawer Overlay -->
+    <div id="mobileDrawerOverlay" class="fixed inset-0 bg-black/60 z-50 opacity-0 pointer-events-none transition-opacity duration-300"></div>
+
+    <!-- Mobile Navigation Drawer -->
+    <aside id="mobileDrawer" class="fixed top-0 right-0 h-full w-4/5 max-w-sm bg-white dark:bg-slate-900 border-l border-slate-200 dark:border-slate-800 shadow-2xl z-50 transform translate-x-full transition-transform duration-300 ease-out flex flex-col justify-between p-6">
+      <div class="space-y-6">
+        <div class="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
+          <div class="flex items-center gap-3">
+            <img src="../images/Logo Patbhe.png" alt="Logo" class="w-8 h-8 object-contain" />
+            <span class="font-black text-lg text-slate-900 dark:text-white">Ruang<span class="text-cyan-600 dark:text-cyan-400">Informatika</span></span>
+          </div>
+          <button id="closeDrawerBtn" class="w-9 h-9 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-900 dark:hover:text-white flex items-center justify-center" aria-label="Tutup Menu">
+            <i class="fa-solid fa-xmark text-lg"></i>
+          </button>
+        </div>
+
+        <nav class="space-y-1.5 font-semibold text-slate-700 dark:text-slate-200">
+          <a href="../index.html" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/80 transition-colors">
+            <i class="fa-solid fa-house text-cyan-600 dark:text-cyan-400 w-5"></i> Beranda
+          </a>
+          <a href="../index.html#materi" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-cyan-50 dark:bg-cyan-950/40 text-cyan-700 dark:text-cyan-300 transition-colors">
+            <i class="fa-solid fa-book-open text-cyan-600 dark:text-cyan-400 w-5"></i> Modul Belajar
+          </a>
+          <a href="../leaderboard.html" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/80 transition-colors">
+            <i class="fa-solid fa-trophy text-amber-500 w-5"></i> Leaderboard
+          </a>
+          <a href="../forum.html" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/80 transition-colors">
+            <i class="fa-solid fa-comments text-cyan-600 dark:text-cyan-400 w-5"></i> Forum Diskusi
+          </a>
+          <a href="../kisi.html" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/80 transition-colors">
+            <i class="fa-solid fa-bullseye text-rose-500 w-5"></i> Bedah Kisi-Kisi
+          </a>
+        </nav>
+      </div>
+
+      <div class="pt-6 border-t border-slate-100 dark:border-slate-800 space-y-3">
+        <a
+          href="https://wa.me/6285282386260?text=Halo%20Pak%20Ilyas%2C%20saya%20ingin%20bertanya%20tentang%20materi%20Sistem%20Operasi."
+          target="_blank"
+          class="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-sm shadow-md transition-all"
+        >
+          <i class="fa-brands fa-whatsapp text-base"></i> Tanya Pak Ilyas
+        </a>
+      </div>
+    </aside>
+
+    <!-- ============================================================
+         2. HERO SECTION
+         ============================================================ -->
+    <section class="relative pt-12 pb-14 overflow-hidden border-b border-slate-200/80 dark:border-slate-800/80">
+      <div class="hero-glow-1"></div>
+      <div class="hero-glow-2"></div>
+
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center space-y-6">
+        <!-- Top Pill Badge -->
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-100 dark:bg-cyan-950/70 border border-cyan-200 dark:border-cyan-800/80 text-cyan-800 dark:text-cyan-300 text-xs font-bold font-mono tracking-wider shadow-sm">
+          <i class="fa-solid fa-microchip animate-pulse text-cyan-600 dark:text-cyan-400"></i>
+          <span>MODUL SISTEM OPERASI • ARSITEKTUR &amp; SISTEM KOMPUTER</span>
+        </div>
+
+        <!-- Main H1 Heading -->
+        <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 dark:text-white tracking-tight leading-tight max-w-4xl mx-auto">
+          Memahami Jantung Komputer: <br class="hidden sm:inline" />
+          <span class="bg-gradient-to-r from-cyan-600 via-sky-500 to-teal-400 bg-clip-text text-transparent">Sistem Operasi (OS)</span>
+        </h1>
+
+        <!-- Subtitle -->
+        <p class="text-base sm:text-lg text-slate-600 dark:text-slate-300 max-w-3xl mx-auto leading-relaxed">
+          Pelajari bagaimana OS bertindak sebagai jembatan magis antara pengguna, aplikasi, dan perangkat keras: dari peran kernel, manajemen proses &amp; memori RAM, simulasi lab interaktif, rekaman video, hingga lembar kerja evaluasi.
+        </p>
+
+        <!-- 4 Meta Pill Badges -->
+        <div class="flex flex-wrap items-center justify-center gap-3 pt-2">
+          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs font-semibold text-slate-700 dark:text-slate-300 shadow-sm">
+            <i class="fa-solid fa-folder-open text-cyan-600 dark:text-cyan-400"></i>
+            <span>Bab 3: Sistem Komputer (SK)</span>
+          </div>
+          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs font-semibold text-slate-700 dark:text-slate-300 shadow-sm">
+            <i class="fa-solid fa-layer-group text-sky-500"></i>
+            <span>Level: Menengah (Fase E - Kelas X)</span>
+          </div>
+          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs font-semibold text-slate-700 dark:text-slate-300 shadow-sm">
+            <i class="fa-solid fa-clock text-emerald-500"></i>
+            <span>Waktu: 45 Menit Belajar + Lab</span>
+          </div>
+          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs font-semibold text-slate-700 dark:text-slate-300 shadow-sm">
+            <i class="fa-solid fa-graduation-cap text-amber-500"></i>
+            <span>Kurikulum Merdeka 2026/2027</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         3. MAIN CONTENT: 4 MODERN SUB-MENUS
+         1. Materi  |  2. Simulasi  |  3. Video  |  4. Lembar Kerja
+         ============================================================ -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12">
+      <!-- TAB NAVIGATION BUTTONS (Modern 4-Pill Switcher) -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 p-1.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 max-w-3xl mx-auto mb-10 shadow-sm">
+        <button
+          onclick="openTab(event, 'materi')"
+          id="btn-materi"
+          class="tab-btn active py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all cursor-pointer bg-cyan-600 text-white shadow-md shadow-cyan-600/20"
+        >
+          <i class="fa-solid fa-book-open"></i>
+          <span>1. Materi</span>
+        </button>
+
+        <button
+          onclick="openTab(event, 'simulasi')"
+          id="btn-simulasi"
+          class="tab-btn py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all cursor-pointer text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+        >
+          <i class="fa-solid fa-flask"></i>
+          <span>2. Simulasi</span>
+        </button>
+
+        <button
+          onclick="openTab(event, 'video')"
+          id="btn-video"
+          class="tab-btn py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all cursor-pointer text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+        >
+          <i class="fa-solid fa-circle-play"></i>
+          <span>3. Video</span>
+        </button>
+
+        <button
+          onclick="openTab(event, 'lembarkerja')"
+          id="btn-lembarkerja"
+          class="tab-btn py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all cursor-pointer text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+        >
+          <i class="fa-solid fa-clipboard-list"></i>
+          <span>4. Lembar Kerja</span>
+        </button>
+      </div>
+
+      <!-- ============================================================
+           SUB-MENU 1: MATERI LENGKAP
+           ============================================================ -->
+      <section id="materi" class="tab-content block space-y-12">
+        <!-- 1.1 Pengantar Analogi Restoran -->
+        <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl shadow-slate-200/50 dark:shadow-none p-6 sm:p-8 md:p-10 relative overflow-hidden transition-all" data-tilt data-tilt-max="3" data-tilt-glare data-tilt-max-glare="0.05">
+          <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-cyan-500/10 dark:bg-cyan-500/15 rounded-full blur-3xl pointer-events-none"></div>
+          
+          <div class="flex flex-col sm:flex-row items-start gap-5 relative z-10">
+            <div class="w-14 h-14 rounded-2xl bg-cyan-100 dark:bg-cyan-950/80 border border-cyan-200 dark:border-cyan-800/80 flex items-center justify-center text-cyan-600 dark:text-cyan-400 text-2xl shrink-0 shadow-sm">
+              <i class="fa-solid fa-utensils"></i>
+            </div>
+            
+            <div class="space-y-4 flex-1">
+              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-50 dark:bg-cyan-950/40 border border-cyan-200 dark:border-cyan-800/60 text-cyan-700 dark:text-cyan-300 text-xs font-bold font-mono tracking-wider">
+                <i class="fa-solid fa-lightbulb"></i>
+                <span>ANALOGI MUDAH DIPAHAMI</span>
+              </div>
+              
+              <h2 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
+                Sistem Operasi adalah <span class="text-cyan-600 dark:text-cyan-400">"Manajer Restoran"</span> Komputer
+              </h2>
+              
+              <p class="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed">
+                Bayangkan sebuah restoran besar: <strong class="text-slate-900 dark:text-white">Dapur</strong> adalah prosesor (CPU), <strong class="text-slate-900 dark:text-white">meja saji</strong> adalah memori (RAM), <strong class="text-slate-900 dark:text-white">gudang bahan</strong> adalah Harddisk/SSD, dan <strong class="text-slate-900 dark:text-white">tamu yang memesan hidangan</strong> adalah kamu (Pengguna).
+              </p>
+              
+              <div class="p-4 sm:p-5 rounded-2xl bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800/40 text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed shadow-sm">
+                <div class="flex items-start gap-3">
+                  <i class="fa-solid fa-star text-amber-500 text-base mt-0.5 shrink-0"></i>
+                  <span>
+                    Siapakah yang mengatur agar pesanan tamu tidak tabrakan di dapur, bahan makanan diambil tepat waktu, dan hidangan sampai ke meja yang benar? <strong>Itulah tugas Manajer Restoran — persis seperti peran Sistem Operasi (Operating System / OS)</strong> yang mengelola seluruh sumber daya hardware komputer secara efisien dan adil!
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 1.2 Dua Peran Utama OS -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl shadow-slate-200/50 dark:shadow-none p-6 sm:p-8 space-y-4 hover:border-emerald-500/40 transition-all">
+            <div class="w-12 h-12 rounded-2xl bg-emerald-100 dark:bg-emerald-950/80 border border-emerald-200 dark:border-emerald-800/80 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-xl shadow-sm">
+              <i class="fa-solid fa-boxes-stacked"></i>
+            </div>
+            <h3 class="text-xl font-bold text-slate-900 dark:text-white">1. Pengelola Sumber Daya (Resource Manager)</h3>
+            <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+              OS mengalokasikan CPU, memori RAM, ruang disk penyimpanan, dan perangkat I/O (mouse, printer, monitor) ke berbagai aplikasi yang sedang berjalan bersamaan secara adil dan teratur tanpa saling bentrok.
+            </p>
+            <div class="text-xs font-mono text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 p-3 rounded-xl border border-emerald-200 dark:border-emerald-800/60">
+              <i class="fa-solid fa-circle-check mr-1.5 text-emerald-500"></i> Contoh: Mencegah Spotify dan Chrome berebut memori RAM hingga komputer membeku (freeze).
+            </div>
+          </div>
+
+          <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl shadow-slate-200/50 dark:shadow-none p-6 sm:p-8 space-y-4 hover:border-sky-500/40 transition-all">
+            <div class="w-12 h-12 rounded-2xl bg-sky-100 dark:bg-sky-950/80 border border-sky-200 dark:border-sky-800/80 text-sky-600 dark:text-sky-400 flex items-center justify-center text-xl shadow-sm">
+              <i class="fa-solid fa-handshake"></i>
+            </div>
+            <h3 class="text-xl font-bold text-slate-900 dark:text-white">2. Mesin Virtual / Penghubung (Extended Machine)</h3>
+            <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+              OS menyembunyikan kerumitan sinyal listrik dan biner hardware di balik antarmuka yang ramah pengguna. Programmer aplikasi tidak perlu menulis kode langsung untuk menggerakkan laser optik mouse atau memutar piringan harddisk.
+            </p>
+            <div class="text-xs font-mono text-sky-700 dark:text-sky-300 bg-sky-50 dark:bg-sky-950/40 p-3 rounded-xl border border-sky-200 dark:border-sky-800/60">
+              <i class="fa-solid fa-circle-check mr-1.5 text-sky-500"></i> Contoh: Cukup klik "Save", OS yang menerjemahkan berkas ke blok fisik SSD.
+            </div>
+          </div>
+        </div>
+
+        <!-- 1.3 Ragam OS di Dunia -->
+        <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl shadow-slate-200/50 dark:shadow-none p-6 sm:p-8 space-y-6">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-cyan-100 dark:bg-cyan-950/80 text-cyan-600 dark:text-cyan-400 flex items-center justify-center">
+              <i class="fa-solid fa-globe text-lg"></i>
+            </div>
+            <div>
+              <h3 class="text-xl font-bold text-slate-900 dark:text-white">Ragam Sistem Operasi Populer Dunia</h3>
+              <p class="text-xs text-slate-500 dark:text-slate-400">Platform OS yang mendominasi ekosistem komputer, gadget, dan server global.</p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <!-- Windows -->
+            <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-700/60 flex flex-col justify-between space-y-3 hover:border-cyan-500/40 transition-all">
+              <div class="flex items-center gap-3">
+                <i class="fa-brands fa-windows text-sky-500 text-3xl"></i>
+                <div>
+                  <h4 class="font-bold text-slate-900 dark:text-white text-sm">Microsoft Windows</h4>
+                  <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold">Proprietary</span>
+                </div>
+              </div>
+              <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">Paling banyak digunakan di komputer desktop &amp; laptop rumahan/sekolah. Sangat ramah pengguna dan kompatibel dengan ribuan game.</p>
+            </div>
+
+            <!-- Linux -->
+            <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-700/60 flex flex-col justify-between space-y-3 hover:border-amber-500/40 transition-all">
+              <div class="flex items-center gap-3">
+                <i class="fa-brands fa-linux text-amber-500 text-3xl"></i>
+                <div>
+                  <h4 class="font-bold text-slate-900 dark:text-white text-sm">Linux (Ubuntu/Debian)</h4>
+                  <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 font-bold">Open Source</span>
+                </div>
+              </div>
+              <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">Sistem operasi sumber terbuka yang menjadi tulang punggung server internet dunia, superkomputer, cloud computing, dan perangkat IoT.</p>
+            </div>
+
+            <!-- Apple -->
+            <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-700/60 flex flex-col justify-between space-y-3 hover:border-slate-400 transition-all">
+              <div class="flex items-center gap-3">
+                <i class="fa-brands fa-apple text-slate-800 dark:text-slate-200 text-3xl"></i>
+                <div>
+                  <h4 class="font-bold text-slate-900 dark:text-white text-sm">macOS &amp; iOS</h4>
+                  <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold">Eksklusif Apple</span>
+                </div>
+              </div>
+              <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">Dibangun di atas fondasi arsitektur Unix (Darwin). Terkenal stabil, aman, dan terintegrasi harmonis dengan hardware khusus Apple.</p>
+            </div>
+
+            <!-- Android -->
+            <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-700/60 flex flex-col justify-between space-y-3 hover:border-emerald-500/40 transition-all">
+              <div class="flex items-center gap-3">
+                <i class="fa-brands fa-android text-emerald-500 text-3xl"></i>
+                <div>
+                  <h4 class="font-bold text-slate-900 dark:text-white text-sm">Android (Google)</h4>
+                  <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 font-bold">Open Source</span>
+                </div>
+              </div>
+              <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">Sistem operasi mobile berbasis kernel Linux yang telah dimodifikasi. Menguasai lebih dari 70% pasar smartphone dan tablet di seluruh dunia.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 1.4 Arsitektur 4 Lapisan Ekosistem Komputer -->
+        <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl shadow-slate-200/50 dark:shadow-none p-6 sm:p-8 md:p-10 space-y-6">
+          <div class="flex items-center gap-3 pb-2 border-b border-slate-100 dark:border-slate-800">
+            <div class="w-10 h-10 rounded-xl bg-teal-100 dark:bg-teal-950/80 text-teal-600 dark:text-teal-400 flex items-center justify-center font-bold">
+              <i class="fa-solid fa-layer-group text-lg"></i>
+            </div>
+            <div>
+              <span class="text-xs font-bold text-teal-600 dark:text-teal-400 uppercase tracking-widest font-mono">Struktur Berlapis Komputer</span>
+              <h2 class="text-2xl font-black text-slate-900 dark:text-white">4 Lapisan Ekosistem Komputer Modern</h2>
+            </div>
+          </div>
+
+          <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+            Setiap kali kamu mengklik aplikasi atau mengetik huruf di keyboard, instruksi tersebut mengalir secara bertingkat melewati 4 lapisan perlindungan agar komputer tetap aman, efisien, dan stabil:
+          </p>
+
+          <div class="space-y-3 max-w-3xl mx-auto py-2">
+            <!-- Lapisan 1: User -->
+            <div class="p-4 sm:p-5 rounded-2xl bg-amber-50 dark:bg-amber-950/20 border-2 border-amber-300 dark:border-amber-700/60 flex items-center justify-between gap-4 shadow-sm hover:scale-[1.01] transition-all">
+              <div class="flex items-center gap-4">
+                <div class="w-11 h-11 rounded-xl bg-amber-500 text-white flex items-center justify-center font-bold text-lg shadow-sm">1</div>
+                <div>
+                  <h4 class="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                    <i class="fa-solid fa-user text-amber-500"></i> Pengguna (User / Brainware)
+                  </h4>
+                  <p class="text-xs text-slate-600 dark:text-slate-300">Manusia yang memberikan perintah (mengklik mouse, mengetik keyboard, berbicara lewat mic).</p>
+                </div>
+              </div>
+              <span class="text-xs font-mono font-bold px-3 py-1 rounded-full bg-amber-200 dark:bg-amber-900/60 text-amber-800 dark:text-amber-200 shrink-0">Level Tertinggi</span>
+            </div>
+
+            <div class="flex justify-center text-slate-400 dark:text-slate-500 text-xs font-semibold items-center gap-1.5 py-0.5">
+              <i class="fa-solid fa-arrow-down text-cyan-600 dark:text-cyan-400"></i> berinteraksi dengan
+            </div>
+
+            <!-- Lapisan 2: Aplikasi -->
+            <div class="p-4 sm:p-5 rounded-2xl bg-sky-50 dark:bg-sky-950/20 border-2 border-sky-300 dark:border-sky-700/60 flex items-center justify-between gap-4 shadow-sm hover:scale-[1.01] transition-all">
+              <div class="flex items-center gap-4">
+                <div class="w-11 h-11 rounded-xl bg-sky-500 text-white flex items-center justify-center font-bold text-lg shadow-sm">2</div>
+                <div>
+                  <h4 class="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                    <i class="fa-solid fa-window-maximize text-sky-500"></i> Program Aplikasi (Software Aplikasi)
+                  </h4>
+                  <p class="text-xs text-slate-600 dark:text-slate-300">Browser Chrome, MS Word, Game 3D, Canva, Spotify, Visual Studio Code.</p>
+                </div>
+              </div>
+              <span class="text-xs font-mono font-bold px-3 py-1 rounded-full bg-sky-200 dark:bg-sky-900/60 text-sky-800 dark:text-sky-200 shrink-0">User Space</span>
+            </div>
+
+            <div class="flex justify-center flex-col items-center py-1">
+              <span class="text-[11px] font-mono font-bold px-3 py-0.5 rounded-full bg-cyan-100 dark:bg-cyan-950/60 border border-cyan-300 dark:border-cyan-800 text-cyan-700 dark:text-cyan-300 shadow-sm">
+                ⚡ System Call (API Jembatan Permintaan Layanan)
+              </span>
+              <i class="fa-solid fa-arrow-down text-xs text-cyan-500 mt-1"></i>
+            </div>
+
+            <!-- Lapisan 3: Sistem Operasi (Kernel) -->
+            <div class="p-5 sm:p-6 rounded-2xl bg-teal-50 dark:bg-teal-950/30 border-2 border-teal-500 flex items-center justify-between gap-4 shadow-lg shadow-teal-500/10 hover:scale-[1.01] transition-all">
+              <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-xl bg-teal-600 text-white flex items-center justify-center font-black text-xl shadow-md">3</div>
+                <div>
+                  <div class="flex items-center gap-2">
+                    <h4 class="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                      <i class="fa-solid fa-gears text-teal-600 dark:text-teal-400"></i> Sistem Operasi &amp; Kernel
+                    </h4>
+                    <span class="text-[10px] bg-teal-600 text-white px-2 py-0.5 rounded-full font-bold uppercase">Inti Sistem</span>
+                  </div>
+                  <p class="text-xs text-slate-600 dark:text-slate-300 mt-1">Kernel memegang kendali penuh akses hardware, alokasi memori RAM, dan proteksi hak akses.</p>
+                </div>
+              </div>
+              <span class="text-xs font-mono font-bold px-3 py-1 rounded-full bg-teal-200 dark:bg-teal-900/60 text-teal-800 dark:text-teal-200 shrink-0">Kernel Space</span>
+            </div>
+
+            <div class="flex justify-center flex-col items-center py-1">
+              <span class="text-[11px] font-mono font-bold px-3 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950/60 border border-emerald-300 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 shadow-sm">
+                🔌 Device Driver (Penerjemah Bahasa Mesin)
+              </span>
+              <i class="fa-solid fa-arrow-down text-xs text-emerald-500 mt-1"></i>
+            </div>
+
+            <!-- Lapisan 4: Hardware -->
+            <div class="p-4 sm:p-5 rounded-2xl bg-emerald-50 dark:bg-emerald-950/20 border-2 border-emerald-300 dark:border-emerald-700/60 flex items-center justify-between gap-4 shadow-sm hover:scale-[1.01] transition-all">
+              <div class="flex items-center gap-4">
+                <div class="w-11 h-11 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold text-lg shadow-sm">4</div>
+                <div>
+                  <h4 class="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                    <i class="fa-solid fa-microchip text-emerald-600 dark:text-emerald-400"></i> Perangkat Keras (Hardware Fisik)
+                  </h4>
+                  <p class="text-xs text-slate-600 dark:text-slate-300">CPU (Prosesor), Memori RAM, Motherboard, SSD/HDD, GPU Grafis, Keyboard, Layar Monitor.</p>
+                </div>
+              </div>
+              <span class="text-xs font-mono font-bold px-3 py-1 rounded-full bg-emerald-200 dark:bg-emerald-900/60 text-emerald-800 dark:text-emerald-200 shrink-0">Fisik Nyata</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 1.5 CLI vs GUI -->
+        <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl shadow-slate-200/50 dark:shadow-none p-6 sm:p-8 space-y-6">
+          <div class="flex items-center gap-3 pb-2 border-b border-slate-100 dark:border-slate-800">
+            <div class="w-10 h-10 rounded-xl bg-cyan-100 dark:bg-cyan-950/80 text-cyan-600 dark:text-cyan-400 flex items-center justify-center">
+              <i class="fa-solid fa-desktop text-lg"></i>
+            </div>
+            <div>
+              <h3 class="text-xl font-bold text-slate-900 dark:text-white">Antarmuka Pengguna: CLI vs GUI</h3>
+              <p class="text-xs text-slate-500 dark:text-slate-400">Dua metode utama manusia berinteraksi dengan sistem operasi komputer.</p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- CLI Box -->
+            <div class="p-5 sm:p-6 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 space-y-3 hover:border-cyan-500/40 transition-all">
+              <div class="flex items-center justify-between pb-2 border-b border-slate-200 dark:border-slate-700">
+                <span class="text-sm font-bold text-cyan-600 dark:text-cyan-400 flex items-center gap-2 font-mono">
+                  <i class="fa-solid fa-terminal"></i> CLI (Command Line Interface)
+                </span>
+                <span class="text-xs font-bold font-mono px-2 py-0.5 rounded bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300">Teks Murni</span>
+              </div>
+              <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                Pengguna berinteraksi dengan mengetikkan baris perintah teks (seperti Command Prompt, PowerShell Windows, atau Bash Terminal Linux).
+              </p>
+              <ul class="text-xs space-y-2 pt-1">
+                <li class="flex items-start gap-2">
+                  <i class="fa-solid fa-circle-check text-emerald-500 mt-0.5"></i>
+                  <span><strong class="text-emerald-700 dark:text-emerald-400">Kelebihan:</strong> Konsumsi RAM sangat kecil, eksekusi perintah instan, sangat mudah diotomasi dengan script bash/python.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <i class="fa-solid fa-circle-xmark text-rose-500 mt-0.5"></i>
+                  <span><strong class="text-rose-700 dark:text-rose-400">Kekurangan:</strong> Mengharuskan pengguna menghafal sintaks perintah, kurang ramah untuk pemula tanpa panduan.</span>
+                </li>
+              </ul>
+            </div>
+
+            <!-- GUI Box -->
+            <div class="p-5 sm:p-6 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 space-y-3 hover:border-emerald-500/40 transition-all">
+              <div class="flex items-center justify-between pb-2 border-b border-slate-200 dark:border-slate-700">
+                <span class="text-sm font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-2 font-mono">
+                  <i class="fa-solid fa-window-restore"></i> GUI (Graphical User Interface)
+                </span>
+                <span class="text-xs font-bold font-mono px-2 py-0.5 rounded bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300">Visual &amp; Grafis</span>
+              </div>
+              <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                Pengguna berinteraksi melalui elemen visual grafis seperti ikon desktop, jendela window, tombol warna-warni, kursor mouse, dan gesture layar sentuh.
+              </p>
+              <ul class="text-xs space-y-2 pt-1">
+                <li class="flex items-start gap-2">
+                  <i class="fa-solid fa-circle-check text-emerald-500 mt-0.5"></i>
+                  <span><strong class="text-emerald-700 dark:text-emerald-400">Kelebihan:</strong> Sangat intuitif, mudah digunakan oleh siapa pun tanpa perlu menghafal baris kode.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <i class="fa-solid fa-circle-xmark text-rose-500 mt-0.5"></i>
+                  <span><strong class="text-rose-700 dark:text-rose-400">Kekurangan:</strong> Membutuhkan alokasi memori RAM dan kinerja kartu grafis (GPU) yang jauh lebih besar.</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- 1.6 Empat Fungsi Manajemen Inti OS -->
+        <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl shadow-slate-200/50 dark:shadow-none p-6 sm:p-8 md:p-10 space-y-6">
+          <div class="flex items-center gap-3 pb-2 border-b border-slate-100 dark:border-slate-800">
+            <div class="w-10 h-10 rounded-xl bg-emerald-100 dark:bg-emerald-950/80 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-bold">
+              <i class="fa-solid fa-sliders text-lg"></i>
+            </div>
+            <div>
+              <span class="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest font-mono">Tugas Berat Di Balik Layar</span>
+              <h2 class="text-2xl font-black text-slate-900 dark:text-white">4 Fungsi Manajemen Inti Sistem Operasi</h2>
+            </div>
+          </div>
+
+          <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+            Pernahkah kamu bertanya-tanya, bagaimana sebuah komputer bisa memutar lagu di Spotify, mendownload file di Chrome, dan mengetik tugas di Word secara bersamaan tanpa saling mengganggu? Inilah 4 tugas raksasa OS:
+          </p>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- A. Manajemen Proses -->
+            <div class="p-6 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 space-y-3.5 hover:border-emerald-500/40 transition-all">
+              <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-xl bg-emerald-100 dark:bg-emerald-950/80 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-bold text-lg shadow-sm">
+                  <i class="fa-solid fa-microchip"></i>
+                </div>
+                <div>
+                  <h3 class="font-bold text-slate-900 dark:text-white text-base">A. Manajemen Proses (CPU)</h3>
+                  <span class="text-xs text-emerald-600 dark:text-emerald-400 font-mono font-semibold">CPU Scheduling &amp; Multitasking</span>
+                </div>
+              </div>
+              <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                Program yang sedang dieksekusi disebut <strong class="text-slate-900 dark:text-white">Proses</strong>. OS membagi waktu kerja CPU menjadi irisan waktu milidetik (Time Slice) melalui algoritma penjadwalan seperti Round Robin, sehingga seolah-olah semua aplikasi berjalan serentak.
+              </p>
+              <div class="p-3 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 space-y-1.5 text-xs shadow-sm">
+                <span class="font-bold text-slate-800 dark:text-slate-200">5 Siklus Status Proses Komputer:</span>
+                <div class="flex flex-wrap items-center gap-1.5 pt-1 text-[11px] font-mono">
+                  <span class="px-2 py-0.5 rounded bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold">New</span>
+                  <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i>
+                  <span class="px-2 py-0.5 rounded bg-sky-100 dark:bg-sky-950/80 text-sky-700 dark:text-sky-300 font-bold">Ready</span>
+                  <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i>
+                  <span class="px-2 py-0.5 rounded bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-300 font-bold">Running</span>
+                  <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i>
+                  <span class="px-2 py-0.5 rounded bg-amber-100 dark:bg-amber-950/80 text-amber-700 dark:text-amber-300 font-bold">Waiting</span>
+                  <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i>
+                  <span class="px-2 py-0.5 rounded bg-purple-100 dark:bg-purple-950/80 text-purple-700 dark:text-purple-300 font-bold">Terminated</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- B. Manajemen Memori -->
+            <div class="p-6 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 space-y-3.5 hover:border-sky-500/40 transition-all">
+              <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-xl bg-sky-100 dark:bg-sky-950/80 text-sky-600 dark:text-sky-400 flex items-center justify-center font-bold text-lg shadow-sm">
+                  <i class="fa-solid fa-memory"></i>
+                </div>
+                <div>
+                  <h3 class="font-bold text-slate-900 dark:text-white text-base">B. Manajemen Memori (RAM)</h3>
+                  <span class="text-xs text-sky-600 dark:text-sky-400 font-mono font-semibold">Alokasi &amp; Virtual Memory</span>
+                </div>
+              </div>
+              <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                OS melacak alamat blok memori mana yang sedang dipakai program dan mana yang masih kosong. Jika kapasitas RAM hampir habis, OS mengaktifkan fitur cerdas <strong class="text-slate-900 dark:text-white">Virtual Memory (Paging)</strong>: meminjam sebagian ruang harddisk/SSD sebagai memori cadangan darurat.
+              </p>
+              <div class="text-xs font-mono text-sky-700 dark:text-sky-300 bg-white dark:bg-slate-900 p-3 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                <i class="fa-solid fa-arrows-rotate mr-1 text-sky-500"></i> Konsep Swapping: Memindahkan halaman data pasif dari RAM ke Swap Storage SSD.
+              </div>
+            </div>
+
+            <!-- C. Manajemen Berkas -->
+            <div class="p-6 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 space-y-3.5 hover:border-purple-500/40 transition-all">
+              <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-xl bg-purple-100 dark:bg-purple-950/80 text-purple-600 dark:text-purple-400 flex items-center justify-center font-bold text-lg shadow-sm">
+                  <i class="fa-solid fa-folder-tree"></i>
+                </div>
+                <div>
+                  <h3 class="font-bold text-slate-900 dark:text-white text-base">C. Manajemen Berkas (File System)</h3>
+                  <span class="text-xs text-purple-600 dark:text-purple-400 font-mono font-semibold">Hierarki Pohon Direktori &amp; Hak Akses</span>
+                </div>
+              </div>
+              <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                Data digital disimpan dalam berkas dengan ekstensi format tertentu (.docx, .mp3, .py). OS mengatur struktur hierarki pohon direktori (folder dalam folder) serta format file system seperti <strong class="text-slate-900 dark:text-white">NTFS</strong> (Windows), <strong class="text-slate-900 dark:text-white">ext4</strong> (Linux), atau <strong class="text-slate-900 dark:text-white">APFS</strong> (macOS).
+              </p>
+            </div>
+
+            <!-- D. Manajemen Perangkat I/O -->
+            <div class="p-6 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 space-y-3.5 hover:border-amber-500/40 transition-all">
+              <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-xl bg-amber-100 dark:bg-amber-950/80 text-amber-600 dark:text-amber-400 flex items-center justify-center font-bold text-lg shadow-sm">
+                  <i class="fa-solid fa-plug"></i>
+                </div>
+                <div>
+                  <h3 class="font-bold text-slate-900 dark:text-white text-base">D. Manajemen Perangkat I/O</h3>
+                  <span class="text-xs text-amber-600 dark:text-amber-400 font-mono font-semibold">Device Driver &amp; Plug and Play</span>
+                </div>
+              </div>
+              <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                Setiap kali kamu mencolokkan mouse baru, printer, atau flashdisk ke port USB, OS langsung mengaktifkan perangkat lunak penerjemah bernama <strong class="text-slate-900 dark:text-white">Device Driver</strong> dan mekanisme <strong class="text-slate-900 dark:text-white">Plug and Play</strong> agar hardware tersebut siap pakai tanpa merestart komputer.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================
+           SUB-MENU 2: SIMULASI LAB MAYA
+           ============================================================ -->
+      <section id="simulasi" class="tab-content hidden space-y-10">
+        <!-- Header Lab -->
+        <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl shadow-slate-200/50 dark:shadow-none p-6 sm:p-8 space-y-3">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-purple-100 dark:bg-purple-950/80 text-purple-600 dark:text-purple-400 flex items-center justify-center font-bold">
+              <i class="fa-solid fa-flask text-lg"></i>
+            </div>
+            <div>
+              <span class="text-xs font-bold text-purple-600 dark:text-purple-400 uppercase tracking-widest font-mono">Laboratorium Maya Informatika</span>
+              <h2 class="text-2xl font-black text-slate-900 dark:text-white">Uji Coba Langsung Cara Kerja Sistem Operasi</h2>
+            </div>
+          </div>
+          <p class="text-sm text-slate-600 dark:text-slate-300">
+            Jalankan perintah di simulator terminal CLI Linux nyata dan saksikan simulasi algoritma penjadwalan CPU Multitasking secara interaktif!
+          </p>
+        </div>
+
+        <!-- SIMULASI 1: Interactive Mini Terminal (CLI) -->
+        <div class="cli-terminal p-5 sm:p-7 space-y-4 shadow-2xl">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div class="flex items-center gap-2">
+              <span class="w-3.5 h-3.5 rounded-full bg-rose-500 inline-block shadow-sm"></span>
+              <span class="w-3.5 h-3.5 rounded-full bg-amber-500 inline-block shadow-sm"></span>
+              <span class="w-3.5 h-3.5 rounded-full bg-emerald-500 inline-block shadow-sm"></span>
+              <span class="text-xs font-mono text-slate-400 ml-2 font-semibold">bash terminal — kelas_xe6@patbhe:~</span>
+            </div>
+            <button
+              type="button"
+              onclick="clearTerminal()"
+              class="text-xs text-slate-400 hover:text-white font-mono px-3 py-1 rounded-lg bg-slate-800/80 hover:bg-slate-700 transition-colors cursor-pointer"
+            >
+              <i class="fa-solid fa-rotate-left mr-1.5"></i> Bersihkan
+            </button>
+          </div>
+
+          <div class="p-3 rounded-xl bg-cyan-950/30 border border-cyan-800/40 text-xs text-slate-300 font-sans leading-relaxed">
+            💡 <strong>Tugas Siswa Patbhe:</strong> Ketik perintah di bawah ini dan tekan <kbd class="px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-white font-mono text-[11px]">Enter</kbd>. Coba ketik: <code class="text-cyan-400 font-bold">help</code>, <code class="text-cyan-400 font-bold">ls</code>, <code class="text-cyan-400 font-bold">ps</code>, <code class="text-cyan-400 font-bold">mkdir tugas_patbhe</code>, <code class="text-cyan-400 font-bold">uname -a</code>, atau <code class="text-cyan-400 font-bold">whoami</code>.
+          </div>
+
+          <!-- Output Box -->
+          <div id="cliOutput" class="cli-output font-mono text-xs text-slate-200 space-y-2 leading-relaxed bg-black/60 p-4 rounded-xl border border-slate-800/80">
+            <div class="text-emerald-400 font-bold"><i class="fa-solid fa-terminal mr-2"></i>Selamat datang di Mini Terminal Linux Simulator — RuangInformatika SMAN 4 Yogyakarta!</div>
+            <div class="text-slate-400">Ketik <span class="text-cyan-400 font-bold">'help'</span> untuk melihat seluruh perintah sistem yang tersedia.</div>
+          </div>
+
+          <!-- Command Input -->
+          <form id="cliForm" onsubmit="handleCliCommand(event)" class="flex items-center gap-2 pt-2">
+            <span class="text-xs font-mono text-emerald-400 shrink-0 font-bold">xe6@patbhe:~$</span>
+            <input
+              type="text"
+              id="cliInput"
+              class="flex-1 bg-black/70 border border-slate-700 focus:border-cyan-400 rounded-xl px-3.5 py-2.5 text-xs font-mono text-white focus:outline-none transition-all shadow-inner"
+              placeholder="Ketik perintah di sini (contoh: ls, ps, help)..."
+              autocomplete="off"
+            />
+            <button
+              type="submit"
+              class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-600 to-sky-600 hover:from-cyan-500 hover:to-sky-500 text-white font-bold text-xs font-mono transition-all shadow-md shadow-cyan-600/30 cursor-pointer shrink-0"
+            >
+              <i class="fa-solid fa-paper-plane mr-1.5"></i> Kirim
+            </button>
+          </form>
+        </div>
+
+        <!-- SIMULASI 2: Visualizer CPU Scheduler (Round Robin / Multitasking) -->
+        <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl shadow-slate-200/50 dark:shadow-none p-6 sm:p-8 space-y-6">
+          <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-slate-100 dark:border-slate-800">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-emerald-100 dark:bg-emerald-950/80 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-bold">
+                <i class="fa-solid fa-stopwatch text-lg"></i>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold text-slate-900 dark:text-white">Visualisasi CPU Scheduler (Round Robin)</h3>
+                <p class="text-xs text-slate-500 dark:text-slate-400">Lihat cara OS membagi giliran core prosesor untuk aplikasi secara dinamis.</p>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2.5">
+              <button
+                type="button"
+                id="btnNextProcess"
+                onclick="stepScheduler()"
+                class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-md shadow-emerald-600/20 transition-all cursor-pointer flex items-center gap-2"
+              >
+                <i class="fa-solid fa-play"></i>
+                <span>Giliran Berikutnya</span>
+              </button>
+              <button
+                type="button"
+                onclick="resetScheduler()"
+                class="px-3.5 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-semibold border border-slate-200 dark:border-slate-700 transition-all cursor-pointer"
+              >
+                <i class="fa-solid fa-rotate-left mr-1"></i> Reset
+              </button>
+            </div>
+          </div>
+
+          <!-- Alur Visual: Ready Queue -> CPU Core -> Selesai -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
+            <!-- 1. Ready Queue -->
+            <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 space-y-3 flex flex-col justify-between">
+              <div class="flex items-center justify-between text-xs font-bold text-sky-600 dark:text-sky-400 pb-2 border-b border-slate-200 dark:border-slate-700">
+                <span class="flex items-center gap-1.5"><i class="fa-solid fa-layer-group"></i> 1. Ready Queue (Antrean RAM)</span>
+                <span id="queueCount" class="font-mono text-[10px] px-2 py-0.5 rounded bg-sky-100 dark:bg-sky-950 text-sky-700 dark:text-sky-300 font-bold">3 Menunggu</span>
+              </div>
+              <div id="readyQueueContainer" class="flex flex-col gap-2.5 min-h-[160px] justify-center py-2">
+                <!-- Dynamically populated -->
+              </div>
+              <span class="text-[11px] text-slate-500 dark:text-slate-400 text-center italic">Proses yang siap dieksekusi CPU</span>
+            </div>
+
+            <!-- 2. CPU Core -->
+            <div class="p-5 rounded-2xl bg-emerald-50/60 dark:bg-emerald-950/20 border-2 border-emerald-400 dark:border-emerald-600/60 flex flex-col items-center justify-between min-h-[220px] space-y-4 text-center shadow-lg shadow-emerald-500/5">
+              <span class="text-xs font-bold text-emerald-700 dark:text-emerald-300 uppercase tracking-widest flex items-center gap-2">
+                <i class="fa-solid fa-microchip animate-pulse text-base"></i> 2. CPU Core (Sedang Eksekusi)
+              </span>
+
+              <div id="activeCpuProcess" class="w-full py-5 rounded-xl bg-white dark:bg-slate-900 border border-emerald-300 dark:border-emerald-700 font-mono text-sm font-bold text-slate-500 dark:text-slate-400 flex flex-col items-center justify-center shadow-sm">
+                <span>(CPU Idle — Menunggu Proses)</span>
+              </div>
+
+              <div class="p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 w-full text-center">
+                <span class="text-xs text-slate-600 dark:text-slate-300 italic font-medium" id="cpuNarration">Klik "Giliran Berikutnya" untuk memasukkan proses.</span>
+              </div>
+            </div>
+
+            <!-- 3. Selesai (Terminated) -->
+            <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 space-y-3 flex flex-col justify-between">
+              <div class="flex items-center justify-between text-xs font-bold text-purple-600 dark:text-purple-400 pb-2 border-b border-slate-200 dark:border-slate-700">
+                <span class="flex items-center gap-1.5"><i class="fa-solid fa-circle-check"></i> 3. Selesai (Terminated)</span>
+                <span id="doneCount" class="font-mono text-[10px] px-2 py-0.5 rounded bg-purple-100 dark:bg-purple-950 text-purple-700 dark:text-purple-300 font-bold">0 Selesai</span>
+              </div>
+              <div id="doneQueueContainer" class="flex flex-col gap-2.5 min-h-[160px] justify-center py-2">
+                <span class="text-xs text-slate-400 dark:text-slate-500 text-center italic" id="doneEmpty">(belum ada proses selesai)</span>
+              </div>
+              <span class="text-[11px] text-slate-500 dark:text-slate-400 text-center italic">Memori RAM telah dibebaskan kembali</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================
+           SUB-MENU 3: VIDEO PEMBELAJARAN
+           ============================================================ -->
+      <section id="video" class="tab-content hidden space-y-8">
+        <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl shadow-slate-200/50 dark:shadow-none p-6 sm:p-8 md:p-10 space-y-8 transition-colors">
+          <!-- Video Header -->
+          <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b border-slate-100 dark:border-slate-800 pb-6">
+            <div>
+              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-100 dark:bg-cyan-950/60 text-cyan-700 dark:text-cyan-300 text-xs font-bold font-mono mb-2">
+                <i class="fa-solid fa-circle-play text-cyan-600 dark:text-cyan-400"></i>
+                <span>VIDEO PEMBELAJARAN MULTIMEDIA</span>
+              </div>
+              <h2 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">
+                Cara Kerja Sistem Operasi: Kernel, Memori &amp; Multitasking
+              </h2>
+              <p class="text-sm text-slate-600 dark:text-slate-300 mt-1">
+                Simak penjelasan visual dan animasi komprehensif mengenai bagaimana sistem operasi mengelola komputer di balik layar.
+              </p>
+            </div>
+            <span class="text-xs font-bold text-cyan-700 dark:text-cyan-300 bg-cyan-50 dark:bg-cyan-950/60 border border-cyan-200 dark:border-cyan-800 px-4 py-2 rounded-full font-mono shrink-0">
+              <i class="fa-solid fa-clock mr-1.5"></i> Durasi: ~12 Menit
+            </span>
+          </div>
+
+          <!-- 16:9 Responsive Video Player -->
+          <div class="aspect-video w-full rounded-2xl overflow-hidden bg-black border border-slate-200 dark:border-slate-800 shadow-2xl relative">
+            <iframe
+              class="w-full h-full"
+              src="https://www.youtube.com/embed/26QPDBe-NB8"
+              title="Operating Systems: Crash Course Computer Science #18"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen
+            ></iframe>
+          </div>
+
+          <!-- Video Chapter Breakdown / Rangkuman Bab -->
+          <div class="space-y-4 pt-2">
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              <i class="fa-solid fa-list-ol text-cyan-600 dark:text-cyan-400"></i>
+              <span>Poin Bahasan Penting Dalam Video:</span>
+            </h3>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-bold text-cyan-600 dark:text-cyan-400 font-mono">Bab 1 • 00:00</span>
+                  <i class="fa-solid fa-bolt text-amber-500 text-xs"></i>
+                </div>
+                <h4 class="text-sm font-bold text-slate-900 dark:text-white">Era Komputer Tanpa OS</h4>
+                <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                  Bagaimana masa awal komputer hanya bisa menjalankan satu program menggunakan kartu berlubang (punch card) sebelum OS diciptakan.
+                </p>
+              </div>
+
+              <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-bold text-cyan-600 dark:text-cyan-400 font-mono">Bab 2 • 03:40</span>
+                  <i class="fa-solid fa-microchip text-emerald-500 text-xs"></i>
+                </div>
+                <h4 class="text-sm font-bold text-slate-900 dark:text-white">Manajemen Batch &amp; Multitasking</h4>
+                <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                  Lompatan besar ketika OS mampu menjalankan puluhan program bersamaan dengan teknik time-sharing pada prosesor CPU.
+                </p>
+              </div>
+
+              <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-bold text-cyan-600 dark:text-cyan-400 font-mono">Bab 3 • 07:15</span>
+                  <i class="fa-solid fa-shield-halved text-sky-500 text-xs"></i>
+                </div>
+                <h4 class="text-sm font-bold text-slate-900 dark:text-white">Proteksi Memori &amp; Virtual RAM</h4>
+                <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                  Mencegah satu program merusak program lain di RAM fisik dan teknik paging memanfaatkan ruang penyimpanan SSD.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================
+           SUB-MENU 4: LEMBAR KERJA (LKPD & EVALUASI)
+           ============================================================ -->
+      <section id="lembarkerja" class="tab-content hidden space-y-10">
+        <div class="bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl border border-slate-200/80 dark:border-slate-800 shadow-xl rounded-3xl p-6 sm:p-8 md:p-10 space-y-8">
+          <!-- Header -->
+          <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-6">
+            <div>
+              <div class="flex items-center gap-2 mb-2">
+                <span class="text-xs font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/30 uppercase tracking-wider">
+                  <i class="fa-solid fa-file-pen mr-1"></i> Aktivitas Belajar
+                </span>
+              </div>
+              <h3 class="text-3xl md:text-4xl font-bold mb-2 text-slate-900 dark:text-white">Lembar Kerja &amp; Evaluasi</h3>
+              <p class="text-base sm:text-lg text-slate-600 dark:text-slate-300">Pilih aktivitas pembelajaran yang ingin kamu kerjakan. Dua tahapan berikut dirancang untuk menguatkan dan menguji pemahamanmu secara bertahap.</p>
+            </div>
+          </div>
+
+          <!-- Card Grid (2 Card Buttons: Lembar Kerja & Post Test) -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+            <!-- Card 1: LKPD -->
+            <a href="lkpd.html" class="lk-card lk-lkpd group">
+              <span class="lk-card-badge">Langkah 1</span>
+              <div class="lk-card-icon"><i class="fa-solid fa-clipboard-list"></i></div>
+              <div>
+                <h4 class="lk-card-title">Lembar Kerja (LKPD)</h4>
+                <p class="text-sm text-slate-600 dark:text-slate-400 mt-1 font-mono">Lembar Kerja Peserta Didik</p>
+              </div>
+              <p class="lk-card-desc">Jurnal Misi Eksplorasi Game: Selesaikan 4 misi petualangan Sistem Operasi (Booting, Model Lapisan Bawang, 4 Jenis OS, dan 5 Peran Utama OS) serta refleksi secara digital.</p>
+              <span class="lk-card-cta"> Buka Lembar Kerja <i class="fa-solid fa-arrow-right"></i> </span>
+            </a>
+
+            <!-- Card 2: Post Test -->
+            <a href="post.html" class="lk-card lk-posttest group">
+              <span class="lk-card-badge">Langkah 2</span>
+              <div class="lk-card-icon"><i class="fa-solid fa-clipboard-check"></i></div>
+              <div>
+                <h4 class="lk-card-title">Post Test</h4>
+                <p class="text-sm text-slate-600 dark:text-slate-400 mt-1 font-mono">Asesmen Akhir Materi</p>
+              </div>
+              <p class="lk-card-desc">Uji pemahamanmu setelah mempelajari seluruh modul Sistem Operasi. Asesmen ini mengukur penguasaan materi dengan soal analisis dan studi kasus pilihan ganda.</p>
+              <span class="lk-card-cta"> Mulai Post Test <i class="fa-solid fa-arrow-right"></i> </span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Latihan Cepat Mandiri (In-Page Practice) -->
+        <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl shadow-slate-200/50 dark:shadow-none p-6 sm:p-8 space-y-6">
+          <div class="flex items-center justify-between flex-wrap gap-3 pb-4 border-b border-slate-100 dark:border-slate-800">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-cyan-100 dark:bg-cyan-950/80 text-cyan-600 dark:text-cyan-400 flex items-center justify-center font-bold">
+                <i class="fa-solid fa-circle-question text-lg"></i>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold text-slate-900 dark:text-white">Latihan Mandiri Cepat (Cek Pemahaman Instan)</h3>
+                <p class="text-xs text-slate-500 dark:text-slate-400">Jawab 4 soal kilat di bawah ini sebelum membuka lembar kerja atau post test resmi.</p>
+              </div>
+            </div>
+            <span class="text-xs font-bold text-cyan-700 dark:text-cyan-300 bg-cyan-50 dark:bg-cyan-950/60 border border-cyan-200 dark:border-cyan-800 px-3.5 py-1.5 rounded-full font-mono">
+              4 Soal Kilat
+            </span>
+          </div>
+
+          <div class="space-y-6 max-w-4xl mx-auto pt-2">
+            <!-- Soal 1 -->
+            <div class="bg-slate-50 dark:bg-slate-800/60 rounded-2xl border border-slate-200 dark:border-slate-700/60 p-5 sm:p-6 space-y-4">
+              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-100 dark:bg-cyan-950/60 text-cyan-700 dark:text-cyan-300 text-xs font-bold font-mono">
+                <span>Soal 1 dari 4</span>
+              </div>
+              <p class="text-sm sm:text-base text-slate-900 dark:text-white font-bold leading-snug">
+                Bagian terdalam dari sistem operasi yang bertugas berurusan langsung dengan alokasi prosesor dan memori hardware disebut...
+              </p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs sm:text-sm">
+                <button
+                  type="button"
+                  onclick="checkQuiz(1, 'A', false, this)"
+                  class="quiz-btn text-left p-3.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 hover:border-cyan-500 hover:bg-cyan-50/50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 transition-all font-medium cursor-pointer shadow-sm"
+                >
+                  A. Browser Web
+                </button>
+                <button
+                  type="button"
+                  onclick="checkQuiz(1, 'B', true, this)"
+                  class="quiz-btn text-left p-3.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 hover:border-cyan-500 hover:bg-cyan-50/50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 transition-all font-medium cursor-pointer shadow-sm"
+                >
+                  B. Kernel
+                </button>
+                <button
+                  type="button"
+                  onclick="checkQuiz(1, 'C', false, this)"
+                  class="quiz-btn text-left p-3.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 hover:border-cyan-500 hover:bg-cyan-50/50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 transition-all font-medium cursor-pointer shadow-sm"
+                >
+                  C. Antivirus Scanner
+                </button>
+                <button
+                  type="button"
+                  onclick="checkQuiz(1, 'D', false, this)"
+                  class="quiz-btn text-left p-3.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 hover:border-cyan-500 hover:bg-cyan-50/50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 transition-all font-medium cursor-pointer shadow-sm"
+                >
+                  D. User Interface
+                </button>
+              </div>
+              <div id="quizFb_1" class="hidden text-xs sm:text-sm p-3.5 rounded-xl"></div>
+            </div>
+
+            <!-- Soal 2 -->
+            <div class="bg-slate-50 dark:bg-slate-800/60 rounded-2xl border border-slate-200 dark:border-slate-700/60 p-5 sm:p-6 space-y-4">
+              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-100 dark:bg-cyan-950/60 text-cyan-700 dark:text-cyan-300 text-xs font-bold font-mono">
+                <span>Soal 2 dari 4</span>
+              </div>
+              <p class="text-sm sm:text-base text-slate-900 dark:text-white font-bold leading-snug">
+                Apa yang dilakukan Sistem Operasi melalui mekanisme <strong>Virtual Memory</strong> jika kapasitas memori RAM fisik komputer sudah hampir penuh?
+              </p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs sm:text-sm">
+                <button
+                  type="button"
+                  onclick="checkQuiz(2, 'A', false, this)"
+                  class="quiz-btn text-left p-3.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 hover:border-cyan-500 hover:bg-cyan-50/50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 transition-all font-medium cursor-pointer shadow-sm"
+                >
+                  A. Mematikan komputer secara paksa tanpa konfirmasi
+                </button>
+                <button
+                  type="button"
+                  onclick="checkQuiz(2, 'B', false, this)"
+                  class="quiz-btn text-left p-3.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 hover:border-cyan-500 hover:bg-cyan-50/50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 transition-all font-medium cursor-pointer shadow-sm"
+                >
+                  B. Menghapus sistem operasi dari harddisk
+                </button>
+                <button
+                  type="button"
+                  onclick="checkQuiz(2, 'C', true, this)"
+                  class="quiz-btn text-left p-3.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 hover:border-cyan-500 hover:bg-cyan-50/50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 transition-all font-medium cursor-pointer shadow-sm"
+                >
+                  C. Meminjam sebagian ruang harddisk/SSD sebagai memori sementara (Paging)
+                </button>
+                <button
+                  type="button"
+                  onclick="checkQuiz(2, 'D', false, this)"
+                  class="quiz-btn text-left p-3.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 hover:border-cyan-500 hover:bg-cyan-50/50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 transition-all font-medium cursor-pointer shadow-sm"
+                >
+                  D. Mengubah komputer menjadi mesin kasir offline
+                </button>
+              </div>
+              <div id="quizFb_2" class="hidden text-xs sm:text-sm p-3.5 rounded-xl"></div>
+            </div>
+
+            <!-- Soal 3 -->
+            <div class="bg-slate-50 dark:bg-slate-800/60 rounded-2xl border border-slate-200 dark:border-slate-700/60 p-5 sm:p-6 space-y-4">
+              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-100 dark:bg-cyan-950/60 text-cyan-700 dark:text-cyan-300 text-xs font-bold font-mono">
+                <span>Soal 3 dari 4</span>
+              </div>
+              <p class="text-sm sm:text-base text-slate-900 dark:text-white font-bold leading-snug">
+                Contoh sistem operasi yang bersifat <em>Open Source</em> (kode sumber terbuka bebas dimodifikasi dan dikembangkan oleh publik) adalah...
+              </p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs sm:text-sm">
+                <button
+                  type="button"
+                  onclick="checkQuiz(3, 'A', false, this)"
+                  class="quiz-btn text-left p-3.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 hover:border-cyan-500 hover:bg-cyan-50/50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 transition-all font-medium cursor-pointer shadow-sm"
+                >
+                  A. Microsoft Windows 11
+                </button>
+                <button
+                  type="button"
+                  onclick="checkQuiz(3, 'B', true, this)"
+                  class="quiz-btn text-left p-3.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 hover:border-cyan-500 hover:bg-cyan-50/50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 transition-all font-medium cursor-pointer shadow-sm"
+                >
+                  B. Linux Ubuntu &amp; Android
+                </button>
+                <button
+                  type="button"
+                  onclick="checkQuiz(3, 'C', false, this)"
+                  class="quiz-btn text-left p-3.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 hover:border-cyan-500 hover:bg-cyan-50/50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 transition-all font-medium cursor-pointer shadow-sm"
+                >
+                  C. Apple iOS
+                </button>
+                <button
+                  type="button"
+                  onclick="checkQuiz(3, 'D', false, this)"
+                  class="quiz-btn text-left p-3.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 hover:border-cyan-500 hover:bg-cyan-50/50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 transition-all font-medium cursor-pointer shadow-sm"
+                >
+                  D. Apple macOS Sonoma
+                </button>
+              </div>
+              <div id="quizFb_3" class="hidden text-xs sm:text-sm p-3.5 rounded-xl"></div>
+            </div>
+
+            <!-- Soal 4 -->
+            <div class="bg-slate-50 dark:bg-slate-800/60 rounded-2xl border border-slate-200 dark:border-slate-700/60 p-5 sm:p-6 space-y-4">
+              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-100 dark:bg-cyan-950/60 text-cyan-700 dark:text-cyan-300 text-xs font-bold font-mono">
+                <span>Soal 4 dari 4</span>
+              </div>
+              <p class="text-sm sm:text-base text-slate-900 dark:text-white font-bold leading-snug">
+                Mengapa antarmuka CLI (Command Line Interface) masih sangat disukai dan digunakan luas oleh para teknisi jaringan, administrator cloud, dan developer server?
+              </p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs sm:text-sm">
+                <button
+                  type="button"
+                  onclick="checkQuiz(4, 'A', true, this)"
+                  class="quiz-btn text-left p-3.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 hover:border-cyan-500 hover:bg-cyan-50/50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 transition-all font-medium cursor-pointer shadow-sm"
+                >
+                  A. Lebih hemat RAM, sangat cepat diakses remote SSH, dan mudah diotomasi script
+                </button>
+                <button
+                  type="button"
+                  onclick="checkQuiz(4, 'B', false, this)"
+                  class="quiz-btn text-left p-3.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 hover:border-cyan-500 hover:bg-cyan-50/50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 transition-all font-medium cursor-pointer shadow-sm"
+                >
+                  B. Karena tampilannya selalu berwarna hitam putih
+                </button>
+                <button
+                  type="button"
+                  onclick="checkQuiz(4, 'C', false, this)"
+                  class="quiz-btn text-left p-3.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 hover:border-cyan-500 hover:bg-cyan-50/50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 transition-all font-medium cursor-pointer shadow-sm"
+                >
+                  C. CLI tidak membutuhkan prosesor sama sekali
+                </button>
+                <button
+                  type="button"
+                  onclick="checkQuiz(4, 'D', false, this)"
+                  class="quiz-btn text-left p-3.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 hover:border-cyan-500 hover:bg-cyan-50/50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 transition-all font-medium cursor-pointer shadow-sm"
+                >
+                  D. CLI kebal dari segala jenis virus komputer secara ajaib
+                </button>
+              </div>
+              <div id="quizFb_4" class="hidden text-xs sm:text-sm p-3.5 rounded-xl"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- ============================================================
+         4. BOTTOM CTA BANNER (Konsultasi Pak Ilyas)
+         ============================================================ -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-cyan-500/10 via-sky-500/5 to-transparent border border-cyan-500/20 p-8 sm:p-12 shadow-xl">
+        <div class="absolute -right-20 -bottom-20 w-80 h-80 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-8 text-center lg:text-left">
+          <!-- 3D Laptop Image -->
+          <div class="w-48 sm:w-60 lg:w-72 shrink-0">
+            <img
+              src="../images/cta-laptop.png"
+              alt="Laptop 3D Belajar OS"
+              class="w-full h-auto object-contain drop-shadow-2xl hover:scale-105 transition-transform duration-500"
+            />
+          </div>
+
+          <div class="space-y-4 max-w-2xl">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-100 dark:bg-cyan-950/60 text-cyan-700 dark:text-cyan-300 text-xs font-bold font-mono">
+              <i class="fa-solid fa-headset"></i>
+              <span>KONSULTASI &amp; DISKUSI INTERAKTIF</span>
+            </div>
+
+            <h2 class="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 dark:text-white tracking-tight leading-snug">
+              Masih Bingung dengan <span class="text-cyan-600 dark:text-cyan-400">Cara Kerja Sistem Operasi?</span>
+            </h2>
+
+            <p class="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed">
+              Tanyakan konsep Kernel, Multitasking, Virtual Memory, atau baris perintah Linux ke Pak Ilyas via WhatsApp. Kamu juga bisa berdiskusi bersama teman-teman di Forum Diskusi.
+            </p>
+
+            <!-- Pill Button Group -->
+            <div class="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-2">
+              <a
+                href="https://wa.me/6285282386260?text=Halo%20Pak%20Ilyas%2C%20saya%20ingin%20bertanya%20tentang%20materi%20Sistem%20Operasi."
+                target="_blank"
+                class="inline-flex items-center gap-2.5 px-6 py-3 rounded-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-sm shadow-md shadow-emerald-500/20 hover:scale-[1.02] transition-all"
+              >
+                <i class="fa-brands fa-whatsapp text-lg"></i>
+                <span>Tanya Pak Ilyas via WhatsApp</span>
+              </a>
+
+              <a
+                href="../forum.html"
+                class="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700/80 border border-cyan-200 dark:border-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200 shadow-sm transition-all"
+              >
+                <i class="fa-solid fa-comments text-cyan-600 dark:text-cyan-400"></i>
+                <span>Buka Forum Diskusi Kelas</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         5. OFFICIAL FOOTER (SMAN 4 Yogyakarta)
+         ============================================================ -->
+    <footer class="bg-brandDark text-slate-300 pt-12 pb-8 border-t border-slate-800">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+        <!-- Top 4 Info Chips -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs font-medium">
+          <div class="flex items-center gap-3 p-3.5 rounded-2xl bg-slate-900/80 border border-slate-800 text-slate-300">
+            <i class="fa-solid fa-location-dot text-cyan-400 text-base shrink-0"></i>
+            <span>SMA Negeri 4 Yogyakarta</span>
+          </div>
+
+          <a
+            href="https://wa.me/6285282386260"
+            target="_blank"
+            class="flex items-center gap-3 p-3.5 rounded-2xl bg-slate-900/80 border border-slate-800 text-slate-300 hover:text-cyan-400 hover:border-slate-700 transition-colors"
+          >
+            <i class="fa-solid fa-phone text-cyan-400 text-base shrink-0"></i>
+            <span>+62 852-8238-6260 (Pak Ilyas)</span>
+          </a>
+
+          <div class="flex items-center gap-3 p-3.5 rounded-2xl bg-slate-900/80 border border-slate-800 text-slate-300">
+            <i class="fa-solid fa-envelope text-cyan-400 text-base shrink-0"></i>
+            <span>muhammadilyas2132@gmail.com</span>
+          </div>
+
+          <div class="flex items-center gap-3 p-3.5 rounded-2xl bg-slate-900/80 border border-slate-800 text-slate-300">
+            <i class="fa-solid fa-graduation-cap text-cyan-400 text-base shrink-0"></i>
+            <span>Informatika Fase E (Kelas X)</span>
+          </div>
+        </div>
+
+        <!-- Middle Brand & Info -->
+        <div class="flex flex-col md:flex-row items-center justify-between gap-6 pt-6 border-t border-slate-800/80">
+          <div class="flex items-center gap-3">
+            <img src="../images/Logo Patbhe.png" alt="Logo Patbhe" class="w-8 h-8 object-contain" />
+            <div>
+              <span class="font-bold text-white text-sm">RuangInformatika Patbhe</span>
+              <p class="text-[11px] text-slate-400">Media Pembelajaran Interaktif Siswa SMA Negeri 4 Yogyakarta</p>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap items-center justify-center gap-6 text-xs text-slate-400">
+            <a href="../index.html" class="hover:text-cyan-400 transition-colors">Beranda</a>
+            <a href="../materi-bk.html" class="hover:text-cyan-400 transition-colors">Berpikir Komputasional</a>
+            <a href="../materi-stack-queue.html" class="hover:text-cyan-400 transition-colors">Stack &amp; Queue</a>
+            <a href="../materi-search-sort.html" class="hover:text-cyan-400 transition-colors">Searching &amp; Sorting</a>
+            <a href="../Materi_AP/materi-algoritma.html" class="hover:text-cyan-400 transition-colors">Algoritma &amp; Pemrograman</a>
+            <a href="../kisi.html" class="hover:text-cyan-400 transition-colors">Kisi-Kisi PTS</a>
+          </div>
+        </div>
+
+        <!-- Bottom Copyright -->
+        <div class="pt-6 border-t border-slate-800/60 text-center text-[11px] text-slate-400">
+          <p>© 2026 RuangInformatika SMAN 4 Yogyakarta. Hak Cipta Dilindungi Undang-Undang.</p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- ============================================================
+         6. JAVASCRIPT LOGIC
+         ============================================================ -->
+    <script>
+      /* --- 1. Reading Progress Bar --- */
+      window.addEventListener("scroll", () => {
+        const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrolled = height > 0 ? (winScroll / height) * 100 : 0;
+        const p = document.getElementById("readProgress");
+        if (p) p.style.width = scrolled + "%";
+      });
+
+      /* --- 2. Dark/Light Mode Toggle --- */
+      const themeToggleBtn = document.getElementById("themeToggleBtn");
+      if (themeToggleBtn) {
+        themeToggleBtn.addEventListener("click", () => {
+          if (document.documentElement.classList.contains("dark")) {
+            document.documentElement.classList.remove("dark");
+            localStorage.setItem("theme", "light");
+          } else {
+            document.documentElement.classList.add("dark");
+            localStorage.setItem("theme", "dark");
+          }
+        });
+      }
+
+      /* --- 3. Mobile Drawer Controls --- */
+      const hamburgerBtn = document.getElementById("hamburgerBtn");
+      const closeDrawerBtn = document.getElementById("closeDrawerBtn");
+      const mobileDrawer = document.getElementById("mobileDrawer");
+      const mobileDrawerOverlay = document.getElementById("mobileDrawerOverlay");
+
+      function openDrawer() {
+        if (!mobileDrawer || !mobileDrawerOverlay) return;
+        mobileDrawer.classList.remove("translate-x-full");
+        mobileDrawerOverlay.classList.remove("opacity-0", "pointer-events-none");
+        mobileDrawerOverlay.classList.add("opacity-100");
+      }
+
+      function closeDrawer() {
+        if (!mobileDrawer || !mobileDrawerOverlay) return;
+        mobileDrawer.classList.add("translate-x-full");
+        mobileDrawerOverlay.classList.add("opacity-0", "pointer-events-none");
+        mobileDrawerOverlay.classList.remove("opacity-100");
+      }
+
+      if (hamburgerBtn) hamburgerBtn.addEventListener("click", openDrawer);
+      if (closeDrawerBtn) closeDrawerBtn.addEventListener("click", closeDrawer);
+      if (mobileDrawerOverlay) mobileDrawerOverlay.addEventListener("click", closeDrawer);
+
+      /* --- 4. Sub-Menu / Tab Navigation System (4 Sub-Menus) --- */
+      function openTab(evt, tabName) {
+        // Alias redirection
+        if (tabName === "tab-konsep" || tabName === "tab-arsitektur" || tabName === "tab-manajemen") tabName = "materi";
+        if (tabName === "tab-simulasi") tabName = "simulasi";
+        if (tabName === "tab-kuis") tabName = "lembarkerja";
+
+        const tabContents = document.getElementsByClassName("tab-content");
+        for (let i = 0; i < tabContents.length; i++) {
+          tabContents[i].classList.add("hidden");
+          tabContents[i].classList.remove("block");
+        }
+
+        const tabBtns = document.getElementsByClassName("tab-btn");
+        for (let i = 0; i < tabBtns.length; i++) {
+          tabBtns[i].className = "tab-btn py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all cursor-pointer text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white";
+        }
+
+        const activeContent = document.getElementById(tabName);
+        if (activeContent) {
+          activeContent.classList.remove("hidden");
+          activeContent.classList.add("block");
+        }
+
+        if (evt && evt.currentTarget) {
+          evt.currentTarget.className = "tab-btn active py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all cursor-pointer bg-cyan-600 text-white shadow-md shadow-cyan-600/20";
+        } else {
+          const btn = document.getElementById("btn-" + tabName);
+          if (btn) {
+            btn.className = "tab-btn active py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all cursor-pointer bg-cyan-600 text-white shadow-md shadow-cyan-600/20";
+          }
+        }
+      }
+
+      // Check hash on load
+      window.addEventListener("DOMContentLoaded", () => {
+        let hash = window.location.hash.replace("#", "");
+        if (hash === "tab-konsep" || hash === "tab-arsitektur" || hash === "tab-manajemen") hash = "materi";
+        if (hash === "tab-simulasi") hash = "simulasi";
+        if (hash === "tab-kuis") hash = "lembarkerja";
+
+        if (hash && document.getElementById(hash)) {
+          openTab(null, hash);
+        }
+      });
+
+      /* ==========================================
+         5. CLI Terminal Simulator
+         ========================================== */
+      let fileSystemDirs = ["dokumen", "unduhan", "gambar", "musik"];
+
+      function appendCli(text, type = "normal") {
+        const out = document.getElementById("cliOutput");
+        if (!out) return;
+        const div = document.createElement("div");
+        if (type === "cmd") div.className = "text-cyan-400 font-bold";
+        else if (type === "success") div.className = "text-emerald-400";
+        else if (type === "error") div.className = "text-rose-400";
+        else div.className = "text-slate-300";
+        div.innerHTML = text;
+        out.appendChild(div);
+        out.scrollTop = out.scrollHeight;
+      }
+
+      function clearTerminal() {
+        const out = document.getElementById("cliOutput");
+        if (out) out.innerHTML = "";
+      }
+
+      function handleCliCommand(e) {
+        e.preventDefault();
+        const input = document.getElementById("cliInput");
+        if (!input) return;
+        const cmd = input.value.trim();
+        if (!cmd) return;
+
+        appendCli(`xe6@patbhe:~$ ${cmd}`, "cmd");
+        input.value = "";
+
+        const parts = cmd.split(" ");
+        const action = parts[0].toLowerCase();
+        const arg = parts.slice(1).join(" ");
+
+        switch (action) {
+          case "help":
+            appendCli(`Perintah yang didukung di simulator OS ini:<br>
+              • <strong class="text-white">ls</strong> : Menampilkan daftar folder/file aktif<br>
+              • <strong class="text-white">mkdir [nama]</strong> : Membuat direktori/folder baru<br>
+              • <strong class="text-white">ps</strong> : Melihat daftar proses aplikasi di RAM &amp; CPU<br>
+              • <strong class="text-white">uname -a</strong> : Menampilkan versi kernel sistem operasi<br>
+              • <strong class="text-white">whoami</strong> : Mengetahui identitas akun pengguna saat ini<br>
+              • <strong class="text-white">echo [teks]</strong> : Mencetak teks ke layar terminal<br>
+              • <strong class="text-white">clear</strong> : Membersihkan seluruh riwayat layar terminal`);
+            break;
+
+          case "ls":
+            appendCli(fileSystemDirs.map(d => `<span class="text-cyan-400 font-bold"><i class="fa-solid fa-folder text-[10px] mr-1"></i>${d}/</span>`).join("   "));
+            break;
+
+          case "mkdir":
+            if (!arg) {
+              appendCli("mkdir: missing operand (masukkan nama folder, contoh: mkdir tugas_pts)", "error");
+            } else {
+              fileSystemDirs.push(arg);
+              appendCli(`Direktori '${arg}' berhasil dibuat ke dalam File System!`, "success");
+            }
+            break;
+
+          case "ps":
+            appendCli(`PID   TTY          TIME CMD<br>
+  101 ?        00:00:01 systemd (Init/Kernel)<br>
+  204 ?        00:00:04 chrome_browser<br>
+  315 pts/0    00:00:00 bash (CLI Terminal)<br>
+  412 ?        00:00:02 spotify_audio`);
+            break;
+
+          case "whoami":
+            appendCli("kelas_xe6 (Siswa SMAN 4 Yogyakarta - Fase E)");
+            break;
+
+          case "uname":
+            appendCli("Linux patbhe-kernel-xe6 6.8.0-generic #1 SMP PREEMPT x86_64 GNU/Linux");
+            break;
+
+          case "echo":
+            appendCli(arg || "");
+            break;
+
+          case "clear":
+            clearTerminal();
+            break;
+
+          default:
+            appendCli(`Perintah '${action}' tidak ditemukan. Ketik 'help' untuk panduan perintah.`, "error");
+        }
+      }
+
+      /* ==========================================
+         6. CPU Scheduler Simulator (Round Robin)
+         ========================================== */
+      let readyQueue = [
+        { id: "P1", name: "Spotify (Musik)", burst: 2, icon: "fa-music", colorClass: "border-sky-500/40 text-sky-600 dark:text-sky-300 bg-sky-50 dark:bg-sky-950/40" },
+        { id: "P2", name: "Google Chrome", burst: 3, icon: "fa-globe", colorClass: "border-amber-500/40 text-amber-600 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/40" },
+        { id: "P3", name: "MS Word (Ketik)", burst: 1, icon: "fa-file-lines", colorClass: "border-purple-500/40 text-purple-600 dark:text-purple-300 bg-purple-50 dark:bg-purple-950/40" },
+      ];
+      let runningProcess = null;
+      let terminatedQueue = [];
+
+      function renderScheduler() {
+        const rq = document.getElementById("readyQueueContainer");
+        const act = document.getElementById("activeCpuProcess");
+        const tq = document.getElementById("doneQueueContainer");
+        const qc = document.getElementById("queueCount");
+        const dc = document.getElementById("doneCount");
+
+        if (qc) qc.textContent = `${readyQueue.length} Menunggu`;
+        if (dc) dc.textContent = `${terminatedQueue.length} Selesai`;
+
+        if (rq) {
+          if (readyQueue.length === 0) {
+            rq.innerHTML = '<span class="text-xs text-slate-400 italic text-center">(Antrean RAM kosong)</span>';
+          } else {
+            rq.innerHTML = readyQueue.map(p => `
+              <div class="process-block p-2.5 rounded-xl border flex items-center justify-between text-xs font-semibold shadow-sm ${p.colorClass}">
+                <div class="flex items-center gap-2">
+                  <i class="fa-solid ${p.icon}"></i>
+                  <span>${p.name}</span>
+                </div>
+                <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-white/70 dark:bg-black/30">Burst: ${p.burst}s</span>
+              </div>
+            `).join("");
+          }
+        }
+
+        if (act) {
+          if (runningProcess) {
+            act.innerHTML = `
+              <div class="flex items-center gap-2">
+                <i class="fa-solid ${runningProcess.icon} text-lg text-emerald-600 dark:text-emerald-400"></i>
+                <span class="font-bold text-sm text-slate-900 dark:text-white">${runningProcess.name}</span>
+              </div>
+              <span class="text-[11px] text-emerald-700 dark:text-emerald-300 font-mono font-bold mt-1">Status: Running (CPU Slice)</span>
+            `;
+            act.className = "w-full py-5 rounded-xl bg-emerald-100/80 dark:bg-emerald-950/60 border-2 border-emerald-500 font-mono text-sm font-bold flex flex-col items-center justify-center animate-pulse shadow-md";
+          } else {
+            act.innerHTML = '<span>(CPU Idle — Menunggu Proses)</span>';
+            act.className = "w-full py-5 rounded-xl bg-white dark:bg-slate-900 border border-emerald-300 dark:border-emerald-700 font-mono text-sm font-bold text-slate-400 flex flex-col items-center justify-center shadow-sm";
+          }
+        }
+
+        if (tq) {
+          if (terminatedQueue.length === 0) {
+            tq.innerHTML = '<span class="text-xs text-slate-400 dark:text-slate-500 text-center italic" id="doneEmpty">(belum ada proses selesai)</span>';
+          } else {
+            tq.innerHTML = terminatedQueue.map(p => `
+              <div class="process-block p-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-800 flex items-center justify-between text-xs font-semibold text-emerald-800 dark:text-emerald-200 shadow-sm">
+                <span class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-600 dark:text-emerald-400"></i> ${p.name}</span>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-200 dark:bg-emerald-900 font-bold">Terminated</span>
+              </div>
+            `).join("");
+          }
+        }
+      }
+
+      function stepScheduler() {
+        const nar = document.getElementById("cpuNarration");
+
+        if (runningProcess) {
+          runningProcess.burst -= 1;
+          if (runningProcess.burst <= 0) {
+            terminatedQueue.push(runningProcess);
+            if (nar) nar.innerHTML = `<span class="text-emerald-600 dark:text-emerald-400 font-bold">Proses <strong>${runningProcess.name}</strong> selesai dieksekusi dan dihentikan (Terminated)!</span>`;
+            runningProcess = null;
+          } else {
+            readyQueue.push(runningProcess);
+            if (nar) nar.innerHTML = `<span class="text-amber-600 dark:text-amber-400 font-bold">Jatah waktu habis! <strong>${runningProcess.name}</strong> dikembalikan ke antrean RAM (Round Robin).</span>`;
+            runningProcess = null;
+          }
+        } else if (readyQueue.length > 0) {
+          runningProcess = readyQueue.shift();
+          if (nar) nar.innerHTML = `<span class="text-cyan-600 dark:text-cyan-400 font-bold">CPU mengambil <strong>${runningProcess.name}</strong> dari Ready Queue untuk diproses!</span>`;
+        } else {
+          if (nar) nar.innerHTML = `<span class="text-emerald-600 dark:text-emerald-400 font-bold">Semua proses selesai! Komputer dalam kondisi optimal.</span>`;
+        }
+        renderScheduler();
+      }
+
+      function resetScheduler() {
+        readyQueue = [
+          { id: "P1", name: "Spotify (Musik)", burst: 2, icon: "fa-music", colorClass: "border-sky-500/40 text-sky-600 dark:text-sky-300 bg-sky-50 dark:bg-sky-950/40" },
+          { id: "P2", name: "Google Chrome", burst: 3, icon: "fa-globe", colorClass: "border-amber-500/40 text-amber-600 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/40" },
+          { id: "P3", name: "MS Word (Ketik)", burst: 1, icon: "fa-file-lines", colorClass: "border-purple-500/40 text-purple-600 dark:text-purple-300 bg-purple-50 dark:bg-purple-950/40" },
+        ];
+        runningProcess = null;
+        terminatedQueue = [];
+        const nar = document.getElementById("cpuNarration");
+        if (nar) nar.textContent = 'Klik "Giliran Berikutnya" untuk memasukkan proses.';
+        renderScheduler();
+      }
+
+      /* ==========================================
+         7. Interactive Quiz Logic (Lembar Kerja)
+         ========================================== */
+      function checkQuiz(qNum, choice, isCorrect, btnEl) {
+        const parent = btnEl.closest(".space-y-4");
+        if (!parent) return;
+        parent.querySelectorAll(".quiz-btn").forEach(b => {
+          b.classList.remove(
+            "border-emerald-500", "bg-emerald-50", "dark:bg-emerald-950/60", "text-emerald-700", "dark:text-emerald-300",
+            "border-rose-500", "bg-rose-50", "dark:bg-rose-950/60", "text-rose-700", "dark:text-rose-300"
+          );
+          b.disabled = true;
+        });
+
+        const fb = document.getElementById(`quizFb_${qNum}`);
+        if (!fb) return;
+        fb.classList.remove(
+          "hidden",
+          "bg-emerald-50", "dark:bg-emerald-950/40", "border-emerald-300", "dark:border-emerald-700", "text-emerald-800", "dark:text-emerald-200",
+          "bg-rose-50", "dark:bg-rose-950/40", "border-rose-300", "dark:border-rose-700", "text-rose-800", "dark:text-rose-200"
+        );
+        fb.classList.add("border");
+
+        if (isCorrect) {
+          btnEl.classList.add("border-emerald-500", "bg-emerald-50", "dark:bg-emerald-950/60", "text-emerald-700", "dark:text-emerald-300");
+          fb.classList.add("bg-emerald-50", "dark:bg-emerald-950/40", "border-emerald-300", "dark:border-emerald-700", "text-emerald-800", "dark:text-emerald-200");
+          fb.innerHTML = '<div class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-base text-emerald-600 dark:text-emerald-400"></i><span><strong>Jawaban Benar!</strong> Analisis pemahaman konsepmu sangat tepat.</span></div>';
+        } else {
+          btnEl.classList.add("border-rose-500", "bg-rose-50", "dark:bg-rose-950/60", "text-rose-700", "dark:text-rose-300");
+          fb.classList.add("bg-rose-50", "dark:bg-rose-950/40", "border-rose-300", "dark:border-rose-700", "text-rose-800", "dark:text-rose-200");
+          fb.innerHTML = '<div class="flex items-center gap-2"><i class="fa-solid fa-circle-xmark text-base text-rose-600 dark:text-rose-400"></i><span><strong>Kurang Tepat.</strong> Buka kembali tab Materi di atas untuk mendalami penjelasannya!</span></div>';
+        }
+      }
+
+      /* Init DOM */
+      document.addEventListener("DOMContentLoaded", () => {
+        renderScheduler();
+
+        // Scroll reveal observer
+        const revealElements = document.querySelectorAll(".reveal");
+        const revealObserver = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("active");
+            }
+          });
+        }, { threshold: 0.1 });
+        revealElements.forEach(el => revealObserver.observe(el));
+      });
+    </script>
+  </body>
+</html>

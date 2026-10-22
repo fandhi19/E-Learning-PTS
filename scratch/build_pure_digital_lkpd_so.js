@@ -1,0 +1,1419 @@
+const fs = require('fs');
+
+const htmlContent = `<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LKPD Digital: Mengenal Sistem Operasi — RuangInformatika</title>
+    <link rel="shortcut icon" href="../images/Logo Patbhe.png" type="image/x-icon" />
+
+    <!-- Anti-FOUC script: set tema seawal mungkin -->
+    <script>
+      if (
+        localStorage.getItem("theme") === "dark" ||
+        (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches)
+      ) {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
+    </script>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              brandDark: "#0b1120",
+              brandNavy: "#0f172a",
+              brandGray: "#1e293b",
+            },
+            fontFamily: {
+              sans: ["'Plus Jakarta Sans'", "sans-serif"],
+              mono: ["'JetBrains Mono'", "monospace"],
+            },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      /* Background Grid */
+      body {
+        background-color: #0b1120;
+        background-image: radial-gradient(rgba(16, 185, 129, 0.08) 1px, transparent 1px),
+          radial-gradient(rgba(14, 165, 233, 0.05) 1px, transparent 1px);
+        background-size: 32px 32px;
+        background-position: 0 0, 16px 16px;
+      }
+      html:not(.dark) body {
+        background-color: #f8fafc;
+        background-image: radial-gradient(rgba(16, 185, 129, 0.12) 1px, transparent 1px),
+          radial-gradient(rgba(14, 165, 233, 0.08) 1px, transparent 1px);
+      }
+
+      /* Progress Bar Atas */
+      #examProgress {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #10b981, #06b6d4, #3b82f6);
+        z-index: 999;
+        width: 0%;
+        transition: width 0.3s ease;
+        box-shadow: 0 0 12px rgba(16, 185, 129, 0.6);
+      }
+
+      /* Indikator Autosave Melayang */
+      #saveIndicator {
+        position: fixed;
+        top: 86px;
+        right: 20px;
+        z-index: 998;
+        padding: 8px 16px;
+        border-radius: 999px;
+        background: rgba(15, 23, 42, 0.94);
+        border: 1px solid rgba(16, 185, 129, 0.5);
+        color: #10b981;
+        font-size: 0.75rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        opacity: 0;
+        transform: translateY(-10px);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        pointer-events: none;
+        backdrop-filter: blur(12px);
+        box-shadow: 0 4px 20px rgba(16, 185, 129, 0.2);
+      }
+      html:not(.dark) #saveIndicator {
+        background: rgba(255, 255, 255, 0.95);
+        border-color: rgba(16, 185, 129, 0.6);
+        color: #059669;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      }
+      #saveIndicator.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* Section Styling */
+      .exam-section {
+        background: rgba(15, 23, 42, 0.85);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 24px;
+        padding: 24px 28px;
+        margin-bottom: 24px;
+        position: relative;
+        backdrop-filter: blur(14px);
+        box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.4);
+        transition: border-color 0.3s ease;
+      }
+      html:not(.dark) .exam-section {
+        background: rgba(255, 255, 255, 0.95);
+        border: 1px solid rgba(226, 232, 240, 0.9);
+        box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.06);
+      }
+
+      .exam-section.sec-emerald { border-top: 4px solid #10b981; }
+      .exam-section.sec-cyan { border-top: 4px solid #06b6d4; }
+      .exam-section.sec-teal { border-top: 4px solid #14b8a6; }
+      .exam-section.sec-sky { border-top: 4px solid #0284c7; }
+      .exam-section.sec-purple { border-top: 4px solid #a855f7; }
+      .exam-section.sec-amber { border-top: 4px solid #f59e0b; }
+
+      .exam-head {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 18px;
+        padding-bottom: 16px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      html:not(.dark) .exam-head {
+        border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+      }
+
+      .exam-num {
+        width: 44px;
+        height: 44px;
+        border-radius: 14px;
+        background: rgba(16, 185, 129, 0.15);
+        border: 1px solid rgba(16, 185, 129, 0.3);
+        color: #10b981;
+        font-family: "'JetBrains Mono'", monospace;
+        font-weight: 800;
+        font-size: 1.1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .sec-cyan .exam-num {
+        background: rgba(6, 182, 212, 0.15);
+        border-color: rgba(6, 182, 212, 0.3);
+        color: #06b6d4;
+      }
+      .sec-teal .exam-num {
+        background: rgba(20, 184, 166, 0.15);
+        border-color: rgba(20, 184, 166, 0.3);
+        color: #14b8a6;
+      }
+      .sec-purple .exam-num {
+        background: rgba(168, 85, 247, 0.15);
+        border-color: rgba(168, 85, 247, 0.3);
+        color: #a855f7;
+      }
+      .sec-amber .exam-num {
+        background: rgba(245, 158, 11, 0.15);
+        border-color: rgba(245, 158, 11, 0.3);
+        color: #f59e0b;
+      }
+
+      .exam-title {
+        font-size: 1.15rem;
+        font-weight: 800;
+        color: #fff;
+        line-height: 1.3;
+      }
+      html:not(.dark) .exam-title {
+        color: #0f172a;
+      }
+      .exam-sub {
+        font-size: 0.75rem;
+        color: #94a3b8;
+        margin-top: 2px;
+      }
+      html:not(.dark) .exam-sub {
+        color: #64748b;
+      }
+
+      .exam-points {
+        margin-left: auto;
+        font-size: 0.75rem;
+        font-family: "'JetBrains Mono'", monospace;
+        font-weight: 800;
+        padding: 4px 10px;
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.05);
+        color: #cbd5e1;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        white-space: nowrap;
+      }
+      html:not(.dark) .exam-points {
+        background: #f1f5f9;
+        color: #334155;
+        border-color: #e2e8f0;
+      }
+
+      /* Inputs */
+      .cbt-input {
+        width: 100%;
+        background: rgba(2, 6, 23, 0.6);
+        border: 1.5px solid rgba(255, 255, 255, 0.12);
+        border-radius: 12px;
+        padding: 10px 14px;
+        color: #f8fafc;
+        font-family: "'Plus Jakarta Sans'", sans-serif;
+        font-size: 0.875rem;
+        outline: none;
+        transition: all 0.2s ease;
+      }
+      html:not(.dark) .cbt-input {
+        background: #ffffff;
+        border-color: #cbd5e1;
+        color: #0f172a;
+      }
+      .cbt-input:focus {
+        border-color: #10b981;
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+        background: rgba(2, 6, 23, 0.85);
+      }
+      html:not(.dark) .cbt-input:focus {
+        background: #ffffff;
+      }
+      .cbt-input::placeholder {
+        color: #64748b;
+        font-size: 0.825rem;
+      }
+
+      .cbt-textarea {
+        min-height: 100px;
+        line-height: 1.6;
+        resize: vertical;
+      }
+
+      .cbt-input-sm {
+        padding: 8px 12px;
+        font-size: 0.82rem;
+        border-radius: 10px;
+      }
+
+      .cbt-select {
+        width: 100%;
+        background: rgba(2, 6, 23, 0.6);
+        border: 1.5px solid rgba(255, 255, 255, 0.12);
+        border-radius: 12px;
+        padding: 10px 14px;
+        color: #f8fafc;
+        font-family: "'Plus Jakarta Sans'", sans-serif;
+        font-size: 0.85rem;
+        outline: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+      html:not(.dark) .cbt-select {
+        background: #ffffff;
+        border-color: #cbd5e1;
+        color: #0f172a;
+      }
+      .cbt-select:focus {
+        border-color: #10b981;
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+      }
+
+      /* Custom Checkbox */
+      .cbt-checkbox {
+        appearance: none;
+        width: 22px;
+        height: 22px;
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        border-radius: 6px;
+        background: rgba(0, 0, 0, 0.3);
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+        flex-shrink: 0;
+      }
+      html:not(.dark) .cbt-checkbox {
+        border-color: #94a3b8;
+        background: #f8fafc;
+      }
+      .cbt-checkbox:checked {
+        background: #10b981;
+        border-color: #10b981;
+      }
+      .cbt-checkbox:checked::after {
+        content: "\\f00c";
+        font-family: "Font Awesome 6 Free";
+        font-weight: 900;
+        color: #fff;
+        font-size: 0.75rem;
+      }
+
+      /* Hero Glow */
+      .page-hero-glow {
+        position: absolute;
+        top: -120px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 600px;
+        height: 350px;
+        background: radial-gradient(circle, rgba(16, 185, 129, 0.25) 0%, rgba(6, 182, 212, 0.1) 40%, transparent 70%);
+        filter: blur(40px);
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      /* Print Optimization */
+      @media print {
+        header, #examProgress, #saveIndicator, .no-print, button, #actionBar {
+          display: none !important;
+        }
+        body {
+          background: #fff !important;
+          color: #000 !important;
+        }
+        .exam-section {
+          box-shadow: none !important;
+          border: 1px solid #ccc !important;
+          break-inside: avoid;
+        }
+      }
+    </style>
+  </head>
+
+  <body class="text-slate-100 font-sans antialiased min-h-screen flex flex-col selection:bg-emerald-500 selection:text-white">
+    <!-- Progress Bar Atas -->
+    <div id="examProgress"></div>
+
+    <!-- Floating Auto-Save Notification -->
+    <div id="saveIndicator">
+      <i class="fa-solid fa-cloud-arrow-up text-sm"></i>
+      <span>Tersimpan otomatis di peramban</span>
+    </div>
+
+    <!-- ============================================================
+         1. TOP NAVBAR
+         ============================================================ -->
+    <header class="sticky top-0 z-50 bg-slate-950/80 dark:bg-slate-950/80 backdrop-blur-md border-b border-slate-800 transition-colors">
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between">
+        <a href="../index.html" class="flex items-center gap-3.5 group">
+          <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 p-0.5 shadow-md shadow-emerald-500/20 group-hover:scale-105 transition-transform">
+            <div class="w-full h-full bg-white dark:bg-slate-900 rounded-[14px] flex items-center justify-center overflow-hidden">
+              <img src="../images/Logo Patbhe.png" alt="Logo SMAN 4 Yogyakarta" class="w-7 h-7 object-contain" />
+            </div>
+          </div>
+          <div>
+            <div class="flex items-center gap-1.5">
+              <span class="font-black text-xl text-slate-900 dark:text-white tracking-tight">Ruang<span class="text-emerald-500">Informatika</span></span>
+            </div>
+            <span class="text-[10px] uppercase font-bold tracking-widest text-slate-500 dark:text-slate-400 block">SMAN 4 YOGYAKARTA</span>
+          </div>
+        </a>
+
+        <div class="flex items-center gap-3">
+          <a
+            href="materi.html#lembarkerja"
+            class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-xs font-bold text-slate-200 transition-colors border border-slate-700"
+          >
+            <i class="fa-solid fa-arrow-left"></i>
+            <span>Kembali ke Modul</span>
+          </a>
+
+          <button
+            id="themeToggleBtn"
+            type="button"
+            class="w-10 h-10 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-amber-400 flex items-center justify-center transition-all focus:outline-none shadow-sm cursor-pointer border border-slate-700"
+            aria-label="Toggle Theme"
+            title="Ganti Tema Gelap / Terang"
+          >
+            <i class="fa-solid fa-moon dark:hidden text-sm"></i>
+            <i class="fa-solid fa-sun hidden dark:inline text-sm"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- ============================================================
+         2. HERO BANNER & INFORMASI LKPD
+         ============================================================ -->
+    <div class="relative py-12 px-4 overflow-hidden border-b border-slate-800/80">
+      <div class="page-hero-glow"></div>
+      <div class="max-w-4xl mx-auto text-center relative z-10 space-y-4">
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-950/80 border border-emerald-500/40 text-emerald-300 text-xs font-bold font-mono tracking-wider shadow-sm">
+          <i class="fa-solid fa-gamepad text-emerald-400"></i>
+          <span>LKPD DIGITAL • MISI EKSPLORASI GAME SISTEM OPERASI</span>
+        </div>
+        
+        <h1 class="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 dark:text-white tracking-tight leading-tight">
+          Lembar Kerja: <span class="bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 bg-clip-text text-transparent">Mengenal Sistem Operasi</span>
+        </h1>
+        
+        <p class="text-sm sm:text-base text-slate-600 dark:text-slate-300 max-w-2xl mx-auto leading-relaxed">
+          Jurnal Misi (Quest Log) Pembelajaran Digital. Jelajahi tantangan di dalam game, selesaikan 4 misi eksplorasi, dan lengkapi lembar kerja digital ini secara interaktif!
+        </p>
+
+        <!-- Meta badges -->
+        <div class="flex flex-wrap items-center justify-center gap-2.5 pt-2">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-slate-900/90 border border-slate-800 text-xs font-semibold text-slate-300 shadow-sm">
+            <i class="fa-solid fa-school text-emerald-400"></i> SMAN 4 Yogyakarta
+          </span>
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-slate-900/90 border border-slate-800 text-xs font-semibold text-slate-300 shadow-sm">
+            <i class="fa-solid fa-graduation-cap text-cyan-400"></i> Fase E (Kelas X)
+          </span>
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-slate-900/90 border border-slate-800 text-xs font-semibold text-slate-300 shadow-sm">
+            <i class="fa-solid fa-clock text-amber-400"></i> Alokasi: 90 Menit
+          </span>
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-slate-900/90 border border-slate-800 text-xs font-semibold text-slate-300 shadow-sm">
+            <i class="fa-solid fa-chalkboard-user text-purple-400"></i> Guru: Pak Ilyas
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         3. MAIN CONTAINER
+         ============================================================ -->
+    <main class="max-w-4xl mx-auto px-4 sm:px-6 py-8 flex-1 w-full space-y-6">
+
+      <!-- ============================================================
+           PROGRESS TRACKER CARD
+           ============================================================ -->
+      <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-5 shadow-xl backdrop-blur-md space-y-3">
+        <div class="flex items-center justify-between flex-wrap gap-2">
+          <div class="flex items-center gap-2.5">
+            <span class="w-3 h-3 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span class="text-xs sm:text-sm font-bold text-slate-200">
+              Progress Pengerjaan Digital: <strong class="text-emerald-400"><span id="progressCurrent">0</span> dari 5 Bagian</strong>
+            </span>
+          </div>
+          <span class="text-xs font-mono font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-3 py-1 rounded-full" id="progressPercent">0%</span>
+        </div>
+
+        <div class="w-full bg-slate-800/80 rounded-full h-2.5 overflow-hidden">
+          <div id="progressBarFill" class="bg-gradient-to-r from-emerald-500 via-teal-400 to-cyan-400 h-2.5 rounded-full transition-all duration-300" style="width: 0%"></div>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 pt-1 text-[11px] font-medium text-slate-400">
+          <div class="flex items-center gap-1.5">
+            <span class="w-4 h-4 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 flex items-center justify-center text-[9px] font-mono font-bold">1</span>
+            <span>M1: Booting</span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <span class="w-4 h-4 rounded-full bg-teal-500/20 text-teal-300 border border-teal-500/40 flex items-center justify-center text-[9px] font-mono font-bold">2</span>
+            <span>M2: Lapisan</span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <span class="w-4 h-4 rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/40 flex items-center justify-center text-[9px] font-mono font-bold">3</span>
+            <span>M3: 4 Jenis OS</span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <span class="w-4 h-4 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/40 flex items-center justify-center text-[9px] font-mono font-bold">4</span>
+            <span>M4: 5 Peran OS</span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <span class="w-4 h-4 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 flex items-center justify-center text-[9px] font-mono font-bold">5</span>
+            <span>M5: Refleksi</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================================
+           PETUNJUK & TUJUAN PEMBELAJARAN (Halaman 1)
+           ============================================================ -->
+      <div class="exam-section sec-emerald">
+        <div class="exam-head">
+          <div class="exam-num"><i class="fa-solid fa-book-open text-base"></i></div>
+          <div>
+            <div class="exam-title">Petunjuk Pengerjaan &amp; Aturan Main</div>
+            <div class="exam-sub">Misi Eksplorasi Game · Memahami Sistem Komputer &amp; Sistem Operasi</div>
+          </div>
+          <div class="exam-points">INFO MISI</div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs leading-relaxed">
+          <!-- Petunjuk -->
+          <div class="bg-black/30 border border-emerald-500/20 rounded-xl p-4 space-y-2">
+            <div class="font-bold text-emerald-400 flex items-center gap-2">
+              <i class="fa-solid fa-gamepad"></i> Aturan Main Eksplorasi:
+            </div>
+            <ol class="list-decimal list-inside space-y-1 text-slate-300">
+              <li>Buka dan mainkan Game Pembelajaran Sistem Operasi sesuai arahan guru.</li>
+              <li>LKPD Digital ini adalah <strong>Jurnal Misi (Quest Log)</strong>-mu. Jawaban misi tersimpan di dalam game.</li>
+              <li>Jelajahi setiap tahapan game, temukan informasi kuncinya, lalu ketikkan jawabanmu di lembar digital ini!</li>
+            </ol>
+          </div>
+
+          <!-- Tujuan -->
+          <div class="bg-black/30 border border-cyan-500/20 rounded-xl p-4 space-y-2">
+            <div class="font-bold text-cyan-400 flex items-center gap-2">
+              <i class="fa-solid fa-bullseye"></i> Tujuan Pembelajaran:
+            </div>
+            <ul class="list-disc list-inside space-y-1 text-slate-300">
+              <li>Menjelaskan pengertian OS dan mengurutkan 5 langkah booting.</li>
+              <li>Menganalisis struktur Model Lapisan Bawang (Onion Layer Model).</li>
+              <li>Membedakan 4 jenis OS (Desktop, Mobile, Embedded, Server).</li>
+              <li>Menjelaskan 5 peran utama OS (Memori, CPU Multitasking, IPO, GUI/CLI, Utilitas).</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================================
+           IDENTITAS PESERTA DIDIK (Halaman 1)
+           ============================================================ -->
+      <div class="exam-section sec-cyan">
+        <div class="exam-head">
+          <div class="exam-num"><i class="fa-solid fa-id-card text-base"></i></div>
+          <div>
+            <div class="exam-title">Identitas Peserta Didik</div>
+            <div class="exam-sub">Halaman 1 · Isi data diri atau kelompok sebelum menjalankan misi</div>
+          </div>
+          <div class="exam-points">WAJIB DIISI</div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs sm:text-sm">
+          <div>
+            <label class="block font-bold text-slate-200 mb-1.5">Nama Lengkap / Kelompok <span class="text-rose-400">*</span></label>
+            <input type="text" id="inNama" required placeholder="Contoh: Muhammad Ilyas / Tim 4" class="cbt-input" />
+          </div>
+
+          <div>
+            <label class="block font-bold text-slate-200 mb-1.5">Nomor Presensi (Absen) <span class="text-rose-400">*</span></label>
+            <input type="text" id="inAbsen" required placeholder="Contoh: 18 (atau 18, 19)" class="cbt-input" />
+          </div>
+
+          <div>
+            <label class="block font-bold text-slate-200 mb-1.5">Kelas / Kelompok</label>
+            <input type="text" id="inKelas" value="X-E6 • Kelompok " class="cbt-input font-mono" />
+          </div>
+
+          <div>
+            <label class="block font-bold text-slate-200 mb-1.5">Skor Game (Poin / Level)</label>
+            <input type="text" id="inSkor" placeholder="Contoh: 850 Poin (Level 4)" class="cbt-input font-mono" />
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================================
+           MISI 1: PENGERTIAN OS & TAHAPAN BOOTING (Halaman 2)
+           ============================================================ -->
+      <div class="exam-section sec-teal">
+        <div class="exam-head">
+          <div class="exam-num">01</div>
+          <div>
+            <div class="exam-title">Misi 1 — Pengertian OS &amp; Tahapan Booting</div>
+            <div class="exam-sub">Halaman 2 · Alokasi 12 Menit · Cari tahu bagaimana Sistem Operasi mulai bekerja saat komputer dinyalakan</div>
+          </div>
+          <div class="exam-points">20 POIN</div>
+        </div>
+
+        <!-- Soal 1: Pengertian -->
+        <div class="space-y-4">
+          <div class="bg-black/25 border border-white/5 rounded-2xl p-4 sm:p-5 space-y-2">
+            <label class="block font-bold text-white text-sm leading-relaxed">
+              1. Apa pengertian dan fungsi utama dari Sistem Operasi (Operating System)?
+            </label>
+            <p class="text-xs text-slate-400">Jelaskan peran OS sebagai penghubung antara pengguna (brainware), perangkat lunak (software), dan perangkat keras (hardware).</p>
+            <textarea
+              id="m1_pengertian"
+              class="cbt-input cbt-textarea"
+              placeholder="Tuliskan jawabanmu di sini berdasarkan informasi di dalam game..."
+            ></textarea>
+          </div>
+
+          <!-- Soal 2: 5 Langkah Booting (Interaktif) -->
+          <div class="bg-black/25 border border-white/5 rounded-2xl p-4 sm:p-5 space-y-3">
+            <div class="flex items-center justify-between flex-wrap gap-2 border-b border-white/10 pb-3">
+              <div>
+                <label class="block font-bold text-white text-sm">
+                  2. Urutan 5 Langkah Proses Booting Komputer
+                </label>
+                <p class="text-xs text-slate-400">Lengkapi alur tahapan booting dari langkah ke-1 hingga ke-5 dengan tepat:</p>
+              </div>
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-teal-500/20 text-teal-300 font-bold border border-teal-500/40">5 TAHAP RUNUT</span>
+            </div>
+
+            <div class="space-y-2.5">
+              <!-- Langkah 1 (Fixed) -->
+              <div class="flex items-center gap-3 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-xs sm:text-sm">
+                <span class="w-7 h-7 rounded-lg bg-emerald-500 text-white font-mono font-bold flex items-center justify-center shrink-0">1</span>
+                <div>
+                  <span class="font-bold text-emerald-300">Daya (Power) Dihidupkan</span>
+                  <p class="text-[11px] text-slate-400">Arus listrik mengalir ke motherboard &amp; komponen CPU menerima sinyal awal.</p>
+                </div>
+              </div>
+
+              <!-- Langkah 2 (Input) -->
+              <div class="flex items-center gap-3 p-3 rounded-xl bg-slate-900/60 border border-slate-700/80 text-xs sm:text-sm">
+                <span class="w-7 h-7 rounded-lg bg-teal-500 text-white font-mono font-bold flex items-center justify-center shrink-0">2</span>
+                <div class="flex-1 space-y-1">
+                  <span class="font-bold text-slate-200">Langkah ke-2:</span>
+                  <input
+                    type="text"
+                    id="m1_boot2"
+                    placeholder="Ketik langkah ke-2 (Contoh: Pemeriksaan hardware / POST oleh BIOS / UEFI)..."
+                    class="cbt-input cbt-input-sm"
+                  />
+                </div>
+              </div>
+
+              <!-- Langkah 3 (Input) -->
+              <div class="flex items-center gap-3 p-3 rounded-xl bg-slate-900/60 border border-slate-700/80 text-xs sm:text-sm">
+                <span class="w-7 h-7 rounded-lg bg-teal-500 text-white font-mono font-bold flex items-center justify-center shrink-0">3</span>
+                <div class="flex-1 space-y-1">
+                  <span class="font-bold text-slate-200">Langkah ke-3:</span>
+                  <input
+                    type="text"
+                    id="m1_boot3"
+                    placeholder="Ketik langkah ke-3 (Contoh: Pencarian Boot Sector / Bootloader di Media Penyimpanan SSD/HDD)..."
+                    class="cbt-input cbt-input-sm"
+                  />
+                </div>
+              </div>
+
+              <!-- Langkah 4 (Input) -->
+              <div class="flex items-center gap-3 p-3 rounded-xl bg-slate-900/60 border border-slate-700/80 text-xs sm:text-sm">
+                <span class="w-7 h-7 rounded-lg bg-teal-500 text-white font-mono font-bold flex items-center justify-center shrink-0">4</span>
+                <div class="flex-1 space-y-1">
+                  <span class="font-bold text-slate-200">Langkah ke-4:</span>
+                  <input
+                    type="text"
+                    id="m1_boot4"
+                    placeholder="Ketik langkah ke-4 (Contoh: Pemuatan Kernel Sistem Operasi ke dalam Memori RAM)..."
+                    class="cbt-input cbt-input-sm"
+                  />
+                </div>
+              </div>
+
+              <!-- Langkah 5 (Fixed) -->
+              <div class="flex items-center gap-3 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-xs sm:text-sm">
+                <span class="w-7 h-7 rounded-lg bg-emerald-500 text-white font-mono font-bold flex items-center justify-center shrink-0">5</span>
+                <div>
+                  <span class="font-bold text-emerald-300">Pengalihan Kontrol ke Sistem Operasi</span>
+                  <p class="text-[11px] text-slate-400">Kernel mengaktifkan antarmuka pengguna (Desktop / Login screen) &amp; OS siap dipakai.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Soal 3: Fungsi POST -->
+          <div class="bg-black/25 border border-white/5 rounded-2xl p-4 sm:p-5 space-y-2">
+            <label class="block font-bold text-white text-sm leading-relaxed">
+              3. Apa fungsi dari tahap POST (Power On Self Test)?
+            </label>
+            <p class="text-xs text-slate-400">Jelaskan apa yang diperiksa oleh POST dan apa yang terjadi jika salah satu hardware (misal RAM atau GPU) rusak/tidak terpasang dengan baik!</p>
+            <textarea
+              id="m1_fungsi_post"
+              class="cbt-input cbt-textarea"
+              placeholder="Tuliskan penjelasan mengenai fungsi POST di sini..."
+            ></textarea>
+          </div>
+
+          <!-- Tips Misi 1 -->
+          <div class="bg-teal-500/10 border border-teal-500/30 rounded-xl p-3.5 flex items-start gap-3 text-xs text-teal-200">
+            <i class="fa-solid fa-lightbulb text-teal-400 text-base mt-0.5"></i>
+            <div>
+              <strong class="text-white block mb-0.5">Tips Misi 1:</strong>
+              1. Perhatikan urutan proses saat komputer dinyalakan — jangan sampai terbalik! &bull; 2. POST adalah pengecekan awal perangkat keras sebelum OS dimuat. &bull; 3. Baca materi game dengan teliti.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================================
+           MISI 2: MODEL LAPISAN BAWANG (Halaman 3)
+           ============================================================ -->
+      <div class="exam-section sec-cyan">
+        <div class="exam-head">
+          <div class="exam-num">02</div>
+          <div>
+            <div class="exam-title">Misi 2 — Model Lapisan Bawang (Onion Layer Model)</div>
+            <div class="exam-sub">Halaman 3 · Alokasi 10 Menit · Mengupas struktur bertingkat sistem komputer dari inti fisik hingga pengguna</div>
+          </div>
+          <div class="exam-points">20 POIN</div>
+        </div>
+
+        <div class="space-y-4">
+          <!-- Visual Layer Guide -->
+          <div class="bg-gradient-to-r from-cyan-500/10 via-teal-500/5 to-transparent border border-cyan-500/20 rounded-2xl p-4 flex items-center justify-between flex-wrap gap-3">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-cyan-500/20 text-cyan-300 flex items-center justify-center font-bold text-lg">
+                <i class="fa-solid fa-layer-group"></i>
+              </div>
+              <div class="text-xs">
+                <span class="font-bold text-white block">Hierarki Lapisan Komputer:</span>
+                <span class="text-slate-300">Inti Terdalam (Hardware) &rarr; Kernel &rarr; System Software / Services &rarr; Application &amp; User (Paling Luar)</span>
+              </div>
+            </div>
+            <span class="text-[11px] font-mono text-cyan-300 bg-cyan-950/80 px-2.5 py-1 rounded-lg border border-cyan-800">
+              Inisial: H, K, S, A &amp; U
+            </span>
+          </div>
+
+          <!-- Tabel Lapisan Bawang -->
+          <div class="overflow-x-auto rounded-2xl border border-white/10">
+            <table class="w-full text-left text-xs border-collapse">
+              <thead>
+                <tr class="bg-slate-800/80 text-cyan-300 font-bold border-b border-white/10 uppercase tracking-wider text-[11px]">
+                  <th class="p-3 w-1/4">Urutan Lapisan</th>
+                  <th class="p-3 w-1/4">Nama Lapisan (Inisial)</th>
+                  <th class="p-3 w-1/2">Peran / Penjelasan Singkat &amp; Contoh</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-white/10 bg-slate-900/60">
+                <!-- Lapisan 1 (Hardware - Contoh) -->
+                <tr class="bg-emerald-500/5">
+                  <td class="p-3 font-mono font-bold text-emerald-400">Lapisan Ke-1 (Inti Terdalam)</td>
+                  <td class="p-3 font-mono font-bold text-emerald-300">H (Hardware)</td>
+                  <td class="p-3 text-slate-300">
+                    Berisi perangkat fisik nyata seperti CPU, RAM, Disk Storage, Keyboard, Mouse, Terminals, dan Printers.
+                  </td>
+                </tr>
+
+                <!-- Lapisan 2 (Kernel - Input) -->
+                <tr>
+                  <td class="p-3 font-mono font-bold text-slate-300">Lapisan Ke-2</td>
+                  <td class="p-3 space-y-1">
+                    <span class="font-bold text-cyan-400 block font-mono">Inisial: K</span>
+                    <input type="text" id="m2_l2_nama" placeholder="K (Kernel)..." class="cbt-input cbt-input-sm font-mono font-bold" />
+                  </td>
+                  <td class="p-3">
+                    <input type="text" id="m2_l2_peran" placeholder="Jelaskan peran Kernel (pengatur inti hardware & alokasi memori)..." class="cbt-input cbt-input-sm" />
+                  </td>
+                </tr>
+
+                <!-- Lapisan 3 (System Software - Input) -->
+                <tr>
+                  <td class="p-3 font-mono font-bold text-slate-300">Lapisan Ke-3</td>
+                  <td class="p-3 space-y-1">
+                    <span class="font-bold text-teal-400 block font-mono">Inisial: S</span>
+                    <input type="text" id="m2_l3_nama" placeholder="S (System Software / Services)..." class="cbt-input cbt-input-sm font-mono font-bold" />
+                  </td>
+                  <td class="p-3">
+                    <input type="text" id="m2_l3_peran" placeholder="Jelaskan peran System Software & Layanan OS (file manager, drivers)..." class="cbt-input cbt-input-sm" />
+                  </td>
+                </tr>
+
+                <!-- Lapisan 4 (Application & User - Input) -->
+                <tr>
+                  <td class="p-3 font-mono font-bold text-slate-300">Lapisan Ke-4 (Paling Luar)</td>
+                  <td class="p-3 space-y-1">
+                    <span class="font-bold text-purple-400 block font-mono">Inisial: A &amp; U</span>
+                    <input type="text" id="m2_l4_nama" placeholder="A & U (Application & User)..." class="cbt-input cbt-input-sm font-mono font-bold" />
+                  </td>
+                  <td class="p-3">
+                    <input type="text" id="m2_l4_peran" placeholder="Jelaskan aplikasi (Word, Game, Browser) & pengguna (manusia)..." class="cbt-input cbt-input-sm" />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Soal Refleksi Lapisan -->
+          <div class="bg-black/25 border border-white/5 rounded-2xl p-4 sm:p-5 space-y-2">
+            <label class="block font-bold text-white text-sm leading-relaxed">
+              Analisis Lapisan: Mengapa Kernel dianalogikan sebagai jembatan perantara?
+            </label>
+            <p class="text-xs text-slate-400">Mengapa aplikasi buatan manusia tidak diizinkan mengakses register CPU atau memori hardware secara langsung tanpa melewati Kernel?</p>
+            <textarea
+              id="m2_analisis_kernel"
+              class="cbt-input cbt-textarea"
+              placeholder="Tuliskan analisismu mengenai fungsi Kernel sebagai penjaga & jembatan sistem..."
+            ></textarea>
+          </div>
+
+          <!-- Tips Misi 2 -->
+          <div class="bg-cyan-500/10 border border-cyan-500/30 rounded-xl p-3.5 flex items-start gap-3 text-xs text-cyan-200">
+            <i class="fa-solid fa-lightbulb text-cyan-400 text-base mt-0.5"></i>
+            <div>
+              <strong class="text-white block mb-0.5">Tips Misi 2:</strong>
+              1. Lapisan terdalam (inti) adalah perangkat fisik yang bisa disentuh nyata. &bull; 2. Semakin ke luar, lapisan semakin dekat dengan interaksi pengguna. &bull; 3. Setiap lapisan memiliki wewenang berbeda!
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================================
+           MISI 3: BERBURU 4 JENIS SISTEM OPERASI (Halaman 4)
+           ============================================================ -->
+      <div class="exam-section sec-sky">
+        <div class="exam-head">
+          <div class="exam-num">03</div>
+          <div>
+            <div class="exam-title">Misi 3 — Berburu 4 Jenis Sistem Operasi</div>
+            <div class="exam-sub">Halaman 4 · Alokasi 10 Menit · Pasangkan dan lengkapi karakteristik serta contoh nyata 4 jenis OS</div>
+          </div>
+          <div class="exam-points">20 POIN</div>
+        </div>
+
+        <div class="space-y-4">
+          <p class="text-xs text-slate-300">
+            Di dalam game kamu menjelajahi 4 kategori Sistem Operasi. Lengkapi karakteristik perangkat peruntukannya serta contoh nyata sistem operasi/perangkatnya:
+          </p>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- 1. Desktop OS -->
+            <div class="bg-black/25 border border-sky-500/30 rounded-2xl p-4 sm:p-5 space-y-3">
+              <div class="flex items-center justify-between border-b border-white/10 pb-2.5">
+                <div class="flex items-center gap-2">
+                  <div class="w-8 h-8 rounded-lg bg-sky-500/20 text-sky-400 flex items-center justify-center font-bold text-sm">
+                    <i class="fa-solid fa-desktop"></i>
+                  </div>
+                  <h4 class="font-bold text-white text-sm">1. Desktop OS</h4>
+                </div>
+                <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-sky-500/20 text-sky-300">PC / Laptop</span>
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-slate-300 mb-1">Perangkat &amp; Karakteristik Utama:</label>
+                <textarea id="m3_desktop_karakteristik" rows="2" class="cbt-input cbt-input-sm" placeholder="Contoh: Digunakan di PC/Laptop untuk produktivitas kerja berat, mendukung multitasking kompleks, antarmuka GUI jendela..."></textarea>
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-slate-300 mb-1">Contoh OS / Perangkat Nyata:</label>
+                <input type="text" id="m3_desktop_contoh" class="cbt-input cbt-input-sm" placeholder="Contoh: Windows 11, macOS Sequoia, Ubuntu Desktop..." />
+              </div>
+            </div>
+
+            <!-- 2. Mobile OS -->
+            <div class="bg-black/25 border border-emerald-500/30 rounded-2xl p-4 sm:p-5 space-y-3">
+              <div class="flex items-center justify-between border-b border-white/10 pb-2.5">
+                <div class="flex items-center gap-2">
+                  <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-sm">
+                    <i class="fa-solid fa-mobile-screen-button"></i>
+                  </div>
+                  <h4 class="font-bold text-white text-sm">2. Mobile OS</h4>
+                </div>
+                <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300">Smartphone</span>
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-slate-300 mb-1">Perangkat &amp; Karakteristik Utama:</label>
+                <textarea id="m3_mobile_karakteristik" rows="2" class="cbt-input cbt-input-sm" placeholder="Contoh: Dirancang untuk layar sentuh portabel, sangat hemat daya baterai, konektivitas seluler cepat, integrasi GPS..."></textarea>
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-slate-300 mb-1">Contoh OS / Perangkat Nyata:</label>
+                <input type="text" id="m3_mobile_contoh" class="cbt-input cbt-input-sm" placeholder="Contoh: Android 15, Apple iOS 18..." />
+              </div>
+            </div>
+
+            <!-- 3. Embedded OS -->
+            <div class="bg-black/25 border border-amber-500/30 rounded-2xl p-4 sm:p-5 space-y-3">
+              <div class="flex items-center justify-between border-b border-white/10 pb-2.5">
+                <div class="flex items-center gap-2">
+                  <div class="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold text-sm">
+                    <i class="fa-solid fa-microchip"></i>
+                  </div>
+                  <h4 class="font-bold text-white text-sm">3. Embedded OS</h4>
+                </div>
+                <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-amber-500/20 text-amber-300">Sistem Tertanam</span>
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-slate-300 mb-1">Perangkat &amp; Karakteristik Utama:</label>
+                <textarea id="m3_embedded_karakteristik" rows="2" class="cbt-input cbt-input-sm" placeholder="Contoh: Ditanam di perangkat fungsi khusus, sumber daya memori kecil, respon real-time tanpa delay..."></textarea>
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-slate-300 mb-1">Contoh OS / Perangkat Nyata:</label>
+                <input type="text" id="m3_embedded_contoh" class="cbt-input cbt-input-sm" placeholder="Contoh: Smart TV, Mesin ATM, Mesin Cuci Cerdas, FreeRTOS..." />
+              </div>
+            </div>
+
+            <!-- 4. Server OS -->
+            <div class="bg-black/25 border border-purple-500/30 rounded-2xl p-4 sm:p-5 space-y-3">
+              <div class="flex items-center justify-between border-b border-white/10 pb-2.5">
+                <div class="flex items-center gap-2">
+                  <div class="w-8 h-8 rounded-lg bg-purple-500/20 text-purple-400 flex items-center justify-center font-bold text-sm">
+                    <i class="fa-solid fa-server"></i>
+                  </div>
+                  <h4 class="font-bold text-white text-sm">4. Server OS</h4>
+                </div>
+                <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-purple-500/20 text-purple-300">Pusat Data</span>
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-slate-300 mb-1">Perangkat &amp; Karakteristik Utama:</label>
+                <textarea id="m3_server_karakteristik" rows="2" class="cbt-input cbt-input-sm" placeholder="Contoh: Beroperasi 24/7 tanpa henti melayani jutaan klien di jaringan, multi-user, keamanan ketat, efisien tanpa GUI..."></textarea>
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-slate-300 mb-1">Contoh OS / Perangkat Nyata:</label>
+                <input type="text" id="m3_server_contoh" class="cbt-input cbt-input-sm" placeholder="Contoh: Ubuntu Server, Red Hat Enterprise Linux (RHEL), Windows Server..." />
+              </div>
+            </div>
+          </div>
+
+          <!-- Tips Misi 3 -->
+          <div class="bg-sky-500/10 border border-sky-500/30 rounded-xl p-3.5 flex items-start gap-3 text-xs text-sky-200">
+            <i class="fa-solid fa-lightbulb text-sky-400 text-base mt-0.5"></i>
+            <div>
+              <strong class="text-white block mb-0.5">Tips Misi 3:</strong>
+              1. Perhatikan konteks penggunaan setiap jenis OS — di perangkat apa OS itu ditanam? &bull; 2. Desktop untuk PC/laptop; Mobile untuk smartphone/tablet. &bull; 3. Embedded untuk mesin khusus (IoT); Server untuk layanan jaringan.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================================
+           MISI 4: DI BALIK LAYAR SISTEM OPERASI (Halaman 5 & 6)
+           ============================================================ -->
+      <div class="exam-section sec-purple">
+        <div class="exam-head">
+          <div class="exam-num">04</div>
+          <div>
+            <div class="exam-title">Misi 4 — Di Balik Layar: 5 Peran &amp; Fungsi Utama OS</div>
+            <div class="exam-sub">Halaman 5 &amp; 6 · Alokasi 24 Menit · Membedah manajemen memori, proses, hardware, antarmuka, dan utilitas</div>
+          </div>
+          <div class="exam-points">25 POIN</div>
+        </div>
+
+        <div class="space-y-5">
+          <!-- BAGIAN 1: HALAMAN 5 -->
+          <div class="border-b border-white/10 pb-4">
+            <span class="text-xs font-bold uppercase tracking-wider text-purple-400 font-mono">Bagian 1: Memori &amp; Multitasking (Halaman 5)</span>
+          </div>
+
+          <!-- Peran 1: Memori -->
+          <div class="bg-black/25 border border-white/5 rounded-2xl p-4 sm:p-5 space-y-2">
+            <div class="flex items-center gap-2 text-purple-400 font-bold text-sm">
+              <i class="fa-solid fa-memory"></i>
+              <span>1. Pengelolaan Memori (Memory Management)</span>
+            </div>
+            <label class="block font-bold text-white text-xs sm:text-sm leading-relaxed">
+              Bagaimana cara Sistem Operasi mengatur data aplikasi di dalam RAM agar tidak saling bertabrakan?
+            </label>
+            <textarea
+              id="m4_memori"
+              class="cbt-input cbt-textarea"
+              placeholder="Jelaskan alokasi alamat memori, proteksi isolasi data tiap program, dan pelepasan (dealokasi) ruang saat aplikasi ditutup..."
+            ></textarea>
+          </div>
+
+          <!-- Peran 2: Multitasking Round Robin -->
+          <div class="bg-black/25 border border-white/5 rounded-2xl p-4 sm:p-5 space-y-2">
+            <div class="flex items-center gap-2 text-purple-400 font-bold text-sm">
+              <i class="fa-solid fa-rotate"></i>
+              <span>2. Pengelolaan Proses &amp; Multitasking Round Robin</span>
+            </div>
+            <label class="block font-bold text-white text-xs sm:text-sm leading-relaxed">
+              Mengapa komputer dengan 1 CPU bisa menjalankan Spotify, Word, dan Browser secara bersamaan (Multitasking)? Jelaskan cara kerja metode Round Robin (Time Sharing)!
+            </label>
+            <textarea
+              id="m4_multitasking_rr"
+              class="cbt-input cbt-textarea"
+              placeholder="Jelaskan konsep pembagian waktu (time slice/kuantum milidetik) di mana CPU beralih tugas dengan sangat cepat sehingga tampak serempak..."
+            ></textarea>
+          </div>
+
+          <!-- BAGIAN 2: HALAMAN 6 -->
+          <div class="border-b border-white/10 pb-4 pt-3">
+            <span class="text-xs font-bold uppercase tracking-wider text-purple-400 font-mono">Bagian 2: Siklus IPO, GUI/CLI, &amp; Utilitas (Halaman 6)</span>
+          </div>
+
+          <!-- Peran 3: Siklus IPO -->
+          <div class="bg-black/25 border border-white/5 rounded-2xl p-4 sm:p-5 space-y-3">
+            <div class="flex items-center gap-2 text-purple-400 font-bold text-sm">
+              <i class="fa-solid fa-keyboard"></i>
+              <span>3. Pengelolaan Antarmuka Kernel Hardware (Siklus IPO)</span>
+            </div>
+            <p class="text-xs text-slate-300">
+              Jelaskan bagaimana Sistem Operasi bekerja sama dengan hardware saat kamu menekan tombol huruf di keyboard hingga huruf tersebut tampil di layar monitor!
+            </p>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
+              <div>
+                <label class="block text-xs font-bold text-emerald-400 mb-1">Tahap Input:</label>
+                <textarea id="m4_ipo_input" rows="3" class="cbt-input cbt-input-sm" placeholder="Tombol ditekan mengirim sinyal sinyal elektrik ke driver keyboard..."></textarea>
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-cyan-400 mb-1">Tahap Proses (Kernel):</label>
+                <textarea id="m4_ipo_proses" rows="3" class="cbt-input cbt-input-sm" placeholder="OS menerima sinyal interupsi (interrupt), menerjemahkan kode ASCII huruf..."></textarea>
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-purple-400 mb-1">Tahap Output:</label>
+                <textarea id="m4_ipo_output" rows="3" class="cbt-input cbt-input-sm" placeholder="OS memerintahkan driver kartu grafis merender visual huruf ke piksel monitor..."></textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- Peran 4: GUI vs CLI -->
+          <div class="bg-black/25 border border-white/5 rounded-2xl p-4 sm:p-5 space-y-3">
+            <div class="flex items-center gap-2 text-purple-400 font-bold text-sm">
+              <i class="fa-solid fa-terminal"></i>
+              <span>4. Pengelolaan Interaksi dengan Pengguna (User Interface)</span>
+            </div>
+            <p class="text-xs text-slate-300">Tuliskan perbedaan antara antarmuka GUI dan CLI beserta contoh nyatanya:</p>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <!-- GUI -->
+              <div class="bg-slate-900/60 border border-slate-700/80 rounded-xl p-3.5 space-y-2">
+                <div class="font-bold text-cyan-300 text-xs flex items-center gap-2">
+                  <i class="fa-solid fa-window-restore"></i> GUI (Instruksi Simbolik)
+                </div>
+                <div>
+                  <label class="block text-[11px] text-slate-400 mb-1">Deskripsi:</label>
+                  <textarea id="m4_gui_desc" rows="2" class="cbt-input cbt-input-sm" placeholder="Antarmuka berbasis visual grafis dengan jendela, ikon, tombol..."></textarea>
+                </div>
+                <div>
+                  <label class="block text-[11px] text-slate-400 mb-1">Contoh:</label>
+                  <input type="text" id="m4_gui_contoh" class="cbt-input cbt-input-sm" placeholder="Contoh: Menu Start Windows, File Explorer, iOS Touch..." />
+                </div>
+              </div>
+
+              <!-- CLI -->
+              <div class="bg-slate-900/60 border border-slate-700/80 rounded-xl p-3.5 space-y-2">
+                <div class="font-bold text-emerald-300 text-xs flex items-center gap-2">
+                  <i class="fa-solid fa-code"></i> CLI (Instruksi Tekstual)
+                </div>
+                <div>
+                  <label class="block text-[11px] text-slate-400 mb-1">Deskripsi:</label>
+                  <textarea id="m4_cli_desc" rows="2" class="cbt-input cbt-input-sm" placeholder="Antarmuka berbasis baris perintah teks langsung tanpa grafis..."></textarea>
+                </div>
+                <div>
+                  <label class="block text-[11px] text-slate-400 mb-1">Contoh:</label>
+                  <input type="text" id="m4_cli_contoh" class="cbt-input cbt-input-sm" placeholder="Contoh: Command Prompt (cmd), PowerShell, Bash Linux..." />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Peran 5: Manajemen File & Utilitas -->
+          <div class="bg-black/25 border border-white/5 rounded-2xl p-4 sm:p-5 space-y-3">
+            <div class="flex items-center gap-2 text-purple-400 font-bold text-sm">
+              <i class="fa-solid fa-folder-tree"></i>
+              <span>5. Penyediaan Utilitas &amp; Pengelolaan File</span>
+            </div>
+            <label class="block font-bold text-white text-xs sm:text-sm leading-relaxed">
+              Sebutkan minimal 3 aktivitas pengelolaan file atau program utilitas yang disediakan oleh Sistem Operasi!
+            </label>
+            <div class="space-y-2">
+              <div class="flex items-center gap-2">
+                <span class="w-6 h-6 rounded bg-purple-500/20 text-purple-300 font-mono text-xs font-bold flex items-center justify-center shrink-0">1</span>
+                <input type="text" id="m4_util1" class="cbt-input cbt-input-sm" placeholder="Contoh: Pembuatan direktori folder, penyalinan & pemindahan file (copy/cut/paste)..." />
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="w-6 h-6 rounded bg-purple-500/20 text-purple-300 font-mono text-xs font-bold flex items-center justify-center shrink-0">2</span>
+                <input type="text" id="m4_util2" class="cbt-input cbt-input-sm" placeholder="Contoh: Manajemen ruang penyimpanan & defragmentasi disk (Disk Defragmenter)..." />
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="w-6 h-6 rounded bg-purple-500/20 text-purple-300 font-mono text-xs font-bold flex items-center justify-center shrink-0">3</span>
+                <input type="text" id="m4_util3" class="cbt-input cbt-input-sm" placeholder="Contoh: Keamanan sistem, firewall, dan proteksi antivirus utilitas bawaan..." />
+              </div>
+            </div>
+          </div>
+
+          <!-- Tips Misi 4 -->
+          <div class="bg-purple-500/10 border border-purple-500/30 rounded-xl p-3.5 flex items-start gap-3 text-xs text-purple-200">
+            <i class="fa-solid fa-lightbulb text-purple-400 text-base mt-0.5"></i>
+            <div>
+              <strong class="text-white block mb-0.5">Tips Misi 4:</strong>
+              1. Memory management mengatur alokasi RAM agar aplikasi tidak saling crash. &bull; 2. Round Robin membagi waktu CPU secara bergiliran (time sharing). &bull; 3. Siklus IPO menggambarkan alur kerja harmonis antara kamu, OS, dan hardware.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================================
+           MISI 5: REFLEKSI & BUKTI PENYELESAIAN GAME (Halaman 7)
+           ============================================================ -->
+      <div class="exam-section sec-amber">
+        <div class="exam-head">
+          <div class="exam-num">05</div>
+          <div>
+            <div class="exam-title">Misi 5 — Refleksi Mandiri &amp; Bukti Selesai Game</div>
+            <div class="exam-sub">Halaman 7 · Alokasi 5 Menit · Evaluasi mandiri pemahaman materi dan pengalaman bermain game</div>
+          </div>
+          <div class="exam-points">15 POIN</div>
+        </div>
+
+        <div class="space-y-4">
+          <!-- Soal Refleksi 1 -->
+          <div class="bg-black/25 border border-white/5 rounded-2xl p-4 sm:p-5 space-y-2">
+            <label class="block font-bold text-white text-sm leading-relaxed">
+              1. Bagian mana di dalam game yang menurutmu paling seru atau paling membantumu memahami cara kerja Sistem Operasi? Mengapa?
+            </label>
+            <textarea
+              id="m5_refleksi_seru"
+              class="cbt-input cbt-textarea"
+              placeholder="Tuliskan pengalaman refleksimu di sini..."
+            ></textarea>
+          </div>
+
+          <!-- Soal Refleksi 2 -->
+          <div class="bg-black/25 border border-white/5 rounded-2xl p-4 sm:p-5 space-y-2">
+            <label class="block font-bold text-white text-sm leading-relaxed">
+              2. Tuliskan 1 hal baru yang baru kamu ketahui hari ini setelah menyelesaikan game dan LKPD ini!
+            </label>
+            <textarea
+              id="m5_hal_baru"
+              class="cbt-input cbt-textarea"
+              placeholder="Tuliskan temuan baru yang paling membuka wawasanmu hari ini..."
+            ></textarea>
+          </div>
+
+          <!-- Checklist Refleksi Mandiri -->
+          <div class="bg-black/30 border border-amber-500/30 rounded-2xl p-4 sm:p-5 space-y-3">
+            <div class="flex items-center justify-between border-b border-white/10 pb-2.5">
+              <span class="font-bold text-amber-300 text-xs sm:text-sm flex items-center gap-2">
+                <i class="fa-solid fa-list-check"></i> Checklist Refleksi Mandiri:
+              </span>
+              <span class="text-[10px] font-mono text-amber-300">Centang yang sudah kamu kuasai</span>
+            </div>
+
+            <div class="space-y-2.5 text-xs text-slate-300">
+              <label class="flex items-start gap-3 cursor-pointer p-2 rounded-lg hover:bg-white/5 transition">
+                <input type="checkbox" id="chk_misi1" class="cbt-checkbox mt-0.5" />
+                <span>Saya telah memainkan seluruh 4 misi di dalam Game Sistem Operasi.</span>
+              </label>
+
+              <label class="flex items-start gap-3 cursor-pointer p-2 rounded-lg hover:bg-white/5 transition">
+                <input type="checkbox" id="chk_misi2" class="cbt-checkbox mt-0.5" />
+                <span>Saya telah melengkapi seluruh jawaban di LKPD digital ini secara lengkap.</span>
+              </label>
+
+              <label class="flex items-start gap-3 cursor-pointer p-2 rounded-lg hover:bg-white/5 transition">
+                <input type="checkbox" id="chk_misi3" class="cbt-checkbox mt-0.5" />
+                <span>Saya telah menuliskan refleksi mandiri dengan jujur berdasarkan pemahaman saya.</span>
+              </label>
+
+              <label class="flex items-start gap-3 cursor-pointer p-2 rounded-lg hover:bg-white/5 transition">
+                <input type="checkbox" id="chk_misi4" class="cbt-checkbox mt-0.5" />
+                <span>Saya sudah memahami peran tiap komponen, lapisan hierarki OS, dan siklus IPO.</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================================
+           ACTION BAR & SUBMIT KE GURU
+           ============================================================ -->
+      <div id="actionBar" class="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl backdrop-blur-xl text-center space-y-6">
+        <div>
+          <h3 class="text-xl sm:text-2xl font-black text-white">Siap Mengumpulkan LKPD Digital?</h3>
+          <p class="text-xs sm:text-sm text-slate-400 mt-1 max-w-md mx-auto">
+            Pastikan seluruh identitas dan jawaban 4 misi serta lembar refleksi telah terisi lengkap sebelum dikumpulkan.
+          </p>
+        </div>
+
+        <div id="lkpdSubmitAlert" class="hidden text-xs sm:text-sm font-bold"></div>
+
+        <div class="flex flex-wrap items-center justify-center gap-3">
+          <!-- Reset -->
+          <button
+            type="button"
+            onclick="handleResetForm()"
+            class="px-5 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold transition flex items-center gap-2 cursor-pointer border border-slate-700"
+          >
+            <i class="fa-solid fa-rotate-left"></i>
+            <span>Reset Jawaban</span>
+          </button>
+
+          <!-- Cetak / Simpan PDF -->
+          <button
+            type="button"
+            onclick="window.print()"
+            class="px-5 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold transition flex items-center gap-2 cursor-pointer border border-slate-700"
+          >
+            <i class="fa-solid fa-print"></i>
+            <span>Cetak / Cetak PDF</span>
+          </button>
+
+          <!-- Kumpulkan Jawaban -->
+          <button
+            type="button"
+            id="btnSubmitLkpd"
+            onclick="handleKirimJawaban()"
+            class="px-7 py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white text-xs sm:text-sm font-black transition flex items-center gap-2 shadow-lg shadow-emerald-500/30 cursor-pointer"
+          >
+            <i class="fa-solid fa-paper-plane"></i>
+            <span>Kirim Jawaban ke Guru</span>
+          </button>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- ============================================================
+         FOOTER
+         ============================================================ -->
+    <footer class="mt-auto border-t border-slate-800 bg-slate-950/80 py-6 text-center text-xs text-slate-500 no-print">
+      <div class="max-w-5xl mx-auto px-4 space-y-1">
+        <p>&copy; 2026 RuangInformatika &bull; SMA Negeri 4 Yogyakarta. Modul Sistem Operasi Fase E.</p>
+        <p class="text-[11px] text-slate-600">Dikembangkan untuk aktivitas pembelajaran Informatika berbasis eksplorasi game.</p>
+      </div>
+    </footer>
+
+    <!-- ============================================================
+         SCRIPT LOGIC LKPD DIGITAL
+         ============================================================ -->
+    <script>
+      /* ── 1. Theme Toggle ── */
+      const themeToggleBtn = document.getElementById("themeToggleBtn");
+      if (themeToggleBtn) {
+        themeToggleBtn.addEventListener("click", () => {
+          const isDark = document.documentElement.classList.toggle("dark");
+          localStorage.setItem("theme", isDark ? "dark" : "light");
+        });
+      }
+
+      /* ── 2. List of All Inputs ── */
+      const STORAGE_KEY = "patbhe_lkpd_so_digital_draft";
+      const fieldIds = [
+        "inNama", "inAbsen", "inKelas", "inSkor",
+        "m1_pengertian", "m1_boot2", "m1_boot3", "m1_boot4", "m1_fungsi_post",
+        "m2_l2_nama", "m2_l2_peran", "m2_l3_nama", "m2_l3_peran", "m2_l4_nama", "m2_l4_peran", "m2_analisis_kernel",
+        "m3_desktop_karakteristik", "m3_desktop_contoh",
+        "m3_mobile_karakteristik", "m3_mobile_contoh",
+        "m3_embedded_karakteristik", "m3_embedded_contoh",
+        "m3_server_karakteristik", "m3_server_contoh",
+        "m4_memori", "m4_multitasking_rr", "m4_ipo_input", "m4_ipo_proses", "m4_ipo_output",
+        "m4_gui_desc", "m4_gui_contoh", "m4_cli_desc", "m4_cli_contoh",
+        "m4_util1", "m4_util2", "m4_util3",
+        "m5_refleksi_seru", "m5_hal_baru"
+      ];
+      const checkIds = ["chk_misi1", "chk_misi2", "chk_misi3", "chk_misi4"];
+
+      /* ── 3. Autosave & Progress Indicator ── */
+      let saveTimer = null;
+      function showSaveToast() {
+        const toast = document.getElementById("saveIndicator");
+        if (!toast) return;
+        toast.classList.add("show");
+        clearTimeout(saveTimer);
+        saveTimer = setTimeout(() => {
+          toast.classList.remove("show");
+        }, 1800);
+      }
+
+      function updateProgress() {
+        let filledCount = 0;
+        fieldIds.forEach(id => {
+          const el = document.getElementById(id);
+          if (el && el.value.trim().length > 0) filledCount++;
+        });
+
+        // 5 Sections check
+        const s1 = (document.getElementById("m1_pengertian")?.value.trim() ? 1 : 0);
+        const s2 = (document.getElementById("m2_l2_nama")?.value.trim() ? 1 : 0);
+        const s3 = (document.getElementById("m3_desktop_karakteristik")?.value.trim() ? 1 : 0);
+        const s4 = (document.getElementById("m4_memori")?.value.trim() ? 1 : 0);
+        const s5 = (document.getElementById("m5_refleksi_seru")?.value.trim() ? 1 : 0);
+        const sectionsDone = s1 + s2 + s3 + s4 + s5;
+
+        const currentEl = document.getElementById("progressCurrent");
+        const percentEl = document.getElementById("progressPercent");
+        const barFill = document.getElementById("progressBarFill");
+        const topBar = document.getElementById("examProgress");
+
+        if (currentEl) currentEl.textContent = sectionsDone;
+        const totalFields = fieldIds.length;
+        const pct = Math.min(100, Math.round((filledCount / totalFields) * 100));
+
+        if (percentEl) percentEl.textContent = pct + "%";
+        if (barFill) barFill.style.width = pct + "%";
+        if (topBar) topBar.style.width = pct + "%";
+      }
+
+      function saveDraft(silent = false) {
+        const data = {};
+        fieldIds.forEach(id => {
+          const el = document.getElementById(id);
+          if (el) data[id] = el.value;
+        });
+        checkIds.forEach(id => {
+          const el = document.getElementById(id);
+          if (el) data[id] = el.checked;
+        });
+
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        updateProgress();
+        if (!silent) showSaveToast();
+      }
+
+      function loadDraft() {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (!saved) return;
+        try {
+          const data = JSON.parse(saved);
+          fieldIds.forEach(id => {
+            const el = document.getElementById(id);
+            if (el && data[id] !== undefined) el.value = data[id];
+          });
+          checkIds.forEach(id => {
+            const el = document.getElementById(id);
+            if (el && data[id] !== undefined) el.checked = data[id];
+          });
+        } catch (e) {
+          console.error("Gagal memuat draft:", e);
+        }
+        updateProgress();
+      }
+
+      // Event listeners
+      fieldIds.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.addEventListener("input", () => {
+            saveDraft(false);
+          });
+        }
+      });
+      checkIds.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.addEventListener("change", () => {
+            saveDraft(false);
+          });
+        }
+      });
+
+      window.addEventListener("DOMContentLoaded", loadDraft);
+
+      /* ── 4. Reset Form ── */
+      function handleResetForm() {
+        if (!confirm("Apakah kamu yakin ingin mengosongkan seluruh isian LKPD? Tindakan ini tidak bisa dibatalkan.")) return;
+        localStorage.removeItem(STORAGE_KEY);
+        fieldIds.forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.value = (id === "inKelas" ? "X-E6 • Kelompok " : "");
+        });
+        checkIds.forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.checked = false;
+        });
+        updateProgress();
+        alert("Seluruh isian LKPD berhasil direset.");
+      }
+
+      /* ── 5. Pengumpulan Jawaban ke Spreadsheet Guru ── */
+      const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzVYfhcDSqllYtnhG7bPXLe5DY1ahkGtV4Pkn6Bi_wIXV1BxFpNOJgz2S7wAJwbFD2AAg/exec";
+
+      async function handleKirimJawaban() {
+        const nama = document.getElementById("inNama").value.trim();
+        const absen = document.getElementById("inAbsen").value.trim();
+        const alertBox = document.getElementById("lkpdSubmitAlert");
+        const btn = document.getElementById("btnSubmitLkpd");
+
+        if (!nama || !absen) {
+          alertBox.className = "p-4 rounded-2xl border border-rose-500/40 bg-rose-950/40 text-rose-300 font-bold block";
+          alertBox.innerHTML = '<i class="fa-solid fa-circle-exclamation mr-1.5"></i> Nama lengkap dan nomor presensi wajib diisi sebelum mengumpulkan!';
+          alertBox.scrollIntoView({ behavior: "smooth", block: "center" });
+          return;
+        }
+
+        saveDraft(true);
+
+        btn.disabled = true;
+        const originalBtnHTML = btn.innerHTML;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Mengirimkan...';
+
+        alertBox.className = "p-4 rounded-2xl border border-cyan-500/40 bg-cyan-950/40 text-cyan-300 font-bold block";
+        alertBox.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Sedang mengirimkan jawaban LKPD ke sistem penilaian guru...';
+        alertBox.scrollIntoView({ behavior: "smooth", block: "center" });
+
+        try {
+          const draftData = localStorage.getItem(STORAGE_KEY) || "{}";
+          const formData = new URLSearchParams();
+          formData.append("jenis", "LKPD-SISTEM-OPERASI");
+          formData.append("nama", nama);
+          formData.append("absen", absen);
+          formData.append("kelas", document.getElementById("inKelas").value.trim());
+          formData.append("skor_game", document.getElementById("inSkor").value.trim());
+          formData.append("data_lkpd", draftData);
+
+          await fetch(APPS_SCRIPT_URL, {
+            method: "POST",
+            mode: "no-cors",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: formData.toString(),
+          });
+
+          alertBox.className = "p-5 rounded-2xl border border-emerald-500/40 bg-emerald-950/50 text-emerald-300 font-bold block space-y-2";
+          alertBox.innerHTML = \`
+            <div class="text-base flex items-center justify-center gap-2">
+              <i class="fa-solid fa-circle-check text-xl text-emerald-400"></i>
+              <span>Jawaban LKPD Berhasil Dikumpulkan ke Sistem Guru! 🎉</span>
+            </div>
+            <p class="text-xs font-normal text-slate-300 leading-relaxed">
+              Terima kasih <strong>\${nama}</strong> (Presensi \${absen}). Seluruh jawaban Misi 1 hingga Misi 5 telah tersimpan secara resmi. Kamu dapat mencetak halaman ini atau melanjutkan ke tahap <strong>Post-Test</strong>.
+            </p>
+          \`;
+          btn.innerHTML = '<i class="fa-solid fa-check mr-2"></i> Berhasil Dikumpulkan';
+        } catch (err) {
+          console.error("Submit error:", err);
+          alertBox.className = "p-5 rounded-2xl border border-emerald-500/40 bg-emerald-950/50 text-emerald-300 font-bold block";
+          alertBox.innerHTML = \`<i class="fa-solid fa-circle-check mr-2"></i> Jawaban LKPD berhasil disimpan secara lokal atas nama <strong>\${nama}</strong>!\`;
+          btn.innerHTML = originalBtnHTML;
+          btn.disabled = false;
+        }
+      }
+    </script>
+  </body>
+</html>`;
+
+fs.writeFileSync('Materi_SO/lkpd.html', htmlContent, 'utf8');
+console.log('Successfully written clean digital LKPD to Materi_SO/lkpd.html! Size:', htmlContent.length);
+
