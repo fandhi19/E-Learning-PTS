@@ -1,0 +1,801 @@
+const fs = require('fs');
+
+const esaiHtml = `<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Soal Esai Asesmen Sumatif & Pengumpulan PDF — SMAN 4 Yogyakarta</title>
+    <link rel="shortcut icon" href="../images/Logo Patbhe.png" type="image/x-icon" />
+
+    <!-- Anti-FOUC Script -->
+    <script>
+      if (
+        localStorage.getItem("theme") === "dark" ||
+        (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches)
+      ) {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
+    </script>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              brandDark: "#0b1120",
+              brandNavy: "#0f172a",
+              brandGray: "#1e293b",
+            },
+            fontFamily: {
+              sans: ["'Plus Jakarta Sans'", "sans-serif"],
+              mono: ["'JetBrains Mono'", "monospace"],
+            },
+            screens: {
+              xs: "480px",
+            },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      body {
+        background-color: #0b1120;
+        background-image: radial-gradient(rgba(245, 158, 11, 0.08) 1px, transparent 1px),
+          radial-gradient(rgba(147, 51, 234, 0.06) 1px, transparent 1px);
+        background-size: 32px 32px;
+        background-position: 0 0, 16px 16px;
+      }
+      html:not(.dark) body {
+        background-color: #f8fafc;
+        background-image: radial-gradient(rgba(245, 158, 11, 0.12) 1px, transparent 1px),
+          radial-gradient(rgba(147, 51, 234, 0.08) 1px, transparent 1px);
+      }
+
+      /* Custom scrollbar */
+      ::-webkit-scrollbar { width: 6px; height: 6px; }
+      ::-webkit-scrollbar-track { background: transparent; }
+      ::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.3); border-radius: 999px; }
+
+      .essay-card {
+        background: rgba(15, 23, 42, 0.85);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 20px;
+        backdrop-filter: blur(14px);
+        transition: all 0.3s ease;
+      }
+      @media (min-width: 640px) {
+        .essay-card {
+          border-radius: 24px;
+        }
+      }
+      html:not(.dark) .essay-card {
+        background: rgba(255, 255, 255, 0.96);
+        border: 1px solid rgba(226, 232, 240, 0.9);
+        box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.05);
+      }
+
+      .upload-dropzone {
+        border: 2px dashed rgba(245, 158, 11, 0.4);
+        transition: all 0.25s ease;
+      }
+      .upload-dropzone.dragover {
+        border-color: #f59e0b;
+        background: rgba(245, 158, 11, 0.08);
+        transform: scale(1.01);
+      }
+
+      @media print {
+        header, footer, #tempat-pengumpulan, .no-print, button, a {
+          display: none !important;
+        }
+        body {
+          background: #fff !important;
+          color: #000 !important;
+        }
+        .essay-card {
+          box-shadow: none !important;
+          border: 1px solid #ccc !important;
+          break-inside: avoid;
+          margin-bottom: 20px;
+        }
+      }
+    </style>
+  </head>
+
+  <body class="text-slate-800 dark:text-slate-100 font-sans antialiased min-h-screen flex flex-col selection:bg-amber-500 selection:text-white">
+    
+    <!-- ================= TOP NAVBAR ================= -->
+    <header class="sticky top-0 z-40 bg-white/90 dark:bg-slate-950/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors duration-300">
+      <div class="max-w-6xl mx-auto px-3 sm:px-6 h-16 sm:h-20 flex items-center justify-between gap-2">
+        
+        <!-- Brand Logo -->
+        <a href="uji-kompetensi.html" class="flex items-center gap-2.5 sm:gap-3.5 group min-w-0">
+          <div class="w-9 h-9 sm:w-11 sm:h-11 rounded-xl sm:rounded-2xl bg-gradient-to-tr from-amber-500 to-rose-400 p-0.5 shadow-md shadow-amber-500/20 group-hover:scale-105 transition-transform shrink-0">
+            <div class="w-full h-full bg-white dark:bg-slate-900 rounded-[10px] sm:rounded-[14px] flex items-center justify-center overflow-hidden">
+              <img src="../images/Logo Patbhe.png" alt="Logo SMAN 4 Yogyakarta" class="w-5 h-5 sm:w-7 sm:h-7 object-contain" />
+            </div>
+          </div>
+          <div class="min-w-0">
+            <div class="flex items-center gap-1.5">
+              <span class="font-black text-base sm:text-xl text-slate-900 dark:text-white tracking-tight truncate">
+                Ruang<span class="text-amber-500">Informatika</span>
+              </span>
+            </div>
+            <span class="text-[9px] sm:text-[10px] uppercase font-bold tracking-widest text-slate-500 dark:text-slate-400 hidden xs:block truncate">
+              SMAN 4 YOGYAKARTA
+            </span>
+          </div>
+        </a>
+
+        <!-- Controls -->
+        <div class="flex items-center gap-2 sm:gap-3 shrink-0">
+          <a
+            href="#tempat-pengumpulan"
+            class="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-600 dark:text-amber-400 text-xs font-bold transition-colors shadow-sm"
+          >
+            <i class="fa-solid fa-cloud-arrow-up text-xs"></i>
+            <span class="hidden sm:inline">Kumpulkan PDF</span>
+            <span class="sm:hidden text-[11px]">Kumpul</span>
+          </a>
+
+          <a
+            href="uji-kompetensi.html"
+            class="inline-flex items-center gap-1.5 px-3 py-1.5 sm:py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200 transition-colors border border-slate-200 dark:border-slate-700"
+          >
+            <i class="fa-solid fa-arrow-left text-xs"></i>
+            <span class="hidden sm:inline">Portal Uji</span>
+          </a>
+
+          <button
+            id="themeToggleBtn"
+            type="button"
+            class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-amber-400 flex items-center justify-center transition-all focus:outline-none shadow-sm cursor-pointer border border-slate-200 dark:border-slate-700"
+            aria-label="Toggle Theme"
+            title="Ganti Tema Gelap / Terang"
+          >
+            <i class="fa-solid fa-moon dark:hidden text-xs sm:text-sm"></i>
+            <i class="fa-solid fa-sun hidden dark:inline text-xs sm:text-sm"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- ================= MAIN CONTAINER ================= -->
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-10 flex-1 w-full space-y-8 sm:space-y-10">
+      
+      <!-- ================= HERO BANNER ================= -->
+      <div class="text-center space-y-3 sm:space-y-4 max-w-3xl mx-auto">
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-500 dark:text-amber-300 text-[11px] sm:text-xs font-bold font-mono tracking-wider shadow-sm">
+          <i class="fa-solid fa-pen-nib"></i>
+          <span>BAGIAN B: SOAL ESAI / URAIAN • TOTAL 50 POIN</span>
+        </div>
+
+        <h1 class="text-2xl sm:text-4xl md:text-5xl font-black text-slate-900 dark:text-white tracking-tight leading-tight">
+          Naskah Soal Esai <span class="bg-gradient-to-r from-amber-400 via-orange-400 to-rose-400 bg-clip-text text-transparent">Asesmen Sumatif</span>
+        </h1>
+
+        <p class="text-xs sm:text-sm md:text-base text-slate-600 dark:text-slate-300 leading-relaxed px-2">
+          Kerjakan <strong>3 butir soal esai</strong> di bawah ini di buku tulis / lembar kertas folio bergaris dengan rapi. Setelah selesai, pindai (scan) menjadi <strong>1 file PDF</strong> lalu kumpulkan pada formulir di bawah.
+        </p>
+
+        <!-- Meta Info Pills -->
+        <div class="flex flex-wrap items-center justify-center gap-2 pt-1 text-[11px] sm:text-xs">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 font-semibold text-slate-600 dark:text-slate-300 shadow-sm">
+            <i class="fa-solid fa-user-tie text-amber-500"></i> Guru: Ilyas Fandhi Anggara, S.Kom.
+          </span>
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 font-semibold text-slate-600 dark:text-slate-300 shadow-sm">
+            <i class="fa-solid fa-clock text-amber-500"></i> Waktu: 45 Menit
+          </span>
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 font-semibold text-slate-600 dark:text-slate-300 shadow-sm">
+            <i class="fa-solid fa-award text-amber-500"></i> Bobot: 15 + 15 + 20 = 50 Poin
+          </span>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-2.5 sm:gap-3 pt-2">
+          <a
+            href="#tempat-pengumpulan"
+            class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-xs sm:text-sm shadow-lg shadow-amber-500/25 transition-all cursor-pointer"
+          >
+            <i class="fa-solid fa-arrow-down"></i>
+            <span>Langsung ke Tempat Pengumpulan PDF</span>
+          </a>
+
+          <button
+            onclick="window.print()"
+            class="inline-flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors shadow-sm cursor-pointer"
+          >
+            <i class="fa-solid fa-print text-amber-500"></i>
+            <span>Cetak Lembar Soal</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ================= PETUNJUK PENGERJAAN DI BUKU TULIS ================= -->
+      <div class="bg-white dark:bg-slate-900/90 border-2 border-amber-500/30 rounded-2xl sm:rounded-3xl p-5 sm:p-7 backdrop-blur-md shadow-lg space-y-4">
+        <div class="flex items-center gap-3 border-b border-slate-100 dark:border-slate-800 pb-3">
+          <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-amber-500/15 text-amber-500 flex items-center justify-center text-base sm:text-lg shrink-0">
+            <i class="fa-solid fa-list-ol"></i>
+          </div>
+          <div>
+            <h2 class="text-sm sm:text-base md:text-lg font-bold text-slate-900 dark:text-white">
+              Petunjuk Pengerjaan di Buku Tulis &amp; Pemindaian
+            </h2>
+            <p class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400">Jawablah pertanyaan berikut dengan jelas, rapi, dan tepat!</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 pt-1 text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+          <div class="p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 space-y-1.5">
+            <div class="font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              <span class="w-5 h-5 rounded-full bg-amber-500/20 text-amber-500 flex items-center justify-center font-mono font-bold text-[11px]">1</span>
+              <span>Identitas Kertas</span>
+            </div>
+            <p class="text-[11px] sm:text-xs">Tuliskan <strong>Nama Lengkap, Nomor Presensi, dan Kelas</strong> di pojok kanan atas lembar jawaban bukumu.</p>
+          </div>
+
+          <div class="p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 space-y-1.5">
+            <div class="font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              <span class="w-5 h-5 rounded-full bg-amber-500/20 text-amber-500 flex items-center justify-center font-mono font-bold text-[11px]">2</span>
+              <span>Gambar &amp; Tulis Rapi</span>
+            </div>
+            <p class="text-[11px] sm:text-xs">Gunakan penggaris saat menggambar simbol flowchart, dan gunakan indentasi rapi pada penulisan pseudocode.</p>
+          </div>
+
+          <div class="p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 space-y-1.5">
+            <div class="font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              <span class="w-5 h-5 rounded-full bg-amber-500/20 text-amber-500 flex items-center justify-center font-mono font-bold text-[11px]">3</span>
+              <span>Pindai Jadi 1 PDF</span>
+            </div>
+            <p class="text-[11px] sm:text-xs">Foto lembar jawaban dengan pencahayaan terang dan jadikan <strong>1 file PDF</strong> (CamScanner, Google Drive Scan, dsb).</p>
+          </div>
+
+          <div class="p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 space-y-1.5">
+            <div class="font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              <span class="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-500 flex items-center justify-center font-mono font-bold text-[11px]">4</span>
+              <span>Unggah Berkas</span>
+            </div>
+            <p class="text-[11px] sm:text-xs">Kumpulkan berkas PDF hasil pindaian pada formulir di bawah ini sebelum batas waktu ulangan berakhir.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= DAFTAR 3 SOAL ESAI DARI PDF ================= -->
+      <div class="space-y-6">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 dark:border-slate-800 pb-3">
+          <h2 class="text-lg sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight flex items-center gap-2.5">
+            <i class="fa-solid fa-file-lines text-amber-500"></i>
+            <span>Daftar Soal Esai / Uraian Resmi</span>
+          </h2>
+          <span class="self-start sm:self-auto px-3 py-1 rounded-full text-[11px] sm:text-xs font-mono font-bold bg-amber-500/10 text-amber-500 border border-amber-500/30">
+            3 Butir Soal (Total 50 Poin)
+          </span>
+        </div>
+
+        <!-- SOAL ESAI 1 -->
+        <article class="essay-card p-5 sm:p-7 md:p-8 space-y-4 border-l-4 border-l-cyan-500 shadow-md">
+          <!-- Card Header (Responsive Mobile & Tablet) -->
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 dark:border-slate-800 pb-4">
+            <div class="flex items-start sm:items-center gap-3 min-w-0">
+              <span class="px-3.5 py-1.5 rounded-xl bg-cyan-500 text-slate-950 font-mono font-black text-xs sm:text-sm shadow-md shadow-cyan-500/20 shrink-0 whitespace-nowrap">
+                ESAI 1
+              </span>
+              <div class="min-w-0">
+                <span class="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-cyan-500 block truncate">
+                  DIAGRAM ALIR (FLOWCHART) • C6 KREASI
+                </span>
+                <h3 class="text-sm sm:text-base md:text-lg font-extrabold text-slate-900 dark:text-white leading-snug">
+                  Membuat Flowchart 2 Percabangan: Kasus Cek Kelulusan Ujian
+                </h3>
+              </div>
+            </div>
+            <div class="self-start sm:self-center shrink-0">
+              <span class="inline-flex items-center gap-1.5 text-xs font-mono font-bold px-3 py-1 rounded-xl bg-cyan-500/10 text-cyan-500 border border-cyan-500/20">
+                <i class="fa-solid fa-award text-[10px]"></i> Skor: 15 Poin
+              </span>
+            </div>
+          </div>
+
+          <!-- Card Body -->
+          <div class="text-xs sm:text-sm text-slate-700 dark:text-slate-200 leading-relaxed space-y-3">
+            <p>
+              Buatlah sebuah <strong>Diagram Alir (Flowchart)</strong> dengan <strong>2 jalur percabangan (Ya dan Tidak)</strong> untuk kasus Cek Kelulusan Ujian dengan aturan berikut:
+            </p>
+            <ul class="list-disc list-inside space-y-1.5 pl-2 font-medium bg-slate-50 dark:bg-slate-800/50 p-3.5 sm:p-4 rounded-xl sm:rounded-2xl border border-slate-200 dark:border-slate-700/60">
+              <li>Program menerima masukan berupa <strong>NILAI</strong>.</li>
+              <li>Jika <strong>NILAI &gt;= 75</strong>, maka program mencetak <strong>"LULUS"</strong>.</li>
+              <li>Jika di bawah 75 (Tidak), maka program mencetak <strong>"TIDAK LULUS"</strong>.</li>
+              <li><em>(Gunakan simbol standar yang tepat: Terminator, Input/Output, Decision, dan Flowline!)</em></li>
+            </ul>
+
+            <!-- Rubrik Pedoman Penskoran -->
+            <div class="p-3 sm:p-3.5 rounded-xl bg-cyan-500/5 border border-cyan-500/20 text-[11px] sm:text-xs text-slate-600 dark:text-slate-300 space-y-1">
+              <strong class="text-cyan-600 dark:text-cyan-400 block"><i class="fa-solid fa-award mr-1"></i> Rubrik Penilaian Guru:</strong>
+              <div>• Menggunakan simbol Start/End dan Input/Output dengan benar (5 poin)</div>
+              <div>• Menggunakan simbol Belah Ketupat (Decision) dengan kondisi NILAI &gt;= 75? (5 poin)</div>
+              <div>• Membagi menjadi 2 jalur cabang (Ya dan Tidak) dengan hasil cetak yang tepat (5 poin)</div>
+            </div>
+          </div>
+        </article>
+
+        <!-- SOAL ESAI 2 -->
+        <article class="essay-card p-5 sm:p-7 md:p-8 space-y-4 border-l-4 border-l-emerald-500 shadow-md">
+          <!-- Card Header (Responsive Mobile & Tablet) -->
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 dark:border-slate-800 pb-4">
+            <div class="flex items-start sm:items-center gap-3 min-w-0">
+              <span class="px-3.5 py-1.5 rounded-xl bg-emerald-500 text-slate-950 font-mono font-black text-xs sm:text-sm shadow-md shadow-emerald-500/20 shrink-0 whitespace-nowrap">
+                ESAI 2
+              </span>
+              <div class="min-w-0">
+                <span class="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-emerald-500 block truncate">
+                  PSEUDOCODE (KODE SEMU) • C6 KREASI
+                </span>
+                <h3 class="text-sm sm:text-base md:text-lg font-extrabold text-slate-900 dark:text-white leading-snug">
+                  Membuat Pseudocode 3 Percabangan: Penentuan Grade Nilai Siswa
+                </h3>
+              </div>
+            </div>
+            <div class="self-start sm:self-center shrink-0">
+              <span class="inline-flex items-center gap-1.5 text-xs font-mono font-bold px-3 py-1 rounded-xl bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">
+                <i class="fa-solid fa-award text-[10px]"></i> Skor: 15 Poin
+              </span>
+            </div>
+          </div>
+
+          <!-- Card Body -->
+          <div class="text-xs sm:text-sm text-slate-700 dark:text-slate-200 leading-relaxed space-y-3">
+            <p>
+              Buatlah sebuah <strong>Pseudocode</strong> yang menerapkan <strong>3 kondisi percabangan (IF - ELSE IF - ELSE IF - ELSE)</strong> untuk menentukan Grade Nilai Siswa dengan aturan berikut:
+            </p>
+            <ul class="list-disc list-inside space-y-1.5 pl-2 font-medium bg-slate-50 dark:bg-slate-800/50 p-3.5 sm:p-4 rounded-xl sm:rounded-2xl border border-slate-200 dark:border-slate-700/60 font-mono text-xs">
+              <li>Jika nilai &gt;= 90, cetak "A"</li>
+              <li>Jika nilai &gt;= 80, cetak "B"</li>
+              <li>Jika nilai &gt;= 70, cetak "C"</li>
+              <li>Selain itu (di bawah 70), cetak "D"</li>
+            </ul>
+
+            <!-- Rubrik Pedoman Penskoran -->
+            <div class="p-3 sm:p-3.5 rounded-xl bg-emerald-500/5 border border-emerald-500/20 text-[11px] sm:text-xs text-slate-600 dark:text-slate-300 space-y-1">
+              <strong class="text-emerald-600 dark:text-emerald-400 block"><i class="fa-solid fa-award mr-1"></i> Rubrik Penilaian Guru:</strong>
+              <div>• Menuliskan struktur deklarasi dan INPUT nilai (3 poin)</div>
+              <div>• Menuliskan 3 kondisi pengecekan (&gt;= 90, &gt;= 80, &gt;= 70) menggunakan IF dan ELSE IF secara berurutan (8 poin)</div>
+              <div>• Menuliskan penutup ELSE (cetak "D") dan ENDIF dengan indentasi rapi (4 poin)</div>
+            </div>
+          </div>
+        </article>
+
+        <!-- SOAL ESAI 3 -->
+        <article class="essay-card p-5 sm:p-7 md:p-8 space-y-4 border-l-4 border-l-amber-500 shadow-md">
+          <!-- Card Header (Responsive Mobile & Tablet) -->
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 dark:border-slate-800 pb-4">
+            <div class="flex items-start sm:items-center gap-3 min-w-0">
+              <span class="px-3.5 py-1.5 rounded-xl bg-amber-500 text-slate-950 font-mono font-black text-xs sm:text-sm shadow-md shadow-amber-500/20 shrink-0 whitespace-nowrap">
+                ESAI 3
+              </span>
+              <div class="min-w-0">
+                <span class="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-amber-500 block truncate">
+                  ARSITEKTUR VON NEUMANN • C4 ANALISIS
+                </span>
+                <h3 class="text-sm sm:text-base md:text-lg font-extrabold text-slate-900 dark:text-white leading-snug">
+                  Contoh Cara Kerja Arsitektur Von Neumann dalam Mengeksekusi Instruksi
+                </h3>
+              </div>
+            </div>
+            <div class="self-start sm:self-center shrink-0">
+              <span class="inline-flex items-center gap-1.5 text-xs font-mono font-bold px-3 py-1 rounded-xl bg-amber-500/10 text-amber-500 border border-amber-500/20">
+                <i class="fa-solid fa-award text-[10px]"></i> Skor: 20 Poin
+              </span>
+            </div>
+          </div>
+
+          <!-- Card Body -->
+          <div class="text-xs sm:text-sm text-slate-700 dark:text-slate-200 leading-relaxed space-y-3">
+            <p>
+              Jelaskan dengan bahasamu sendiri bagaimana <strong>cara kerja arsitektur komputer Von Neumann</strong> (melibatkan komponen <strong>Input, RAM, Control Unit, ALU, Register, Bus, dan Output</strong>) dengan memberikan satu contoh kasus sederhana, misalnya saat pengguna menghitung penjumlahan <strong>5 + 3</strong> pada komputer!
+            </p>
+
+            <!-- Rubrik Pedoman Penskoran -->
+            <div class="p-3 sm:p-3.5 rounded-xl bg-amber-500/5 border border-amber-500/20 text-[11px] sm:text-xs text-slate-600 dark:text-slate-300 space-y-1">
+              <strong class="text-amber-600 dark:text-amber-400 block"><i class="fa-solid fa-award mr-1"></i> Rubrik Penilaian Guru:</strong>
+              <div>• Menuliskan contoh kasus konkret (misal 5 + 3) (4 poin)</div>
+              <div>• Menjelaskan peran RAM dan Bus dalam menampung serta mengalirkan instruksi/data (5 poin)</div>
+              <div>• Menjelaskan peran CU dan ALU dalam siklus Fetch - Decode - Execute (6 poin)</div>
+              <div>• Menjelaskan tahap Store dan penyajian hasil ke Output (5 poin)</div>
+            </div>
+          </div>
+        </article>
+
+      </div>
+
+      <!-- ========================================================
+           TEMPAT PENGUMPULAN TUGAS (UPLOAD FILE SCAN PDF)
+           ======================================================== -->
+      <section id="tempat-pengumpulan" class="pt-4 sm:pt-6">
+        <div class="bg-gradient-to-br from-white to-amber-50/50 dark:from-slate-900 dark:to-amber-950/20 border-2 border-amber-500/50 rounded-2xl sm:rounded-3xl p-5 sm:p-8 md:p-10 shadow-2xl relative overflow-hidden space-y-6 sm:space-y-8">
+          
+          <div class="space-y-2 text-center max-w-xl mx-auto">
+            <div class="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl bg-amber-500/20 border border-amber-500/40 text-amber-500 flex items-center justify-center mx-auto text-2xl sm:text-3xl shadow-md shadow-amber-500/10">
+              <i class="fa-solid fa-cloud-arrow-up"></i>
+            </div>
+            <h2 class="text-xl sm:text-2xl md:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
+              Tempat Pengumpulan Berkas Jawaban Esai
+            </h2>
+            <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+              Pastikan ketiga soal esai di atas sudah dituliskan jawabannya di buku tugas, kemudian unggah berkas hasil pindaian (PDF) di bawah ini.
+            </p>
+          </div>
+
+          <!-- Form Identitas Pengumpul -->
+          <form id="formKumpulEsai" onsubmit="event.preventDefault(); submitTugasPdf();" class="space-y-4 sm:space-y-6 max-w-2xl mx-auto">
+            
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5 sm:gap-4">
+              <!-- Nama -->
+              <div class="sm:col-span-1">
+                <label for="upNama" class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5 flex items-center gap-1.5">
+                  <i class="fa-solid fa-user text-amber-500"></i> Nama Lengkap <span class="text-rose-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="upNama"
+                  required
+                  placeholder="Ketik nama lengkap..."
+                  class="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 text-xs sm:text-sm font-semibold text-slate-900 dark:text-white focus:outline-none focus:border-amber-500"
+                />
+              </div>
+
+              <!-- Presensi -->
+              <div>
+                <label for="upAbsen" class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5 flex items-center gap-1.5">
+                  <i class="fa-solid fa-id-badge text-amber-500"></i> Nomor Presensi <span class="text-rose-500">*</span>
+                </label>
+                <input
+                  type="number"
+                  id="upAbsen"
+                  required
+                  min="1"
+                  max="50"
+                  placeholder="Contoh: 18"
+                  class="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 text-xs sm:text-sm font-mono font-bold text-slate-900 dark:text-white focus:outline-none focus:border-amber-500"
+                />
+              </div>
+
+              <!-- Kelas -->
+              <div>
+                <label for="upKelas" class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5 flex items-center gap-1.5">
+                  <i class="fa-solid fa-school text-amber-500"></i> Kelas / Rombel <span class="text-rose-500">*</span>
+                </label>
+                <select
+                  id="upKelas"
+                  class="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 text-xs sm:text-sm font-bold text-slate-900 dark:text-white focus:outline-none focus:border-amber-500 cursor-pointer"
+                >
+                  <option value="X-E6" selected>X-E6 (Sepuluh E6)</option>
+                  <option value="X-E1">X-E1 (Sepuluh E1)</option>
+                  <option value="X-E2">X-E2 (Sepuluh E2)</option>
+                  <option value="X-E3">X-E3 (Sepuluh E3)</option>
+                  <option value="X-E4">X-E4 (Sepuluh E4)</option>
+                  <option value="X-E5">X-E5 (Sepuluh E5)</option>
+                  <option value="X-E7">X-E7 (Sepuluh E7)</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- UPLOAD DROPZONE -->
+            <div class="space-y-2">
+              <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center justify-between">
+                <span class="flex items-center gap-1.5"><i class="fa-solid fa-file-pdf text-amber-500"></i> Unggah Berkas Jawaban (PDF) <span class="text-rose-500">*</span></span>
+                <span class="font-normal text-slate-400 text-[11px] sm:text-xs">Maks. 25 MB</span>
+              </label>
+
+              <!-- Hidden native file input -->
+              <input
+                type="file"
+                id="filePdfInput"
+                accept=".pdf,application/pdf"
+                class="hidden"
+                onchange="handleFileSelect(event)"
+              />
+
+              <!-- Dropzone Card -->
+              <div
+                id="dropzone"
+                onclick="document.getElementById('filePdfInput').click()"
+                ondragover="handleDragOver(event)"
+                ondragleave="handleDragLeave(event)"
+                ondrop="handleFileDrop(event)"
+                class="upload-dropzone p-5 sm:p-8 rounded-2xl bg-white/60 dark:bg-slate-950/60 text-center cursor-pointer hover:border-amber-500 transition-all space-y-3"
+              >
+                <!-- Empty State View -->
+                <div id="dropzoneEmpty" class="space-y-2">
+                  <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-amber-500/10 text-amber-500 flex items-center justify-center mx-auto text-xl sm:text-2xl">
+                    <i class="fa-solid fa-file-arrow-up"></i>
+                  </div>
+                  <div>
+                    <p class="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-200">
+                      Klik untuk memilih file PDF atau seret berkas ke sini
+                    </p>
+                    <p class="text-[11px] sm:text-xs text-slate-400 mt-1">
+                      File hasil scan lembar jawaban tulisan tangan (CamScanner, Google Drive Scan, dsb)
+                    </p>
+                  </div>
+                </div>
+
+                <!-- Selected File Preview -->
+                <div id="dropzonePreview" class="hidden items-center justify-between p-3.5 sm:p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 text-left">
+                  <div class="flex items-center gap-3 min-w-0">
+                    <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-amber-500 text-slate-950 flex items-center justify-center text-base sm:text-lg shrink-0">
+                      <i class="fa-solid fa-file-pdf"></i>
+                    </div>
+                    <div class="min-w-0">
+                      <div class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white truncate max-w-[180px] xs:max-w-[240px] sm:max-w-xs" id="previewFileName">
+                        Jawaban_Esai.pdf
+                      </div>
+                      <div class="text-[10px] sm:text-[11px] font-mono text-slate-500 dark:text-slate-400" id="previewFileSize">
+                        1.4 MB
+                      </div>
+                    </div>
+                  </div>
+
+                  <button
+                    type="button"
+                    onclick="event.stopPropagation(); removeSelectedFile();"
+                    class="w-8 h-8 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-500 flex items-center justify-center text-xs transition-colors cursor-pointer shrink-0 ml-2"
+                    title="Hapus file"
+                  >
+                    <i class="fa-solid fa-trash"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Alternative: Link Google Drive -->
+            <div class="space-y-1.5 pt-1">
+              <label for="upDriveLink" class="block text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+                <i class="fa-brands fa-google-drive text-amber-500"></i>
+                <span>Tautan / Link Google Drive Berkas PDF (Opsional / Cadangan):</span>
+              </label>
+              <input
+                type="url"
+                id="upDriveLink"
+                placeholder="https://drive.google.com/file/d/... (Pastikan akses disetel ke Siapa Saja yang Memiliki Link)"
+                class="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-amber-500"
+              />
+              <p class="text-[10px] sm:text-[11px] text-slate-400">
+                Gunakan opsi tautan ini jika berkas PDF berukuran sangat besar (&gt; 25 MB).
+              </p>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="pt-2">
+              <button
+                type="submit"
+                id="btnKumpulEsai"
+                class="w-full inline-flex items-center justify-center gap-2 sm:gap-3 px-5 py-3.5 sm:py-4 rounded-2xl bg-gradient-to-r from-amber-600 via-orange-600 to-rose-600 hover:from-amber-500 hover:to-rose-500 text-white font-extrabold text-xs sm:text-sm md:text-base shadow-xl shadow-amber-500/25 transition-all cursor-pointer"
+              >
+                <i class="fa-solid fa-paper-plane text-xs sm:text-sm"></i>
+                <span id="btnKumpulText">Kumpulkan Berkas Jawaban Esai Sekarang</span>
+              </button>
+            </div>
+
+            <!-- Alert Box -->
+            <div id="submitAlert" class="hidden p-4 rounded-2xl text-xs sm:text-sm font-semibold text-center items-center justify-center gap-2"></div>
+
+          </form>
+
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-200 dark:border-slate-800 py-6 text-center text-xs text-slate-500 dark:text-slate-400">
+      <div class="max-w-6xl mx-auto px-4">
+        &copy; 2026 RuangInformatika • SMA Negeri 4 Yogyakarta. Instrumen Penilaian Ulangan Harian (Asesmen Sumatif).
+      </div>
+    </footer>
+
+    <!-- LOGIC JAVASCRIPT -->
+    <script>
+      let selectedFile = null;
+      const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzjU4YyZ8ScP9xsXuqpfVFKChn_rrR_fBm1PfRdp8i8UaQ5LrdCiGSI8BmTOMB1K9o/exec";
+
+      window.addEventListener("DOMContentLoaded", () => {
+        setupThemeToggle();
+      });
+
+      function setupThemeToggle() {
+        const btn = document.getElementById("themeToggleBtn");
+        if (btn) {
+          btn.addEventListener("click", () => {
+            const isDark = document.documentElement.classList.toggle("dark");
+            localStorage.setItem("theme", isDark ? "dark" : "light");
+          });
+        }
+      }
+
+      /* ── DROPZONE & FILE SELECTION ── */
+      function handleFileSelect(event) {
+        const file = event.target.files[0];
+        if (file) validateAndSetFile(file);
+      }
+
+      function handleDragOver(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        document.getElementById("dropzone").classList.add("dragover");
+      }
+
+      function handleDragLeave(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        document.getElementById("dropzone").classList.remove("dragover");
+      }
+
+      function handleFileDrop(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        document.getElementById("dropzone").classList.remove("dragover");
+        if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+          validateAndSetFile(e.dataTransfer.files[0]);
+        }
+      }
+
+      function validateAndSetFile(file) {
+        if (file.size > 25 * 1024 * 1024) {
+          alert("Ukuran file terlalu besar (maksimal 25 MB). Gunakan opsi tautan Google Drive jika file melebihi 25 MB.");
+          return;
+        }
+
+        selectedFile = file;
+        document.getElementById("previewFileName").innerText = file.name;
+        document.getElementById("previewFileSize").innerText = formatBytes(file.size);
+
+        document.getElementById("dropzoneEmpty").classList.add("hidden");
+        document.getElementById("dropzonePreview").classList.remove("hidden");
+        document.getElementById("dropzonePreview").classList.add("flex");
+      }
+
+      function removeSelectedFile() {
+        selectedFile = null;
+        document.getElementById("filePdfInput").value = "";
+        document.getElementById("dropzonePreview").classList.add("hidden");
+        document.getElementById("dropzonePreview").classList.remove("flex");
+        document.getElementById("dropzoneEmpty").classList.remove("hidden");
+      }
+
+      function formatBytes(bytes) {
+        if (bytes === 0) return "0 Bytes";
+        const k = 1024;
+        const sizes = ["Bytes", "KB", "MB", "GB"];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
+      }
+
+      function fileToBase64(file) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.readAsDataURL(file);
+          reader.onload = () => {
+            const base64 = reader.result.split(",")[1];
+            resolve(base64);
+          };
+          reader.onerror = (error) => reject(error);
+        });
+      }
+
+      /* ── SUBMISSION HANDLER ── */
+      async function submitTugasPdf() {
+        const nama = document.getElementById("upNama").value.trim();
+        const absen = document.getElementById("upAbsen").value.trim();
+        const kelas = document.getElementById("upKelas").value.trim();
+        const driveLink = document.getElementById("upDriveLink").value.trim();
+        const alertBox = document.getElementById("submitAlert");
+        const btn = document.getElementById("btnKumpulEsai");
+        const btnText = document.getElementById("btnKumpulText");
+
+        if (!nama || !absen) {
+          showAlert("error", "Harap isi Nama Lengkap dan Nomor Presensi sebelum mengumpulkan tugas!");
+          return;
+        }
+
+        if (!selectedFile && !driveLink) {
+          showAlert("error", "Silakan unggah file PDF hasil scan jawaban atau tempelkan link Google Drive!");
+          return;
+        }
+
+        if (!confirm(\`Apakah kamu yakin ingin mengumpulkan berkas jawaban esai atas nama \${nama} (\${kelas} - Presensi \${absen})?\`)) {
+          return;
+        }
+
+        btn.disabled = true;
+        btnText.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Mengirimkan berkas ke guru...';
+        showAlert("loading", "Sedang mengunggah berkas jawaban esaimu ke sistem penyimpanan guru. Mohon jangan tutup halaman ini...");
+
+        try {
+          const safeName = (s) => s.replace(/[^\\w\\d]+/g, "_").replace(/^_+|_+$/g, "");
+          const finalFileName = \`ESAI_\${safeName(kelas)}_\${safeName(absen)}_\${safeName(nama)}.pdf\`;
+
+          let base64 = "";
+          let mime = "application/pdf";
+          if (selectedFile) {
+            base64 = await fileToBase64(selectedFile);
+            mime = selectedFile.type || "application/pdf";
+          }
+
+          const fd = new FormData();
+          fd.append("fileName", finalFileName);
+          fd.append("fileBase64", base64);
+          fd.append("mimeType", mime);
+          fd.append("kelas", kelas);
+          fd.append("nama", nama);
+          fd.append("absen", absen);
+          fd.append("link_drive", driveLink);
+          fd.append("tugas", "ULANGAN-HARIAN-ESAI-SMAN4-PDF");
+
+          await fetch(APPS_SCRIPT_URL, {
+            method: "POST",
+            body: fd,
+            mode: "no-cors"
+          });
+
+          await new Promise(r => setTimeout(r, 1500));
+
+          btnText.innerHTML = '<i class="fa-solid fa-check mr-2"></i> Berkas Berhasil Dikumpulkan!';
+          showAlert(
+            "success",
+            \`<div class="space-y-1">
+                <div class="text-base font-bold flex items-center justify-center gap-2"><i class="fa-solid fa-circle-check text-xl"></i> Berkas Berhasil Terkirim ke Guru!</div>
+                <div class="text-xs opacity-90">Terima kasih <strong>\${nama}</strong> (\${kelas} - Presensi \${absen}). Berkas <strong>\${finalFileName}</strong> telah berhasil disimpan untuk penilaian guru (Maks. 50 Poin).</div>
+              </div>\`
+          );
+
+          localStorage.setItem("patbhe_esai_submitted_" + absen, new Date().toISOString());
+
+        } catch (err) {
+          console.error("Upload error:", err);
+          btn.disabled = false;
+          btnText.innerHTML = 'Coba Kirim Ulang';
+          showAlert("error", "Gagal mengunggah berkas ke server. Pastikan koneksi internetmu stabil, atau gunakan opsi Tautan Google Drive lalu klik kirim ulang.");
+        }
+      }
+
+      function showAlert(type, htmlContent) {
+        const box = document.getElementById("submitAlert");
+        box.classList.remove("hidden", "bg-rose-500/10", "border-rose-500/30", "text-rose-500", "bg-amber-500/10", "border-amber-500/30", "text-amber-500", "bg-emerald-500/10", "border-emerald-500/30", "text-emerald-500");
+        box.classList.add("flex", "border");
+
+        if (type === "error") {
+          box.classList.add("bg-rose-500/10", "border-rose-500/30", "text-rose-600", "dark:text-rose-400");
+          box.innerHTML = '<i class="fa-solid fa-circle-exclamation text-base"></i><span>' + htmlContent + '</span>';
+        } else if (type === "loading") {
+          box.classList.add("bg-amber-500/10", "border-amber-500/30", "text-amber-600", "dark:text-amber-400");
+          box.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-base"></i><span>' + htmlContent + '</span>';
+        } else if (type === "success") {
+          box.classList.add("bg-emerald-500/10", "border-emerald-500/30", "text-emerald-600", "dark:text-emerald-400");
+          box.innerHTML = htmlContent;
+        }
+
+        box.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    </script>
+  </body>
+</html>`;
+
+fs.writeFileSync('Uji_Kompetensi/esai.html', esaiHtml, 'utf8');
+console.log('Successfully written responsive Uji_Kompetensi/esai.html with fixed Esai 1, 2, 3 badges!');
+

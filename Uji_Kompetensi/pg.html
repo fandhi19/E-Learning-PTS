@@ -1,0 +1,1218 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ujian Pilihan Ganda — Uji Kompetensi Informatika SMAN 4 Yogyakarta</title>
+    <link rel="shortcut icon" href="../images/Logo Patbhe.png" type="image/x-icon" />
+
+    <script>
+      if (localStorage.getItem("theme") === "dark" || (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              brandDark: "#0b1120",
+              brandNavy: "#0f172a",
+              brandGray: "#1e293b",
+            },
+            fontFamily: {
+              sans: ["'Plus Jakarta Sans'", "sans-serif"],
+              mono: ["'JetBrains Mono'", "monospace"],
+            },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      body {
+        background-color: #0b1120;
+        background-image: radial-gradient(rgba(16, 185, 129, 0.08) 1px, transparent 1px), radial-gradient(rgba(14, 165, 233, 0.06) 1px, transparent 1px);
+        background-size: 32px 32px;
+        background-position:
+          0 0,
+          16px 16px;
+      }
+      html:not(.dark) body {
+        background-color: #f8fafc;
+        background-image: radial-gradient(rgba(16, 185, 129, 0.12) 1px, transparent 1px), radial-gradient(rgba(14, 165, 233, 0.08) 1px, transparent 1px);
+      }
+
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: rgba(148, 163, 184, 0.3);
+        border-radius: 999px;
+      }
+
+      .cbt-option {
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .cbt-option:hover {
+        transform: translateX(4px);
+      }
+
+      #topProgress {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #10b981, #06b6d4, #3b82f6);
+        z-index: 999;
+        width: 0%;
+        transition: width 0.3s ease;
+      }
+    </style>
+  </head>
+
+  <body class="text-slate-800 dark:text-slate-100 font-sans antialiased min-h-screen flex flex-col selection:bg-emerald-500 selection:text-white">
+    <div id="topProgress"></div>
+
+    <!-- ================= TOP NAVBAR ================= -->
+    <header class="sticky top-0 z-40 bg-white/90 dark:bg-slate-950/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors duration-300">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between">
+        <a href="uji-kompetensi.html" class="flex items-center gap-3.5 group">
+          <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 p-0.5 shadow-md shadow-emerald-500/20 group-hover:scale-105 transition-transform">
+            <div class="w-full h-full bg-white dark:bg-slate-900 rounded-[14px] flex items-center justify-center overflow-hidden">
+              <img src="../images/Logo Patbhe.png" alt="Logo SMAN 4 Yogyakarta" class="w-7 h-7 object-contain" />
+            </div>
+          </div>
+          <div>
+            <div class="flex items-center gap-1.5">
+              <span class="font-black text-xl text-slate-900 dark:text-white tracking-tight">Ruang<span class="text-emerald-500">Informatika</span></span>
+            </div>
+            <span class="text-[10px] uppercase font-bold tracking-widest text-slate-500 dark:text-slate-400 block">CBT PILIHAN GANDA • SMAN 4 YOGYAKARTA</span>
+          </div>
+        </a>
+
+        <div class="flex items-center gap-3">
+          <div
+            id="navTimerBox"
+            class="hidden items-center gap-2 px-3.5 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-200 shadow-sm font-mono text-sm font-bold"
+          >
+            <i class="fa-solid fa-clock text-emerald-500 animate-pulse"></i>
+            <span id="cbtTimer">45:00</span>
+          </div>
+
+          <button
+            id="btnForceFullscreen"
+            type="button"
+            onclick="triggerFullscreen()"
+            title="Aktifkan Mode Layar Penuh"
+            class="hidden w-10 h-10 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-500 items-center justify-center transition-all cursor-pointer"
+          >
+            <i class="fa-solid fa-expand text-sm"></i>
+          </button>
+
+          <a
+            id="navBackBtn"
+            href="uji-kompetensi.html"
+            class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200 transition-colors border border-slate-200 dark:border-slate-700"
+          >
+            <i class="fa-solid fa-arrow-left"></i>
+            <span>Kembali ke Hub</span>
+          </a>
+
+          <button
+            id="themeToggleBtn"
+            type="button"
+            class="w-10 h-10 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-amber-400 flex items-center justify-center transition-all focus:outline-none shadow-sm cursor-pointer border border-slate-200 dark:border-slate-700"
+            aria-label="Toggle Theme"
+          >
+            <i class="fa-solid fa-moon dark:hidden text-sm"></i>
+            <i class="fa-solid fa-sun hidden dark:inline text-sm"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- ================= MAIN ================= -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 py-8 flex-1 w-full space-y-6">
+      <!-- TAHAP 1: FORMULIR IDENTITAS -->
+      <section id="preExamSection" class="max-w-2xl mx-auto space-y-6">
+        <div class="bg-white dark:bg-slate-900/95 border-2 border-emerald-500/30 rounded-3xl p-6 sm:p-8 backdrop-blur-md shadow-2xl relative overflow-hidden space-y-6">
+          <div class="absolute -right-12 -top-12 w-40 h-40 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+          <div class="text-center space-y-2">
+            <div class="w-16 h-16 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-500 text-3xl mx-auto shadow-md shadow-emerald-500/10">
+              <i class="fa-solid fa-user-pen"></i>
+            </div>
+            <h1 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">Registrasi Ujian Pilihan Ganda</h1>
+            <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">Instrumen Penilaian Ulangan Harian (Asesmen Sumatif) • 20 Butir Soal (Skor Maks. 50 Poin)</p>
+          </div>
+
+          <form
+            id="formIdentitas"
+            onsubmit="
+              event.preventDefault();
+              startExamFlow();
+            "
+            class="space-y-4 pt-2"
+          >
+            <div>
+              <label for="cbtNama" class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5 flex items-center gap-1.5">
+                <i class="fa-solid fa-user text-emerald-500"></i>
+                <span>Nama Lengkap Peserta Didik</span>
+                <span class="text-rose-500">*</span>
+              </label>
+              <input
+                type="text"
+                id="cbtNama"
+                required
+                autocomplete="name"
+                placeholder="Masukkan nama lengkap sesuai presensi..."
+                class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800/80 border-2 border-slate-200 dark:border-slate-700 font-semibold text-sm focus:outline-none focus:border-emerald-500 text-slate-800 dark:text-slate-100 transition-colors"
+              />
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label for="cbtAbsen" class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5 flex items-center gap-1.5">
+                  <i class="fa-solid fa-id-badge text-emerald-500"></i>
+                  <span>Nomor Presensi (Absen)</span>
+                  <span class="text-rose-500">*</span>
+                </label>
+                <input
+                  type="number"
+                  id="cbtAbsen"
+                  required
+                  min="1"
+                  max="50"
+                  placeholder="Contoh: 18"
+                  class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800/80 border-2 border-slate-200 dark:border-slate-700 font-mono font-bold text-sm focus:outline-none focus:border-emerald-500 text-slate-800 dark:text-slate-100 transition-colors"
+                />
+              </div>
+
+              <div>
+                <label for="cbtKelas" class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5 flex items-center gap-1.5">
+                  <i class="fa-solid fa-school text-emerald-500"></i>
+                  <span>Kelas / Rombel</span>
+                  <span class="text-rose-500">*</span>
+                </label>
+                <select
+                  id="cbtKelas"
+                  class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800/80 border-2 border-slate-200 dark:border-slate-700 font-bold text-sm focus:outline-none focus:border-emerald-500 text-slate-800 dark:text-slate-100 transition-colors cursor-pointer"
+                >
+                  <option value="X-E6" selected>X-E6 (Sepuluh E6)</option>
+                  <option value="X-E1">X-E1 (Sepuluh E1)</option>
+                  <option value="X-E2">X-E2 (Sepuluh E2)</option>
+                  <option value="X-E3">X-E3 (Sepuluh E3)</option>
+                  <option value="X-E4">X-E4 (Sepuluh E4)</option>
+                  <option value="X-E5">X-E5 (Sepuluh E5)</option>
+                  <option value="X-E7">X-E7 (Sepuluh E7)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-700 dark:text-amber-300 text-xs space-y-2">
+              <div class="font-bold flex items-center gap-2">
+                <i class="fa-solid fa-shield-halved text-amber-500 text-sm"></i>
+                <span>Ketentuan Pelaksanaan Ujian Layar Penuh (Fullscreen):</span>
+              </div>
+              <ul class="list-disc list-inside space-y-1 text-slate-600 dark:text-slate-300 leading-relaxed">
+                <li>Struktur Soal: <strong>No 1–10 Reguler</strong> (2 poin), <strong>No 11–15 HOTS</strong> (3 poin), <strong>No 16–20 PG Kompleks</strong> (3 poin).</li>
+                <li>Setelah mengklik mulai, layar akan <strong>otomatis berpindah ke mode Layar Penuh (Fullscreen)</strong>.</li>
+                <li>Dilarang keluar dari layar penuh, membuka tab lain, atau berganti aplikasi.</li>
+                <li>
+                  <strong class="text-rose-500 dark:text-rose-400">Peringatan Keras:</strong> Jika keluar dari layar ujian <strong>lebih dari 3 kali</strong>, jawaban akan <strong>langsung dikirimkan secara paksa</strong> dan ujian
+                  terkunci!
+                </li>
+                <li>Alokasi waktu: <strong>45 Menit</strong>.</li>
+              </ul>
+            </div>
+
+            <div class="pt-2">
+              <button
+                type="submit"
+                id="btnMulaiUjian"
+                class="w-full inline-flex items-center justify-center gap-3 px-6 py-4 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-extrabold text-sm sm:text-base shadow-xl shadow-emerald-500/25 transition-all cursor-pointer hover:gap-4"
+              >
+                <span>Mulai Kerjakan Ujian Sekarang</span>
+                <i class="fa-solid fa-play text-xs"></i>
+              </button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- TAHAP 2: AREA PENGERJAAN -->
+      <section id="examSection" class="hidden space-y-6">
+        <div class="bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-2xl px-5 py-3.5 backdrop-blur-md shadow-sm flex flex-wrap items-center justify-between gap-3">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-xl bg-emerald-500/15 text-emerald-500 flex items-center justify-center font-bold text-xs">
+              <i class="fa-solid fa-user-graduate"></i>
+            </div>
+            <div>
+              <div class="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-2 flex-wrap">
+                <span id="dispNama">Nama Siswa</span>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-500" id="dispAbsen">Absen 0</span>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded-md bg-cyan-500/10 text-cyan-500" id="dispKelas">X-E6</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-3 text-xs font-semibold">
+            <span id="fsStatusBadge" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-slate-500/10 border border-slate-500/30 text-slate-500 dark:text-slate-400 font-mono text-[11px]">
+              <i class="fa-solid fa-circle-notch fa-spin text-[10px]"></i> Memeriksa layar...
+            </span>
+
+            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-mono text-[11px]">
+              <i class="fa-solid fa-triangle-exclamation text-amber-500"></i>
+              <span>Pelanggaran: <strong class="text-rose-500" id="dispViolation">0</strong> / 3</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+          <div class="lg:col-span-8 space-y-4">
+            <div class="bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 backdrop-blur-md shadow-xl relative min-h-[460px] flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800/80 pb-4 mb-5 flex-wrap gap-2">
+                  <div class="flex items-center gap-3">
+                    <span class="w-10 h-10 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-500 font-mono font-extrabold flex items-center justify-center text-base" id="qCurrentBadge"> 1 </span>
+                    <div>
+                      <span class="text-xs font-bold uppercase tracking-wider text-slate-400 block" id="qCategory">PG REGULER</span>
+                      <h2 class="text-sm sm:text-base font-extrabold text-slate-800 dark:text-slate-100">Soal No. <span id="qCurrentText">1</span> dari 20</h2>
+                    </div>
+                  </div>
+
+                  <div class="flex items-center gap-2">
+                    <span class="px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-xs font-mono font-bold" id="qPointsBadge"> 2 Poin </span>
+                    <button id="btnRagu" type="button" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-amber-500/40 text-amber-500 hover:bg-amber-500/10 text-xs font-bold transition-colors cursor-pointer">
+                      <i class="fa-regular fa-flag"></i>
+                      <span id="raguText">Ragu-ragu</span>
+                    </button>
+                  </div>
+                </div>
+
+                <div id="qTypeHint" class="hidden mb-4 p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-600 dark:text-amber-400 text-xs font-bold flex items-center gap-2">
+                  <i class="fa-solid fa-square-check text-sm"></i>
+                  <span>Pilihan Ganda Kompleks: Kamu dapat mencentang lebih dari 1 pilihan yang benar!</span>
+                </div>
+
+                <div id="qText" class="text-slate-700 dark:text-slate-200 font-medium text-sm sm:text-base leading-relaxed space-y-3 mb-6"></div>
+
+                <div id="qOptions" class="space-y-3"></div>
+              </div>
+
+              <div class="pt-8 mt-6 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between">
+                <button
+                  id="btnPrev"
+                  type="button"
+                  class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200 transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+                >
+                  <i class="fa-solid fa-arrow-left"></i>
+                  <span>Sebelumnya</span>
+                </button>
+
+                <div class="text-xs font-mono font-bold text-slate-400">
+                  <span id="savedIndicatorText"><i class="fa-solid fa-check text-emerald-500"></i> Tersimpan</span>
+                </div>
+
+                <button
+                  id="btnNext"
+                  type="button"
+                  class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shadow-md shadow-emerald-500/20 transition-colors cursor-pointer"
+                >
+                  <span id="nextBtnText">Berikutnya</span>
+                  <i class="fa-solid fa-arrow-right"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="lg:col-span-4 space-y-4">
+            <div class="bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-3xl p-5 backdrop-blur-md shadow-lg space-y-4">
+              <h3 class="font-extrabold text-sm text-slate-800 dark:text-slate-100 flex items-center justify-between">
+                <span class="flex items-center gap-2"><i class="fa-solid fa-grip text-emerald-500"></i> Navigator Soal PG</span>
+                <span class="text-xs font-mono px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-500 font-bold" id="answeredCount">0 / 20</span>
+              </h3>
+
+              <div id="navigatorGrid" class="grid grid-cols-5 gap-2"></div>
+
+              <div class="grid grid-cols-3 gap-2 pt-2 border-t border-slate-100 dark:border-slate-800/80 text-[11px] font-semibold text-slate-500 dark:text-slate-400">
+                <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-emerald-500"></span><span>Terjawab</span></div>
+                <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-amber-500"></span><span>Ragu</span></div>
+                <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-slate-200 dark:bg-slate-800 border border-slate-300 dark:border-slate-700"></span><span>Kosong</span></div>
+              </div>
+
+              <div class="pt-2">
+                <button
+                  id="btnSubmitAll"
+                  type="button"
+                  class="w-full inline-flex items-center justify-center gap-2 px-5 py-3 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs shadow-lg shadow-emerald-500/25 transition-all cursor-pointer"
+                >
+                  <i class="fa-solid fa-paper-plane"></i>
+                  <span>Selesai &amp; Kumpulkan Nilai</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="p-4 rounded-2xl bg-emerald-500/5 border border-emerald-500/20 text-xs text-slate-600 dark:text-slate-400 space-y-1.5">
+              <div class="font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5"><i class="fa-solid fa-lightbulb"></i> Pembagian Soal:</div>
+              <ul class="list-disc list-inside space-y-1 leading-relaxed text-[11px]">
+                <li>No. 1–10: PG Reguler (Bobot @ 2 Poin)</li>
+                <li>No. 11–15: PG HOTS Analisis (Bobot @ 3 Poin)</li>
+                <li>No. 16–20: PG Kompleks / Multi-Select (Bobot @ 3 Poin)</li>
+                <li>Total Skor Maksimal: <strong>50 Poin</strong></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- MODAL VIOLATION -->
+    <div id="violationModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden items-center justify-center p-4">
+      <div class="bg-white dark:bg-slate-900 border-2 border-rose-500/50 rounded-3xl max-w-md w-full p-6 sm:p-7 space-y-5 shadow-2xl text-center">
+        <div class="w-16 h-16 rounded-2xl bg-rose-500/15 border border-rose-500/30 text-rose-500 flex items-center justify-center mx-auto text-3xl animate-bounce">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+        </div>
+
+        <div class="space-y-2">
+          <h2 class="text-xl sm:text-2xl font-black text-rose-500">Peringatan Integritas Ujian!</h2>
+          <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">Kamu terdeteksi <strong>meninggalkan layar ujian / keluar dari mode Fullscreen</strong>!</p>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-xs font-mono font-bold text-rose-600 dark:text-rose-400">
+          Jumlah Pelanggaran: <span class="text-base text-rose-500 font-extrabold" id="modalViolCount">1</span> / 3 Kali
+          <div class="text-[11px] font-normal text-slate-500 dark:text-slate-400 mt-1">Jika keluar lebih dari 3 kali, jawaban akan langsung <strong>dikirimkan secara paksa</strong>.</div>
+        </div>
+
+        <button
+          type="button"
+          id="btnResumeFullscreen"
+          onclick="resumeExamFullscreen()"
+          class="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs sm:text-sm shadow-lg shadow-rose-600/30 transition-all cursor-pointer"
+        >
+          <i class="fa-solid fa-expand"></i>
+          <span>Kembali ke Layar Penuh &amp; Lanjutkan</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- MODAL HASIL -->
+    <div id="resultModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden items-center justify-center p-4">
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl max-w-lg w-full p-6 sm:p-8 space-y-6 shadow-2xl relative">
+        <div class="text-center space-y-2">
+          <div class="w-16 h-16 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-500 flex items-center justify-center mx-auto text-2xl">
+            <i class="fa-solid fa-circle-check"></i>
+          </div>
+          <h2 class="text-2xl font-black text-slate-900 dark:text-white" id="resTitle">Jawaban Berhasil Dikumpulkan!</h2>
+          <p class="text-xs text-slate-500 dark:text-slate-400" id="resStudentInfo">Nama Siswa • Kelas</p>
+        </div>
+
+        <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-center space-y-2">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold text-xs"><i class="fa-solid fa-check-double"></i> 20 Butir Jawaban Terkirim</div>
+          <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+            Terima kasih telah menyelesaikan ujian. Seluruh jawaban pilihan gandamu telah berhasil disimpan dan tercatat di sistem penilaian guru. Nilai akhir akan diumumkan setelah seluruh rangkaian ulangan selesai.
+          </p>
+        </div>
+
+        <div id="resAutoSubmitNotice" class="hidden text-xs p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-500 dark:text-rose-400 font-bold text-center">
+          <i class="fa-solid fa-circle-exclamation mr-1.5"></i> Ujian dihentikan otomatis karena terdeteksi keluar dari layar ujian lebih dari 3 kali.
+        </div>
+
+        <div id="resSubmitAlert" class="text-xs p-3 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-600 dark:text-cyan-400 font-semibold text-center">
+          <i class="fa-solid fa-spinner fa-spin mr-1.5"></i> Sedang mengirim nilai ke server guru...
+        </div>
+
+        <div class="space-y-2.5 pt-2">
+          <a
+            href="esai.html"
+            class="w-full inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white font-bold text-xs shadow-md shadow-amber-500/20 transition-all cursor-pointer"
+          >
+            <span>Lanjut ke Soal Esai (Tulis Tangan &amp; PDF)</span>
+            <i class="fa-solid fa-arrow-right"></i>
+          </a>
+
+          <a
+            href="uji-kompetensi.html"
+            class="w-full inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs transition-colors cursor-pointer"
+          >
+            <i class="fa-solid fa-house"></i>
+            <span>Kembali ke Portal Uji Kompetensi</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ SOAL & LOGIKA ============ -->
+    <script>
+      /* ── SOAL 20 BUTIR ── */
+      const questions = [
+        {
+          id: 1,
+          type: "single",
+          category: "PG Reguler (L1) • Konsep Dasar Algoritma",
+          points: 2,
+          text: "Dalam dunia pemrograman, komputer tidak dapat berpikir sendiri melainkan hanya menjalankan perintah yang diberikan. Urutan langkah-langkah logis dan terstruktur yang disusun untuk menyelesaikan suatu masalah disebut ....",
+          options: ["Compiler", "Variabel", "Algoritma", "Sintaks", "Debugging"],
+          correct: 2,
+        },
+        {
+          id: 2,
+          type: "single",
+          category: "PG Reguler (L1) • Diagram Alir (Flowchart)",
+          points: 2,
+          text: "Jika algoritma merupakan urutan langkah berupa teks, maka representasi gambar visual yang memakai bentuk-bentuk simbol geometris untuk menggambarkan alur program agar lebih mudah dibaca dan dipahami disebut ....",
+          options: ["Pseudocode", "Flowchart (Diagram Alir)", "Tipe Data", "Array", "IDE (Integrated Development Environment)"],
+          correct: 1,
+        },
+        {
+          id: 3,
+          type: "single",
+          category: "PG Reguler (L1) • Konsep Dasar Algoritma",
+          points: 2,
+          text: "Menurut Donald E. Knuth, sebuah algoritma yang baik harus memiliki lima ciri utama. Ciri yang mengharuskan setiap instruksi di dalam algoritma ditulis secara jelas dan tidak ambigu serta ciri bahwa program tahu kapan harus berhenti secara berturut-turut adalah ....",
+          options: ["Input dan Output", "Definiteness dan Finiteness", "Effectiveness dan Input", "Looping dan Branching", "Sequence dan Output"],
+          correct: 1,
+        },
+        {
+          id: 4,
+          type: "single",
+          category: "PG Reguler (L1) • Diagram Alir (Flowchart)",
+          points: 2,
+          text: "Dalam pembuatan diagram alir (flowchart), terdapat berbagai simbol standar dengan fungsi khusus. Apakah fungsi utama dari simbol berbentuk Belah Ketupat (Diamond)?",
+          options: [
+            "Menandakan titik awal (Start) atau titik akhir (End) suatu program.",
+            "Menunjukkan arah aliran program dari awal hingga akhir.",
+            "Melakukan kegiatan komputasi atau operasi aritmatika.",
+            "Menandakan titik Keputusan (Decision) atau percabangan di mana salah satu cabang dipilih berdasarkan suatu kondisi (Ya/Tidak).",
+            "Menghubungkan titik pada diagram alir ke halaman yang berbeda.",
+          ],
+          correct: 3,
+        },
+        {
+          id: 5,
+          type: "single",
+          category: "PG Reguler (L1) • Diagram Alir (Flowchart)",
+          points: 2,
+          text: 'Perhatikan pernyataan berikut: "Melambangkan saat program menerima data masukan (input) atau menampilkan hasil keluaran (output)." Pada diagram alir (flowchart), fungsi tersebut digambarkan menggunakan simbol berbentuk ....',
+          options: ["Jajar Genjang (Input/Output)", "Persegi Panjang (Proses)", "Kapsul / Oval (Terminator)", "Belah Ketupat (Keputusan)", "Lingkaran Kecil (Penghubung dalam Halaman)"],
+          correct: 0,
+        },
+        {
+          id: 6,
+          type: "single",
+          category: "PG Reguler (L1) • Pseudocode (Kode Semu)",
+          points: 2,
+          text: "Agar rapi dan mudah diterjemahkan ke bahasa pemrograman, penulisan pseudocode umumnya dibagi menjadi tiga bagian struktur utama secara berurutan, yaitu ....",
+          options: ["Start, Process, dan End", "Input, Looping, dan Compile", "Judul Algoritma, Deklarasi, dan Algoritma / Deskripsi", "Header, Body, dan Footer", "Fetch, Decode, dan Execute"],
+          correct: 2,
+        },
+        {
+          id: 7,
+          type: "single",
+          category: "PG Reguler (L1) • Pseudocode (Kode Semu)",
+          points: 2,
+          text: "Secara bahasa, kata pseudo berarti semu atau tiruan, sedangkan code berarti kode. Pengertian yang paling tepat mengenai Pseudocode adalah ....",
+          options: [
+            "Bahasa mesin berbasis angka biner (0 dan 1) yang langsung dieksekusi oleh prosesor.",
+            "Aplikasi khusus untuk mencari dan memperbaiki kesalahan penulisan titik koma pada program.",
+            "Bahasa jembatan antara gagasan manusia dan bahasa komputer yang menyerupai struktur kode asli untuk merancang logika, namun belum dapat dijalankan langsung oleh komputer.",
+            "Diagram grafis yang menggunakan simbol-simbol geometri untuk mempresentasikan alur kerja tim.",
+            "Perangkat keras di dalam CPU yang bertugas menyimpan hasil perhitungan sementara.",
+          ],
+          correct: 2,
+        },
+        {
+          id: 8,
+          type: "single",
+          category: "PG Reguler (L1) • Arsitektur Von Neumann",
+          points: 2,
+          text: "Model arsitektur komputer yang diusulkan oleh John von Neumann pada tahun 1945 membagi sistem komputer menjadi empat komponen utama yang saling terhubung, yaitu ....",
+          options: [
+            "Monitor, Keyboard, Mouse, dan Printer",
+            "Central Processing Unit (CPU), Memori Utama (RAM), Unit Masukan/Keluaran (I/O), dan Sistem Bus",
+            "Harddisk, Flashdisk, CD-ROM, dan Power Supply",
+            "Internet, Router, Browser, dan Server",
+            "Flowchart, Pseudocode, Compiler, dan Sintaks",
+          ],
+          correct: 1,
+        },
+        {
+          id: 9,
+          type: "single",
+          category: "PG Reguler (L1) • Siklus Mesin (Machine Cycle)",
+          points: 2,
+          text: "Ketika CPU bekerja menjalankan instruksi program pada siklus mesin (Machine Cycle), apakah fungsi dari tahapan DECODE?",
+          options: [
+            "Menjemput kode instruksi dari RAM berdasarkan alamat di Program Counter (PC).",
+            "Control Unit (CU) membaca kode biner di dalam Instruction Register (IR) dan menerjemahkan arti perintah tersebut (misalnya apakah perintah ADD, LOAD, atau STORE).",
+            "ALU menghitung operasi penjumlahan matematika dan menyimpannya ke Accumulator.",
+            "Menyimpan kembali hasil perhitungan akhir dari CPU ke petak memori RAM atau layar monitor.",
+            "Mematikan aliran listrik komputer ketika program telah selesai dijalankan.",
+          ],
+          correct: 1,
+        },
+        {
+          id: 10,
+          type: "single",
+          category: "PG Reguler (L2) • Siklus Mesin (Machine Cycle)",
+          points: 2,
+          text: "Setiap kali komputer memproses suatu perintah, CPU mengeksekusi instruksi tersebut melalui empat tahapan siklus mesin (Machine Cycle) yang berulang secara berurutan dari awal hingga akhir, yaitu ....",
+          options: ["Input – Proses – Output – Delete", "Decode – Fetch – Store – Execute", "Fetch – Decode – Execute – Store", "Store – Execute – Decode – Fetch", "Start – Branching – Looping – End"],
+          correct: 2,
+        },
+        {
+          id: 11,
+          type: "single",
+          category: "PG HOTS (C5) • Diagram Alir (Flowchart)",
+          points: 3,
+          text: "<strong>[HOTS - Evaluasi Logika Flowchart]</strong> Seorang siswa ingin membuat flowchart penentuan Grade Nilai dengan aturan sekolah: Nilai >= 90 dapat A, Nilai >= 80 dapat B, Nilai >= 70 dapat C, dan di bawah 70 dapat D. Namun, siswa tersebut menyusun urutan simbol Decision (Keputusan) dari atas ke bawah secara terbalik seperti berikut:<br/><br/>• Keputusan 1: Apakah NILAI >= 70? -> Jika YA, Cetak C lalu END. Jika TIDAK, lanjut ke Keputusan 2.<br/>• Keputusan 2: Apakah NILAI >= 80? -> Jika YA, Cetak B lalu END. Jika TIDAK, lanjut ke Keputusan 3.<br/>• Keputusan 3: Apakah NILAI >= 90? -> Jika YA, Cetak A lalu END. Jika TIDAK, Cetak D lalu END.<br/><br/><strong>Pertanyaan:</strong> Apabila diuji dengan memasukkan NILAI = 95, apakah yang akan terjadi pada program tersebut?",
+          options: [
+            "Program tetap mencetak A dengan benar karena nilai 95 lebih besar dari 90.",
+            "Program akan mengalami error dan berhenti sebelum mencetak hasil.",
+            "Program langsung mencetak C dan berhenti di Keputusan 1, karena angka 95 sudah memenuhi syarat NILAI >= 70 sehingga cabang Decision di bawahnya (>= 80 dan >= 90) tidak pernah terjangkau.",
+            "Program mencetak C, B, dan A sekaligus secara berurutan.",
+            "Program mencetak D karena urutan kondisi terbalik.",
+          ],
+          correct: 2,
+        },
+        {
+          id: 12,
+          type: "single",
+          category: "PG HOTS (C4) • Pseudocode Perulangan",
+          points: 3,
+          text: "<strong>[HOTS - Analisis Pseudocode Perulangan]</strong> Perhatikan modifikasi pseudocode algoritma menghitung mundur berikut (jika pengguna memasukkan nilai awal N = 3, analisislah apa yang terjadi saat algoritma tersebut ditelusuri):<br/><br/><pre class='p-3 rounded-xl bg-slate-900 text-emerald-400 font-mono text-xs'>// Algoritma Menghitung Mundur\n1. input N\n2. while N > 0 do\n3.    print N\n4.    N <- N + 1</pre>",
+          options: [
+            "Program mencetak angka 3, 2, 1 lalu berhenti dengan normal.",
+            "Program mencetak angka 3, 4, 5 lalu berhenti karena hanya diulang tiga kali.",
+            "Program tidak mencetak angka apa pun karena kondisi while N > 0 langsung bernilai salah.",
+            "Program mengalami Infinite Loop (perulangan tanpa henti) yang mencetak 3, 4, 5, 6, ... terus-menerus karena nilai N justru ditambah 1 (N <- N + 1) sehingga kondisi N > 0 selalu terpenuhi dan melanggar ciri Finiteness.",
+            "Program otomatis mengubah perintah N <- N + 1 menjadi N <- N - 1 agar bisa berhenti.",
+          ],
+          correct: 3,
+        },
+        {
+          id: 13,
+          type: "single",
+          category: "PG HOTS (C4) • Pseudocode Logika Bertingkat",
+          points: 3,
+          text: "<strong>[HOTS - Analisis Tracing Pseudocode Nilai Terbesar]</strong> Perhatikan pseudocode pencarian bilangan terbesar berikut. Jika diberikan masukan himpunan bilangan L = [25, 18, 42, 30, 60, 55], bagaimanakah riwayat perubahan nilai yang tersimpan di dalam variabel largest sejak baris ke-2 dieksekusi hingga program selesai, dan berapa kali baris ke-5 (largest <- item) dijalankan?<br/><br/><pre class='p-3 rounded-xl bg-slate-900 text-emerald-400 font-mono text-xs'>1. if size of (L) = 0 then return null\n2. largest <- elemen pertama L\n3. for each item in L, do\n4.    if item > largest, then\n5.       largest <- item\n6. return largest</pre>",
+          options: [
+            "Riwayat nilai largest: 0 -> 25 -> 42 -> 60; baris ke-5 dijalankan 3 kali.",
+            "Riwayat nilai largest: 25 -> 42 -> 60; baris ke-5 dijalankan 2 kali (yaitu hanya saat mengecek angka 42 dan 60).",
+            "Riwayat nilai largest: 25 -> 18 -> 42 -> 30 -> 60 -> 55; baris ke-5 dijalankan 5 kali.",
+            "Riwayat nilai largest: 25 -> 60; baris ke-5 dijalankan 1 kali.",
+            "Riwayat nilai largest: 25 -> 42 -> 60 -> 55; baris ke-5 dijalankan 3 kali.",
+          ],
+          correct: 1,
+        },
+        {
+          id: 14,
+          type: "single",
+          category: "PG HOTS (C4) • Simulasi Register Tracing",
+          points: 3,
+          text: "<strong>[HOTS - Analisis Register Tracing Von Neumann]</strong> Sebuah komputer Von Neumann hendak menjalankan program untuk menjumlahkan dua data (Data di Alamat 20 = 10 dan Data di Alamat 21 = 4) lalu menyimpan hasilnya ke Alamat 22. Namun, programmer salah menuliskan alamat pada instruksi kedua di dalam RAM menjadi seperti berikut. Berdasarkan cara kerja Register Tracing, apakah dampak dari kesalahan kode di [Alamat 11] tersebut setelah Siklus 3 selesai dijalankan?<br/><br/><pre class='p-3 rounded-xl bg-slate-900 text-emerald-400 font-mono text-xs'>[Alamat 10] : LOAD [20]\n[Alamat 11] : ADD [20]    (seharusnya ADD [21])\n[Alamat 12] : STORE [22]\n[Alamat 20] : Data: 10\n[Alamat 21] : Data: 4</pre>",
+          options: [
+            "CPU menolak menjalankan Siklus 2 karena alamat [20] sudah dipakai pada Siklus 1.",
+            "Control Unit (CU) otomatis memperbaiki instruksi menjadi ADD [21] sehingga hasil di [Alamat 22] tetap bernilai 14.",
+            "ALU tetap berjalan patuh menjumlahkan nilai di Accumulator (10) dengan data di [Alamat 20] (10), sehingga di akhir Siklus 3 memori [Alamat 22] menyimpan hasil yang salah yaitu 20 (bukan 14).",
+            "Nilai pada Program Counter (PC) mundur kembali ke 10 dan mengulang program dari awal.",
+            "Memori [Alamat 22] menyimpan nilai 4 karena data di [Alamat 21] belum terpakai.",
+          ],
+          correct: 2,
+        },
+        {
+          id: 15,
+          type: "single",
+          category: "PG HOTS (C5) • Arsitektur Komputer Modern",
+          points: 3,
+          text: '<strong>[HOTS - Evaluasi Kasus Roleplay & Arsitektur Modern]</strong> Saat melakukan simulasi Roleplay "Kami Komputer Hidup!" di kelas, guru mempercepat tepukan tangan (sinyal clock) berkali-kali lipat. Siswa yang berperan sebagai ALU mampu menghitung sangat cepat, namun ia terpaksa sering menganggur menunggu siswa Bus Sistem (Kurir) yang kelelahan berlari bolak-balik mengantar kartu instruksi dan kartu data dari meja RAM lewat satu jalur yang sama. Jika masalah pada simulasi tersebut terjadi pada komputer nyata, inovasi arsitektur modern manakah yang paling tepat untuk memangkas jarak lari kurir Bus serta membuat tahapan eksekusi bekerja secara estafet?',
+          options: [
+            "Mengganti keyboard dan monitor dengan ukuran yang lebih besar.",
+            "Memperbesar kapasitas Harddisk eksternal dan menghapus komponen Control Unit (CU).",
+            "Menambahkan Cache Memory (L1/L2/L3) yang menempel langsung di dalam prosesor untuk menyimpan data yang sering dipanggil, serta menerapkan Instruction Pipelining agar proses Fetch, Decode, Execute berjalan serentak seperti ban berjalan.",
+            "Mengubah seluruh kode biner di RAM menjadi diagram flowchart agar lebih ringan dibawa oleh Data Bus.",
+            "Menyatukan kembali fungsi ALU dan peranti Output tanpa menggunakan memori register.",
+          ],
+          correct: 2,
+        },
+        {
+          id: 16,
+          type: "multi",
+          category: "PG Kompleks (>1 Jawaban Benar) • Konsep Dasar Algoritma",
+          points: 3,
+          text: "<strong>[PG Kompleks - Konsep Dasar Algoritma]</strong> Berdasarkan materi Konsep Dasar Algoritma, manakah di antara pernyataan-pernyataan berikut yang <strong>BENAR</strong> mengenai ciri algoritma menurut Donald E. Knuth dan jenis alur algoritma? <span class='text-amber-500 font-bold'>(Pilih SEMUA jawaban yang benar!)</span>",
+          options: [
+            "Ciri Finiteness berarti program memiliki titik berhenti yang pasti setelah menyelesaikan tugasnya.",
+            "Alur Sequence adalah langkah algoritma yang diulang terus-menerus selama kondisi masih terpenuhi.",
+            'Mencetak tulisan "LULUS" jika nilai ujian >= 75 merupakan contoh dari alur percabangan (Branching).',
+            "Ciri Effectiveness menuntut langkah algoritma harus masuk akal, efisien, dan tidak melakukan hal yang sia-sia.",
+            "Sebuah algoritma yang baik tidak boleh memiliki Output sama sekali agar memori komputer tetap hemat.",
+          ],
+          correct: [0, 2, 3],
+        },
+        {
+          id: 17,
+          type: "multi",
+          category: "PG Kompleks (>1 Jawaban Benar) • Diagram Alir (Flowchart)",
+          points: 3,
+          text: "<strong>[PG Kompleks - Diagram Alir / Flowchart]</strong> Manakah di antara pernyataan berikut yang <strong>BENAR</strong> sesuai dengan Simbol Wajib Flowchart dan Aturan Emas Membuat Flowchart? <span class='text-amber-500 font-bold'>(Pilih SEMUA jawaban yang benar!)</span>",
+          options: [
+            "Setiap flowchart wajib dimulai dengan simbol Start dan diakhiri dengan simbol End menggunakan bentuk Terminator.",
+            "Simbol Subprogram (persegi panjang dengan garis vertikal di sisi kiri-kanan) melambangkan kegiatan atau proses lain yang telah didefinisikan sebelumnya.",
+            'Setiap simbol Keputusan (Decision) cukup memiliki satu jalur keluar saja yaitu jalur "Ya".',
+            "Arah aliran program pada flowchart umumnya disusun dari atas ke bawah menggunakan Garis Alir (Flowline).",
+            "Simbol Lingkaran Kecil digunakan untuk menghubungkan diagram alir ke halaman kertas yang berbeda (Antarhalaman).",
+          ],
+          correct: [0, 1, 3],
+        },
+        {
+          id: 18,
+          type: "multi",
+          category: "PG Kompleks (>1 Jawaban Benar) • Pseudocode (Kode Semu)",
+          points: 3,
+          text: "<strong>[PG Kompleks - Karakteristik & Kata Kunci Pseudocode]</strong> Manakah pernyataan di bawah ini yang <strong>BENAR</strong> mengenai karakteristik pseudocode dan fungsi kata kuncinya? <span class='text-amber-500 font-bold'>(Pilih SEMUA jawaban yang benar!)</span>",
+          options: [
+            "Pseudocode menggunakan indentasi (teks menjorok ke dalam) untuk menunjukkan hierarki blok perintah seperti IF-ELSE atau WHILE/FOR.",
+            "Dua orang programmer tidak mungkin menulis pseudocode yang berbeda untuk menyelesaikan satu masalah yang sama.",
+            'Prinsip "Satu Baris, Satu Perintah" diterapkan agar urutan operasi logika mudah dibaca dan ditelusuri.',
+            "Pola dasar pengolahan data dalam pseudocode adalah: INPUT (ambil data) -> SET / <- (olah data) -> PRINT (tampilkan hasil).",
+            "Penulisan pseudocode wajib mematuhi aturan sintaks titik koma (;) yang kaku agar tidak terjadi compile error di kertas.",
+          ],
+          correct: [0, 2, 3],
+        },
+        {
+          id: 19,
+          type: "multi",
+          category: "PG Kompleks (>1 Jawaban Benar) • Struktur CPU & Sistem Bus",
+          points: 3,
+          text: "<strong>[PG Kompleks - Struktur Internal CPU & Jalur Bus Sistem]</strong> Berdasarkan materi Arsitektur Von Neumann, manakah pasangan komponen internal CPU, Register, dan jalur System Bus berikut yang memiliki penjelasan fungsi yang <strong>TEPAT</strong>? <span class='text-amber-500 font-bold'>(Pilih SEMUA jawaban yang benar!)</span>",
+          options: [
+            "ALU (Arithmetic Logic Unit): Bertugas melakukan operasi matematika (+, -, x, /) dan pembandingan logika (AND, OR, NOT, lebih besar/kecil).",
+            "PC (Program Counter): Register yang menyimpan alamat memori dari instruksi berikutnya yang akan diambil oleh prosesor.",
+            "Data Bus: Jalur transmisi dua arah (bidirectional) untuk membawa bit data atau angka antara CPU, RAM, dan perangkat I/O.",
+            "ACC (Accumulator): Kabel eksternal yang berfungsi menghubungkan printer dengan layar monitor.",
+            "Control Bus: Jalur pembawa sinyal kendali/komando seperti perintah Read, Write, sinyal detak jam (clock), dan interupsi.",
+          ],
+          correct: [0, 1, 2, 4],
+        },
+        {
+          id: 20,
+          type: "multi",
+          category: "PG Kompleks (>1 Jawaban Benar) • Siklus IPO & Arsitektur Modern",
+          points: 3,
+          text: "<strong>[PG Kompleks - Siklus IPO & Perbandingan Arsitektur]</strong> Tentukan manakah pernyataan yang <strong>BENAR</strong> terkait penerapan Siklus Input-Proses-Output (IPO) pada perangkat nyata dan perbandingan Arsitektur Von Neumann vs Arsitektur Harvard! <span class='text-amber-500 font-bold'>(Pilih SEMUA jawaban yang benar!)</span>",
+          options: [
+            "Pada Kamera Smartphone, sensor optik yang menangkap cahaya pemandangan berperan sebagai Input, sedangkan prosesor (ISP/GPU) yang memproses warna, fokus, dan kompresi JPEG berperan sebagai Proses.",
+            "Peranti Input berfungsi mengubah aksi fisik manusia atau fenomena alam menjadi deretan bit sinyal digital (0 dan 1) agar dapat diproses komputer.",
+            "Pada Arsitektur Harvard, memori program dan memori data dipisahkan secara fisik serta memiliki dua set jalur bus yang terpisah sehingga dapat diakses secara serentak.",
+            "Arsitektur Von Neumann umumnya digunakan pada PC, laptop, server, dan smartphone, sedangkan Arsitektur Harvard banyak diterapkan pada mikrokontroler dan DSP (Digital Signal Processor).",
+            "Pada mesin kasir minimarket, struk belanja yang tercetak dan tampilan layar total harga merupakan bagian dari tahap Input.",
+          ],
+          correct: [0, 1, 2, 3],
+        },
+      ];
+
+      /* ── KONFIGURASI ── */
+      const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz2DItjonkOb9CcizC_rlE3RrbhGP6GgUbDCm5n43iqM4SZW3XHe74jKGKIMsrnghxN4A/exec";
+      const STORAGE_DRAFT_KEY = "patbhe_cbt_pg_pdf_v2";
+
+      /* ── STATE ── */
+      let isExamStarted = false;
+      let isExamSubmitted = false;
+      let currentIdx = 0;
+      let userAnswers = {};
+      let raguStatus = {};
+      let timeLeft = 45 * 60;
+      let timerInterval = null;
+      let violationCount = 0;
+      let studentData = { nama: "", absen: "", kelas: "X-E6" };
+
+      // Anti-cheat guards
+      let lastViolationTime = 0;
+      let antiCheatGraceUntil = 0;
+      const VIOLATION_DEBOUNCE_MS = 1500;
+      const START_GRACE_MS = 3000;
+
+      window.addEventListener("DOMContentLoaded", () => {
+        setupThemeToggle();
+        setupAntiCheatListeners();
+        checkExistingSession();
+      });
+
+      function setupThemeToggle() {
+        const btn = document.getElementById("themeToggleBtn");
+        if (btn) {
+          btn.addEventListener("click", () => {
+            const isDark = document.documentElement.classList.toggle("dark");
+            localStorage.setItem("theme", isDark ? "dark" : "light");
+          });
+        }
+      }
+
+      function checkExistingSession() {
+        try {
+          const raw = localStorage.getItem(STORAGE_DRAFT_KEY);
+          if (!raw) return;
+
+          const data = JSON.parse(raw);
+
+          // Sudah submit → jangan izinkan ulang
+          if (data.isExamStarted && data.isExamSubmitted) {
+            isExamSubmitted = true;
+            document.getElementById("preExamSection").classList.add("hidden");
+            document.getElementById("resTitle").innerText = "Anda Sudah Mengumpulkan";
+            document.getElementById("resStudentInfo").innerText = (data.nama || "") + " • Kelas " + (data.kelas || "");
+            document.getElementById("resSubmitAlert").className = "text-xs p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 font-semibold text-center";
+            document.getElementById("resSubmitAlert").innerHTML = '<i class="fa-solid fa-check-double mr-1.5"></i> Ujian sudah dikumpulkan sebelumnya. Silakan lanjut ke soal esai.';
+            const modal = document.getElementById("resultModal");
+            modal.classList.remove("hidden");
+            modal.classList.add("flex");
+            return;
+          }
+
+          // Sesi aktif → tawarkan lanjut
+          if (data.isExamStarted && !data.isExamSubmitted) {
+            studentData = { nama: data.nama || "", absen: data.absen || "", kelas: data.kelas || "X-E6" };
+            userAnswers = data.userAnswers || {};
+            raguStatus = data.raguStatus || {};
+            violationCount = data.violationCount || 0;
+            if (data.timeLeft && data.timeLeft > 5) timeLeft = data.timeLeft;
+
+            document.getElementById("cbtNama").value = studentData.nama;
+            document.getElementById("cbtAbsen").value = studentData.absen;
+            document.getElementById("cbtKelas").value = studentData.kelas;
+
+            if (confirm(`Ditemukan sesi ujian aktif atas nama ${studentData.nama}. Lanjutkan pengerjaan?`)) {
+              startExamUI();
+            }
+          }
+        } catch (e) {
+          console.error("Error reading session:", e);
+        }
+      }
+
+      function startExamFlow() {
+        const nama = document.getElementById("cbtNama").value.trim();
+        const absen = document.getElementById("cbtAbsen").value.trim();
+        const kelas = document.getElementById("cbtKelas").value.trim();
+
+        if (!nama || !absen) {
+          alert("Harap lengkapi Nama Lengkap dan Nomor Presensi!");
+          return;
+        }
+
+        studentData = { nama, absen, kelas };
+        triggerFullscreen();
+        startExamUI();
+      }
+
+      function triggerFullscreen() {
+        try {
+          const docEl = document.documentElement;
+          if (docEl.requestFullscreen) {
+            docEl
+              .requestFullscreen()
+              .then(checkFullscreenState)
+              .catch((err) => console.log("FS error:", err));
+          } else if (docEl.webkitRequestFullscreen) {
+            docEl.webkitRequestFullscreen();
+          } else if (docEl.msRequestFullscreen) {
+            docEl.msRequestFullscreen();
+          }
+        } catch (e) {
+          console.warn("Fullscreen permission:", e);
+        }
+      }
+
+      function startExamUI() {
+        isExamStarted = true;
+        // Grace period: anti-cheat tidak aktif 3 detik pertama
+        antiCheatGraceUntil = Date.now() + START_GRACE_MS;
+
+        document.getElementById("preExamSection").classList.add("hidden");
+        document.getElementById("examSection").classList.remove("hidden");
+        document.getElementById("navTimerBox").classList.remove("hidden");
+        document.getElementById("navTimerBox").classList.add("flex");
+        document.getElementById("btnForceFullscreen").classList.remove("hidden");
+        document.getElementById("btnForceFullscreen").classList.add("flex");
+        document.getElementById("navBackBtn").classList.add("hidden");
+
+        document.getElementById("dispNama").innerText = studentData.nama;
+        document.getElementById("dispAbsen").innerText = "Absen " + studentData.absen;
+        document.getElementById("dispKelas").innerText = studentData.kelas;
+        document.getElementById("dispViolation").innerText = violationCount;
+
+        renderQuestion();
+        renderNavigator();
+        startTimer();
+        saveDraft();
+
+        // Setelah grace period, cek fullscreen
+        setTimeout(checkFullscreenState, START_GRACE_MS + 100);
+      }
+
+      function setupAntiCheatListeners() {
+        window.addEventListener("blur", () => {
+          if (isExamStarted && !isExamSubmitted) {
+            handleViolation("Berpindah jendela / aplikasi lain");
+          }
+        });
+
+        document.addEventListener("visibilitychange", () => {
+          if (document.hidden && isExamStarted && !isExamSubmitted) {
+            handleViolation("Membuka tab baru / menyembunyikan halaman ujian");
+          }
+        });
+
+        document.addEventListener("fullscreenchange", checkFullscreenState);
+        document.addEventListener("webkitfullscreenchange", checkFullscreenState);
+      }
+
+      function checkFullscreenState() {
+        const isFs = !!(document.fullscreenElement || document.webkitFullscreenElement);
+        const badge = document.getElementById("fsStatusBadge");
+        if (!badge) return;
+
+        if (isFs) {
+          badge.className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 font-mono text-[11px]";
+          badge.innerHTML = '<i class="fa-solid fa-expand text-[10px]"></i> Layar Penuh Aktif';
+        } else {
+          badge.className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-500 font-mono text-[11px]";
+          badge.innerHTML = '<i class="fa-solid fa-compress text-[10px]"></i> Layar Penuh Mati';
+
+          if (isExamStarted && !isExamSubmitted) {
+            handleViolation("Keluar dari Mode Layar Penuh (Fullscreen)");
+          }
+        }
+      }
+
+      function handleViolation(reason) {
+        // Debounce: abaikan trigger beruntun dalam 1.5 detik
+        const now = Date.now();
+        if (now - lastViolationTime < VIOLATION_DEBOUNCE_MS) return;
+        lastViolationTime = now;
+
+        // Grace period setelah mulai (hindari false positive dialog FS)
+        if (now < antiCheatGraceUntil) return;
+
+        violationCount++;
+        document.getElementById("dispViolation").innerText = violationCount;
+        document.getElementById("modalViolCount").innerText = violationCount;
+        saveDraft();
+
+        if (violationCount > 3) {
+          const violModal = document.getElementById("violationModal");
+          violModal.classList.add("hidden");
+          violModal.classList.remove("flex");
+          alert("BATAS PELANGGARAN TERLAMPAUI (> 3 KALI)!\n\nJawabanmu otomatis dikumpulkan.");
+          submitExam(true, "Auto-Submit: keluar layar > 3 kali (" + reason + ")");
+          return;
+        }
+
+        const violModal = document.getElementById("violationModal");
+        violModal.classList.remove("hidden");
+        violModal.classList.add("flex");
+      }
+
+      function resumeExamFullscreen() {
+        const violModal = document.getElementById("violationModal");
+        violModal.classList.add("hidden");
+        violModal.classList.remove("flex");
+        triggerFullscreen();
+      }
+
+      function startTimer() {
+        if (timerInterval) clearInterval(timerInterval);
+        const timerEl = document.getElementById("cbtTimer");
+        const m0 = Math.floor(timeLeft / 60),
+          s0 = timeLeft % 60;
+        timerEl.innerText = `${m0 < 10 ? "0" : ""}${m0}:${s0 < 10 ? "0" : ""}${s0}`;
+
+        timerInterval = setInterval(() => {
+          if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            timerEl.innerText = "00:00";
+            alert("Waktu ujian habis! Jawabanmu dikumpulkan otomatis.");
+            submitExam(true, "Waktu Ujian Habis (45 Menit)");
+            return;
+          }
+          timeLeft--;
+          const m = Math.floor(timeLeft / 60),
+            s = timeLeft % 60;
+          timerEl.innerText = `${m < 10 ? "0" : ""}${m}:${s < 10 ? "0" : ""}${s}`;
+          if (timeLeft % 10 === 0) saveDraft();
+        }, 1000);
+      }
+
+      function renderQuestion() {
+        const q = questions[currentIdx];
+        document.getElementById("qCurrentBadge").innerText = q.id;
+        document.getElementById("qCurrentText").innerText = q.id;
+        document.getElementById("qCategory").innerText = q.category;
+        document.getElementById("qPointsBadge").innerText = q.points + " Poin";
+        document.getElementById("qText").innerHTML = q.text;
+
+        const hintEl = document.getElementById("qTypeHint");
+        if (q.type === "multi") hintEl.classList.remove("hidden");
+        else hintEl.classList.add("hidden");
+
+        const container = document.getElementById("qOptions");
+        container.innerHTML = "";
+        const labels = ["A", "B", "C", "D", "E"];
+
+        q.options.forEach((opt, idx) => {
+          let isSelected = false;
+          if (q.type === "multi") {
+            const arr = userAnswers[q.id] || [];
+            isSelected = arr.includes(idx);
+          } else {
+            isSelected = userAnswers[q.id] === idx;
+          }
+
+          const optDiv = document.createElement("div");
+          optDiv.className = `cbt-option p-3.5 sm:p-4 rounded-2xl border-2 cursor-pointer flex items-start gap-3.5 transition-all ${
+            isSelected
+              ? "bg-emerald-500/15 border-emerald-500 text-emerald-900 dark:text-emerald-100 font-semibold shadow-sm"
+              : "bg-slate-50 dark:bg-slate-800/60 border-slate-200 dark:border-slate-700/80 hover:border-slate-300 dark:hover:border-slate-600 text-slate-700 dark:text-slate-300"
+          }`;
+          optDiv.onclick = () => toggleOption(q.id, idx, q.type);
+
+          const badgeIcon = q.type === "multi" ? (isSelected ? '<i class="fa-solid fa-square-check text-sm"></i>' : '<i class="fa-regular fa-square text-sm"></i>') : labels[idx];
+
+          optDiv.innerHTML = `
+            <div class="w-7 h-7 rounded-xl flex items-center justify-center font-mono font-bold text-xs flex-shrink-0 ${
+              isSelected ? "bg-emerald-500 text-white shadow-sm" : "bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-slate-500"
+            }">${badgeIcon}</div>
+            <div class="text-xs sm:text-sm leading-relaxed pt-0.5">${opt}</div>
+          `;
+          container.appendChild(optDiv);
+        });
+
+        const isRagu = !!raguStatus[q.id];
+        const btnRagu = document.getElementById("btnRagu");
+        const raguText = document.getElementById("raguText");
+        if (isRagu) {
+          btnRagu.className = "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-amber-500 bg-amber-500 text-white text-xs font-bold transition-colors cursor-pointer";
+          raguText.innerText = "Ragu-ragu (Aktif)";
+        } else {
+          btnRagu.className = "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-amber-500/40 text-amber-500 hover:bg-amber-500/10 text-xs font-bold transition-colors cursor-pointer";
+          raguText.innerText = "Ragu-ragu";
+        }
+
+        document.getElementById("btnPrev").disabled = currentIdx === 0;
+        document.getElementById("nextBtnText").innerText = currentIdx === questions.length - 1 ? "Selesai" : "Berikutnya";
+
+        updateTopProgress();
+      }
+
+      function toggleOption(qId, optIdx, qType) {
+        if (qType === "multi") {
+          let currentArr = userAnswers[qId] || [];
+          if (currentArr.includes(optIdx)) currentArr = currentArr.filter((i) => i !== optIdx);
+          else {
+            currentArr.push(optIdx);
+            currentArr.sort((a, b) => a - b);
+          }
+          if (currentArr.length > 0) userAnswers[qId] = currentArr;
+          else delete userAnswers[qId];
+        } else {
+          userAnswers[qId] = optIdx;
+        }
+        saveDraft();
+        renderQuestion();
+        renderNavigator();
+      }
+
+      function toggleRagu() {
+        const qId = questions[currentIdx].id;
+        raguStatus[qId] = !raguStatus[qId];
+        saveDraft();
+        renderQuestion();
+        renderNavigator();
+      }
+
+      document.getElementById("btnRagu").onclick = toggleRagu;
+
+      document.getElementById("btnPrev").onclick = () => {
+        if (currentIdx > 0) {
+          currentIdx--;
+          renderQuestion();
+          renderNavigator();
+        }
+      };
+
+      document.getElementById("btnNext").onclick = () => {
+        if (currentIdx < questions.length - 1) {
+          currentIdx++;
+          renderQuestion();
+          renderNavigator();
+        } else confirmSubmit();
+      };
+
+      function renderNavigator() {
+        const grid = document.getElementById("navigatorGrid");
+        grid.innerHTML = "";
+        let answered = 0;
+
+        questions.forEach((q, idx) => {
+          let isAnswered = false;
+          if (q.type === "multi") isAnswered = Array.isArray(userAnswers[q.id]) && userAnswers[q.id].length > 0;
+          else isAnswered = userAnswers[q.id] !== undefined;
+
+          const isRagu = !!raguStatus[q.id];
+          const isCurrent = idx === currentIdx;
+          if (isAnswered) answered++;
+
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.onclick = () => {
+            currentIdx = idx;
+            renderQuestion();
+            renderNavigator();
+          };
+
+          let colorClass = "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700";
+          if (isRagu) colorClass = "bg-amber-500 text-white border-amber-500 font-bold";
+          else if (isAnswered) colorClass = "bg-emerald-500 text-white border-emerald-500 font-bold";
+
+          const ringClass = isCurrent ? "ring-2 ring-cyan-400 ring-offset-2 dark:ring-offset-slate-900 scale-105" : "";
+
+          btn.className = `h-10 rounded-xl border flex items-center justify-center font-mono text-xs transition-all cursor-pointer ${colorClass} ${ringClass}`;
+          btn.innerText = q.id;
+          grid.appendChild(btn);
+        });
+
+        document.getElementById("answeredCount").innerText = `${answered} / ${questions.length}`;
+      }
+
+      function updateTopProgress() {
+        const percent = ((currentIdx + 1) / questions.length) * 100;
+        document.getElementById("topProgress").style.width = `${percent}%`;
+      }
+
+      function saveDraft() {
+        if (!isExamStarted || isExamSubmitted) return;
+        localStorage.setItem(
+          STORAGE_DRAFT_KEY,
+          JSON.stringify({
+            isExamStarted,
+            isExamSubmitted,
+            nama: studentData.nama,
+            absen: studentData.absen,
+            kelas: studentData.kelas,
+            userAnswers,
+            raguStatus,
+            violationCount,
+            timeLeft,
+          }),
+        );
+      }
+
+      document.getElementById("btnSubmitAll").onclick = confirmSubmit;
+
+      function confirmSubmit() {
+        const answeredTotal = Object.keys(userAnswers).length;
+        const msg =
+          answeredTotal < questions.length
+            ? `Perhatian: Kamu baru menjawab ${answeredTotal} dari ${questions.length} butir soal.\nYakin ingin mengumpulkan nilai ujian sekarang?`
+            : "Apakah kamu yakin seluruh jawabanmu sudah benar dan ingin mengumpulkan nilai ujian PG?";
+        if (!confirm(msg)) return;
+        submitExam(false, "Selesai Normal");
+      }
+
+      async function submitExam(isForced, catatan) {
+        if (isExamSubmitted) return;
+        isExamSubmitted = true;
+        clearInterval(timerInterval);
+
+        // Hitung lokal (hanya info — server yang menentukan skor resmi)
+        let totalScore = 0,
+          correctCount = 0;
+        questions.forEach((q) => {
+          if (q.type === "multi") {
+            const ua = userAnswers[q.id] || [];
+            const ca = q.correct || [];
+            if (ua.length === ca.length && ua.every((v) => ca.includes(v))) {
+              totalScore += q.points;
+              correctCount++;
+            }
+          } else if (userAnswers[q.id] === q.correct) {
+            totalScore += q.points;
+            correctCount++;
+          }
+        });
+        const percent = Math.round((totalScore / 50) * 100);
+
+        document.getElementById("resStudentInfo").innerText = `${studentData.nama} (Presensi ${studentData.absen}) • Kelas ${studentData.kelas}`;
+
+        if (isForced && violationCount > 3) {
+          document.getElementById("resTitle").innerText = "Ujian Selesai (Auto-Submit)";
+          document.getElementById("resAutoSubmitNotice").classList.remove("hidden");
+        }
+
+        const modal = document.getElementById("resultModal");
+        modal.classList.remove("hidden");
+        modal.classList.add("flex");
+
+        const alertEl = document.getElementById("resSubmitAlert");
+        try {
+          const formData = new URLSearchParams();
+          formData.append("jenis", "UJI-KOMPETENSI-PILIHAN-GANDA-OFFICIAL");
+          formData.append("nama", studentData.nama);
+          formData.append("absen", studentData.absen);
+          formData.append("kelas", studentData.kelas);
+          formData.append("skor_pg", totalScore);
+          formData.append("skor_persen", percent);
+          formData.append("benar", correctCount);
+          formData.append("total_soal", questions.length);
+          formData.append("pelanggaran_tab", violationCount);
+          formData.append("catatan", catatan || "Normal");
+          formData.append("jawaban_detail", JSON.stringify(userAnswers));
+
+          const response = await fetch(APPS_SCRIPT_URL, {
+            method: "POST",
+            body: formData,
+          });
+
+          if (!response.ok) throw new Error("HTTP " + response.status);
+
+          const text = await response.text();
+          let result;
+          try {
+            result = JSON.parse(text);
+          } catch (e) {
+            console.error("Respons bukan JSON:", text.substring(0, 200));
+            throw new Error("Respons server tidak valid. Pastikan Web App deployed dengan access: Anyone.");
+          }
+
+          if (result.status !== "success") throw new Error(result.message || "Gagal menyimpan nilai.");
+
+          if (alertEl) {
+            alertEl.className = "text-xs p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 font-semibold text-center";
+            alertEl.innerHTML = '<i class="fa-solid fa-check-double mr-1.5"></i> Nilai berhasil tersimpan di spreadsheet guru. (Skor server: <strong>' + result.skor + "/50</strong>)";
+          }
+          saveDraft();
+        } catch (err) {
+          console.error("Submit error:", err);
+          if (alertEl) {
+            alertEl.className = "text-xs p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-600 dark:text-rose-400 font-semibold text-center";
+            alertEl.innerHTML = '<i class="fa-solid fa-triangle-exclamation mr-1.5"></i> Gagal mengirim ke server: ' + (err.message || "Tidak diketahui") + ". Silakan hubungi guru Anda.";
+          }
+        }
+      }
+    </script>
+  </body>
+</html>
