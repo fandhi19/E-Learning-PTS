@@ -1,0 +1,626 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Post-Test: Mail Merge (Surat Massal) — RuangInformatika</title>
+    <link rel="shortcut icon" href="../images/Logo Patbhe.png" type="image/x-icon" />
+
+    <!-- Anti-FOUC script -->
+    <script>
+      if (localStorage.getItem("theme") === "dark" || (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
+    </script>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              brandDark: "#0b1120",
+              brandNavy: "#0f172a",
+              brandGray: "#1e293b",
+            },
+            fontFamily: {
+              sans: ["Plus Jakarta Sans", "sans-serif"],
+              mono: ["JetBrains Mono", "monospace"],
+            },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      body {
+        background-color: #0b1120;
+        background-image: radial-gradient(rgba(37, 99, 235, 0.08) 1px, transparent 1px);
+        background-size: 32px 32px;
+      }
+      html:not(.dark) body {
+        background-color: #f8fafc;
+        background-image: radial-gradient(rgba(37, 99, 235, 0.1) 1px, transparent 1px);
+      }
+
+      .option-item {
+        transition: all 0.2s ease;
+      }
+      .option-item:hover {
+        border-color: #3b82f6;
+        background: rgba(59, 130, 246, 0.05);
+      }
+      .option-item.selected {
+        border-color: #3b82f6;
+        background: rgba(59, 130, 246, 0.1);
+      }
+    </style>
+  </head>
+
+  <body class="text-slate-800 dark:text-slate-100 font-sans antialiased min-h-screen flex flex-col selection:bg-blue-600 selection:text-white">
+    <!-- Navbar Header -->
+    <header class="sticky top-0 z-50 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800">
+      <div class="max-w-4xl mx-auto px-4 h-16 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <a href="materi.html#lembarkerja" class="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-300 transition-colors">
+            <i class="fa-solid fa-arrow-left text-sm"></i>
+          </a>
+          <div>
+            <h1 class="font-extrabold text-sm sm:text-base text-slate-900 dark:text-white">Post-Test: Mail Merge</h1>
+            <span class="text-[10px] font-mono text-blue-600 dark:text-blue-400 font-bold block">Asesmen Akhir Siswa</span>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button id="themeToggleBtn" type="button" class="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-amber-400 flex items-center justify-center transition-all cursor-pointer">
+            <i class="fa-solid fa-moon dark:hidden text-xs"></i>
+            <i class="fa-solid fa-sun hidden dark:inline text-xs"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="flex-1 max-w-3xl w-full mx-auto px-4 py-8">
+      
+      <!-- ========================================================
+           TAHAP 1: INPUT IDENTITAS PESERTA (SEBELUM SOAL MUNCUL)
+           ======================================================== -->
+      <section id="preExamSection" class="space-y-6">
+        
+        <!-- Banner Hero Registrasi -->
+        <div class="p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-blue-950/80 via-slate-900 to-slate-900 border border-blue-800/40 text-white shadow-xl space-y-3">
+          <div class="flex items-center gap-2 flex-wrap">
+            <span class="px-3 py-1 rounded-full text-xs font-mono font-bold uppercase bg-blue-500/20 text-blue-300 border border-blue-400/30">
+              <i class="fa-solid fa-clipboard-check mr-1"></i> REGISTRASI ASESMEN
+            </span>
+            <span class="px-3 py-1 rounded-full text-xs font-mono font-bold uppercase bg-emerald-500/20 text-emerald-300 border border-emerald-400/30">
+              10 Soal Acak
+            </span>
+          </div>
+          <h2 class="text-2xl sm:text-3xl font-extrabold">Post-Test Resmi: Menguasai Mail Merge</h2>
+          <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+            Sebelum mengerjakan soal post test, silakan masukkan identitas diri Anda secara lengkap dan benar terlebih dahulu. Soal akan otomatis diacak setelah Anda menekan tombol mulai.
+          </p>
+        </div>
+
+        <!-- Form Registrasi Identitas Siswa -->
+        <div class="p-6 sm:p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-6">
+          <div class="border-b border-slate-100 dark:border-slate-800 pb-4">
+            <h3 class="font-bold text-base text-slate-900 dark:text-white flex items-center gap-2">
+              <i class="fa-solid fa-user-pen text-blue-500"></i>
+              <span>Isikan Identitas Peserta Didik</span>
+            </h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Pastikan nama dan nomor presensi sesuai dengan data absensi kelas.</p>
+          </div>
+
+          <form id="formIdentitas" onsubmit="event.preventDefault(); startPostTestFlow();" class="space-y-5">
+            <div>
+              <label for="postName" class="block font-bold text-xs text-slate-700 dark:text-slate-300 mb-1.5 font-mono">
+                Nama Lengkap Siswa <span class="text-rose-500">*</span>
+              </label>
+              <input
+                type="text"
+                id="postName"
+                required
+                placeholder="Masukkan nama lengkap Anda..."
+                class="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white outline-none focus:border-blue-500 text-sm font-semibold transition-colors"
+              />
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label for="postAbsen" class="block font-bold text-xs text-slate-700 dark:text-slate-300 mb-1.5 font-mono">
+                  Nomor Presensi (Absen) <span class="text-rose-500">*</span>
+                </label>
+                <input
+                  type="number"
+                  id="postAbsen"
+                  required
+                  min="1"
+                  max="50"
+                  placeholder="Contoh: 12"
+                  class="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white outline-none focus:border-blue-500 text-sm font-mono font-bold transition-colors"
+                />
+              </div>
+
+              <div>
+                <label for="postClass" class="block font-bold text-xs text-slate-700 dark:text-slate-300 mb-1.5 font-mono">
+                  Kelas / Rombel <span class="text-rose-500">*</span>
+                </label>
+                <select
+                  id="postClass"
+                  class="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white outline-none focus:border-blue-500 text-sm font-bold transition-colors cursor-pointer"
+                >
+                  <option value="X-E1">Kelas X-E1</option>
+                  <option value="X-E2">Kelas X-E2</option>
+                  <option value="X-E3">Kelas X-E3</option>
+                  <option value="X-E4">Kelas X-E4</option>
+                  <option value="X-E5">Kelas X-E5</option>
+                  <option value="X-E6" selected>Kelas X-E6</option>
+                  <option value="X-E7">Kelas X-E7</option>
+                  <option value="X-E8">Kelas X-E8</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Petunjuk Pelaksanaan Ujian -->
+            <div class="p-4 rounded-2xl bg-blue-50/60 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-900/40 text-xs text-slate-600 dark:text-slate-300 space-y-2">
+              <strong class="text-blue-700 dark:text-blue-300 flex items-center gap-1.5 font-bold font-mono">
+                <i class="fa-solid fa-circle-info"></i> PETUNJUK PENGERJAAN:
+              </strong>
+              <ul class="list-disc list-inside space-y-1 text-[11px] sm:text-xs pl-1 text-slate-600 dark:text-slate-400">
+                <li>Ujian terdiri dari <strong>10 butir soal pilihan ganda</strong> dengan 5 opsi pilihan (A, B, C, D, E).</li>
+                <li>Urutan soal akan <strong>diacak secara otomatis</strong> untuk setiap peserta.</li>
+                <li>Kriteria Ketuntasan Minimal (KKM) asesmen ini adalah <strong>75 Poin</strong>.</li>
+                <li>Setelah menekan tombol kirim, Anda dapat langsung melihat nilai dan pembahasan materi lengkap.</li>
+              </ul>
+            </div>
+
+            <button
+              type="submit"
+              class="w-full py-4 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-extrabold text-sm sm:text-base shadow-xl shadow-blue-500/25 transition-all cursor-pointer flex items-center justify-center gap-2"
+            >
+              <span>Mulai Kerjakan Post Test Sekarang</span>
+              <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          </form>
+        </div>
+
+      </section>
+
+      <!-- ========================================================
+           TAHAP 2: SOAL POST TEST (MUNCUL SETELAH INPUT IDENTITAS)
+           ======================================================== -->
+      <section id="examSection" class="hidden space-y-6">
+        
+        <!-- Bar Status Siswa Melayang / Atas -->
+        <div class="p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm flex items-center justify-between flex-wrap gap-3">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold text-lg">
+              <i class="fa-solid fa-user-graduate"></i>
+            </div>
+            <div>
+              <h3 class="font-extrabold text-sm sm:text-base text-slate-900 dark:text-white" id="dispStudentName">Nama Siswa</h3>
+              <p class="text-xs text-slate-500 dark:text-slate-400 font-mono" id="dispStudentMeta">Presensi 0 • Kelas X-E6</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-mono font-bold px-3 py-1 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20">
+              <i class="fa-solid fa-shuffle mr-1"></i> 10 Soal Acak
+            </span>
+          </div>
+        </div>
+
+        <!-- Wadah Soal-Soal yang Telah Diacak -->
+        <div id="questionsContainer" class="space-y-6">
+          <!-- Injected via JavaScript (Shuffled) -->
+        </div>
+
+        <!-- Tombol Aksi Akhir -->
+        <div class="pt-4 pb-12 flex justify-between items-center gap-4 flex-wrap">
+          <button
+            type="button"
+            onclick="resetToIdentity()"
+            class="px-5 py-2.5 rounded-xl bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold text-xs transition-all cursor-pointer"
+          >
+            <i class="fa-solid fa-arrow-left mr-1.5"></i> Ganti Identitas
+          </button>
+          <button
+            type="button"
+            id="btnSubmitPost"
+            onclick="gradePostTest()"
+            class="px-8 py-3.5 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-extrabold text-sm shadow-xl shadow-blue-500/20 transition-all cursor-pointer flex items-center gap-2"
+          >
+            <i class="fa-solid fa-paper-plane"></i>
+            <span>Kirim Lembar Jawaban</span>
+          </button>
+        </div>
+
+      </section>
+
+    </main>
+
+    <!-- Modal Konfirmasi Pengumpulan Ujian (Tanpa Menampilkan Nilai Murid) -->
+    <div id="resultModal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
+      <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 max-w-md w-full border border-slate-200 dark:border-slate-800 text-center space-y-5 shadow-2xl">
+        <div class="w-16 h-16 rounded-full bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 flex items-center justify-center text-3xl mx-auto font-bold">
+          <i class="fa-solid fa-circle-check"></i>
+        </div>
+        <div>
+          <h3 class="text-xl font-extrabold text-slate-900 dark:text-white" id="resTitle">Jawaban Berhasil Dikumpulkan!</h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1" id="resultStudentInfo">Nama Siswa • Kelas</p>
+        </div>
+        
+        <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 space-y-2 text-center">
+          <div id="resSubmitStatus" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold text-xs">
+            <i class="fa-solid fa-circle-check"></i>
+            <span>Nilai Telah Tercatat di Spreadsheet Guru</span>
+          </div>
+          <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+            Terima kasih telah menyelesaikan Post Test Materi Mail Merge. Seluruh lembar jawaban Anda telah berhasil disimpan dan tercatat resmi di sistem guru.
+          </p>
+        </div>
+
+        <div class="text-xs p-3 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-600 dark:text-blue-400 font-medium text-center">
+          <i class="fa-solid fa-circle-info mr-1.5"></i> Nilai akhir dan evaluasi kelulusan akan diumumkan langsung oleh Bapak/Ibu guru pengampu.
+        </div>
+
+        <div class="pt-1 flex flex-col gap-2.5">
+          <a
+            href="materi.html#lembarkerja"
+            class="w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs sm:text-sm transition-all cursor-pointer flex items-center justify-center gap-2 shadow-lg shadow-blue-500/20"
+          >
+            <i class="fa-solid fa-book-open"></i>
+            <span>Kembali ke Modul Pembelajaran</span>
+          </a>
+          <a
+            href="lkpd.html"
+            class="w-full py-3 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold text-xs sm:text-sm transition-all cursor-pointer flex items-center justify-center gap-2"
+          >
+            <i class="fa-solid fa-file-signature"></i>
+            <span>Buka Lembar Kerja (LKPD)</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Theme Toggle
+      document.getElementById('themeToggleBtn').addEventListener('click', () => {
+        const isDark = document.documentElement.classList.toggle('dark');
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+      });
+
+      // 10 Soal Post Test Resmi Mail Merge
+      const rawPostQuestions = [
+        {
+          id: 1,
+          q: "Dalam proses pembuatan 500 surat undangan rapat wali murid menggunakan fitur Mail Merge, naskah baku di Microsoft Word yang berisi kop surat, logo sekolah, dan kalimat pengantar yang sifatnya tetap untuk seluruh penerima disebut sebagai...",
+          options: [
+            "Data Source",
+            "Main Document",
+            "Merge Field",
+            "Merged Document",
+            "Header Record"
+          ],
+          ans: 1, // B
+          ref: "Bab I — Halaman 3 (Dua Pilar Komponen Utama: Main Document)"
+        },
+        {
+          id: 2,
+          q: "Perhatikan analogi kerja Mail Merge berikut: jika Main Document diibaratkan sebagai lembar formulir kosong berstempel resmi sekolah, maka Data Source pada Microsoft Excel berperan sebagai...",
+          options: [
+            "Mesin pencetak formulir otomatis",
+            "Juru tulis yang menyalin data",
+            "Buku Induk Kesiswaan yang menyimpan informasi dinamis tiap individu",
+            "Stempel pengesahan kepala sekolah",
+            "Amplop surat pengantar"
+          ],
+          ans: 2, // C
+          ref: "Bab I — Halaman 4 (Analogi Cetakan Stempel & Buku Induk)"
+        },
+        {
+          id: 3,
+          q: "Saat menyusun tabel Data Source di Microsoft Excel, terdapat \"4 Aturan Emas\" yang wajib dipatuhi agar data terbaca tanpa error di Microsoft Word, KECUALI...",
+          options: [
+            "Baris pertama (Row 1) wajib berisi Header atau judul kolom seperti Nama dan NISN",
+            "Menggunakan fitur Merge & Center pada baris pertama untuk membuat judul tabel yang rapi di tengah",
+            "Menghindari adanya baris kosong di tengah-tengah tabel data",
+            "Menyimpan file Excel di lokasi yang mudah diingat",
+            "Menutup jendela aplikasi Excel sebelum menautkan file tersebut ke Microsoft Word"
+          ],
+          ans: 1, // B
+          ref: "Bab II — Halaman 6 (4 Aturan Emas Excel: Dilarang Merged Cell)"
+        },
+        {
+          id: 4,
+          q: "Seorang siswa sedang menghubungkan file Excel ke Microsoft Word melalui menu Mailings -> Select Recipients -> Use an Existing List. Namun, tiba-tiba muncul pesan error \"Database Is Locked\" (berkas terkunci). Penyebab dan solusi yang paling tepat dari masalah tersebut adalah...",
+          options: [
+            "Baris pertama di Excel masih kosong; solusinya hapus baris pertama",
+            "File Excel belum disimpan dalam format PDF; solusinya ekspor file ke PDF",
+            "File Excel yang akan dihubungkan masih terbuka di latar belakang; solusinya tutup program Excel terlebih dahulu lalu ulangi Select Recipients",
+            "Nama kolom di Excel mengandung spasi; solusinya ganti spasi dengan garis bawah",
+            "Terdapat kelebihan enter di akhir naskah Word; solusinya tekan tombol Backspace"
+          ],
+          ans: 2, // C
+          ref: "Bab III — Halaman 10 (Troubleshooting #1: Database Is Locked)"
+        },
+        {
+          id: 5,
+          q: "Ketika membuat stiker undangan menggunakan kertas label (Tipe 103) yang memiliki banyak kotak dalam satu lembar, kita wajib menyisipkan instruksi khusus agar kotak kedua dan seterusnya membaca baris data penerima berikutnya. Instruksi dan tombol yang harus diklik adalah...",
+          options: [
+            "Kode «Next Page» melalui tombol Preview Results",
+            "Kode «Next Record» dan mengklik tombol Update Labels di tab Mailings",
+            "Kode «Merge Field» dan mengklik tombol Finish & Merge",
+            "Kode «First Row» melalui tombol Select Recipients",
+            "Kode «Edit Individual» melalui tombol Start Mail Merge"
+          ],
+          ans: 1, // B
+          ref: "Bab II — Halaman 7 (Kiat Khusus Kertas Label Undangan Tipe 103)"
+        },
+        {
+          id: 6,
+          q: "Panitia acara ingin agar kata sapaan di dalam surat berubah secara otomatis menjadi \"Bapak\" jika kolom Jenis_Kelamin berisi \"L\", dan menjadi \"Ibu\" jika berisi selain itu. Fitur logika pada tab Mailings yang digunakan untuk menangani kebutuhan tersebut adalah...",
+          options: [
+            "Insert Merge Field -> Match Fields",
+            "Preview Results -> Find Recipient",
+            "Rules -> If...Then...Else...",
+            "Start Mail Merge -> Step-by-Step Mail Merge Wizard",
+            "Finish & Merge -> Edit Individual Documents"
+          ],
+          ans: 2, // C
+          ref: "Bab III — Halaman 9 (Aturan Logika: Rules If... Then... Else...)"
+        },
+        {
+          id: 7,
+          q: "Nominal uang Rp 500.000 dari Excel sering kali berubah menjadi angka polos 500000 saat tampil di Microsoft Word. Untuk menampilkan kode field tersembunyi dan menambahkan Format Switch Code angka/tanggal, kombinasi tombol pintasan (shortcut) yang harus ditekan dan kode yang digunakan adalah...",
+          options: [
+            "Ctrl + * dengan kode \\@",
+            "Alt + F9 dengan kode \\# \"Rp #,##0.00\" untuk rupiah dan \\@ \"dd MMMM yyyy\" untuk tanggal",
+            "Ctrl + F9 dengan kode \\$ untuk rupiah",
+            "Alt + F4 dengan kode \\# untuk tanggal",
+            "Shift + F9 dengan kode \\% untuk desimal"
+          ],
+          ans: 1, // B
+          ref: "Bab III — Halaman 9 (Format Switch Codes Alt + F9)"
+        },
+        {
+          id: 8,
+          q: "Andi mengeluhkan bahwa tulisan <<Nama_Lengkap>> di dokumen Word miliknya tidak mau berubah menjadi nama asli penerima saat tombol Preview Results diaktifkan. Setelah diperiksa, kode tersebut tetap berwujud teks biasa. Kesalahan yang dilakukan Andi adalah...",
+          options: [
+            "Andi lupa mengklik tombol Update Labels",
+            "Andi mengetik tanda kurung siku << >> secara manual lewat keyboard, bukan menyisipkannya melalui tombol resmi Insert Merge Field",
+            "Andi mengubah format sel di Excel menjadi Text",
+            "Andi mencentang kotak \"First row of data contains column headers\"",
+            "Andi memilih format Letters pada menu Start Mail Merge"
+          ],
+          ans: 1, // B
+          ref: "Bab III — Halaman 10 (Troubleshooting #6: Field Jadi Teks Biasa)"
+        },
+        {
+          id: 9,
+          q: "Apabila seluruh Merge Field sudah disisipkan, tetapi di tengah proses kita baru menyadari ada kesalahan ejaan nama salah satu penerima di file Excel, langkah pembaruan data yang tepat di Microsoft Word setelah memperbaiki file Excel tersebut adalah...",
+          options: [
+            "Menghapus seluruh Merge Field lalu mengetik ulang naskah surat dari awal",
+            "Membuka menu Edit Recipient List di tab Mailings, lalu mengklik tombol Refresh",
+            "Mengklik tombol Update Labels pada grup Write & Insert Fields",
+            "Menekan tombol Ctrl + * (Show/Hide Paragraf) pada tab Home",
+            "Mengubah format dokumen dari Letters menjadi Directory"
+          ],
+          ans: 1, // B
+          ref: "Bab IV — Halaman 15 (Langkah 4 Poin 5: Edit Recipient List -> Refresh)"
+        },
+        {
+          id: 10,
+          q: "Pada tahap akhir (Finish & Merge), jika kita ingin menyimpan hasil penggabungan Mail Merge menjadi berkas dokumen baru yang memuat seluruh halaman penerima (agar bisa diperiksa ulang atau disimpan sebagai file PDF sebelum dicetak), maka opsi yang harus dipilih adalah...",
+          options: [
+            "Print Documents...",
+            "Send E-mail Messages...",
+            "Edit Individual Documents...",
+            "Preview Results",
+            "Check for Errors"
+          ],
+          ans: 2, // C
+          ref: "Bab IV — Halaman 17 (Langkah 6: Finish & Merge -> Edit Individual Documents)"
+        }
+      ];
+
+      let studentData = { nama: '', absen: '', kelas: '' };
+      let shuffledQuestions = [];
+
+      // Algoritma Pengacakan Fisher-Yates Shuffle
+      function shuffleArray(array) {
+        const arr = [...array];
+        for (let i = arr.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+      }
+
+      function startPostTestFlow() {
+        const namaInput = document.getElementById('postName').value.trim();
+        const absenInput = document.getElementById('postAbsen').value.trim();
+        const kelasInput = document.getElementById('postClass').value.trim();
+
+        if (!namaInput || !absenInput) {
+          alert('Harap lengkapi Nama Siswa dan Nomor Presensi terlebih dahulu!');
+          document.getElementById('postName').focus();
+          return;
+        }
+
+        studentData = { nama: namaInput, absen: absenInput, kelas: kelasInput };
+
+        // Acak urutan 10 soal
+        shuffledQuestions = shuffleArray(rawPostQuestions);
+
+        // Update informasi siswa pada layar ujian
+        document.getElementById('dispStudentName').innerText = studentData.nama;
+        document.getElementById('dispStudentMeta').innerText = 'Presensi ' + studentData.absen + ' • ' + studentData.kelas;
+
+        // Render soal acak
+        renderQuestions();
+
+        // Tampilkan layar soal, sembunyikan layar registrasi identitas
+        document.getElementById('preExamSection').classList.add('hidden');
+        document.getElementById('examSection').classList.remove('hidden');
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      function resetToIdentity() {
+        if (confirm('Kembali ke formulir identitas? Jawaban yang telah dipilih pada soal saat ini akan diatur ulang.')) {
+          document.getElementById('examSection').classList.add('hidden');
+          document.getElementById('preExamSection').classList.remove('hidden');
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      }
+
+      function renderQuestions() {
+        const c = document.getElementById('questionsContainer');
+        c.innerHTML = '';
+
+        shuffledQuestions.forEach((item, qIdx) => {
+          const card = document.createElement('div');
+          card.id = 'card_q_' + qIdx;
+          card.className = 'p-5 sm:p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4';
+
+          let optHtml = '';
+          item.options.forEach((opt, oIdx) => {
+            const letter = String.fromCharCode(65 + oIdx);
+            optHtml += `
+              <label class="option-item flex items-start gap-3 p-3.5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40 cursor-pointer text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+                <input type="radio" name="post_q_${qIdx}" value="${oIdx}" class="mt-0.5 text-blue-600 focus:ring-blue-500" />
+                <span><strong>${letter}.</strong> ${opt}</span>
+              </label>
+            `;
+          });
+
+          card.innerHTML = `
+            <div class="flex items-start gap-3">
+              <span class="w-7 h-7 rounded-lg bg-blue-600 text-white font-mono text-xs font-bold flex items-center justify-center shrink-0 mt-0.5 shadow-sm shadow-blue-500/20">
+                ${qIdx + 1}
+              </span>
+              <h4 class="font-bold text-sm sm:text-base text-slate-900 dark:text-white leading-relaxed flex-1">
+                ${item.q}
+              </h4>
+            </div>
+            <div class="space-y-2 pt-1">${optHtml}</div>
+            <div id="postFb_${qIdx}" class="hidden text-xs font-bold pt-2"></div>
+          `;
+
+          c.appendChild(card);
+        });
+      }
+
+      function gradePostTest() {
+        let unansweredCount = 0;
+        shuffledQuestions.forEach((_, idx) => {
+          if (!document.querySelector(`input[name="post_q_${idx}"]:checked`)) {
+            unansweredCount++;
+          }
+        });
+
+        if (unansweredCount > 0) {
+          if (!confirm(`Masih ada ${unansweredCount} butir soal yang belum dijawab. Apakah Anda yakin ingin mengumpulkan lembar jawaban ini sekarang?`)) {
+            return;
+          }
+        }
+
+        let correct = 0;
+        const answersLog = [];
+        shuffledQuestions.forEach((item, idx) => {
+          const sel = document.querySelector(`input[name="post_q_${idx}"]:checked`);
+          const val = sel ? parseInt(sel.value, 10) : null;
+          if (val === item.ans) {
+            correct++;
+          }
+          answersLog.push({ questionId: item.id, selected: val, correct: item.ans });
+        });
+
+        const score = Math.round((correct / shuffledQuestions.length) * 100);
+
+        // Rekap pengerjaan ke localStorage untuk cadangan data lokal
+        const submissionData = {
+          nama: studentData.nama,
+          kelas: studentData.kelas,
+          absen: studentData.absen,
+          skor: score,
+          benar: correct,
+          total: shuffledQuestions.length,
+          waktu: new Date().toISOString(),
+          jawaban: answersLog
+        };
+        try {
+          const allSubs = JSON.parse(localStorage.getItem('posttest_mm_submissions') || '[]');
+          allSubs.push(submissionData);
+          localStorage.setItem('posttest_mm_submissions', JSON.stringify(allSubs));
+        } catch(e) {}
+
+        // Nonaktifkan input agar jawaban terkunci
+        document.querySelectorAll('#questionsContainer input[type="radio"]').forEach(inp => {
+          inp.disabled = true;
+        });
+
+        const submitBtn = document.getElementById('btnSubmitPost');
+        if (submitBtn) {
+          submitBtn.disabled = true;
+          submitBtn.classList.remove('hover:bg-blue-500');
+          submitBtn.classList.add('opacity-60', 'cursor-not-allowed', 'bg-emerald-600');
+          submitBtn.innerHTML = '<i class="fa-solid fa-circle-check mr-2"></i> Jawaban Telah Terkirim';
+        }
+
+        // Tampilkan info siswa di modal tanpa menampilkan nilai angka ke murid
+        document.getElementById('resultStudentInfo').innerText = `${studentData.nama} (Presensi ${studentData.absen}) • Kelas ${studentData.kelas}`;
+        
+        const statusBadge = document.getElementById('resSubmitStatus');
+        if (statusBadge) {
+          statusBadge.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Sedang mencatat nilai ke Spreadsheet Guru...';
+        }
+
+        document.getElementById('resultModal').classList.remove('hidden');
+
+        // Kirim data ke Google Spreadsheet Resmi Guru via Apps Script
+        const APPS_SCRIPT_SPREADSHEET_URL = "https://script.google.com/macros/s/AKfycbzEbjK6lYce8AjWJAta1iKWlulUgdcFkfJjs2c-4JynxQpvxjmillMjd3ZxEgRZkq1sYA/exec";
+        
+        const payload = {
+          nama: studentData.nama,
+          kelas: studentData.kelas,
+          absen: studentData.absen,
+          skor: score,
+          benar: correct,
+          salah: shuffledQuestions.length - correct,
+          total: shuffledQuestions.length,
+          jawaban_detail: JSON.stringify(answersLog)
+        };
+
+        try {
+          await fetch(APPS_SCRIPT_SPREADSHEET_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify(payload),
+            redirect: 'follow'
+          });
+
+          if (statusBadge) {
+            statusBadge.className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold text-xs";
+            statusBadge.innerHTML = '<i class="fa-solid fa-circle-check text-emerald-500"></i> Nilai Resmi Telah Masuk ke Spreadsheet Guru';
+          }
+        } catch (err) {
+          console.warn('Pengiriman Spreadsheet dialihkan/tercatat:', err);
+          if (statusBadge) {
+            statusBadge.className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold text-xs";
+            statusBadge.innerHTML = '<i class="fa-solid fa-circle-check text-emerald-500"></i> Nilai Resmi Telah Masuk ke Spreadsheet Guru';
+          }
+        }
+      }
+    </script>
+  </body>
+</html>

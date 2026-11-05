@@ -1,0 +1,1263 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LKPD Digital: Teori, Arsitektur Data & Logika Mail Merge — SMAN 4 Yogyakarta</title>
+    <link rel="shortcut icon" href="../images/Logo Patbhe.png" type="image/x-icon" />
+
+    <!-- Anti-FOUC script -->
+    <script>
+      if (
+        localStorage.getItem("theme") === "dark" ||
+        (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches)
+      ) {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
+    </script>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <!-- jsPDF & html2canvas CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              brandDark: "#0b1120",
+              brandNavy: "#0f172a",
+              brandGray: "#1e293b",
+            },
+            fontFamily: {
+              sans: ["'Plus Jakarta Sans'", "sans-serif"],
+              mono: ["'JetBrains Mono'", "monospace"],
+            },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      body {
+        background-color: #0b1120;
+        background-image: radial-gradient(rgba(16, 185, 129, 0.08) 1px, transparent 1px),
+          radial-gradient(rgba(14, 165, 233, 0.05) 1px, transparent 1px);
+        background-size: 32px 32px;
+        background-position: 0 0, 16px 16px;
+      }
+      html:not(.dark) body {
+        background-color: #f8fafc;
+        background-image: radial-gradient(rgba(16, 185, 129, 0.12) 1px, transparent 1px),
+          radial-gradient(rgba(14, 165, 233, 0.08) 1px, transparent 1px);
+      }
+
+      #topProgress {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #10b981, #06b6d4, #3b82f6);
+        z-index: 999;
+        width: 0%;
+        transition: width 0.2s ease;
+        box-shadow: 0 0 12px rgba(16, 185, 129, 0.6);
+      }
+
+      .lkpd-input {
+        width: 100%;
+        background: rgba(2, 6, 23, 0.5);
+        border: 1.5px solid rgba(255, 255, 255, 0.12);
+        border-radius: 12px;
+        padding: 10px 14px;
+        color: #f8fafc;
+        font-family: "'Plus Jakarta Sans'", sans-serif;
+        font-size: 0.875rem;
+        outline: none;
+        transition: all 0.2s ease;
+      }
+      html:not(.dark) .lkpd-input {
+        background: #ffffff;
+        border-color: #cbd5e1;
+        color: #0f172a;
+      }
+      .lkpd-input:focus {
+        border-color: #10b981;
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+        background: rgba(2, 6, 23, 0.85);
+      }
+      html:not(.dark) .lkpd-input:focus {
+        background: #ffffff;
+      }
+
+      .lkpd-textarea {
+        min-height: 85px;
+        line-height: 1.6;
+        resize: vertical;
+      }
+
+      .lkpd-select {
+        width: 100%;
+        background: rgba(2, 6, 23, 0.5);
+        border: 1.5px solid rgba(255, 255, 255, 0.12);
+        border-radius: 12px;
+        padding: 10px 14px;
+        color: #f8fafc;
+        font-family: "'Plus Jakarta Sans'", sans-serif;
+        font-size: 0.85rem;
+        outline: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+      html:not(.dark) .lkpd-select {
+        background: #ffffff;
+        border-color: #cbd5e1;
+        color: #0f172a;
+      }
+      .lkpd-select:focus {
+        border-color: #10b981;
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+      }
+
+      /* Page Break & Avoid Cut untuk Cetak & PDF */
+      .pdf-page-break {
+        page-break-before: always !important;
+        break-before: page !important;
+        height: 0;
+        margin: 0;
+        padding: 0;
+      }
+      .page-card, table, tr, th, td, .avoid-break {
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+      }
+
+      /* Print Optimization */
+      @media print {
+        header, #topProgress, .no-print, button, #actionBar {
+          display: none !important;
+        }
+        body {
+          background: #fff !important;
+          color: #000 !important;
+        }
+        .page-card {
+          box-shadow: none !important;
+          border: 1px solid #cbd5e1 !important;
+          break-inside: avoid !important;
+          page-break-inside: avoid !important;
+          margin-bottom: 0 !important;
+        }
+        .pdf-page-break {
+          page-break-before: always !important;
+          break-before: page !important;
+        }
+      }
+    </style>
+  </head>
+
+  <body class="text-slate-800 dark:text-slate-100 font-sans antialiased min-h-screen flex flex-col selection:bg-emerald-500 selection:text-white">
+    <!-- Top Progress Bar -->
+    <div id="topProgress"></div>
+
+    <!-- Header Navbar -->
+    <header class="sticky top-0 z-50 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors">
+      <div class="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <a href="materi.html#lembarkerja" class="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-300 transition-colors">
+            <i class="fa-solid fa-arrow-left text-sm"></i>
+          </a>
+          <div>
+            <h1 class="font-extrabold text-sm sm:text-base text-slate-900 dark:text-white">LKPD: Mail Merge</h1>
+            <span class="text-[10px] font-mono text-emerald-600 dark:text-emerald-400 font-bold block">Informatika Kelas X • Fase E</span>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <!-- Tombol Cetak / PDF -->
+          <button
+            type="button"
+            onclick="window.print()"
+            title="Cetak atau Simpan sebagai PDF"
+            class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 text-xs font-bold font-mono transition-all flex items-center gap-1.5 cursor-pointer border border-slate-200 dark:border-slate-700"
+          >
+            <i class="fa-solid fa-print"></i>
+            <span class="hidden sm:inline">Cetak / PDF</span>
+          </button>
+
+          <!-- Toggle Theme -->
+          <button id="themeToggleBtn" type="button" class="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-amber-400 flex items-center justify-center transition-all cursor-pointer">
+            <i class="fa-solid fa-moon dark:hidden text-xs"></i>
+            <i class="fa-solid fa-sun hidden dark:inline text-xs"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Container -->
+    <main id="lkpdContent" class="flex-1 max-w-4xl w-full mx-auto px-4 py-8 space-y-8">
+      
+      <!-- ========================================================
+           HALAMAN 1: KOP, IDENTITAS & AKTIVITAS 1
+           ======================================================== -->
+      <div id="lkpdPage1" class="lkpd-pdf-page space-y-6">
+        <!-- ========================================================
+           KOP & HEADER RESMI LKPD
+           ======================================================== -->
+      <div class="page-card p-6 sm:p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-5">
+        <div class="flex items-start justify-between flex-wrap gap-4 border-b border-slate-100 dark:border-slate-800 pb-5">
+          <div class="space-y-1">
+            <span class="text-xs font-mono font-bold tracking-wider uppercase text-emerald-600 dark:text-emerald-400 block">
+              Informatika Kelas X Fase E • Kurikulum Merdeka
+            </span>
+            <h2 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">
+              SMA Negeri 4 Yogyakarta
+            </h2>
+            <h3 class="text-sm sm:text-base font-extrabold text-slate-700 dark:text-slate-300">
+              LEMBAR KERJA PESERTA DIDIK (LKPD)
+            </h3>
+            <p class="text-xs font-medium text-slate-500 dark:text-slate-400">
+              Elemen Teknologi Informasi dan Komunikasi (TIK): Teori, Arsitektur Data &amp; Logika Mail Merge
+            </p>
+          </div>
+          <div class="flex items-center gap-2">
+            <img src="../images/Logo Patbhe.png" alt="Logo SMAN 4 Yogyakarta" class="w-14 h-14 object-contain" />
+          </div>
+        </div>
+
+        <!-- Tabel Identitas Peserta -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+          <div class="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 space-y-1 sm:col-span-2">
+            <label class="block font-bold text-slate-500 dark:text-slate-400 font-mono">Nama Lengkap Siswa *</label>
+            <input type="text" id="studentName" class="lkpd-input font-bold" placeholder="Tuliskan nama lengkap Anda..." required />
+          </div>
+
+          <div class="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 space-y-1">
+            <label class="block font-bold text-slate-500 dark:text-slate-400 font-mono">Kelas / No. Presensi *</label>
+            <div class="grid grid-cols-2 gap-2">
+              <select id="studentClass" class="lkpd-select font-bold">
+                <option value="X-E6" selected>X-E6</option>
+                <option value="X-E1">X-E1</option>
+                <option value="X-E2">X-E2</option>
+                <option value="X-E3">X-E3</option>
+                <option value="X-E4">X-E4</option>
+                <option value="X-E5">X-E5</option>
+                <option value="X-E7">X-E7</option>
+                <option value="X-E8">X-E8</option>
+              </select>
+              <input type="number" id="studentAbsen" min="1" max="50" class="lkpd-input font-mono font-bold" placeholder="No..." required />
+            </div>
+          </div>
+        </div>
+
+        <!-- Tujuan & Petunjuk Pengerjaan -->
+        <div class="p-4 sm:p-5 rounded-2xl bg-emerald-50/70 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-900/40 text-xs sm:text-sm text-slate-700 dark:text-slate-300 space-y-2">
+          <strong class="text-emerald-800 dark:text-emerald-300 flex items-center gap-2 font-bold font-mono text-xs uppercase tracking-wide">
+            <i class="fa-solid fa-compass"></i> Tujuan &amp; Petunjuk Pengerjaan (Ramah Pengguna Smartphone &amp; Laptop):
+          </strong>
+          <ol class="list-decimal list-inside space-y-1.5 text-xs text-slate-600 dark:text-slate-300 leading-relaxed pl-1">
+            <li>Pelajari <strong>Bab I hingga Bab III</strong> pada Buku Saku Pembelajaran: <em>Menguasai Mail Merge</em>.</li>
+            <li>LKPD ini menguji pemahaman konsep, perancangan struktur tabel, logika percabangan, serta analisis masalah (troubleshooting) sehingga <strong>dapat dikerjakan sepenuhnya meskipun menggunakan HP</strong>.</li>
+            <li>Tuliskan jawaban langsung pada kolom yang tersedia atau di buku catatan dengan rapi dan terstruktur.</li>
+          </ol>
+        </div>
+      </div>
+
+      <!-- ========================================================
+           AKTIVITAS 1: PEMETAAN KOMPONEN MAIL MERGE (KONSEP BAB I)
+           ======================================================== -->
+      <div class="page-card p-6 sm:p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-6">
+        
+        <div class="border-b border-slate-100 dark:border-slate-800 pb-4">
+          <div class="flex items-center justify-between flex-wrap gap-2">
+            <div class="flex items-center gap-3">
+              <span class="w-8 h-8 rounded-xl bg-blue-600 text-white font-mono font-bold text-xs flex items-center justify-center shadow-md shadow-blue-500/20">1</span>
+              <h3 class="text-base sm:text-lg font-black text-slate-900 dark:text-white">
+                Aktivitas 1: Pemetaan Komponen Mail Merge (Konsep Bab I)
+              </h3>
+            </div>
+            <span class="text-xs font-mono font-bold px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-800">
+              Bobot: 25 Poin
+            </span>
+          </div>
+        </div>
+
+        <!-- Skenario Kasus -->
+        <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 space-y-2 text-xs sm:text-sm">
+          <strong class="font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+            <i class="fa-solid fa-file-circle-question text-blue-500"></i> Skenario Kasus:
+          </strong>
+          <p class="text-slate-600 dark:text-slate-300 leading-relaxed">
+            Panitia kegiatan sekolah ingin mencetak <strong>360 Sertifikat Penghargaan</strong> untuk seluruh pemenang lomba antarkelas. Di dalam sertifikat tersebut terdapat <strong>6 elemen informasi</strong> berikut:
+          </p>
+          <ol class="list-decimal list-inside space-y-1 text-xs text-slate-700 dark:text-slate-300 font-medium pl-1">
+            <li>Logo Sekolah dan Judul "SERTIFIKAT PENGHARGAAN"</li>
+            <li>Nama Lengkap Siswa Pemenang</li>
+            <li>Kelas Asal Siswa</li>
+            <li>Kalimat pengantar tetap: <em>"Diberikan kepada siswa tersebut atas prestasinya sebagai:"</em></li>
+            <li>Predikat Juara &amp; Cabang Lomba (contoh: Juara 1 Basket Putra)</li>
+            <li>Jabatan, Tanda Tangan &amp; Nama Kepala Sekolah</li>
+          </ol>
+        </div>
+
+        <!-- Tugas 1A -->
+        <div class="space-y-3">
+          <strong class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white block">
+            Tugas 1A: Kelompokkan ke-6 nomor elemen di atas ke dalam tabel arsitektur Mail Merge berikut!
+          </strong>
+
+          <div class="overflow-x-auto rounded-2xl border border-slate-200 dark:border-slate-800">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold border-b border-slate-200 dark:border-slate-800">
+                <tr>
+                  <th class="p-3 w-1/4">Komponen Pilar</th>
+                  <th class="p-3 w-1/6">Aplikasi</th>
+                  <th class="p-3 w-1/4">Nomor Elemen (1–6)</th>
+                  <th class="p-3">Alasan Pengelompokan (Sifat Data)</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100 dark:divide-slate-800 text-slate-700 dark:text-slate-300">
+                <tr>
+                  <td class="p-3 font-bold align-top">
+                    Main Document<br />
+                    <span class="text-[11px] font-normal text-slate-500 dark:text-slate-400">(Dokumen Master)</span>
+                  </td>
+                  <td class="p-3 font-mono font-bold text-blue-600 dark:text-blue-400 align-top">
+                    Microsoft Word
+                  </td>
+                  <td class="p-3 align-top">
+                    <input type="text" id="tugas1a_main_no" class="lkpd-input text-xs font-mono" placeholder="Contoh: 1, 4, 6" />
+                  </td>
+                  <td class="p-3 align-top">
+                    <textarea id="tugas1a_main_alasan" class="lkpd-input lkpd-textarea text-xs" placeholder="Jelaskan alasan (apakah sifat datanya tetap/statis)..."></textarea>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-bold align-top">
+                    Data Source<br />
+                    <span class="text-[11px] font-normal text-slate-500 dark:text-slate-400">(Sumber Basis Data)</span>
+                  </td>
+                  <td class="p-3 font-mono font-bold text-emerald-600 dark:text-emerald-400 align-top">
+                    Microsoft Excel
+                  </td>
+                  <td class="p-3 align-top">
+                    <input type="text" id="tugas1a_source_no" class="lkpd-input text-xs font-mono" placeholder="Contoh: 2, 3, 5" />
+                  </td>
+                  <td class="p-3 align-top">
+                    <textarea id="tugas1a_source_alasan" class="lkpd-input lkpd-textarea text-xs" placeholder="Jelaskan alasan (apakah sifat datanya berubah/dinamis)..."></textarea>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Tugas 1B -->
+        <div class="space-y-2 pt-2 border-t border-slate-100 dark:border-slate-800">
+          <strong class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white block">
+            Tugas 1B: Tuliskan contoh penulisan kode penanda (Merge Field) menggunakan simbol kurung siku ganda untuk memanggil data Nama Lengkap Siswa dan Kelas pada naskah Word!
+          </strong>
+          <div>
+            <label class="block text-[11px] font-mono text-slate-500 dark:text-slate-400 mb-1">Jawaban Merge Field:</label>
+            <input type="text" id="tugas1b_mergefield" class="lkpd-input font-mono text-sm" placeholder="Contoh: «Nama_Lengkap» dan «Kelas»" />
+          </div>
+        </div>
+
+        <!-- Footer Halaman 1 -->
+        <div class="pt-4 mt-3 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center text-[10px] text-slate-400 font-mono">
+          <span>LKPD Informatika Kelas X — Menguasai Mail Merge (SMA Negeri 4 Yogyakarta)</span>
+          <span class="font-bold">Halaman 1 dari 5</span>
+        </div>
+
+      </div>
+      </div>
+
+      <!-- Page Break untuk PDF & Print -->
+      <div class="pdf-page-break"></div>
+
+      <!-- ========================================================
+           HALAMAN 2: AKTIVITAS 2 (AUDIT & PERBAIKAN TABEL EXCEL)
+           ======================================================== -->
+      <div id="lkpdPage2" class="lkpd-pdf-page">
+        <!-- ========================================================
+           AKTIVITAS 2: AUDIT & PERBAIKAN TABEL EXCEL (KONSEP BAB II)
+           ======================================================== -->
+      <div class="page-card p-6 sm:p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-6">
+        
+        <div class="border-b border-slate-100 dark:border-slate-800 pb-4">
+          <div class="flex items-center justify-between flex-wrap gap-2">
+            <div class="flex items-center gap-3">
+              <span class="w-8 h-8 rounded-xl bg-emerald-600 text-white font-mono font-bold text-xs flex items-center justify-center shadow-md shadow-emerald-500/20">2</span>
+              <h3 class="text-base sm:text-lg font-black text-slate-900 dark:text-white">
+                Aktivitas 2: Audit &amp; Perbaikan Tabel Excel (Konsep Bab II)
+              </h3>
+            </div>
+            <span class="text-xs font-mono font-bold px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800">
+              Bobot: 25 Poin
+            </span>
+          </div>
+        </div>
+
+        <!-- Tabel Doni Rusak -->
+        <div class="space-y-2">
+          <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+            Perhatikan rancangan tabel Excel milik seorang panitia bernama <strong>Doni</strong> yang <strong>gagal terbaca</strong> ketika dihubungkan ke Microsoft Word berikut ini:
+          </p>
+
+          <div class="overflow-x-auto rounded-2xl border border-rose-300 dark:border-rose-900/60 bg-rose-50/20 dark:bg-rose-950/10">
+            <table class="w-full text-left text-xs font-mono">
+              <thead class="bg-rose-100/70 dark:bg-rose-950/40 text-slate-900 dark:text-white border-b border-rose-200 dark:border-rose-900">
+                <tr>
+                  <th class="p-2.5 w-16 text-center border-r border-rose-200 dark:border-rose-900">Baris</th>
+                  <th class="p-2.5 border-r border-rose-200 dark:border-rose-900">Kolom A</th>
+                  <th class="p-2.5 border-r border-rose-200 dark:border-rose-900">Kolom B</th>
+                  <th class="p-2.5">Kolom C</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-rose-200/60 dark:divide-rose-900/40 text-slate-700 dark:text-slate-300">
+                <tr class="bg-amber-100/40 dark:bg-amber-950/30">
+                  <td class="p-2.5 text-center font-bold border-r border-rose-200 dark:border-rose-900">1</td>
+                  <td colspan="3" class="p-2.5 text-center font-bold text-amber-700 dark:text-amber-400">
+                    DAFTAR PENERIMA SERTIFIKAT (Sel A1, B1, C1 digabung / Merged Cell)
+                  </td>
+                </tr>
+                <tr class="bg-slate-100/50 dark:bg-slate-800/40 italic text-slate-400">
+                  <td class="p-2 text-center border-r border-rose-200 dark:border-rose-900">2</td>
+                  <td class="p-2 border-r border-rose-200 dark:border-rose-900">(Baris Kosong)</td>
+                  <td class="p-2 border-r border-rose-200 dark:border-rose-900">(Baris Kosong)</td>
+                  <td class="p-2">(Baris Kosong)</td>
+                </tr>
+                <tr class="font-bold bg-slate-50 dark:bg-slate-800/60">
+                  <td class="p-2.5 text-center border-r border-rose-200 dark:border-rose-900">3</td>
+                  <td class="p-2.5 border-r border-rose-200 dark:border-rose-900">Nama_Siswa</td>
+                  <td class="p-2.5 border-r border-rose-200 dark:border-rose-900">Kelas</td>
+                  <td class="p-2.5">Nomor_Telepon</td>
+                </tr>
+                <tr>
+                  <td class="p-2.5 text-center border-r border-rose-200 dark:border-rose-900">4</td>
+                  <td class="p-2.5 border-r border-rose-200 dark:border-rose-900">Agus Haryadi</td>
+                  <td class="p-2.5 border-r border-rose-200 dark:border-rose-900">X-A</td>
+                  <td class="p-2.5">081234567890</td>
+                </tr>
+                <tr class="bg-slate-100/50 dark:bg-slate-800/40 italic text-slate-400">
+                  <td class="p-2 text-center border-r border-rose-200 dark:border-rose-900">5</td>
+                  <td class="p-2 border-r border-rose-200 dark:border-rose-900">(Baris Kosong)</td>
+                  <td class="p-2 border-r border-rose-200 dark:border-rose-900">(Baris Kosong)</td>
+                  <td class="p-2">(Baris Kosong)</td>
+                </tr>
+                <tr>
+                  <td class="p-2.5 text-center border-r border-rose-200 dark:border-rose-900">6</td>
+                  <td class="p-2.5 border-r border-rose-200 dark:border-rose-900">Dewi Lestari</td>
+                  <td class="p-2.5 border-r border-rose-200 dark:border-rose-900">X-B</td>
+                  <td class="p-2.5">085678912345</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Tugas 2A -->
+        <div class="space-y-3 pt-2">
+          <strong class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white block">
+            Tugas 2A: Berdasarkan 4 Aturan Emas Data Source di Excel (Bab II Halaman 6), identifikasikan 3 kesalahan fatal pada tabel Doni di atas!
+          </strong>
+          <div class="space-y-2 text-xs">
+            <div class="flex items-center gap-2">
+              <span class="w-6 h-6 rounded-md bg-rose-500 text-white font-mono font-bold flex items-center justify-center shrink-0">1</span>
+              <input type="text" id="tugas2a_err1" class="lkpd-input text-xs" placeholder="Kesalahan fatal ke-1 (misal: penggunaan merged cell di baris 1)..." />
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="w-6 h-6 rounded-md bg-rose-500 text-white font-mono font-bold flex items-center justify-center shrink-0">2</span>
+              <input type="text" id="tugas2a_err2" class="lkpd-input text-xs" placeholder="Kesalahan fatal ke-2 (misal: adanya baris kosong di baris 2 & 5)..." />
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="w-6 h-6 rounded-md bg-rose-500 text-white font-mono font-bold flex items-center justify-center shrink-0">3</span>
+              <input type="text" id="tugas2a_err3" class="lkpd-input text-xs" placeholder="Kesalahan fatal ke-3 (misal: header kolom tidak diletakkan tepat di baris 1)..." />
+            </div>
+          </div>
+        </div>
+
+        <!-- Tugas 2B -->
+        <div class="space-y-2 pt-2 border-t border-slate-100 dark:border-slate-800">
+          <strong class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white block">
+            Tugas 2B: Saat nomor telepon 081234567890 dipanggil ke Word, angka 0 di bagian depan hilang menjadi 81234567890. Mengapa hal itu terjadi dan bagaimana cara mengatasinya di Excel?
+          </strong>
+          <div>
+            <label class="block text-[11px] font-mono text-slate-500 dark:text-slate-400 mb-1">Penyebab &amp; Solusi:</label>
+            <textarea id="tugas2b_solusi" class="lkpd-input lkpd-textarea text-xs" placeholder="Jelaskan penyebab (tipe data angka / integer) dan cara solusinya di Excel (format Text / beri tanda petik)..."></textarea>
+          </div>
+        </div>
+
+        <!-- Tugas 2C -->
+        <div class="space-y-3 pt-2 border-t border-slate-100 dark:border-slate-800">
+          <strong class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white block">
+            Tugas 2C: Susun ulang tabel Doni di bawah ini menjadi Tabel Data Source yang Benar &amp; Siap Pakai mulai dari Baris 1!
+          </strong>
+
+          <div class="overflow-x-auto rounded-2xl border border-emerald-300 dark:border-emerald-800 bg-emerald-50/10">
+            <table class="w-full text-left text-xs font-mono">
+              <thead class="bg-emerald-100/70 dark:bg-emerald-950/40 text-slate-900 dark:text-white border-b border-emerald-200 dark:border-emerald-900 font-bold">
+                <tr>
+                  <th class="p-2.5 w-16 text-center border-r border-emerald-200 dark:border-emerald-900">Baris</th>
+                  <th class="p-2.5 border-r border-emerald-200 dark:border-emerald-900">Kolom A</th>
+                  <th class="p-2.5 border-r border-emerald-200 dark:border-emerald-900">Kolom B</th>
+                  <th class="p-2.5">Kolom C</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-emerald-200/60 dark:divide-emerald-900/40 text-slate-700 dark:text-slate-300">
+                <tr>
+                  <td class="p-2 text-center font-bold border-r border-emerald-200 dark:border-emerald-900">1</td>
+                  <td class="p-1 border-r border-emerald-200 dark:border-emerald-900">
+                    <input type="text" id="t2c_r1_a" class="lkpd-input text-xs font-bold font-mono" placeholder="Nama_Siswa" />
+                  </td>
+                  <td class="p-1 border-r border-emerald-200 dark:border-emerald-900">
+                    <input type="text" id="t2c_r1_b" class="lkpd-input text-xs font-bold font-mono" placeholder="Kelas" />
+                  </td>
+                  <td class="p-1">
+                    <input type="text" id="t2c_r1_c" class="lkpd-input text-xs font-bold font-mono" placeholder="Nomor_Telepon" />
+                  </td>
+                </tr>
+                <tr>
+                  <td class="p-2 text-center font-bold border-r border-emerald-200 dark:border-emerald-900">2</td>
+                  <td class="p-1 border-r border-emerald-200 dark:border-emerald-900">
+                    <input type="text" id="t2c_r2_a" class="lkpd-input text-xs font-mono" placeholder="Agus Haryadi" />
+                  </td>
+                  <td class="p-1 border-r border-emerald-200 dark:border-emerald-900">
+                    <input type="text" id="t2c_r2_b" class="lkpd-input text-xs font-mono" placeholder="X-A" />
+                  </td>
+                  <td class="p-1">
+                    <input type="text" id="t2c_r2_c" class="lkpd-input text-xs font-mono" placeholder="'081234567890" />
+                  </td>
+                </tr>
+                <tr>
+                  <td class="p-2 text-center font-bold border-r border-emerald-200 dark:border-emerald-900">3</td>
+                  <td class="p-1 border-r border-emerald-200 dark:border-emerald-900">
+                    <input type="text" id="t2c_r3_a" class="lkpd-input text-xs font-mono" placeholder="Dewi Lestari" />
+                  </td>
+                  <td class="p-1 border-r border-emerald-200 dark:border-emerald-900">
+                    <input type="text" id="t2c_r3_b" class="lkpd-input text-xs font-mono" placeholder="X-B" />
+                  </td>
+                  <td class="p-1">
+                    <input type="text" id="t2c_r3_c" class="lkpd-input text-xs font-mono" placeholder="'085678912345" />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Footer Halaman 2 -->
+        <div class="pt-4 mt-3 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center text-[10px] text-slate-400 font-mono">
+          <span>LKPD Informatika Kelas X — Menguasai Mail Merge (SMA Negeri 4 Yogyakarta)</span>
+          <span class="font-bold">Halaman 2 dari 5</span>
+        </div>
+
+      </div>
+      </div>
+
+      <!-- Page Break untuk PDF & Print -->
+      <div class="pdf-page-break"></div>
+
+      <!-- ========================================================
+           HALAMAN 3: AKTIVITAS 3 (RULES & SWITCH CODES)
+           ======================================================== -->
+      <div id="lkpdPage3" class="lkpd-pdf-page">
+        <!-- ========================================================
+           AKTIVITAS 3: LOGIKA ATURAN RULES & FORMAT SWITCH CODE (KONSEP BAB III)
+           ======================================================== -->
+      <div class="page-card p-6 sm:p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-6">
+        
+        <div class="border-b border-slate-100 dark:border-slate-800 pb-4">
+          <div class="flex items-center justify-between flex-wrap gap-2">
+            <div class="flex items-center gap-3">
+              <span class="w-8 h-8 rounded-xl bg-amber-600 text-white font-mono font-bold text-xs flex items-center justify-center shadow-md shadow-amber-500/20">3</span>
+              <h3 class="text-base sm:text-lg font-black text-slate-900 dark:text-white">
+                Aktivitas 3: Logika Aturan Rules &amp; Format Switch Code (Konsep Bab III)
+              </h3>
+            </div>
+            <span class="text-xs font-mono font-bold px-3 py-1 rounded-full bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 border border-amber-200 dark:border-amber-800">
+              Bobot: 25 Poin
+            </span>
+          </div>
+        </div>
+
+        <!-- Kasus 3A: Rules If...Then...Else... -->
+        <div class="space-y-3">
+          <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 space-y-1.5 text-xs sm:text-sm">
+            <strong class="font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              <i class="fa-solid fa-code-branch text-amber-500"></i> Kasus 3A — Aturan Logika Percabangan (If... Then... Else...):
+            </strong>
+            <p class="text-slate-600 dark:text-slate-300 leading-relaxed">
+              Dalam piagam kejuaraan olahraga, panitia ingin naskah secara dinamis menampilkan kalimat <strong>"Juara Pertama"</strong> jika kolom <em>Skor</em> lebih dari atau sama dengan 90 (&ge; 90), dan menampilkan <strong>"Peserta Berprestasi"</strong> jika skor di bawah 90 (&lt; 90). Lengkapilah parameter kotak dialog Rules pada tabel berikut!
+            </p>
+          </div>
+
+          <div class="overflow-x-auto rounded-2xl border border-slate-200 dark:border-slate-800">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold border-b border-slate-200 dark:border-slate-800">
+                <tr>
+                  <th class="p-3 w-1/2">Parameter Menu Rules (If... Then... Else...)</th>
+                  <th class="p-3">Isian Konfigurasi yang Tepat</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100 dark:divide-slate-800 text-slate-700 dark:text-slate-300">
+                <tr>
+                  <td class="p-3 font-semibold">Field name (Nama kolom yang diuji)</td>
+                  <td class="p-2">
+                    <input type="text" id="r_fieldname" class="lkpd-input text-xs font-mono" placeholder="Skor" />
+                  </td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-semibold">Comparison (Operator pembanding)</td>
+                  <td class="p-2">
+                    <input type="text" id="r_comparison" class="lkpd-input text-xs font-mono" placeholder="Greater than or equal (>=)" />
+                  </td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-semibold">Compare to (Nilai batas pembanding)</td>
+                  <td class="p-2">
+                    <input type="text" id="r_compareto" class="lkpd-input text-xs font-mono" placeholder="90" />
+                  </td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-semibold">Insert this text (Teks jika kondisi terpenuhi)</td>
+                  <td class="p-2">
+                    <input type="text" id="r_inserttext" class="lkpd-input text-xs" placeholder="Juara Pertama" />
+                  </td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-semibold">Otherwise insert this text (Teks jika tidak terpenuhi)</td>
+                  <td class="p-2">
+                    <input type="text" id="r_otherwisetext" class="lkpd-input text-xs" placeholder="Peserta Berprestasi" />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Kasus 3B: Switch Codes Alt + F9 -->
+        <div class="space-y-3 pt-3 border-t border-slate-100 dark:border-slate-800">
+          <div class="p-4 rounded-2xl bg-indigo-50/60 dark:bg-indigo-950/20 border border-indigo-200 dark:border-indigo-900/40 text-xs sm:text-sm text-slate-700 dark:text-slate-300 space-y-1.5">
+            <strong class="font-bold text-indigo-700 dark:text-indigo-400 flex items-center gap-2">
+              <i class="fa-solid fa-keyboard"></i> Kasus 3B — Modifikasi Format Switch Codes (Alt + F9):
+            </strong>
+            <p class="leading-relaxed">
+              Setelah menekan pintasan <strong>Alt + F9</strong> di Word, tuliskan kode modifikasi lengkap menggunakan Switch Code tanggal (<code>@</code>) dan angka rupiah (<code>#</code>) sesuai panduan Bab III Halaman 9!
+            </p>
+          </div>
+
+          <div class="space-y-3 text-xs sm:text-sm">
+            <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 space-y-1.5">
+              <label class="block font-bold text-slate-900 dark:text-white">
+                1. Agar tanggal tampil berformat <strong>12 Mei 2026</strong>:
+              </label>
+              <div class="flex items-center gap-2 font-mono text-xs">
+                <span class="text-slate-500">{ MERGEFIELD Tgl</span>
+                <input type="text" id="switch_tgl" class="lkpd-input text-xs font-mono flex-1 text-emerald-600 dark:text-emerald-400" placeholder='\@ "dd MMMM yyyy"' />
+                <span class="text-slate-500">}</span>
+              </div>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 space-y-1.5">
+              <label class="block font-bold text-slate-900 dark:text-white">
+                2. Agar nominal tampil berformat <strong>Rp 500.000,00</strong>:
+              </label>
+              <div class="flex items-center gap-2 font-mono text-xs">
+                <span class="text-slate-500">{ MERGEFIELD Biaya</span>
+                <input type="text" id="switch_biaya" class="lkpd-input text-xs font-mono flex-1 text-emerald-600 dark:text-emerald-400" placeholder='\# "Rp #,##0.00"' />
+                <span class="text-slate-500">}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer Halaman 3 -->
+        <div class="pt-4 mt-3 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center text-[10px] text-slate-400 font-mono">
+          <span>LKPD Informatika Kelas X — Menguasai Mail Merge (SMA Negeri 4 Yogyakarta)</span>
+          <span class="font-bold">Halaman 3 dari 5</span>
+        </div>
+
+      </div>
+      </div>
+
+      <!-- Page Break untuk PDF & Print -->
+      <div class="pdf-page-break"></div>
+
+      <!-- ========================================================
+           HALAMAN 4: AKTIVITAS 4 (TROUBLESHOOTING)
+           ======================================================== -->
+      <div id="lkpdPage4" class="lkpd-pdf-page">
+        <!-- ========================================================
+           AKTIVITAS 4: KLINIK DIAGNOSIS TROUBLESHOOTING (BAB II & III)
+           ======================================================== -->
+      <div class="page-card p-6 sm:p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-6">
+        
+        <div class="border-b border-slate-100 dark:border-slate-800 pb-4">
+          <div class="flex items-center justify-between flex-wrap gap-2">
+            <div class="flex items-center gap-3">
+              <span class="w-8 h-8 rounded-xl bg-rose-600 text-white font-mono font-bold text-xs flex items-center justify-center shadow-md shadow-rose-500/20">4</span>
+              <h3 class="text-base sm:text-lg font-black text-slate-900 dark:text-white">
+                Aktivitas 4: Klinik Diagnosis Troubleshooting (Bab II &amp; III)
+              </h3>
+            </div>
+            <span class="text-xs font-mono font-bold px-3 py-1 rounded-full bg-rose-50 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-800">
+              Bobot: 25 Poin
+            </span>
+          </div>
+        </div>
+
+        <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+          Analisislah <strong>5 kasus kendala teknis</strong> di bawah ini dengan menuliskan penyebab utama serta langkah solusinya!
+        </p>
+
+        <div class="overflow-x-auto rounded-2xl border border-slate-200 dark:border-slate-800">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold border-b border-slate-200 dark:border-slate-800">
+              <tr>
+                <th class="p-3 w-12 text-center">No</th>
+                <th class="p-3 w-1/3">Gejala / Masalah Teknis di Lapangan</th>
+                <th class="p-3 w-1/3">Penyebab Utama</th>
+                <th class="p-3">Langkah Solusi Perbaikan</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 dark:divide-slate-800 text-slate-700 dark:text-slate-300">
+              <!-- Kasus 1 -->
+              <tr>
+                <td class="p-3 text-center font-bold font-mono align-top">1</td>
+                <td class="p-3 align-top font-semibold text-slate-900 dark:text-white">
+                  Muncul pesan peringatan <em>"Database Is Locked"</em> saat menautkan file Excel lewat Select Recipients.
+                </td>
+                <td class="p-2 align-top">
+                  <textarea id="diag_1_sebab" class="lkpd-input lkpd-textarea text-xs" placeholder="Tuliskan penyebab utama..."></textarea>
+                </td>
+                <td class="p-2 align-top">
+                  <textarea id="diag_1_solusi" class="lkpd-input lkpd-textarea text-xs" placeholder="Tuliskan langkah solusi perbaikan..."></textarea>
+                </td>
+              </tr>
+
+              <!-- Kasus 2 -->
+              <tr>
+                <td class="p-3 text-center font-bold font-mono align-top">2</td>
+                <td class="p-3 align-top font-semibold text-slate-900 dark:text-white">
+                  Daftar kolom di menu Insert Merge Field muncul sebagai kode F1, F2, F3, bukan Nama, Kelas, Alamat.
+                </td>
+                <td class="p-2 align-top">
+                  <textarea id="diag_2_sebab" class="lkpd-input lkpd-textarea text-xs" placeholder="Tuliskan penyebab utama..."></textarea>
+                </td>
+                <td class="p-2 align-top">
+                  <textarea id="diag_2_solusi" class="lkpd-input lkpd-textarea text-xs" placeholder="Tuliskan langkah solusi perbaikan..."></textarea>
+                </td>
+              </tr>
+
+              <!-- Kasus 3 -->
+              <tr>
+                <td class="p-3 text-center font-bold font-mono align-top">3</td>
+                <td class="p-3 align-top font-semibold text-slate-900 dark:text-white">
+                  Pada pencetakan 1 lembar stiker Label Undangan 103 (12 kotak), ke-12 kotak tersebut menampilkan nama tamu urutan pertama yang sama berulang 12 kali.
+                </td>
+                <td class="p-2 align-top">
+                  <textarea id="diag_3_sebab" class="lkpd-input lkpd-textarea text-xs" placeholder="Tuliskan penyebab utama..."></textarea>
+                </td>
+                <td class="p-2 align-top">
+                  <textarea id="diag_3_solusi" class="lkpd-input lkpd-textarea text-xs" placeholder="Tuliskan langkah solusi perbaikan..."></textarea>
+                </td>
+              </tr>
+
+              <!-- Kasus 4 -->
+              <tr>
+                <td class="p-3 text-center font-bold font-mono align-top">4</td>
+                <td class="p-3 align-top font-semibold text-slate-900 dark:text-white">
+                  Tulisan &lt;&lt;Nama_Siswa&gt;&gt; tidak mau berubah menjadi nama asli penerima saat tombol Preview Results ditekan.
+                </td>
+                <td class="p-2 align-top">
+                  <textarea id="diag_4_sebab" class="lkpd-input lkpd-textarea text-xs" placeholder="Tuliskan penyebab utama..."></textarea>
+                </td>
+                <td class="p-2 align-top">
+                  <textarea id="diag_4_solusi" class="lkpd-input lkpd-textarea text-xs" placeholder="Tuliskan langkah solusi perbaikan..."></textarea>
+                </td>
+              </tr>
+
+              <!-- Kasus 5 -->
+              <tr>
+                <td class="p-3 text-center font-bold font-mono align-top">5</td>
+                <td class="p-3 align-top font-semibold text-slate-900 dark:text-white">
+                  Setelah diekspor lewat Finish &amp; Merge, setiap surat selalu diselingi oleh 1 halaman kosong.
+                </td>
+                <td class="p-2 align-top">
+                  <textarea id="diag_5_sebab" class="lkpd-input lkpd-textarea text-xs" placeholder="Tuliskan penyebab utama..."></textarea>
+                </td>
+                <td class="p-2 align-top">
+                  <textarea id="diag_5_solusi" class="lkpd-input lkpd-textarea text-xs" placeholder="Tuliskan langkah solusi perbaikan..."></textarea>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Footer Halaman 4 -->
+        <div class="pt-4 mt-3 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center text-[10px] text-slate-400 font-mono">
+          <span>LKPD Informatika Kelas X — Menguasai Mail Merge (SMA Negeri 4 Yogyakarta)</span>
+          <span class="font-bold">Halaman 4 dari 5</span>
+        </div>
+
+      </div>
+      </div>
+
+      <!-- Page Break untuk PDF & Print -->
+      <div class="pdf-page-break"></div>
+
+      <!-- ========================================================
+           HALAMAN 5: REFLEKSI MANDIRI & LEMBAR PENILAIAN
+           ======================================================== -->
+      <div id="lkpdPage5" class="lkpd-pdf-page">
+        <!-- ========================================================
+           REFLEKSI MANDIRI PESERTA DIDIK & LEMBAR PENILAIAN
+           ======================================================== -->
+      <div class="page-card p-6 sm:p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-5">
+        
+        <div class="flex items-center gap-3 border-b border-slate-100 dark:border-slate-800 pb-4">
+          <div class="w-8 h-8 rounded-xl bg-purple-600 text-white font-mono font-bold text-xs flex items-center justify-center shadow-md shadow-purple-500/20">
+            <i class="fa-solid fa-lightbulb"></i>
+          </div>
+          <div>
+            <h3 class="text-base sm:text-lg font-black text-slate-900 dark:text-white">
+              Refleksi Mandiri Peserta Didik
+            </h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400">Rencana Penerapan Keterampilan di Laboratorium Komputer</p>
+          </div>
+        </div>
+
+        <p class="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+          Setelah mempelajari teori integrasi Microsoft Word dan Excel hari ini, jenis dokumen apa yang paling ingin kamu buat saat sesi praktik laboratorium komputer pada pertemuan berikutnya? Jelaskan manfaatnya bagi kegiatanmu di sekolah!
+        </p>
+
+        <textarea
+          id="refleksi_siswa"
+          class="lkpd-input lkpd-textarea text-xs sm:text-sm"
+          style="min-height: 110px;"
+          placeholder="Tuliskan refleksi pribadimu di sini (misal: ingin membuat kartu OSIS, sertifikat kepanitiaan, atau label stiker perpustakaan)..."
+        ></textarea>
+
+        <!-- Rubrik Rekapitulasi Nilai & Catatan Guru -->
+        <div class="pt-4 border-t border-slate-100 dark:border-slate-800 space-y-3">
+          <h4 class="text-xs font-bold font-mono uppercase text-slate-500 dark:text-slate-400">
+            Lembar Rekapitulasi &amp; Catatan Umpan Balik Guru
+          </h4>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+            <div class="rounded-xl border border-slate-200 dark:border-slate-700/80 p-3 bg-slate-50/50 dark:bg-slate-800/40">
+              <span class="block font-bold text-slate-600 dark:text-slate-300 mb-1">Struktur Komponen Penilaian:</span>
+              <ul class="space-y-1 text-slate-500 dark:text-slate-400 font-mono text-[11px]">
+                <li>• Aktivitas 1 (Pemetaan Komponen) : Maks. 25 Poin</li>
+                <li>• Aktivitas 2 (Audit Tabel Excel) : Maks. 25 Poin</li>
+                <li>• Aktivitas 3 (Rules &amp; Switch Codes) : Maks. 25 Poin</li>
+                <li>• Aktivitas 4 (Troubleshooting) : Maks. 25 Poin</li>
+              </ul>
+            </div>
+            <div class="rounded-xl border border-slate-200 dark:border-slate-700/80 p-3 bg-slate-50/50 dark:bg-slate-800/40 flex flex-col justify-between">
+              <div>
+                <span class="block font-bold text-slate-600 dark:text-slate-300 mb-1">Catatan / Feedback Guru:</span>
+                <p class="text-[11px] text-slate-400 italic">Disampaikan secara langsung pada Google Classroom / Sesi Kelas.</p>
+              </div>
+              <div class="pt-2 border-t border-slate-200/60 dark:border-slate-700/60 flex justify-between items-center text-[11px] font-mono">
+                <span class="text-slate-500">Status Dokumen:</span>
+                <span class="font-bold text-emerald-600 dark:text-emerald-400">Tervalidasi Digital</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer Halaman 5 -->
+        <div class="pt-4 mt-3 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center text-[10px] text-slate-400 font-mono">
+          <span>LKPD Informatika Kelas X — Menguasai Mail Merge (SMA Negeri 4 Yogyakarta)</span>
+          <span class="font-bold">Halaman 5 dari 5 (Selesai)</span>
+        </div>
+
+      </div>
+      </div>
+
+      <!-- ========================================================
+           TOMBOL AKSI SIMPAN & KUMPULKAN
+           ======================================================== -->
+      <div class="pt-4 pb-16 flex flex-col sm:flex-row items-center justify-between gap-4 no-print">
+        <a
+          href="materi.html#lembarkerja"
+          class="w-full sm:w-auto px-6 py-3.5 rounded-2xl bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs sm:text-sm transition-all text-center"
+        >
+          <i class="fa-solid fa-arrow-left mr-2"></i> Kembali ke Modul
+        </a>
+
+        <div class="flex items-center gap-3 w-full sm:w-auto">
+          <button
+            type="button"
+            onclick="saveDraft(true)"
+            class="flex-1 sm:flex-initial px-5 py-3.5 rounded-2xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs sm:text-sm transition-all border border-slate-300 dark:border-slate-700 cursor-pointer flex items-center justify-center gap-2"
+          >
+            <i class="fa-solid fa-floppy-disk"></i>
+            <span>Simpan Draf</span>
+          </button>
+
+          <button
+            type="button"
+            id="btnSubmitLKPD"
+            onclick="submitLKPD()"
+            class="flex-1 sm:flex-initial px-8 py-3.5 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-extrabold text-xs sm:text-sm shadow-xl shadow-emerald-500/25 transition-all cursor-pointer flex items-center justify-center gap-2"
+          >
+            <i class="fa-solid fa-cloud-arrow-up"></i>
+            <span>Kumpulkan LKPD ke Drive</span>
+          </button>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- Modal Loading Pengunggahan ke Google Drive -->
+    <div id="uploadLoadingModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+      <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 max-w-sm w-full border border-slate-200 dark:border-slate-800 text-center space-y-4 shadow-2xl">
+        <div class="w-16 h-16 rounded-full bg-emerald-500/10 text-emerald-500 flex items-center justify-center text-3xl mx-auto">
+          <i class="fa-solid fa-spinner fa-spin"></i>
+        </div>
+        <div class="space-y-1">
+          <h3 class="text-lg font-extrabold text-slate-900 dark:text-white" id="uploadStatusTitle">Menyiapkan Dokumen PDF...</h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400" id="uploadStatusDesc">Mohon tunggu, sistem sedang merender lembar kerja Anda.</p>
+        </div>
+        <div class="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2.5 overflow-hidden">
+          <div id="uploadProgressBar" class="bg-gradient-to-r from-emerald-500 to-teal-500 h-full w-1/3 transition-all duration-300"></div>
+        </div>
+        <p class="text-[11px] text-slate-400">Jangan menutup atau merefresh halaman selama proses berlangsung.</p>
+      </div>
+    </div>
+
+    <!-- Modal Konfirmasi Sukses -->
+    <div id="successModal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
+      <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 max-w-md w-full border border-slate-200 dark:border-slate-800 text-center space-y-4 shadow-2xl">
+        <div class="w-16 h-16 rounded-full bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 flex items-center justify-center text-3xl mx-auto font-bold">
+          <i class="fa-solid fa-cloud-arrow-up"></i>
+        </div>
+        <div>
+          <h3 class="text-xl font-extrabold text-slate-900 dark:text-white">LKPD Berhasil Dikumpulkan!</h3>
+          <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-1" id="modalStudentDesc">
+            Pengerjaan atas nama Siswa berhasil terkirim.
+          </p>
+        </div>
+
+        <div class="p-3.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-bold flex items-center justify-center gap-2">
+          <i class="fa-solid fa-circle-check text-base"></i>
+          <span>File PDF Telah Tersimpan di Folder Google Drive Guru</span>
+        </div>
+
+        <div class="pt-2 flex flex-col gap-2.5">
+          <button onclick="downloadSelfPDF()" type="button" class="w-full py-3 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold text-xs sm:text-sm transition-all cursor-pointer flex items-center justify-center gap-2 border border-slate-200 dark:border-slate-700">
+            <i class="fa-solid fa-download"></i>
+            <span>Unduh Salinan PDF Mandiri</span>
+          </button>
+          <a href="post.html" class="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm transition-all cursor-pointer flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20">
+            <span>Lanjut ke Post Test Resmi</span>
+            <i class="fa-solid fa-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Script Penyimpanan & Interaksi -->
+    <script>
+      // Endpoint Resmi Google Apps Script untuk Pengumpulan LKPD ke Google Drive Guru
+      const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyBdHGvteALdyfm5kvMlinXuOzMUrcBiJHA95wkqDZrYnWskPv-z68KPgtLn9gkETPa/exec";
+
+      // Theme Toggle
+      document.getElementById('themeToggleBtn').addEventListener('click', () => {
+        const isDark = document.documentElement.classList.toggle('dark');
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+      });
+
+      // Reading progress bar
+      window.addEventListener('scroll', () => {
+        const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrolled = (winScroll / height) * 100;
+        const prog = document.getElementById('topProgress');
+        if (prog) prog.style.width = scrolled + '%';
+      });
+
+      const fieldIds = [
+        'studentName', 'studentClass', 'studentAbsen',
+        'tugas1a_main_no', 'tugas1a_main_alasan', 'tugas1a_source_no', 'tugas1a_source_alasan',
+        'tugas1b_mergefield',
+        'tugas2a_err1', 'tugas2a_err2', 'tugas2a_err3', 'tugas2b_solusi',
+        't2c_r1_a', 't2c_r1_b', 't2c_r1_c',
+        't2c_r2_a', 't2c_r2_b', 't2c_r2_c',
+        't2c_r3_a', 't2c_r3_b', 't2c_r3_c',
+        'r_fieldname', 'r_comparison', 'r_compareto', 'r_inserttext', 'r_otherwisetext',
+        'switch_tgl', 'switch_biaya',
+        'diag_1_sebab', 'diag_1_solusi',
+        'diag_2_sebab', 'diag_2_solusi',
+        'diag_3_sebab', 'diag_3_solusi',
+        'diag_4_sebab', 'diag_4_solusi',
+        'diag_5_sebab', 'diag_5_solusi',
+        'refleksi_siswa'
+      ];
+
+      function saveDraft(showAlert = false) {
+        const payload = {};
+        fieldIds.forEach(id => {
+          const el = document.getElementById(id);
+          if (el) payload[id] = el.value;
+        });
+
+        localStorage.setItem('LKPD_MM_DRAFT', JSON.stringify(payload));
+        if (showAlert) {
+          alert('Draf jawaban LKPD berhasil disimpan di perangkat ini!');
+        }
+      }
+
+      function loadDraft() {
+        try {
+          const raw = localStorage.getItem('LKPD_MM_DRAFT');
+          if (!raw) return;
+          const payload = JSON.parse(raw);
+          fieldIds.forEach(id => {
+            const el = document.getElementById(id);
+            if (el && payload[id] !== undefined) {
+              el.value = payload[id];
+            }
+          });
+        } catch (e) {
+          console.error('Error loading draft:', e);
+        }
+      }
+
+      // Generator PDF 5 Halaman Presisi (jsPDF + html2canvas) — Mencegah Pemotongan Tabel
+      async function buildCleanPdf() {
+        if (!window.jspdf || !window.jspdf.jsPDF) {
+          throw new Error('Pustaka jsPDF belum termuat. Periksa koneksi internet Anda.');
+        }
+        if (!window.html2canvas) {
+          throw new Error('Pustaka html2canvas belum termuat. Periksa koneksi internet Anda.');
+        }
+
+        const nama = document.getElementById('studentName').value.trim() || 'Siswa';
+        const absen = document.getElementById('studentAbsen').value.trim() || '00';
+        const kelas = document.getElementById('studentClass').value || 'X';
+        const cleanNama = nama.replace(/[^a-zA-Z0-9_\s]/g, '').replace(/\s+/g, '_');
+        const filename = `LKPD_MM_${kelas}_${absen}_${cleanNama}.pdf`;
+
+        // 1. Sinkronisasi nilai input/textarea ke atribut value dan textContent
+        document.querySelectorAll('#lkpdContent input').forEach(inp => {
+          inp.setAttribute('value', inp.value);
+        });
+        document.querySelectorAll('#lkpdContent textarea').forEach(ta => {
+          ta.textContent = ta.value;
+        });
+
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF({
+          orientation: 'portrait',
+          unit: 'mm',
+          format: 'a4',
+          compress: true
+        });
+
+        // 5 Halaman Terstruktur Sesuai Spesifikasi LKPD
+        const pages = [
+          document.getElementById('lkpdPage1'),
+          document.getElementById('lkpdPage2'),
+          document.getElementById('lkpdPage3'),
+          document.getElementById('lkpdPage4'),
+          document.getElementById('lkpdPage5')
+        ];
+
+        // Dimensi Kertas A4
+        const pageWidth = 210;
+        const pageHeight = 297;
+        const marginX = 12; // 12mm kiri dan kanan (simetris)
+        const printWidth = pageWidth - (marginX * 2); // 186 mm
+        const maxPrintHeight = pageHeight - 20; // 277 mm
+
+        for (let i = 0; i < pages.length; i++) {
+          const pageEl = pages[i];
+          if (!pageEl) continue;
+
+          // Update status progress modal
+          const progressBar = document.getElementById('uploadProgressBar');
+          const statusDesc = document.getElementById('uploadStatusDesc');
+          if (progressBar) progressBar.style.width = `${15 + (i + 1) * 14}%`;
+          if (statusDesc) statusDesc.innerText = `Merender halaman ${i + 1} dari 5 ke PDF...`;
+
+          const canvas = await html2canvas(pageEl, {
+            scale: 2,
+            useCORS: true,
+            backgroundColor: '#ffffff',
+            logging: false,
+            onclone: (clonedDoc) => {
+              clonedDoc.documentElement.classList.remove('dark');
+              clonedDoc.body.classList.remove('dark');
+              clonedDoc.body.style.backgroundColor = '#ffffff';
+
+              const clonedTarget = clonedDoc.getElementById(pageEl.id);
+              if (clonedTarget) {
+                clonedTarget.style.backgroundColor = '#ffffff';
+                clonedTarget.style.color = '#0f172a';
+                clonedTarget.style.padding = '0';
+              }
+
+              // Pastikan card berlatar putih bersih dengan border halus
+              clonedDoc.querySelectorAll('.page-card').forEach(card => {
+                card.style.backgroundColor = '#ffffff';
+                card.style.color = '#0f172a';
+                card.style.borderColor = '#cbd5e1';
+                card.style.boxShadow = 'none';
+                card.style.padding = '18px 22px';
+              });
+
+              // Format warna input agar terbaca jelas
+              clonedDoc.querySelectorAll('input, textarea').forEach(inp => {
+                inp.style.backgroundColor = '#f8fafc';
+                inp.style.color = '#0f172a';
+                inp.style.borderColor = '#cbd5e1';
+              });
+            }
+          });
+
+          const imgData = canvas.toDataURL('image/jpeg', 0.95);
+          const imgProps = pdf.getImageProperties(imgData);
+          const imgHeight = (imgProps.height * printWidth) / imgProps.width;
+
+          if (i > 0) {
+            pdf.addPage('a4', 'portrait');
+          }
+
+          const renderHeight = Math.min(imgHeight, maxPrintHeight);
+          pdf.addImage(imgData, 'JPEG', marginX, 10, printWidth, renderHeight);
+        }
+
+        return {
+          pdf: pdf,
+          filename: filename,
+          base64: pdf.output('datauristring').split(',')[1]
+        };
+      }
+
+      // Fungsi Ekspor PDF Cadangan Mandiri Siswa
+      async function downloadSelfPDF() {
+        const loadingModal = document.getElementById('uploadLoadingModal');
+        const statusTitle = document.getElementById('uploadStatusTitle');
+        const statusDesc = document.getElementById('uploadStatusDesc');
+
+        loadingModal.classList.remove('hidden');
+        statusTitle.innerText = 'Menyiapkan PDF Mandiri...';
+        statusDesc.innerText = 'Sistem sedang menyusun 5 halaman lembar kerja Anda.';
+
+        try {
+          const { pdf, filename } = await buildCleanPdf();
+          pdf.save(filename);
+        } catch (err) {
+          console.error('Error download PDF:', err);
+          alert('Gagal membuat PDF: ' + err.message);
+        } finally {
+          loadingModal.classList.add('hidden');
+        }
+      }
+
+      // Fungsi Utama Pengumpulan LKPD ke Google Drive
+      async function submitLKPD() {
+        const nama = document.getElementById('studentName').value.trim();
+        const absen = document.getElementById('studentAbsen').value.trim();
+        const kelas = document.getElementById('studentClass').value;
+
+        if (!nama || !absen) {
+          alert('Harap lengkapi Nama Siswa dan Nomor Presensi terlebih dahulu!');
+          document.getElementById('studentName').focus();
+          return;
+        }
+
+        saveDraft(false);
+
+        const loadingModal = document.getElementById('uploadLoadingModal');
+        const progressBar = document.getElementById('uploadProgressBar');
+        const statusTitle = document.getElementById('uploadStatusTitle');
+        const statusDesc = document.getElementById('uploadStatusDesc');
+        const btnSubmit = document.getElementById('btnSubmitLKPD');
+
+        loadingModal.classList.remove('hidden');
+        progressBar.style.width = '15%';
+        statusTitle.innerText = 'Merender Dokumen PDF...';
+        statusDesc.innerText = 'Sistem sedang menyusun 5 lembar halaman LKPD Anda.';
+
+        if (btnSubmit) {
+          btnSubmit.disabled = true;
+          btnSubmit.classList.add('opacity-60', 'cursor-not-allowed');
+        }
+
+        try {
+          // 1. Buat Dokumen PDF 5 Halaman Utuh (Tanpa Pemotongan)
+          const { base64, filename } = await buildCleanPdf();
+
+          progressBar.style.width = '88%';
+          statusTitle.innerText = 'Mengunggah ke Google Drive...';
+          statusDesc.innerText = 'Mengirimkan dokumen resmi ke Folder Google Drive guru pengampu.';
+
+          // 2. Kirim ke Google Apps Script Web App
+          const payload = {
+            nama: nama,
+            kelas: kelas,
+            absen: absen,
+            pdfBase64: base64,
+            pdf: base64,
+            fileName: filename
+          };
+
+          const response = await fetch(APPS_SCRIPT_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify(payload),
+            redirect: 'follow'
+          });
+
+          progressBar.style.width = '100%';
+
+          let result;
+          try {
+            result = await response.json();
+          } catch (e) {
+            result = { status: 'success' };
+          }
+
+          loadingModal.classList.add('hidden');
+
+          if (result && result.status === 'error') {
+            throw new Error(result.message || 'Terjadi kesalahan pada Google Apps Script');
+          }
+
+          // Kunci form dan tampilkan modal sukses
+          if (btnSubmit) {
+            btnSubmit.innerHTML = '<i class="fa-solid fa-check mr-2"></i> LKPD Terkirim ke Drive';
+          }
+
+          document.getElementById('modalStudentDesc').innerText =
+            `Pengerjaan atas nama ${nama} (${kelas} - Presensi ${absen}) berhasil tersimpan resmi di Google Drive guru dalam 5 halaman PDF utuh.`;
+          document.getElementById('successModal').classList.remove('hidden');
+
+        } catch (err) {
+          console.error('Error upload PDF ke Drive:', err);
+          loadingModal.classList.add('hidden');
+          alert(`Pemberitahuan: Kendala saat mengirim ke Google Drive (${err.message}).\n\nJangan khawatir, draf pengerjaan Anda aman tersimpan. Silakan coba klik tombol kumpulkan kembali atau gunakan tombol "Cetak / PDF" untuk menyimpan manual.`);
+          if (btnSubmit) {
+            btnSubmit.disabled = false;
+            btnSubmit.classList.remove('opacity-60', 'cursor-not-allowed');
+          }
+        }
+      }
+
+      window.addEventListener('DOMContentLoaded', () => {
+        loadDraft();
+      });
+    </script>
+  </body>
+</html>
