@@ -233,7 +233,7 @@
         </div>
 
         <!-- Tabel Identitas Peserta -->
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+        <div id="identitasGridContainer" class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
           <div class="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 space-y-1 sm:col-span-2">
             <label class="block font-bold text-slate-500 dark:text-slate-400 font-mono">Nama Lengkap Siswa *</label>
             <input type="text" id="studentName" class="lkpd-input font-bold" placeholder="Tuliskan nama lengkap Anda..." required />
@@ -1058,7 +1058,7 @@
         const cleanNama = nama.replace(/[^a-zA-Z0-9_\s]/g, '').replace(/\s+/g, '_');
         const filename = `LKPD_MM_${kelas}_${absen}_${cleanNama}.pdf`;
 
-        // 1. Sinkronisasi nilai input/textarea ke atribut value dan textContent
+        // 1. Sinkronisasi nilai input/textarea ke atribut value dan textContent sebelum dirender
         document.querySelectorAll('#lkpdContent input').forEach(inp => {
           inp.setAttribute('value', inp.value);
         });
@@ -1083,12 +1083,17 @@
           document.getElementById('lkpdPage5')
         ];
 
-        // Dimensi Kertas A4
+        // Dimensi Kertas A4 Standar
         const pageWidth = 210;
         const pageHeight = 297;
-        const marginX = 12; // 12mm kiri dan kanan (simetris)
-        const printWidth = pageWidth - (marginX * 2); // 186 mm
-        const maxPrintHeight = pageHeight - 16; // 281 mm
+        const marginX = 10; // 10mm margin kiri-kanan
+        const marginY = 8;  // 8mm margin atas-bawah
+        const printableWidth = pageWidth - (marginX * 2); // 190 mm
+        const printableHeight = pageHeight - (marginY * 2); // 281 mm
+
+        // Simpan posisi scroll sebelum render
+        const originalScrollY = window.scrollY || window.pageYOffset || 0;
+        const originalScrollX = window.scrollX || window.pageXOffset || 0;
 
         for (let i = 0; i < pages.length; i++) {
           const pageEl = pages[i];
@@ -1098,45 +1103,94 @@
           const progressBar = document.getElementById('uploadProgressBar');
           const statusDesc = document.getElementById('uploadStatusDesc');
           if (progressBar) progressBar.style.width = `${15 + (i + 1) * 14}%`;
-          if (statusDesc) statusDesc.innerText = `Merender halaman ${i + 1} dari 5 ke PDF...`;
+          if (statusDesc) statusDesc.innerText = `Merender halaman ${i + 1} dari 5 ke PDF resmi...`;
 
+          // RENDER DENGAN DESKTOP VIEW A4 (800px):
+          // Menghindari bug layar smartphone (HP) yang membuat teks gepeng dan tabel terpotong di kiri
           const canvas = await html2canvas(pageEl, {
             scale: 2,
             useCORS: true,
             backgroundColor: '#ffffff',
             logging: false,
+            scrollX: 0,
+            scrollY: 0,
+            x: 0,
+            y: 0,
+            windowWidth: 800,
+            width: 800,
             onclone: (clonedDoc) => {
+              // Pastikan scroll berada di puncak dokumen
+              if (clonedDoc.defaultView) {
+                clonedDoc.defaultView.scrollTo(0, 0);
+              }
+
+              // Nonaktifkan dark mode untuk cetak resmi putih bersih
               clonedDoc.documentElement.classList.remove('dark');
               clonedDoc.body.classList.remove('dark');
               clonedDoc.body.style.backgroundColor = '#ffffff';
 
+              // Kunci lebar dokumen ke format kertas A4 800px
+              clonedDoc.documentElement.style.width = '800px';
+              clonedDoc.documentElement.style.minWidth = '800px';
+              clonedDoc.documentElement.style.maxWidth = '800px';
+              clonedDoc.body.style.width = '800px';
+              clonedDoc.body.style.minWidth = '800px';
+              clonedDoc.body.style.maxWidth = '800px';
+              clonedDoc.body.style.margin = '0';
+              clonedDoc.body.style.padding = '0';
+              clonedDoc.body.style.overflow = 'visible';
+
               const clonedTarget = clonedDoc.getElementById(pageEl.id);
               if (clonedTarget) {
+                clonedTarget.style.width = '800px';
+                clonedTarget.style.minWidth = '800px';
+                clonedTarget.style.maxWidth = '800px';
+                clonedTarget.style.boxSizing = 'border-box';
                 clonedTarget.style.backgroundColor = '#ffffff';
                 clonedTarget.style.color = '#0f172a';
                 clonedTarget.style.padding = '0';
+                clonedTarget.style.margin = '0 auto';
+                clonedTarget.style.overflow = 'visible';
               }
 
-              // 1. Pastikan card berlatar putih bersih dengan border halus simetris
+              // Kartu halaman kompak dan rapi
               clonedTarget.querySelectorAll('.page-card').forEach(card => {
                 card.style.backgroundColor = '#ffffff';
                 card.style.color = '#0f172a';
                 card.style.borderColor = '#cbd5e1';
                 card.style.boxShadow = 'none';
-                card.style.padding = '18px 22px';
+                card.style.padding = '14px 20px';
+                card.style.borderRadius = '16px';
+                card.style.marginBottom = '10px';
               });
 
-              // 2. Seluruh tabel rata tengah vertikal & rapi
+              // Pastikan Identitas Siswa pada Halaman 1 selalu berdampingan 2 Kolom (Bukan 1 kolom sempit HP)
+              const identitasGrid = clonedTarget.querySelector('#identitasGridContainer');
+              if (identitasGrid) {
+                identitasGrid.style.display = 'grid';
+                identitasGrid.style.gridTemplateColumns = '2fr 1fr';
+                identitasGrid.style.gap = '10px';
+              }
+
+              // Atasi bug tabel terpotong di kiri di HP: Buka overflow dan scrollLeft = 0
+              clonedTarget.querySelectorAll('.overflow-x-auto').forEach(container => {
+                container.style.overflow = 'visible';
+                container.style.width = '100%';
+                container.scrollLeft = 0;
+              });
+
               clonedTarget.querySelectorAll('table').forEach(tbl => {
                 tbl.style.width = '100%';
                 tbl.style.borderCollapse = 'collapse';
+                tbl.style.tableLayout = 'auto';
               });
+
               clonedTarget.querySelectorAll('th, td').forEach(cell => {
                 cell.style.verticalAlign = 'middle';
               });
 
-              // 3. Ganti semua input & textarea dengan DIV bergaya dokumen resmi:
-              // Menghindari bug flexbox html2canvas agar teks SIMETRIS dan LURUS RATA TENGAH
+              // Ganti semua elemen INPUT & TEXTAREA menjadi DIV bergaya dokumen resmi:
+              // Menghindari bug flexbox html2canvas agar teks SIMETRIS, LURUS RATA TENGAH, dan TIDAK TERPOTONG
               clonedTarget.querySelectorAll('input, textarea').forEach(inp => {
                 const val = inp.value.trim();
                 const placeholder = inp.getAttribute('placeholder') || '-';
@@ -1173,11 +1227,10 @@
                   div.style.display = "block";
                   div.style.padding = "7px 10px";
                   div.style.lineHeight = "1.4";
-                  div.style.minHeight = "48px";
+                  div.style.minHeight = "46px";
                 } else {
                   // SINGLE LINE INPUT: Simetris Vertikal Murni (Tanpa Flexbox)
-                  // padding 7px + line-height 16px + padding 7px + border 3px = 33px
-                  // Teks berada tepat di tengah vertikal dan lurus sejajar
+                  // padding 7px + line-height 16px + padding 7px = 30px (presisi tengah vertikal)
                   div.style.display = "block";
                   div.style.padding = "7px 10px";
                   div.style.lineHeight = "16px";
@@ -1188,7 +1241,7 @@
                 inp.parentNode.replaceChild(div, inp);
               });
 
-              // 4. Ganti elemen select dengan DIV yang senada
+              // Ganti elemen SELECT dengan DIV yang senada
               clonedTarget.querySelectorAll('select').forEach(sel => {
                 const text = sel.options[sel.selectedIndex]?.text || sel.value || '-';
                 const div = clonedDoc.createElement('div');
@@ -1213,15 +1266,32 @@
 
           const imgData = canvas.toDataURL('image/jpeg', 0.95);
           const imgProps = pdf.getImageProperties(imgData);
-          const imgHeight = (imgProps.height * printWidth) / imgProps.width;
+
+          // PENGATURAN DIMENSI ANTI-GEPENG:
+          // 100% Menjaga Aspect Ratio (Width dan Height diskalakan proporsional bersama-sama)
+          let renderWidth = printableWidth;
+          let renderHeight = (imgProps.height * printableWidth) / imgProps.width;
+
+          // Jika tinggi gambar melebihi printableHeight (281mm), kecilkan KEDUANYA secara proporsional
+          if (renderHeight > printableHeight) {
+            const scale = printableHeight / renderHeight;
+            renderHeight = printableHeight;
+            renderWidth = printableWidth * scale;
+          }
+
+          // Posisikan tepat di tengah secara horizontal
+          const renderX = marginX + (printableWidth - renderWidth) / 2;
+          const renderY = marginY;
 
           if (i > 0) {
             pdf.addPage('a4', 'portrait');
           }
 
-          const renderHeight = Math.min(imgHeight, maxPrintHeight);
-          pdf.addImage(imgData, 'JPEG', marginX, 8, printWidth, renderHeight);
+          pdf.addImage(imgData, 'JPEG', renderX, renderY, renderWidth, renderHeight);
         }
+
+        // Kembalikan posisi scroll pengguna
+        window.scrollTo(originalScrollX, originalScrollY);
 
         return {
           pdf: pdf,
