@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Refleksi & Kesan Pesan Perpisahan — Pak Ilyas di SMAN 4 Yogyakarta</title>
+    <link rel="shortcut icon" href="images/Logo Patbhe.png" type="image/x-icon" />
+
+    <!-- Anti-FOUC script -->
+    <script>
+      if (
+        localStorage.getItem("theme") === "dark" ||
+        (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches)
+      ) {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
+    </script>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              brandDark: "#0b1120",
+              brandNavy: "#0f172a",
+              brandRose: "#f43f5e",
+              brandPurple: "#8b5cf6",
+              brandAmber: "#f59e0b",
+            },
+            fontFamily: {
+              sans: ["'Plus Jakarta Sans'", "system-ui", "sans-serif"],
+              mono: ["'JetBrains Mono'", "monospace"],
+            },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      .form-input-farewell {
+        width: 100%;
+        background-color: #f8fafc;
+        border: 1.5px solid #cbd5e1;
+        border-radius: 16px;
+        padding: 13px 18px;
+        font-size: 0.875rem;
+        color: #0f172a;
+        outline: none;
+        transition: all 0.25s ease;
+      }
+      .form-input-farewell:focus {
+        border-color: #f43f5e;
+        box-shadow: 0 0 0 3px rgba(244, 63, 94, 0.15);
+        background-color: #ffffff;
+      }
+      .dark .form-input-farewell {
+        background-color: #0f172a;
+        border-color: #334155;
+        color: #f8fafc;
+      }
+      .dark .form-input-farewell:focus {
+        border-color: #fb7185;
+        box-shadow: 0 0 0 3px rgba(251, 113, 133, 0.2);
+        background-color: #0b1120;
+      }
+      .rating-heart {
+        transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        cursor: pointer;
+      }
+      .rating-heart:hover, .rating-heart.active {
+        transform: scale(1.22);
+        color: #f43f5e;
+      }
+      .mood-card {
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        cursor: pointer;
+      }
+      .mood-card:hover {
+        transform: translateY(-3px);
+      }
+      .mood-card.selected {
+        border-color: #f43f5e;
+        background-color: rgba(244, 63, 94, 0.08);
+        box-shadow: 0 6px 18px -4px rgba(244, 63, 94, 0.25);
+      }
+      .dark .mood-card.selected {
+        border-color: #fb7185;
+        background-color: rgba(251, 113, 133, 0.12);
+      }
+      .polaroid-frame {
+        background: #ffffff;
+        box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.15);
+        border: 1px solid rgba(0, 0, 0, 0.06);
+      }
+      .dark .polaroid-frame {
+        background: #1e293b;
+        border-color: rgba(255, 255, 255, 0.08);
+      }
+    </style>
+  </head>
+
+  <body class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 font-sans antialiased min-h-screen flex flex-col selection:bg-rose-500 selection:text-white transition-colors duration-200">
+    
+    <!-- Top Sticky Navbar -->
+    <header class="sticky top-0 z-40 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <a
+            href="index.html"
+            class="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-300 transition-colors"
+            title="Kembali ke Beranda"
+          >
+            <i class="fa-solid fa-arrow-left text-sm"></i>
+          </a>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="font-extrabold text-sm sm:text-base text-slate-900 dark:text-white tracking-tight">
+                Ruang<span class="text-rose-600 dark:text-rose-400">Informatika</span>
+              </span>
+              <span class="text-[9px] font-mono font-bold px-2 py-0.5 rounded-full bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20">
+                Pesan Perpisahan PPL 2026
+              </span>
+            </div>
+            <span class="text-[10px] uppercase font-bold tracking-widest text-slate-500 dark:text-slate-400 block">
+              SMA NEGERI 4 YOGYAKARTA &bull; KELAS X-E6
+            </span>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2 sm:gap-3">
+          <a
+            href="index.html#materi"
+            class="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200 transition-all border border-slate-200 dark:border-slate-700"
+          >
+            <i class="fa-solid fa-cubes text-rose-500"></i>
+            <span>Daftar Modul</span>
+          </a>
+
+          <!-- Theme Toggle Button -->
+          <button
+            id="themeToggleBtn"
+            type="button"
+            class="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-amber-400 flex items-center justify-center transition-all cursor-pointer"
+            aria-label="Ganti Tema"
+            title="Ganti Mode Gelap / Terang"
+          >
+            <i class="fa-solid fa-moon dark:hidden text-xs"></i>
+            <i class="fa-solid fa-sun hidden dark:inline text-xs"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="flex-1 max-w-4xl w-full mx-auto px-4 sm:px-6 py-8 sm:py-10 space-y-8">
+      
+      <!-- HERO BANNER PERPISAHAN HANGAT DARI PAK ILYAS -->
+      <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-rose-600 via-purple-700 to-indigo-800 text-white p-6 sm:p-10 shadow-2xl shadow-rose-500/20">
+        <div class="absolute -right-16 -top-16 w-72 h-72 bg-white/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -left-16 -bottom-16 w-72 h-72 bg-amber-400/20 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+          <div class="space-y-3 max-w-2xl">
+            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-mono font-extrabold uppercase bg-white/20 backdrop-blur-md border border-white/30 text-white">
+              <i class="fa-solid fa-heart text-amber-300"></i> Hari Perpisahan PPL PPG Prajabatan UNY 2026
+            </div>
+            <h1 class="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight leading-tight">
+              Catatan Kenangan &amp; Refleksi Hati: <br class="hidden sm:inline" />
+              <span class="text-amber-300">Terima Kasih, Kelas X-E6!</span>
+            </h1>
+            <p class="text-xs sm:text-sm text-rose-100 leading-relaxed pt-1">
+              "Halo teman-teman hebat kelas X-E6! Hari ini adalah hari terakhir saya mendampingi kalian sebagai mahasiswa PPL Informatika di SMA Negeri 4 Yogyakarta. Terima kasih atas tawa, kehangatan, pertanyaan seru, dan semangat belajarmu di kelas maupun di laboratorium komputer. Sebelum kita berpisah, tulislah kesan, pesan, dan uneg-uneg jujurmu untuk saya simpan selamanya."
+            </p>
+            <div class="pt-2 text-xs font-semibold text-amber-200 flex items-center gap-2">
+              <i class="fa-solid fa-pen-nib"></i>
+              <span>Salam hangat dari guru PPL kalian: <strong>Ilyas Fandhi Anggara, S.Kom</strong></span>
+            </div>
+          </div>
+
+          <!-- Polaroid Mini Badge -->
+          <div class="polaroid-frame rounded-2xl p-3 text-slate-800 dark:text-slate-100 shrink-0 w-full sm:w-56 text-center transform rotate-1 hover:rotate-0 transition-transform shadow-lg">
+            <div class="w-full h-32 rounded-xl bg-gradient-to-tr from-rose-500 to-purple-600 flex flex-col items-center justify-center text-white p-3 space-y-1 relative overflow-hidden">
+              <div class="text-3xl">🎓🤝✨</div>
+              <span class="text-xs font-extrabold tracking-wider uppercase">Kelas X-E6 Patbhe</span>
+              <span class="text-[10px] font-mono text-rose-100">Informatika 2026</span>
+            </div>
+            <p class="text-[11px] font-bold font-mono text-slate-600 dark:text-slate-300 mt-2.5">
+              "Setiap pertemuan membawa cerita, setiap perpisahan menitip doa."
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- FORMULIR REFLEKSI & KESAN PESAN PERPISAHAN -->
+      <form id="farewellForm" onsubmit="submitFarewellReflection(event)" class="space-y-8">
+        
+        <!-- BAGIAN 1: IDENTITAS SISWA -->
+        <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-sm space-y-6">
+          <div class="flex items-center gap-3 border-b border-slate-100 dark:border-slate-800 pb-4">
+            <div class="w-10 h-10 rounded-xl bg-rose-500/10 text-rose-600 dark:text-rose-400 flex items-center justify-center text-lg font-bold">
+              <i class="fa-solid fa-user-tag"></i>
+            </div>
+            <div>
+              <h2 class="text-base sm:text-lg font-black text-slate-900 dark:text-white">
+                1. Data Murid Spesial Pak Ilyas
+              </h2>
+              <p class="text-xs text-slate-500 dark:text-slate-400">Tuliskan identitasmu agar Pak Ilyas selalu ingat siapa yang menulis pesan ini.</p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <!-- Nama Lengkap -->
+            <div class="sm:col-span-2 space-y-1.5">
+              <label for="studentName" class="block text-xs font-bold font-mono text-slate-700 dark:text-slate-300">
+                Nama Lengkap Siswa <span class="text-rose-500">*</span>
+              </label>
+              <input
+                type="text"
+                id="studentName"
+                name="studentName"
+                class="form-input-farewell font-semibold"
+                placeholder="Contoh: Nadia Az-Zahra"
+                required
+              />
+            </div>
+
+            <!-- Nama Panggilan di Kelas -->
+            <div class="space-y-1.5">
+              <label for="studentNickname" class="block text-xs font-bold font-mono text-slate-700 dark:text-slate-300">
+                Nama Panggilan di Kelas <span class="text-rose-500">*</span>
+              </label>
+              <input
+                type="text"
+                id="studentNickname"
+                name="studentNickname"
+                class="form-input-farewell font-semibold"
+                placeholder="Contoh: Nadia"
+                required
+              />
+            </div>
+
+            <!-- Kelas & No Presensi -->
+            <div class="grid grid-cols-2 gap-3 sm:col-span-3">
+              <div class="space-y-1.5">
+                <label for="studentClass" class="block text-xs font-bold font-mono text-slate-700 dark:text-slate-300">
+                  Kelas <span class="text-rose-500">*</span>
+                </label>
+                <select id="studentClass" name="studentClass" class="form-input-farewell font-bold font-mono cursor-pointer">
+                  <option value="X-E6" selected>X-E6 (Kelas Kesayangan)</option>
+                  <option value="X-E1">X-E1</option>
+                  <option value="X-E2">X-E2</option>
+                  <option value="X-E3">X-E3</option>
+                  <option value="X-E4">X-E4</option>
+                  <option value="X-E5">X-E5</option>
+                  <option value="X-E7">X-E7</option>
+                  <option value="X-E8">X-E8</option>
+                </select>
+              </div>
+
+              <div class="space-y-1.5">
+                <label for="studentAbsen" class="block text-xs font-bold font-mono text-slate-700 dark:text-slate-300">
+                  Nomor Presensi <span class="text-rose-500">*</span>
+                </label>
+                <input
+                  type="number"
+                  id="studentAbsen"
+                  name="studentAbsen"
+                  min="1"
+                  max="50"
+                  class="form-input-farewell font-bold font-mono text-center"
+                  placeholder="25"
+                  required
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- BAGIAN 2: PERTANYAAN REFLEKSI PERASAAN & KENANGAN BERSAMA PAK ILYAS -->
+        <div class="space-y-6">
+
+          <!-- KARTU 1: KESAN PERTAMA VS SEKARANG -->
+          <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+            <div class="flex items-start gap-3.5 border-b border-slate-100 dark:border-slate-800 pb-3">
+              <div class="w-10 h-10 rounded-2xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-black text-lg shrink-0">
+                1
+              </div>
+              <div>
+                <h3 class="text-sm sm:text-base font-extrabold text-slate-900 dark:text-white">
+                  Kesan Pertama vs Kesan Sekarang (First Impression vs Reality)
+                </h3>
+                <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                  Bagaimana perasaanmu saat pertama kali Pak Ilyas masuk ke kelas X-E6 dibanding perasaanmu sekarang setelah berminggu-minggu belajar bersama?
+                </p>
+              </div>
+            </div>
+            <textarea
+              id="kesan_pertama"
+              rows="3"
+              class="form-input-farewell text-xs leading-relaxed"
+              placeholder="Ceritakan dengan jujur: awalnya saya kira Pak Ilyas orangnya galak/pendiam/kaku, tapi setelah diajar ternyata sangat ramah, asyik, suka bercanda, dan sabar banget..."
+              required
+            ></textarea>
+          </div>
+
+          <!-- KARTU 2: MOMEN PALING BERKESAN / PALING LUCU DI KELAS & LAB -->
+          <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+            <div class="flex items-start gap-3.5 border-b border-slate-100 dark:border-slate-800 pb-3">
+              <div class="w-10 h-10 rounded-2xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center font-black text-lg shrink-0">
+                2
+              </div>
+              <div>
+                <h3 class="text-sm sm:text-base font-extrabold text-slate-900 dark:text-white">
+                  Momen Paling Berkesan, Lucu, atau Tak Terlupakan
+                </h3>
+                <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                  Apa 1 atau 2 kejadian paling seru saat belajar Informatika bersama Pak Ilyas yang paling kamu ingat?
+                </p>
+              </div>
+            </div>
+            <textarea
+              id="momen_berkesan"
+              rows="3"
+              class="form-input-farewell text-xs leading-relaxed"
+              placeholder="Contoh: Saat praktik di lab komputer pas materi Mail Merge kemarin, waktu Pak Ilyas bantuin benerin error database Excel, pas games kuis interaktif, atau candaan di sela-sela materi..."
+              required
+            ></textarea>
+          </div>
+
+          <!-- KARTU 3: CARA MENGAJAR & BIMBINGAN PAK ILYAS -->
+          <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+            <div class="flex items-start gap-3.5 border-b border-slate-100 dark:border-slate-800 pb-3">
+              <div class="w-10 h-10 rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-black text-lg shrink-0">
+                3
+              </div>
+              <div>
+                <h3 class="text-sm sm:text-base font-extrabold text-slate-900 dark:text-white">
+                  Penilaianmu terhadap Cara Mengajar Pak Ilyas
+                </h3>
+                <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                  Menurutmu, apa hal yang paling kamu sukai dari cara Pak Ilyas membimbing dan menerangkan pelajaran di kelas?
+                </p>
+              </div>
+            </div>
+            <textarea
+              id="cara_mengajar"
+              rows="3"
+              class="form-input-farewell text-xs leading-relaxed"
+              placeholder="Contoh: Penyampaian materi tidak kaku, sabar mau ngulang penjelasan saat kami belum paham, web belajarnya sangat keren & modern, serta selalu memberi kesempatan praktik langsung..."
+              required
+            ></textarea>
+          </div>
+
+          <!-- KARTU 4: MASUKAN & KRITIK MEMBANGUN UNTUK GURU MASA DEPAN -->
+          <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+            <div class="flex items-start gap-3.5 border-b border-slate-100 dark:border-slate-800 pb-3">
+              <div class="w-10 h-10 rounded-2xl bg-purple-500/10 text-purple-600 dark:text-purple-400 flex items-center justify-center font-black text-lg shrink-0">
+                4
+              </div>
+              <div>
+                <h3 class="text-sm sm:text-base font-extrabold text-slate-900 dark:text-white">
+                  Saran &amp; Masukan untuk Pak Ilyas ke Depan
+                </h3>
+                <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                  Sebagai calon guru profesional, apa masukan tulus darimu agar Pak Ilyas bisa menjadi guru yang semakin hebat dan dicintai murid-muridnya nanti?
+                </p>
+              </div>
+            </div>
+            <textarea
+              id="saran_guru"
+              rows="3"
+              class="form-input-farewell text-xs leading-relaxed"
+              placeholder="Saran bebas dan terbuka: terus pertahankan cara mengajar yang seru ini Pak, mungkin ke depan bisa ditambah ice breaking lebih banyak, atau pesan lainnya..."
+              required
+            ></textarea>
+          </div>
+
+          <!-- KARTU 5: PESAN, DOA & UCAPAN PERPISAHAN HATI -->
+          <div class="bg-gradient-to-br from-rose-50 via-white to-purple-50 dark:from-slate-900 dark:via-slate-900 dark:to-rose-950/20 rounded-3xl p-6 sm:p-8 border-2 border-rose-300 dark:border-rose-900/60 shadow-md space-y-4">
+            <div class="flex items-start gap-3.5 border-b border-rose-200/60 dark:border-rose-900/50 pb-3">
+              <div class="w-10 h-10 rounded-2xl bg-rose-500 text-white flex items-center justify-center font-black text-lg shrink-0 shadow-md shadow-rose-500/30">
+                <i class="fa-solid fa-heart"></i>
+              </div>
+              <div>
+                <h3 class="text-sm sm:text-base font-extrabold text-rose-700 dark:text-rose-300">
+                  Surat Perpisahan: Pesan, Doa &amp; Harapan untuk Pak Ilyas
+                </h3>
+                <p class="text-xs text-slate-600 dark:text-slate-300 mt-0.5">
+                  Tuliskan semua kata-kata terakhir, ucapan terima kasih, dan doa tulusmu untuk perjalanan karier Pak Ilyas setelah selesai PPL di SMAN 4 Yogyakarta.
+                </p>
+              </div>
+            </div>
+            <textarea
+              id="pesan_perpisahan"
+              rows="4"
+              class="form-input-farewell text-xs leading-relaxed font-medium"
+              placeholder="Tuliskan dari lubuk hatimu yang paling dalam: Terima kasih banyak atas segalanya Pak Ilyas! Semoga dilancarkan ujian PPG-nya, segera diangkat menjadi guru ASN/PNS impian bapak, dan sukses dunia akhirat. Jangan lupakan kami anak-anak kelas X-E6 ya Pak! 🥺❤️"
+              required
+            ></textarea>
+          </div>
+
+        </div>
+
+        <!-- BAGIAN 3: MOOD HARI INI & RATING GURU TERBAIK -->
+        <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-sm space-y-6">
+          <div class="flex items-center gap-3 border-b border-slate-100 dark:border-slate-800 pb-4">
+            <div class="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center text-lg font-bold">
+              <i class="fa-solid fa-award"></i>
+            </div>
+            <div>
+              <h2 class="text-base sm:text-lg font-black text-slate-900 dark:text-white">
+                3. Suasana Hati Hari Perpisahan &amp; Apresiasi Guru
+              </h2>
+              <p class="text-xs text-slate-500 dark:text-slate-400">Ekspresikan perasaanmu di hari terakhir kita belajar bersama.</p>
+            </div>
+          </div>
+
+          <!-- Pilihan Mood Suasana Hati Hari Perpisahan -->
+          <div class="space-y-2">
+            <label class="block text-xs font-bold font-mono text-slate-700 dark:text-slate-300">
+              Gambarkan Suasana Hatimu Hari Ini di Hari Perpisahan:
+            </label>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-1">
+              <button
+                type="button"
+                onclick="selectFarewellMood(this, 'Sedih Berpisah tapi Sangat Bersyukur 🥹')"
+                class="mood-card selected p-3.5 rounded-2xl border-2 border-rose-500 bg-rose-50/40 dark:bg-rose-950/20 text-center space-y-1"
+              >
+                <div class="text-3xl">🥹</div>
+                <div class="text-xs font-extrabold text-slate-900 dark:text-white">Terharu &amp; Bersyukur</div>
+                <div class="text-[10px] text-slate-500 dark:text-slate-400">Sedih mau pisah</div>
+              </button>
+
+              <button
+                type="button"
+                onclick="selectFarewellMood(this, 'Sangat Senang & Bahagia Pernah Diajar Pak Ilyas 🥰')"
+                class="mood-card p-3.5 rounded-2xl border-2 border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/40 text-center space-y-1"
+              >
+                <div class="text-3xl">🥰</div>
+                <div class="text-xs font-extrabold text-slate-900 dark:text-white">Penuh Kenangan</div>
+                <div class="text-[10px] text-slate-500 dark:text-slate-400">Sangat berkesan</div>
+              </button>
+
+              <button
+                type="button"
+                onclick="selectFarewellMood(this, 'Pasti Bakal Kangen Banget Suasana Kelas 😭')"
+                class="mood-card p-3.5 rounded-2xl border-2 border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/40 text-center space-y-1"
+              >
+                <div class="text-3xl">😭</div>
+                <div class="text-xs font-extrabold text-slate-900 dark:text-white">Bakal Kangen</div>
+                <div class="text-[10px] text-slate-500 dark:text-slate-400">Suasana canda tawa</div>
+              </button>
+
+              <button
+                type="button"
+                onclick="selectFarewellMood(this, 'Bangga & Terinspirasi Meraih Cita-Cita 🥳')"
+                class="mood-card p-3.5 rounded-2xl border-2 border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/40 text-center space-y-1"
+              >
+                <div class="text-3xl">🥳</div>
+                <div class="text-xs font-extrabold text-slate-900 dark:text-white">Bangga &amp; Semangat</div>
+                <div class="text-[10px] text-slate-500 dark:text-slate-400">Terinspirasi maju</div>
+              </button>
+            </div>
+            <input type="hidden" id="farewellMood" value="Sedih Berpisah tapi Sangat Bersyukur 🥹" />
+          </div>
+
+          <!-- Rating Apresiasi untuk Pak Ilyas -->
+          <div class="space-y-2 pt-2">
+            <label class="block text-xs font-bold font-mono text-slate-700 dark:text-slate-300">
+              Berapa Bintang Hati untuk Pengalaman Belajar Bersama Pak Ilyas? (Skala 1 - 5):
+            </label>
+            <div class="flex items-center gap-3 py-1">
+              <div class="flex items-center gap-2 text-3xl text-slate-300 dark:text-slate-700" id="heartContainer">
+                <i class="fa-solid fa-heart rating-heart active text-rose-500" onclick="setFarewellRating(1)"></i>
+                <i class="fa-solid fa-heart rating-heart active text-rose-500" onclick="setFarewellRating(2)"></i>
+                <i class="fa-solid fa-heart rating-heart active text-rose-500" onclick="setFarewellRating(3)"></i>
+                <i class="fa-solid fa-heart rating-heart active text-rose-500" onclick="setFarewellRating(4)"></i>
+                <i class="fa-solid fa-heart rating-heart active text-rose-500" onclick="setFarewellRating(5)"></i>
+              </div>
+              <span class="text-xs font-extrabold font-mono text-rose-500" id="ratingDescText">
+                ⭐⭐⭐⭐⭐ (Guru PPL Paling Terbaik &amp; Menginspirasi!)
+              </span>
+              <input type="hidden" id="farewellRating" value="5" />
+            </div>
+          </div>
+        </div>
+
+        <!-- TOMBOL AKSI PENGIRIMAN REFLEKSI PERPISAHAN -->
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2">
+          <a
+            href="index.html"
+            class="w-full sm:w-auto px-6 py-3.5 rounded-2xl bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs sm:text-sm transition-all text-center"
+          >
+            <i class="fa-solid fa-arrow-left mr-2"></i> Kembali ke Beranda
+          </a>
+
+          <div class="flex items-center gap-3 w-full sm:w-auto">
+            <button
+              type="button"
+              onclick="saveFarewellDraft(true)"
+              class="flex-1 sm:flex-initial px-5 py-3.5 rounded-2xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs sm:text-sm transition-all border border-slate-300 dark:border-slate-700 cursor-pointer flex items-center justify-center gap-2"
+            >
+              <i class="fa-solid fa-floppy-disk"></i>
+              <span>Simpan Draf</span>
+            </button>
+
+            <button
+              type="submit"
+              id="btnSubmitFarewell"
+              class="flex-1 sm:flex-initial px-8 py-3.5 rounded-2xl bg-gradient-to-r from-rose-600 via-pink-600 to-purple-600 hover:from-rose-500 hover:to-purple-500 text-white font-extrabold text-xs sm:text-sm shadow-xl shadow-rose-500/25 transition-all cursor-pointer flex items-center justify-center gap-2"
+            >
+              <i class="fa-solid fa-paper-plane"></i>
+              <span>Kirimkan Pesan Perpisahan ke Pak Ilyas</span>
+            </button>
+          </div>
+        </div>
+
+      </form>
+
+    </main>
+
+    <!-- Footer Kenangan -->
+    <footer class="border-t border-slate-200 dark:border-slate-800 py-8 text-center text-xs text-slate-500 dark:text-slate-400 mt-12">
+      <div class="max-w-6xl mx-auto px-4 space-y-2">
+        <p class="font-semibold text-slate-700 dark:text-slate-300">&copy; 2026 Kenangan Manis PPL Informatika &bull; SMA Negeri 4 Yogyakarta</p>
+        <p class="text-[11px] text-slate-400">Dipersembahkan dengan cinta untuk siswa-siswi kelas X-E6 oleh Ilyas Fandhi Anggara, S.Kom (PPG Prajabatan UNY).</p>
+      </div>
+    </footer>
+
+    <!-- MODAL LOADING -->
+    <div id="loadingModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+      <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 max-w-sm w-full border border-slate-200 dark:border-slate-800 text-center space-y-4 shadow-2xl">
+        <div class="w-16 h-16 rounded-full bg-rose-500/10 text-rose-500 flex items-center justify-center text-3xl mx-auto">
+          <i class="fa-solid fa-heart fa-beat"></i>
+        </div>
+        <div class="space-y-1">
+          <h3 class="text-lg font-extrabold text-slate-900 dark:text-white">Mengirimkan Pesan...</h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400">Pesan perpisahanmu sedang dihantarkan ke buku kenangan Pak Ilyas.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL SUKSES PERPISAHAN YANG MENYENTUH -->
+    <div id="successModal" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm hidden flex items-center justify-center p-4">
+      <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 max-w-md w-full border border-slate-200 dark:border-slate-800 text-center space-y-5 shadow-2xl">
+        <div class="w-16 h-16 rounded-full bg-rose-500/10 text-rose-500 border border-rose-500/20 flex items-center justify-center text-3xl mx-auto font-bold animate-bounce">
+          <i class="fa-solid fa-heart"></i>
+        </div>
+        <div class="space-y-1">
+          <h3 class="text-xl font-extrabold text-slate-900 dark:text-white">Pesanmu Berhasil Tersampaikan! 🥺❤️</h3>
+          <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300" id="successDesc">
+            Terima kasih banyak atas pesan manis dan doa tulusmu. Pesan ini akan selalu disimpan oleh Pak Ilyas sebagai kenangan indah di SMAN 4 Yogyakarta.
+          </p>
+        </div>
+
+        <div class="bg-rose-50/60 dark:bg-slate-800/60 rounded-2xl p-4 border border-rose-200 dark:border-slate-700/80 text-left text-xs space-y-2">
+          <div class="flex justify-between items-center text-slate-500 dark:text-slate-400">
+            <span>Pengirim:</span>
+            <span class="font-bold text-rose-600 dark:text-rose-400 font-mono" id="successSender">-</span>
+          </div>
+          <div class="flex justify-between items-center text-slate-500 dark:text-slate-400">
+            <span>Kelas &bull; Presensi:</span>
+            <span class="font-mono font-medium text-slate-800 dark:text-slate-200" id="successClass">-</span>
+          </div>
+          <div class="flex justify-between items-center text-slate-500 dark:text-slate-400">
+            <span>Waktu Kirim:</span>
+            <span class="font-mono text-slate-600 dark:text-slate-300" id="successTimestamp">-</span>
+          </div>
+        </div>
+
+        <div class="p-3 rounded-xl bg-purple-500/10 border border-purple-500/20 text-purple-700 dark:text-purple-300 text-xs font-semibold">
+          "Sukses selalu untuk kalian semua di kelas X-E6! Teruslah bermimpi tinggi dan jangan pernah menyerah. Sampai jumpa di masa depan sebagai orang-orang sukses!" &mdash; Pak Ilyas
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-2 pt-2">
+          <a
+            href="index.html"
+            class="flex-1 py-3 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs sm:text-sm transition-all text-center"
+          >
+            Kembali ke Beranda
+          </a>
+          <button
+            type="button"
+            onclick="document.getElementById('successModal').classList.add('hidden')"
+            class="px-5 py-3 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold text-xs transition-all cursor-pointer"
+          >
+            Tutup
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC PENGIRIMAN & LOCALSTORAGE -->
+    <script>
+      // Endpoint Resmi Google Apps Script (Spreadsheet Guru)
+      const APPS_SCRIPT_SPREADSHEET_URL = "https://script.google.com/macros/s/AKfycbyhDEqKonpEln9DYE7kXDS6mUG9LOdWrAJ7uY0QPgbtpIq00LRNJcBYrSOYzlVSnfy_Ag/exec";
+
+      // Theme Switcher
+      const themeToggleBtn = document.getElementById("themeToggleBtn");
+      if (themeToggleBtn) {
+        themeToggleBtn.addEventListener("click", () => {
+          if (document.documentElement.classList.contains("dark")) {
+            document.documentElement.classList.remove("dark");
+            localStorage.setItem("theme", "light");
+          } else {
+            document.documentElement.classList.add("dark");
+            localStorage.setItem("theme", "dark");
+          }
+        });
+      }
+
+      // Rating Heart Handler
+      const ratingDescriptions = [
+        "⭐ (Biasa Saja)",
+        "⭐⭐ (Cukup Menyenangkan)",
+        "⭐⭐⭐ (Seru & Bermanfaat)",
+        "⭐⭐⭐⭐ (Sangat Menyenangkan & Asyik!)",
+        "⭐⭐⭐⭐⭐ (Guru PPL Paling Terbaik & Menginspirasi! ❤️)"
+      ];
+
+      function setFarewellRating(score) {
+        document.getElementById('farewellRating').value = score;
+        document.getElementById('ratingDescText').innerText = ratingDescriptions[score - 1];
+        const hearts = document.querySelectorAll('#heartContainer .rating-heart');
+        hearts.forEach((heart, index) => {
+          if (index < score) {
+            heart.classList.add('active', 'text-rose-500');
+            heart.classList.remove('text-slate-300', 'dark:text-slate-700');
+          } else {
+            heart.classList.remove('active', 'text-rose-500');
+            heart.classList.add('text-slate-300', 'dark:text-slate-700');
+          }
+        });
+      }
+
+      // Mood Selection Handler
+      function selectFarewellMood(btn, moodValue) {
+        document.querySelectorAll('.mood-card').forEach(b => {
+          b.classList.remove('selected', 'border-rose-500', 'bg-rose-50/40', 'dark:bg-rose-950/20');
+          b.classList.add('border-slate-200', 'dark:border-slate-800', 'bg-slate-50', 'dark:bg-slate-800/40');
+        });
+        btn.classList.add('selected', 'border-rose-500', 'bg-rose-50/40', 'dark:bg-rose-950/20');
+        btn.classList.remove('border-slate-200', 'dark:border-slate-800', 'bg-slate-50', 'dark:bg-slate-800/40');
+        document.getElementById('farewellMood').value = moodValue;
+      }
+
+      // Save Draft
+      function saveFarewellDraft(showAlert = false) {
+        const draft = {
+          nama: document.getElementById('studentName').value,
+          nickname: document.getElementById('studentNickname').value,
+          kelas: document.getElementById('studentClass').value,
+          absen: document.getElementById('studentAbsen').value,
+          kesan_pertama: document.getElementById('kesan_pertama').value,
+          momen_berkesan: document.getElementById('momen_berkesan').value,
+          cara_mengajar: document.getElementById('cara_mengajar').value,
+          saran_guru: document.getElementById('saran_guru').value,
+          pesan_perpisahan: document.getElementById('pesan_perpisahan').value,
+          rating: document.getElementById('farewellRating').value,
+          mood: document.getElementById('farewellMood').value
+        };
+        localStorage.setItem('refleksi_perpisahan_draft', JSON.stringify(draft));
+        if (showAlert) {
+          alert('Draf pesan perpisahanmu berhasil disimpan di perangkat ini.');
+        }
+      }
+
+      // Load Draft
+      function loadFarewellDraft() {
+        try {
+          const raw = localStorage.getItem('refleksi_perpisahan_draft');
+          if (!raw) return;
+          const draft = JSON.parse(raw);
+          if (draft.nama) document.getElementById('studentName').value = draft.nama;
+          if (draft.nickname) document.getElementById('studentNickname').value = draft.nickname;
+          if (draft.kelas) document.getElementById('studentClass').value = draft.kelas;
+          if (draft.absen) document.getElementById('studentAbsen').value = draft.absen;
+          if (draft.kesan_pertama) document.getElementById('kesan_pertama').value = draft.kesan_pertama;
+          if (draft.momen_berkesan) document.getElementById('momen_berkesan').value = draft.momen_berkesan;
+          if (draft.cara_mengajar) document.getElementById('cara_mengajar').value = draft.cara_mengajar;
+          if (draft.saran_guru) document.getElementById('saran_guru').value = draft.saran_guru;
+          if (draft.pesan_perpisahan) document.getElementById('pesan_perpisahan').value = draft.pesan_perpisahan;
+          if (draft.rating) setFarewellRating(parseInt(draft.rating));
+        } catch (e) {
+          console.warn('Gagal memuat draf:', e);
+        }
+      }
+
+      // Submit Form ke Google Spreadsheet
+      async function submitFarewellReflection(event) {
+        event.preventDefault();
+
+        const nama = document.getElementById('studentName').value.trim();
+        const nickname = document.getElementById('studentNickname').value.trim();
+        const kelas = document.getElementById('studentClass').value;
+        const absen = document.getElementById('studentAbsen').value.trim();
+
+        const kesanPertama = document.getElementById('kesan_pertama').value.trim();
+        const momenBerkesan = document.getElementById('momen_berkesan').value.trim();
+        const caraMengajar = document.getElementById('cara_mengajar').value.trim();
+        const saranGuru = document.getElementById('saran_guru').value.trim();
+        const pesanPerpisahan = document.getElementById('pesan_perpisahan').value.trim();
+        const rating = document.getElementById('farewellRating').value;
+        const mood = document.getElementById('farewellMood').value;
+
+        if (!nama || !absen) {
+          alert('Harap lengkapi nama dan nomor presensi terlebih dahulu!');
+          return;
+        }
+
+        saveFarewellDraft(false);
+
+        const loadingModal = document.getElementById('loadingModal');
+        const btnSubmit = document.getElementById('btnSubmitFarewell');
+
+        loadingModal.classList.remove('hidden');
+        if (btnSubmit) {
+          btnSubmit.disabled = true;
+          btnSubmit.classList.add('opacity-60', 'cursor-not-allowed');
+        }
+
+        const payload = {
+          nama: `${nama} (${nickname})`,
+          kelas: kelas,
+          absen: absen,
+          skor: 100, // Tanda partisipasi perpisahan
+          benar: parseInt(rating),
+          salah: 0,
+          total: 5,
+          tipe: "REFLEKSI_PERPISAHAN_PPL",
+          modul: "Perpisahan PPL Informatika SMAN 4 Yogyakarta",
+          mood: mood,
+          rating_bintang: `${rating} Bintang`,
+          kesan_pertama: kesanPertama,
+          momen_paling_berkesan: momenBerkesan,
+          penilaian_mengajar: caraMengajar,
+          saran_untuk_pak_ilyas: saranGuru,
+          pesan_dan_doa_perpisahan: pesanPerpisahan
+        };
+
+        try {
+          await fetch(APPS_SCRIPT_SPREADSHEET_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify(payload),
+            redirect: 'follow'
+          });
+        } catch (e) {
+          console.warn('Koneksi spreadsheet opsional:', e);
+        }
+
+        loadingModal.classList.add('hidden');
+
+        // Tampilkan Modal Sukses
+        const now = new Date();
+        const timeString = now.toLocaleDateString('id-ID', {
+          weekday: 'long',
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        });
+
+        document.getElementById('successSender').innerText = `${nama} ("${nickname}")`;
+        document.getElementById('successClass').innerText = `${kelas} • Presensi ${absen}`;
+        document.getElementById('successTimestamp').innerText = timeString;
+
+        if (btnSubmit) {
+          btnSubmit.innerHTML = '<i class="fa-solid fa-heart mr-2"></i> Pesan Perpisahan Terkirim';
+          btnSubmit.classList.remove('from-rose-600', 'to-purple-600');
+          btnSubmit.classList.add('bg-emerald-600');
+        }
+
+        document.getElementById('successModal').classList.remove('hidden');
+      }
+
+      window.addEventListener('DOMContentLoaded', () => {
+        loadFarewellDraft();
+      });
+    </script>
+  </body>
+</html>

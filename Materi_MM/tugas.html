@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pengumpulan Proyek Praktik Mail Merge — SMAN 4 Yogyakarta</title>
+    <link rel="shortcut icon" href="../images/Logo Patbhe.png" type="image/x-icon" />
+
+    <!-- Anti-FOUC script -->
+    <script>
+      if (
+        localStorage.getItem("theme") === "dark" ||
+        (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches)
+      ) {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
+    </script>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              brandDark: "#0b1120",
+              brandNavy: "#0f172a",
+              brandBlue: "#2563eb",
+              brandCyan: "#06b6d4",
+              brandEmerald: "#059669",
+            },
+            fontFamily: {
+              sans: ["'Plus Jakarta Sans'", "system-ui", "sans-serif"],
+              mono: ["'JetBrains Mono'", "monospace"],
+            },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      .dropzone {
+        border: 2px dashed #cbd5e1;
+        transition: all 0.2s ease;
+      }
+      .dark .dropzone {
+        border-color: #334155;
+      }
+      .dropzone.dragover {
+        border-color: #2563eb;
+        background-color: rgba(37, 99, 235, 0.05);
+      }
+      .dark .dropzone.dragover {
+        border-color: #3b82f6;
+        background-color: rgba(59, 130, 246, 0.1);
+      }
+      .input-custom {
+        width: 100%;
+        background-color: #f8fafc;
+        border: 1.5px solid #cbd5e1;
+        border-radius: 14px;
+        padding: 11px 15px;
+        font-size: 0.875rem;
+        color: #0f172a;
+        outline: none;
+        transition: all 0.2s ease;
+      }
+      .input-custom:focus {
+        border-color: #2563eb;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        background-color: #ffffff;
+      }
+      .dark .input-custom {
+        background-color: #0f172a;
+        border-color: #334155;
+        color: #f8fafc;
+      }
+      .dark .input-custom:focus {
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        background-color: #0b1120;
+      }
+    </style>
+  </head>
+
+  <body class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 font-sans antialiased min-h-screen flex flex-col selection:bg-blue-500 selection:text-white transition-colors duration-200">
+    
+    <!-- Header Navbar Sticky -->
+    <header class="sticky top-0 z-40 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <a
+            href="materi.html#lembarkerja"
+            class="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-300 transition-colors"
+            title="Kembali ke Modul Belajar"
+          >
+            <i class="fa-solid fa-arrow-left text-sm"></i>
+          </a>
+          <div>
+            <span class="text-[10px] font-mono font-bold tracking-wider uppercase text-blue-600 dark:text-blue-400 block">
+              SMAN 4 YOGYAKARTA • INFORMATIKA KELAS X
+            </span>
+            <h1 class="font-extrabold text-sm sm:text-base text-slate-900 dark:text-white leading-tight">
+              Pengumpulan Proyek Praktik Mail Merge
+            </h1>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2.5">
+          <a
+            href="materi.html#lembarkerja"
+            class="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-bold text-slate-700 dark:text-slate-300 transition-all"
+          >
+            <i class="fa-solid fa-book-open text-blue-500"></i>
+            <span>Modul Materi</span>
+          </a>
+
+          <a
+            href="lkpd.html"
+            class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:bg-emerald-100 transition-all"
+          >
+            <i class="fa-solid fa-file-signature"></i>
+            <span>Buka LKPD</span>
+          </a>
+
+          <!-- Theme Toggle Button -->
+          <button
+            id="themeToggleBtn"
+            type="button"
+            class="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-amber-400 flex items-center justify-center transition-all cursor-pointer"
+            aria-label="Ganti Tema"
+            title="Ganti Mode Gelap / Terang"
+          >
+            <i class="fa-solid fa-moon dark:hidden text-xs"></i>
+            <i class="fa-solid fa-sun hidden dark:inline text-xs"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 py-8 sm:py-10 space-y-8">
+      
+      <!-- HERO BANNER PENGUMPULAN TUGAS -->
+      <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-blue-600 via-indigo-600 to-cyan-600 text-white p-6 sm:p-10 shadow-xl shadow-blue-500/15">
+        <div class="absolute -right-12 -top-12 w-64 h-64 bg-white/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -left-12 -bottom-12 w-64 h-64 bg-cyan-400/20 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+          <div class="space-y-3 max-w-2xl">
+            <span class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-mono font-extrabold uppercase bg-white/20 backdrop-blur-md border border-white/30 text-white">
+              <i class="fa-solid fa-cloud-arrow-up"></i> Portofolio Praktik Siswa • Fase E
+            </span>
+            <h2 class="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight leading-tight">
+              Kumpulkan Berkas Praktik Mail Merge
+            </h2>
+            <p class="text-xs sm:text-sm text-blue-100 leading-relaxed">
+              Unggah file hasil integrasi dokumen <strong>Microsoft Word (.docx)</strong>, berkas sumber data <strong>Microsoft Excel (.xlsx)</strong>, serta berkas hasil cetak gabung <strong>PDF (.pdf)</strong> langsung ke Google Drive guru pengampu.
+            </p>
+          </div>
+
+          <div class="bg-white/15 backdrop-blur-md rounded-2xl p-4 border border-white/20 text-xs space-y-2 shrink-0 w-full sm:w-auto">
+            <div class="flex items-center gap-2 font-bold text-white">
+              <i class="fa-solid fa-circle-info text-amber-300"></i> Format File Didukung:
+            </div>
+            <div class="grid grid-cols-2 gap-2 text-[11px] text-blue-100 font-mono">
+              <span class="flex items-center gap-1.5"><i class="fa-solid fa-file-word text-blue-300"></i> Word (.docx)</span>
+              <span class="flex items-center gap-1.5"><i class="fa-solid fa-file-excel text-emerald-300"></i> Excel (.xlsx)</span>
+              <span class="flex items-center gap-1.5"><i class="fa-solid fa-file-pdf text-rose-300"></i> Ekspor PDF</span>
+              <span class="flex items-center gap-1.5"><i class="fa-solid fa-file-zipper text-amber-300"></i> Arsip (.zip)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FORMULIR PENGUMPULAN TUGAS PRAKTIK -->
+      <form id="submissionForm" onsubmit="handleSubmission(event)" class="space-y-8">
+        
+        <!-- BAGIAN 1: IDENTITAS SISWA & PROYEK -->
+        <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-sm space-y-6">
+          <div class="flex items-center gap-3 border-b border-slate-100 dark:border-slate-800 pb-4">
+            <div class="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center text-lg font-bold">
+              <i class="fa-solid fa-user-graduate"></i>
+            </div>
+            <div>
+              <h3 class="text-base sm:text-lg font-black text-slate-900 dark:text-white">
+                1. Identitas Peserta Didik &amp; Proyek
+              </h3>
+              <p class="text-xs text-slate-500 dark:text-slate-400">Pastikan data nama, kelas, dan presensi sesuai dengan presensi sekolah.</p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <!-- Nama Lengkap -->
+            <div class="sm:col-span-2 space-y-1.5">
+              <label for="studentName" class="block text-xs font-bold font-mono text-slate-700 dark:text-slate-300">
+                Nama Lengkap Siswa <span class="text-rose-500">*</span>
+              </label>
+              <input
+                type="text"
+                id="studentName"
+                name="studentName"
+                class="input-custom font-semibold"
+                placeholder="Contoh: Muhammad Ilyas Anggara"
+                required
+              />
+            </div>
+
+            <!-- Kelas & No Presensi -->
+            <div class="grid grid-cols-2 gap-3">
+              <div class="space-y-1.5">
+                <label for="studentClass" class="block text-xs font-bold font-mono text-slate-700 dark:text-slate-300">
+                  Kelas <span class="text-rose-500">*</span>
+                </label>
+                <select id="studentClass" name="studentClass" class="input-custom font-bold font-mono cursor-pointer">
+                  <option value="X-E6" selected>X-E6</option>
+                  <option value="X-E1">X-E1</option>
+                  <option value="X-E2">X-E2</option>
+                  <option value="X-E3">X-E3</option>
+                  <option value="X-E4">X-E4</option>
+                  <option value="X-E5">X-E5</option>
+                  <option value="X-E7">X-E7</option>
+                  <option value="X-E8">X-E8</option>
+                </select>
+              </div>
+
+              <div class="space-y-1.5">
+                <label for="studentAbsen" class="block text-xs font-bold font-mono text-slate-700 dark:text-slate-300">
+                  No. Presensi <span class="text-rose-500">*</span>
+                </label>
+                <input
+                  type="number"
+                  id="studentAbsen"
+                  name="studentAbsen"
+                  min="1"
+                  max="50"
+                  class="input-custom font-bold font-mono text-center"
+                  placeholder="01"
+                  required
+                />
+              </div>
+            </div>
+
+            <!-- Topik Proyek yang Dikerjakan -->
+            <div class="sm:col-span-3 space-y-1.5">
+              <label for="projectType" class="block text-xs font-bold font-mono text-slate-700 dark:text-slate-300">
+                Jenis / Studi Kasus Dokumen yang Dibuat <span class="text-rose-500">*</span>
+              </label>
+              <select id="projectType" name="projectType" class="input-custom font-semibold cursor-pointer">
+                <option value="Surat Undangan Pembagian Rapor Siswa SMAN 4" selected>
+                  Studi Kasus 1: Surat Undangan Pengambilan Rapor SMAN 4 Yogyakarta (Sesuai Panduan Modul)
+                </option>
+                <option value="Sertifikat / Piagam Penghargaan Lomba Sekolah">
+                  Studi Kasus 2: Piagam Penghargaan &amp; Sertifikat Juara Lomba Sekolah (360 Siswa)
+                </option>
+                <option value="Kartu Tanda Peserta Ujian / ID Card Siswa">
+                  Studi Kasus 3: Kartu Peserta Ujian / ID Card Siswa Massal
+                </option>
+                <option value="Label Stiker Undangan Korespondensi 103">
+                  Studi Kasus 4: Label Undangan Tom &amp; Jerry No. 103 (12 Kotak / Lembar)
+                </option>
+                <option value="Proyek Mandiri Kreasi Siswa">
+                  Studi Kasus 5: Dokumen Lain (Kreasi Proyek Mandiri Terintegrasi)
+                </option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- BAGIAN 2: UPLOAD BERKAS PRAKTIK -->
+        <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-sm space-y-6">
+          <div class="flex items-center justify-between flex-wrap gap-2 border-b border-slate-100 dark:border-slate-800 pb-4">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 flex items-center justify-center text-lg font-bold">
+                <i class="fa-solid fa-folder-open"></i>
+              </div>
+              <div>
+                <h3 class="text-base sm:text-lg font-black text-slate-900 dark:text-white">
+                  2. Unggah Berkas Praktik Mail Merge
+                </h3>
+                <p class="text-xs text-slate-500 dark:text-slate-400">Pilih salah satu metode pengumpulan berkas yang paling mudah bagi Anda.</p>
+              </div>
+            </div>
+
+            <span class="text-xs font-mono font-bold px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-800">
+              Maks. 25 MB per Berkas
+            </span>
+          </div>
+
+          <!-- Pilihan Tab Metode Pengumpulan: Langsung Upload / Tautan Google Drive -->
+          <div class="flex items-center gap-2 p-1 rounded-2xl bg-slate-100 dark:bg-slate-800/80 max-w-md">
+            <button
+              type="button"
+              onclick="switchUploadMethod('file')"
+              id="tabUploadFile"
+              class="flex-1 py-2 px-3 rounded-xl text-xs font-bold transition-all bg-white dark:bg-slate-900 text-blue-600 dark:text-blue-400 shadow-sm"
+            >
+              <i class="fa-solid fa-file-arrow-up mr-1.5"></i> Unggah File Langsung
+            </button>
+            <button
+              type="button"
+              onclick="switchUploadMethod('link')"
+              id="tabUploadLink"
+              class="flex-1 py-2 px-3 rounded-xl text-xs font-bold transition-all text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+            >
+              <i class="fa-brands fa-google-drive mr-1.5"></i> Tautan Google Drive
+            </button>
+          </div>
+
+          <!-- KONTEN METODE 1: UPLOAD BERKAS LANGSUNG (DEFAULT) -->
+          <div id="methodFileSection" class="space-y-5">
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+              Silakan unggah <strong>minimal 1 file berkas utama</strong> (Dokumen Word, Data Excel, PDF Ekspor, atau Arsip ZIP gabungan):
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              
+              <!-- SLOT 1: DOKUMEN WORD (.docx) -->
+              <div class="dropzone rounded-2xl p-4 text-center cursor-pointer hover:border-blue-500 transition-all bg-slate-50/50 dark:bg-slate-800/30 flex flex-col justify-between" id="dropzoneWord" onclick="document.getElementById('fileWord').click()">
+                <input type="file" id="fileWord" accept=".docx,.doc" class="hidden" onchange="handleFileSelected(this, 'statusWord', 'iconWord')" />
+                <div class="space-y-2 py-4">
+                  <div class="w-12 h-12 rounded-2xl bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 flex items-center justify-center text-xl mx-auto" id="iconWord">
+                    <i class="fa-solid fa-file-word"></i>
+                  </div>
+                  <div>
+                    <h4 class="text-xs font-bold text-slate-900 dark:text-white">1. Dokumen Word Master</h4>
+                    <p class="text-[10px] text-slate-500 dark:text-slate-400 font-mono">Format: .docx atau .doc</p>
+                  </div>
+                </div>
+                <div id="statusWord" class="mt-2 text-[11px] font-semibold text-slate-500 bg-white dark:bg-slate-900 py-1.5 px-2.5 rounded-xl border border-slate-200 dark:border-slate-800 truncate">
+                  <i class="fa-solid fa-plus mr-1"></i> Pilih Berkas Word
+                </div>
+              </div>
+
+              <!-- SLOT 2: BASIS DATA EXCEL (.xlsx) -->
+              <div class="dropzone rounded-2xl p-4 text-center cursor-pointer hover:border-emerald-500 transition-all bg-slate-50/50 dark:bg-slate-800/30 flex flex-col justify-between" id="dropzoneExcel" onclick="document.getElementById('fileExcel').click()">
+                <input type="file" id="fileExcel" accept=".xlsx,.xls,.csv" class="hidden" onchange="handleFileSelected(this, 'statusExcel', 'iconExcel')" />
+                <div class="space-y-2 py-4">
+                  <div class="w-12 h-12 rounded-2xl bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-xl mx-auto" id="iconExcel">
+                    <i class="fa-solid fa-file-excel"></i>
+                  </div>
+                  <div>
+                    <h4 class="text-xs font-bold text-slate-900 dark:text-white">2. Sumber Data Excel</h4>
+                    <p class="text-[10px] text-slate-500 dark:text-slate-400 font-mono">Format: .xlsx, .xls, .csv</p>
+                  </div>
+                </div>
+                <div id="statusExcel" class="mt-2 text-[11px] font-semibold text-slate-500 bg-white dark:bg-slate-900 py-1.5 px-2.5 rounded-xl border border-slate-200 dark:border-slate-800 truncate">
+                  <i class="fa-solid fa-plus mr-1"></i> Pilih Berkas Excel
+                </div>
+              </div>
+
+              <!-- SLOT 3: HASIL CETAK PDF (.pdf) -->
+              <div class="dropzone rounded-2xl p-4 text-center cursor-pointer hover:border-rose-500 transition-all bg-slate-50/50 dark:bg-slate-800/30 flex flex-col justify-between" id="dropzonePdf" onclick="document.getElementById('filePdf').click()">
+                <input type="file" id="filePdf" accept=".pdf" class="hidden" onchange="handleFileSelected(this, 'statusPdf', 'iconPdf')" />
+                <div class="space-y-2 py-4">
+                  <div class="w-12 h-12 rounded-2xl bg-rose-100 dark:bg-rose-900/40 text-rose-600 dark:text-rose-400 flex items-center justify-center text-xl mx-auto" id="iconPdf">
+                    <i class="fa-solid fa-file-pdf"></i>
+                  </div>
+                  <div>
+                    <h4 class="text-xs font-bold text-slate-900 dark:text-white">3. Hasil Cetak PDF</h4>
+                    <p class="text-[10px] text-slate-500 dark:text-slate-400 font-mono">Format: .pdf (Finish &amp; Merge)</p>
+                  </div>
+                </div>
+                <div id="statusPdf" class="mt-2 text-[11px] font-semibold text-slate-500 bg-white dark:bg-slate-900 py-1.5 px-2.5 rounded-xl border border-slate-200 dark:border-slate-800 truncate">
+                  <i class="fa-solid fa-plus mr-1"></i> Pilih Berkas PDF
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Alternatif Arsip ZIP Gabungan -->
+            <div class="p-3.5 rounded-2xl bg-slate-100 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-500 flex items-center justify-center font-bold text-sm shrink-0">
+                  <i class="fa-solid fa-file-zipper"></i>
+                </div>
+                <div>
+                  <span class="font-bold text-slate-900 dark:text-white block">Punya Berkas Gabungan (.ZIP / .RAR)?</span>
+                  <span class="text-slate-500 dark:text-slate-400 text-[11px]">Anda juga dapat mengemas seluruh berkas Word + Excel + PDF dalam 1 arsip zip.</span>
+                </div>
+              </div>
+              <label class="px-3 py-1.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer transition-all shrink-0">
+                <i class="fa-solid fa-paperclip mr-1"></i> Pilih Berkas ZIP
+                <input type="file" id="fileZip" accept=".zip,.rar,.7z" class="hidden" onchange="handleZipSelected(this)" />
+              </label>
+            </div>
+            <div id="zipStatusDisplay" class="hidden text-xs font-mono font-bold text-emerald-600 dark:text-emerald-400 px-3"></div>
+          </div>
+
+          <!-- KONTEN METODE 2: TAUTAN GOOGLE DRIVE (ALTERNATIF) -->
+          <div id="methodLinkSection" class="hidden space-y-3">
+            <div class="p-4 rounded-2xl bg-blue-50/50 dark:bg-blue-950/20 border border-blue-200/60 dark:border-blue-900/40 text-xs text-blue-800 dark:text-blue-300 space-y-1">
+              <p class="font-bold flex items-center gap-1.5">
+                <i class="fa-solid fa-link"></i> Petunjuk Tautan Google Drive / Cloud:
+              </p>
+              <p class="text-[11px] leading-relaxed text-blue-700 dark:text-blue-300/80">
+                Pastikan akses berbagi tautan diatur ke <strong>"Siapa saja yang memiliki link dapat melihat" (Anyone with the link can view)</strong> agar guru dapat membuka dan memeriksa berkas Anda.
+              </p>
+            </div>
+
+            <div class="space-y-1.5">
+              <label for="driveLinkInput" class="block text-xs font-bold font-mono text-slate-700 dark:text-slate-300">
+                Tautan Berkas / Folder Google Drive:
+              </label>
+              <div class="relative">
+                <span class="absolute left-3.5 top-3.5 text-slate-400">
+                  <i class="fa-brands fa-google-drive"></i>
+                </span>
+                <input
+                  type="url"
+                  id="driveLinkInput"
+                  name="driveLink"
+                  class="input-custom pl-10 text-xs font-mono"
+                  placeholder="https://drive.google.com/drive/folders/xxxx-xxxx?usp=sharing"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- CATATAN REFLEKSI / KETERANGAN TAMBAHAN SISWA -->
+          <div class="pt-3 border-t border-slate-100 dark:border-slate-800 space-y-1.5">
+            <label for="studentNotes" class="block text-xs font-bold font-mono text-slate-700 dark:text-slate-300">
+              Refleksi Praktik &amp; Catatan Tambahan (Opsional):
+            </label>
+            <textarea
+              id="studentNotes"
+              name="studentNotes"
+              rows="3"
+              class="input-custom text-xs leading-relaxed"
+              placeholder="Ceritakan pengalamanmu: apakah kamu mengalami kendala saat format tanggal, switch code rupiah, atau aturan IF? Bagaimana caramu menyelesaikannya?"
+            ></textarea>
+          </div>
+        </div>
+
+        <!-- BAGIAN 3: CHECKLIST PRA-PENGUMPULAN -->
+        <div class="bg-amber-50/60 dark:bg-amber-950/20 rounded-3xl p-6 border border-amber-200/70 dark:border-amber-900/40 space-y-3">
+          <div class="flex items-center gap-2 font-bold text-amber-900 dark:text-amber-300 text-xs sm:text-sm">
+            <i class="fa-solid fa-list-check text-amber-600 dark:text-amber-400"></i>
+            <span>Checklist Verifikasi Kerapian Berkas Sebelum Dikirim:</span>
+          </div>
+          <ul class="text-xs text-amber-800/90 dark:text-amber-300/80 space-y-1.5 list-disc list-inside leading-relaxed pl-1">
+            <li>Tabel Excel telah memenuhi 4 Aturan Emas: Header di Baris 1, tanpa spasi kosong, dan tanpa Merged Cell.</li>
+            <li>Nama penanda field pada naskah Word telah terhubung sempurna dan diuji lewat tombol <em>Preview Results</em>.</li>
+            <li>Data uji coba berisi minimal 10 penerima yang valid dan berbeda.</li>
+          </ul>
+        </div>
+
+        <!-- TOMBOL AKSI PENGUMPULAN -->
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2">
+          <a
+            href="materi.html#lembarkerja"
+            class="w-full sm:w-auto px-6 py-3.5 rounded-2xl bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs sm:text-sm transition-all text-center"
+          >
+            <i class="fa-solid fa-arrow-left mr-2"></i> Kembali ke Modul
+          </a>
+
+          <div class="flex items-center gap-3 w-full sm:w-auto">
+            <button
+              type="button"
+              onclick="saveDraft(true)"
+              class="flex-1 sm:flex-initial px-5 py-3.5 rounded-2xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs sm:text-sm transition-all border border-slate-300 dark:border-slate-700 cursor-pointer flex items-center justify-center gap-2"
+            >
+              <i class="fa-solid fa-floppy-disk"></i>
+              <span>Simpan Draf</span>
+            </button>
+
+            <button
+              type="submit"
+              id="btnSubmitProject"
+              class="flex-1 sm:flex-initial px-8 py-3.5 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-extrabold text-xs sm:text-sm shadow-xl shadow-blue-500/25 transition-all cursor-pointer flex items-center justify-center gap-2"
+            >
+              <i class="fa-solid fa-paper-plane"></i>
+              <span>Kirimkan Hasil Kerja ke Guru</span>
+            </button>
+          </div>
+        </div>
+
+      </form>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-200 dark:border-slate-800 py-8 text-center text-xs text-slate-500 dark:text-slate-400 mt-12">
+      <div class="max-w-6xl mx-auto px-4 space-y-2">
+        <p>&copy; 2026 RuangInformatika • SMA Negeri 4 Yogyakarta. Modul Integrasi Konten Aplikasi Perkantoran.</p>
+        <p class="text-[11px] text-slate-400">Guru Pengampu: Ilyas Fandhi Anggara, S.Kom • Mata Pelajaran Informatika Fase E.</p>
+      </div>
+    </footer>
+
+    <!-- MODAL LOADING PROGRES PENGUNGGAHAN -->
+    <div id="loadingModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+      <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 max-w-sm w-full border border-slate-200 dark:border-slate-800 text-center space-y-4 shadow-2xl">
+        <div class="w-16 h-16 rounded-full bg-blue-500/10 text-blue-500 flex items-center justify-center text-3xl mx-auto">
+          <i class="fa-solid fa-spinner fa-spin"></i>
+        </div>
+        <div class="space-y-1">
+          <h3 class="text-lg font-extrabold text-slate-900 dark:text-white" id="uploadStatusTitle">Menyiapkan Berkas...</h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400" id="uploadStatusDesc">Memproses data pengerjaan proyek Mail Merge Anda.</p>
+        </div>
+        <!-- Progress Bar -->
+        <div class="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2 overflow-hidden border border-slate-200 dark:border-slate-700">
+          <div id="uploadProgressBar" class="bg-gradient-to-r from-blue-600 to-indigo-600 h-2 rounded-full transition-all duration-300" style="width: 25%"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL SUKSES PENGUMPULAN -->
+    <div id="successModal" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm hidden flex items-center justify-center p-4">
+      <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 max-w-md w-full border border-slate-200 dark:border-slate-800 text-center space-y-5 shadow-2xl">
+        <div class="w-16 h-16 rounded-full bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 flex items-center justify-center text-3xl mx-auto font-bold">
+          <i class="fa-solid fa-circle-check"></i>
+        </div>
+        <div class="space-y-1">
+          <h3 class="text-xl font-extrabold text-slate-900 dark:text-white">Proyek Berhasil Dikumpulkan!</h3>
+          <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300" id="successStudentDesc">
+            Berkas kerja Mail Merge Anda telah tercatat resmi di sistem dan tersimpan di Google Drive guru.
+          </p>
+        </div>
+
+        <!-- Rincian Berkas yang Dikumpulkan -->
+        <div class="bg-slate-50 dark:bg-slate-800/60 rounded-2xl p-4 border border-slate-200 dark:border-slate-700/80 text-left text-xs space-y-2">
+          <div class="flex justify-between items-center text-slate-500 dark:text-slate-400">
+            <span>Status Pengumpulan:</span>
+            <span class="font-bold text-emerald-600 dark:text-emerald-400 font-mono">TERKIRIM</span>
+          </div>
+          <div class="flex justify-between items-center text-slate-500 dark:text-slate-400">
+            <span>Waktu Kumpul:</span>
+            <span class="font-mono font-medium text-slate-800 dark:text-slate-200" id="successTimestamp">-</span>
+          </div>
+          <div class="border-t border-slate-200 dark:border-slate-700 pt-2 space-y-1" id="successFileList">
+            <!-- Diinjeksi JS -->
+          </div>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-2 pt-2">
+          <a
+            href="materi.html#lembarkerja"
+            class="flex-1 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs sm:text-sm transition-all text-center"
+          >
+            Kembali ke Modul
+          </a>
+          <button
+            type="button"
+            onclick="document.getElementById('successModal').classList.add('hidden')"
+            class="px-5 py-3 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold text-xs transition-all cursor-pointer"
+          >
+            Tutup
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC PENGUMPULAN & SINKRONISASI DRIVE -->
+    <script>
+      // Endpoint Resmi Google Apps Script (Drive & Spreadsheet)
+      const APPS_SCRIPT_DRIVE_URL = "https://script.google.com/macros/s/AKfycbyBdHGvteALdyfm5kvMlinXuOzMUrcBiJHA95wkqDZrYnWskPv-z68KPgtLn9gkETPa/exec";
+      const APPS_SCRIPT_SPREADSHEET_URL = "https://script.google.com/macros/s/AKfycbzEbjK6lYce8AjWJAta1iKWlulUgdcFkfJjs2c-4JynxQpvxjmillMjd3ZxEgRZkq1sYA/exec";
+
+      let currentMethod = 'file'; // 'file' atau 'link'
+
+      // Toggle Theme
+      const themeToggleBtn = document.getElementById("themeToggleBtn");
+      if (themeToggleBtn) {
+        themeToggleBtn.addEventListener("click", () => {
+          if (document.documentElement.classList.contains("dark")) {
+            document.documentElement.classList.remove("dark");
+            localStorage.setItem("theme", "light");
+          } else {
+            document.documentElement.classList.add("dark");
+            localStorage.setItem("theme", "dark");
+          }
+        });
+      }
+
+      // Ganti Metode Upload
+      function switchUploadMethod(method) {
+        currentMethod = method;
+        const btnFile = document.getElementById('tabUploadFile');
+        const btnLink = document.getElementById('tabUploadLink');
+        const secFile = document.getElementById('methodFileSection');
+        const secLink = document.getElementById('methodLinkSection');
+
+        if (method === 'file') {
+          btnFile.className = "flex-1 py-2 px-3 rounded-xl text-xs font-bold transition-all bg-white dark:bg-slate-900 text-blue-600 dark:text-blue-400 shadow-sm";
+          btnLink.className = "flex-1 py-2 px-3 rounded-xl text-xs font-bold transition-all text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white";
+          secFile.classList.remove('hidden');
+          secLink.classList.add('hidden');
+        } else {
+          btnLink.className = "flex-1 py-2 px-3 rounded-xl text-xs font-bold transition-all bg-white dark:bg-slate-900 text-blue-600 dark:text-blue-400 shadow-sm";
+          btnFile.className = "flex-1 py-2 px-3 rounded-xl text-xs font-bold transition-all text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white";
+          secLink.classList.remove('hidden');
+          secFile.classList.add('hidden');
+        }
+      }
+
+      // Handler Pemilihan File Individual
+      function handleFileSelected(input, statusId, iconId) {
+        const file = input.files[0];
+        const statusEl = document.getElementById(statusId);
+        const iconEl = document.getElementById(iconId);
+
+        if (file) {
+          const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2);
+          statusEl.innerHTML = `<i class="fa-solid fa-check-circle text-emerald-500 mr-1"></i> ${file.name} (${fileSizeMB} MB)`;
+          statusEl.classList.remove('text-slate-500');
+          statusEl.classList.add('text-emerald-600', 'dark:text-emerald-400', 'font-bold');
+        } else {
+          statusEl.innerHTML = `<i class="fa-solid fa-plus mr-1"></i> Pilih Berkas`;
+          statusEl.classList.remove('text-emerald-600', 'dark:text-emerald-400', 'font-bold');
+          statusEl.classList.add('text-slate-500');
+        }
+      }
+
+      // Handler Pemilihan File ZIP
+      function handleZipSelected(input) {
+        const file = input.files[0];
+        const display = document.getElementById('zipStatusDisplay');
+        if (file) {
+          const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2);
+          display.innerHTML = `<i class="fa-solid fa-check-circle mr-1.5"></i> Arsip Terpilih: <strong>${file.name}</strong> (${fileSizeMB} MB)`;
+          display.classList.remove('hidden');
+        } else {
+          display.classList.add('hidden');
+        }
+      }
+
+      // Drag & Drop Listeners pada Dropzone
+      ['dropzoneWord', 'dropzoneExcel', 'dropzonePdf'].forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        ['dragenter', 'dragover'].forEach(name => {
+          el.addEventListener(name, (e) => {
+            e.preventDefault();
+            el.classList.add('dragover');
+          });
+        });
+        ['dragleave', 'drop'].forEach(name => {
+          el.addEventListener(name, (e) => {
+            e.preventDefault();
+            el.classList.remove('dragover');
+          });
+        });
+        el.addEventListener('drop', (e) => {
+          const dt = e.dataTransfer;
+          const files = dt.files;
+          if (files.length > 0) {
+            const input = el.querySelector('input[type="file"]');
+            if (input) {
+              input.files = files;
+              input.dispatchEvent(new Event('change'));
+            }
+          }
+        });
+      });
+
+      // Konversi File ke Base64
+      function fileToBase64(file) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.readAsDataURL(file);
+          reader.onload = () => {
+            const res = reader.result;
+            const base64 = res.split(',')[1];
+            resolve(base64);
+          };
+          reader.onerror = (error) => reject(error);
+        });
+      }
+
+      // Simpan Draf ke LocalStorage
+      function saveDraft(showAlert = false) {
+        const data = {
+          nama: document.getElementById('studentName').value,
+          kelas: document.getElementById('studentClass').value,
+          absen: document.getElementById('studentAbsen').value,
+          projectType: document.getElementById('projectType').value,
+          notes: document.getElementById('studentNotes').value,
+          driveLink: document.getElementById('driveLinkInput').value
+        };
+        localStorage.setItem('mm_proyek_draft', JSON.stringify(data));
+        if (showAlert) {
+          alert('Draf pengerjaan identitas & catatan berhasil disimpan di perangkat ini.');
+        }
+      }
+
+      // Muat Draf dari LocalStorage
+      function loadDraft() {
+        try {
+          const raw = localStorage.getItem('mm_proyek_draft');
+          if (!raw) return;
+          const data = JSON.parse(raw);
+          if (data.nama) document.getElementById('studentName').value = data.nama;
+          if (data.kelas) document.getElementById('studentClass').value = data.kelas;
+          if (data.absen) document.getElementById('studentAbsen').value = data.absen;
+          if (data.projectType) document.getElementById('projectType').value = data.projectType;
+          if (data.notes) document.getElementById('studentNotes').value = data.notes;
+          if (data.driveLink) document.getElementById('driveLinkInput').value = data.driveLink;
+        } catch (e) {
+          console.warn('Gagal memuat draf:', e);
+        }
+      }
+
+      // PENGIRIMAN DATA FORM KE GOOGLE DRIVE & SPREADSHEET
+      async function handleSubmission(event) {
+        event.preventDefault();
+
+        const nama = document.getElementById('studentName').value.trim();
+        const kelas = document.getElementById('studentClass').value;
+        const absen = document.getElementById('studentAbsen').value.trim();
+        const projectType = document.getElementById('projectType').value;
+        const notes = document.getElementById('studentNotes').value.trim();
+        const driveLink = document.getElementById('driveLinkInput').value.trim();
+
+        const fileWord = document.getElementById('fileWord').files[0];
+        const fileExcel = document.getElementById('fileExcel').files[0];
+        const filePdf = document.getElementById('filePdf').files[0];
+        const fileZip = document.getElementById('fileZip').files[0];
+
+        // Validasi: Harus ada minimal 1 file terunggah ATAU ada link Google Drive
+        const hasFile = fileWord || fileExcel || filePdf || fileZip;
+        if (!hasFile && !driveLink) {
+          alert('Harap unggah minimal 1 berkas praktik (Word/Excel/PDF/ZIP) ATAU cantumkan tautan Google Drive Anda!');
+          return;
+        }
+
+        saveDraft(false);
+
+        // Modal Loading
+        const loadingModal = document.getElementById('loadingModal');
+        const progressBar = document.getElementById('uploadProgressBar');
+        const statusTitle = document.getElementById('uploadStatusTitle');
+        const statusDesc = document.getElementById('uploadStatusDesc');
+        const btnSubmit = document.getElementById('btnSubmitProject');
+
+        loadingModal.classList.remove('hidden');
+        progressBar.style.width = '20%';
+        statusTitle.innerText = 'Mempersiapkan Berkas...';
+        statusDesc.innerText = 'Mengenkripsi dan menyusun berkas praktik proyek Anda.';
+
+        if (btnSubmit) {
+          btnSubmit.disabled = true;
+          btnSubmit.classList.add('opacity-60', 'cursor-not-allowed');
+        }
+
+        try {
+          const uploadedFileNames = [];
+          const cleanNama = nama.replace(/[^a-zA-Z0-9_\s]/g, '').replace(/\s+/g, '_');
+
+          // Kumpulkan file yang akan dikirim ke Google Drive
+          const filesToSend = [];
+          if (fileWord) filesToSend.push({ file: fileWord, tag: 'Word' });
+          if (fileExcel) filesToSend.push({ file: fileExcel, tag: 'Excel' });
+          if (filePdf) filesToSend.push({ file: filePdf, tag: 'PDF' });
+          if (fileZip) filesToSend.push({ file: fileZip, tag: 'ZIP' });
+
+          // Kirim berkas-berkas ke Google Drive via Apps Script Web App
+          for (let i = 0; i < filesToSend.length; i++) {
+            const item = filesToSend[i];
+            const originalExt = item.file.name.split('.').pop();
+            const customFileName = `PROYEK_MM_${kelas}_${absen}_${cleanNama}_${item.tag}.${originalExt}`;
+
+            progressBar.style.width = `${30 + (i + 1) * 20}%`;
+            statusTitle.innerText = `Mengunggah Berkas ${i + 1} dari ${filesToSend.length}...`;
+            statusDesc.innerText = `Mengirimkan ${customFileName} ke Google Drive Guru.`;
+
+            // Baca Base64
+            const base64Data = await fileToBase64(item.file);
+
+            const payloadDrive = {
+              nama: nama,
+              kelas: kelas,
+              absen: absen,
+              proyek: projectType,
+              fileName: customFileName,
+              pdfBase64: base64Data,
+              fileBase64: base64Data,
+              mimeType: item.file.type || 'application/octet-stream',
+              catatan: notes,
+              driveLink: driveLink
+            };
+
+            await fetch(APPS_SCRIPT_DRIVE_URL, {
+              method: 'POST',
+              headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+              body: JSON.stringify(payloadDrive),
+              redirect: 'follow'
+            });
+
+            uploadedFileNames.push(`${customFileName} (${(item.file.size / (1024 * 1024)).toFixed(2)} MB)`);
+          }
+
+          // Catat Rekapitulasi ke Google Spreadsheet Guru
+          progressBar.style.width = '90%';
+          statusTitle.innerText = 'Mencatat Rekapitulasi Guru...';
+          statusDesc.innerText = 'Menyimpan tanda terima pengumpulan ke Spreadsheet guru pengampu.';
+
+          const payloadSpreadsheet = {
+            nama: nama,
+            kelas: kelas,
+            absen: absen,
+            skor: 100, // Tanda kumpul portofolio
+            benar: filesToSend.length,
+            salah: 0,
+            total: filesToSend.length,
+            tipe: "PENGUMPULAN_PROYEK_MM",
+            proyek: projectType,
+            berkas_list: uploadedFileNames.join('; ') || 'Melalui Tautan Google Drive',
+            drive_link: driveLink || '-',
+            catatan: notes || '-'
+          };
+
+          try {
+            await fetch(APPS_SCRIPT_SPREADSHEET_URL, {
+              method: 'POST',
+              headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+              body: JSON.stringify(payloadSpreadsheet),
+              redirect: 'follow'
+            });
+          } catch (e) {
+            console.warn('Pencatatan spreadsheet opsional:', e);
+          }
+
+          progressBar.style.width = '100%';
+          loadingModal.classList.add('hidden');
+
+          // Tampilkan Modal Sukses
+          const now = new Date();
+          const timeString = now.toLocaleDateString('id-ID', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+          });
+
+          document.getElementById('successStudentDesc').innerText =
+            `Pengerjaan atas nama ${nama} (${kelas} - No. Presensi ${absen}) untuk "${projectType}" berhasil dikumpulkan secara resmi.`;
+          document.getElementById('successTimestamp').innerText = timeString;
+
+          const fileListContainer = document.getElementById('successFileList');
+          fileListContainer.innerHTML = '';
+          if (uploadedFileNames.length > 0) {
+            uploadedFileNames.forEach(fn => {
+              const div = document.createElement('div');
+              div.className = 'flex items-center gap-1.5 text-slate-700 dark:text-slate-200 font-mono text-[11px]';
+              div.innerHTML = `<i class="fa-solid fa-file-check text-emerald-500"></i> ${fn}`;
+              fileListContainer.appendChild(div);
+            });
+          }
+          if (driveLink) {
+            const divLink = document.createElement('div');
+            divLink.className = 'text-blue-600 dark:text-blue-400 font-mono text-[11px] truncate';
+            divLink.innerHTML = `<i class="fa-solid fa-link mr-1"></i> Tautan: ${driveLink}`;
+            fileListContainer.appendChild(divLink);
+          }
+
+          if (btnSubmit) {
+            btnSubmit.innerHTML = '<i class="fa-solid fa-check mr-2"></i> Tugas Berhasil Terkirim';
+            btnSubmit.classList.remove('from-blue-600', 'to-indigo-600');
+            btnSubmit.classList.add('bg-emerald-600');
+          }
+
+          document.getElementById('successModal').classList.remove('hidden');
+
+        } catch (err) {
+          console.error('Error saat pengumpulan:', err);
+          loadingModal.classList.add('hidden');
+          alert(`Pemberitahuan: Terjadi kendala koneksi saat mengirim berkas (${err.message}).\n\nJangan khawatir, draf isian Anda aman tersimpan. Silakan coba klik tombol kirim kembali atau gunakan opsi "Tautan Google Drive" sebagai alternatif.`);
+          if (btnSubmit) {
+            btnSubmit.disabled = false;
+            btnSubmit.classList.remove('opacity-60', 'cursor-not-allowed');
+          }
+        }
+      }
+
+      window.addEventListener('DOMContentLoaded', () => {
+        loadDraft();
+      });
+    </script>
+  </body>
+</html>

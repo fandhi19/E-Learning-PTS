@@ -293,6 +293,24 @@
         color: #2563eb;
         border-color: rgba(37, 99, 235, 0.3);
       }
+    .lk-posttest {
+        --lk-accent: #2563eb;
+        --lk-accent-gradient: linear-gradient(135deg, #3b82f6, #1d4ed8);
+      }
+      .lk-posttest .lk-card-badge {
+        background: rgba(37, 99, 235, 0.12);
+        color: #2563eb;
+        border-color: rgba(37, 99, 235, 0.3);
+      }
+      .lk-tugas {
+        --lk-accent: #0284c7;
+        --lk-accent-gradient: linear-gradient(135deg, #0284c7, #0369a1);
+      }
+      .lk-tugas .lk-card-badge {
+        background: rgba(2, 132, 199, 0.12);
+        color: #0284c7;
+        border-color: rgba(2, 132, 199, 0.3);
+      }
     </style>
   </head>
 
@@ -1941,40 +1959,58 @@
           </div>
 
           <!-- Card Grid (2 Card Buttons: Lembar Kerja & Post Test) -->
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
-            <!-- Card 1: LKPD -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
+            <!-- Card 1: LKPD Digital -->
             <a href="lkpd.html" class="lk-card lk-lkpd group">
-              <span class="lk-card-badge">Langkah 1 • Praktik</span>
+              <span class="lk-card-badge">Tahap 1 • Analisis</span>
               <div class="lk-card-icon">
                 <i class="fa-solid fa-clipboard-list"></i>
               </div>
               <div>
                 <h4 class="lk-card-title">Lembar Kerja (LKPD)</h4>
-                <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 font-mono font-medium">Proyek Digital Mail Merge</p>
+                <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 font-mono font-medium">Teori, Data &amp; Logika</p>
               </div>
               <p class="lk-card-desc">
-                Selesaikan misi praktik korespondensi massal: integrasikan tabel data Excel dengan surat undangan resmi dan piagam kejuaraan digital, sisipkan Merge Field, serta kumpulkan laporan hasil karyamu secara digital.
+                Kerjakan analisis komponen dokumen master, audit 4 aturan emas tabel Excel Doni, logika Rules If-Else, switch code tanggal/rupiah, dan diagnosis masalah.
               </p>
               <span class="lk-card-cta">
-                Buka Lembar Kerja (LKPD) <i class="fa-solid fa-arrow-right"></i>
+                Buka LKPD Digital <i class="fa-solid fa-arrow-right"></i>
               </span>
             </a>
 
-            <!-- Card 2: Post Test -->
+            <!-- Card 2: Pengumpulan Proyek Praktik (BARU) -->
+            <a href="tugas.html" class="lk-card lk-tugas group">
+              <span class="lk-card-badge">Tahap 2 • Portofolio</span>
+              <div class="lk-card-icon">
+                <i class="fa-solid fa-cloud-arrow-up"></i>
+              </div>
+              <div>
+                <h4 class="lk-card-title">Kumpul Proyek Praktik</h4>
+                <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 font-mono font-medium">Unggah Berkas Mail Merge</p>
+              </div>
+              <p class="lk-card-desc">
+                Kumpulkan file hasil kerja praktik komputermu: Dokumen Word (.docx), Data Excel (.xlsx), atau PDF Cetak Gabung (.pdf) langsung ke Google Drive guru.
+              </p>
+              <span class="lk-card-cta">
+                Unggah Berkas Proyek <i class="fa-solid fa-arrow-right"></i>
+              </span>
+            </a>
+
+            <!-- Card 3: Post Test Resmi -->
             <a href="post.html" class="lk-card lk-posttest group">
-              <span class="lk-card-badge">Langkah 2 • Evaluasi</span>
+              <span class="lk-card-badge">Tahap 3 • Evaluasi</span>
               <div class="lk-card-icon">
                 <i class="fa-solid fa-clipboard-check"></i>
               </div>
               <div>
                 <h4 class="lk-card-title">Post Test Resmi</h4>
-                <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 font-mono font-medium">Asesmen Akhir Materi</p>
+                <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 font-mono font-medium">Asesmen Akhir Siswa</p>
               </div>
               <p class="lk-card-desc">
-                Uji pemahamanmu setelah mempelajari seluruh modul Mail Merge. Asesmen ini mengukur penguasaan konsep, aturan pembuatan tabel Excel, aturan logika (Rules), switch formatting, dan diagnosis troubleshooting.
+                Uji pemahamanmu setelah menuntaskan seluruh materi Mail Merge. Terdiri dari 15 soal pilihan ganda acak dengan feedback nilai langsung ke guru.
               </p>
               <span class="lk-card-cta">
-                Mulai Kerjakan Post Test <i class="fa-solid fa-arrow-right"></i>
+                Mulai Post Test <i class="fa-solid fa-arrow-right"></i>
               </span>
             </a>
           </div>
@@ -2003,6 +2039,38 @@
               <li>Hubungkan kedua dokumen dengan fitur <strong>Mail Merge</strong>, sisipkan seluruh field yang diperlukan, lalu lakukan <em>Preview Results</em>.</li>
               <li>Ekspor hasil akhir menjadi 1 berkas PDF utuh (10 halaman) menggunakan menu <em>Finish &amp; Merge &rarr; Print Documents &rarr; Microsoft Print to PDF</em>.</li>
             </ol>
+
+            <!-- Callout CTA Pengumpulan Proyek -->
+            <div class="mt-6 p-5 rounded-2xl bg-gradient-to-r from-blue-500/10 via-indigo-500/10 to-cyan-500/10 border border-blue-500/20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div class="space-y-1">
+                <div class="flex items-center gap-2 font-bold text-slate-900 dark:text-white text-sm">
+                  <i class="fa-solid fa-laptop-code text-blue-600 dark:text-blue-400"></i>
+                  <span>Jobsheet &amp; Pengumpulan Proyek Praktik Laboratorium</span>
+                </div>
+                <p class="text-xs text-slate-600 dark:text-slate-300">
+                  Gunakan Jobsheet Praktikum resmi (format A4) untuk memandu langkah kerja di lab komputer, lalu kumpulkan berkas hasilnya ke Drive guru.
+                </p>
+              </div>
+              <div class="flex items-center gap-2.5 flex-wrap shrink-0">
+                <a
+                  href="../tes.html"
+                  target="_blank"
+                  class="px-4 py-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold text-xs shadow-sm transition-all flex items-center gap-2"
+                  title="Buka Jobsheet Panduan Praktik Lab Komputer"
+                >
+                  <i class="fa-solid fa-file-lines text-blue-500"></i>
+                  <span>Buka / Cetak Jobsheet (A4)</span>
+                </a>
+                <a
+                  href="tugas.html"
+                  class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs shadow-md shadow-blue-500/20 transition-all flex items-center gap-2"
+                >
+                  <i class="fa-solid fa-cloud-arrow-up"></i>
+                  <span>Kumpulkan Tugas Praktik</span>
+                  <i class="fa-solid fa-arrow-right text-[11px]"></i>
+                </a>
+              </div>
+            </div>
           </div>
         </div>
 

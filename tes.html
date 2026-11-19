@@ -1,24 +1,28 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>LKPD Misi Eksplorasi Game: Sistem Komputer &amp; Sistem Operasi | Kelas X</title>
+    <title>Jobsheet Praktik: Otomasi Dokumen Massal Mail Merge — SMAN 4 Yogyakarta</title>
+    <link rel="shortcut icon" href="images/Logo Patbhe.png" type="image/x-icon" />
+
+    <!-- Google Fonts & Font Awesome -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
     <style>
         :root {
             --navy: #0f172a;
             --navy-2: #1e293b;
-            --purple: #7c3aed;
-            --purple-2: #a78bfa;
-            --purple-tint: #f5f3ff;
-            --purple-border: #ddd6fe;
+            --blue: #2563eb;
+            --blue-2: #3b82f6;
+            --blue-tint: #eff6ff;
+            --blue-border: #bfdbfe;
             --sky: #0284c7;
-            --sky-2: #38bdf8;
-            --sky-tint: #eff6ff;
-            --sky-border: #bfdbfe;
+            --sky-tint: #f0f9ff;
+            --sky-border: #bae6fd;
             --green: #059669;
             --green-tint: #ecfdf5;
             --green-border: #a7f3d0;
@@ -28,43 +32,115 @@
             --rose: #e11d48;
             --rose-tint: #fff1f2;
             --rose-border: #fecdd3;
-            --cyan: #0891b2;
-            --cyan-tint: #ecfeff;
-            --cyan-border: #a5f3fc;
+            --purple: #7c3aed;
+            --purple-tint: #f5f3ff;
+            --purple-border: #ddd6fe;
             --card-bg: #f8fafc;
             --border: #e2e8f0;
             --border-strong: #cbd5e1;
             --text: #1e293b;
             --text-muted: #64748b;
-            --page-pad: 13mm;
+            --page-pad: 12mm;
         }
 
-        *,
-        *::before,
-        *::after {
+        *, *::before, *::after {
             box-sizing: border-box;
             -webkit-print-color-adjust: exact !important;
             print-color-adjust: exact !important;
         }
 
-        html,
-        body {
+        html, body {
             margin: 0;
             padding: 0;
-        }
-
-        body {
             font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             color: var(--text);
-            font-size: 11px;
-            line-height: 1.5;
+            font-size: 10.5px;
+            line-height: 1.45;
             -webkit-font-smoothing: antialiased;
             background: #cbd5e1;
         }
 
+        /* SCREEN TOOLBAR */
         @media screen {
             body {
-                padding: 28px 0;
+                padding-top: 65px;
+                padding-bottom: 40px;
+            }
+            .screen-toolbar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 54px;
+                background: rgba(15, 23, 42, 0.92);
+                backdrop-filter: blur(10px);
+                border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 0 20px;
+                z-index: 999;
+                color: #ffffff;
+            }
+            .toolbar-title {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                font-weight: 700;
+                font-size: 13px;
+            }
+            .toolbar-actions {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+            .btn-tool {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                padding: 6px 14px;
+                border-radius: 8px;
+                font-size: 11.5px;
+                font-weight: 700;
+                text-decoration: none;
+                cursor: pointer;
+                transition: all 0.2s ease;
+                border: none;
+            }
+            .btn-tool-primary {
+                background: #2563eb;
+                color: #ffffff;
+            }
+            .btn-tool-primary:hover {
+                background: #1d4ed8;
+            }
+            .btn-tool-secondary {
+                background: #334155;
+                color: #ffffff;
+            }
+            .btn-tool-secondary:hover {
+                background: #475569;
+            }
+            .btn-tool-success {
+                background: #059669;
+                color: #ffffff;
+            }
+            .btn-tool-success:hover {
+                background: #047857;
+            }
+        }
+
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            html, body {
+                background: #ffffff;
+                padding: 0;
+            }
+            .page {
+                margin: 0 !important;
+                box-shadow: none !important;
             }
         }
 
@@ -73,13 +149,14 @@
             margin: 0;
         }
 
+        /* PAGE CONTAINER (A4 STANDAR 210mm x 297mm) */
         .page {
             width: 210mm;
             height: 297mm;
             padding: var(--page-pad);
             background: #ffffff;
             margin: 0 auto 12mm;
-            box-shadow: 0 12px 40px -12px rgba(15, 23, 42, 0.28);
+            box-shadow: 0 12px 35px -10px rgba(15, 23, 42, 0.25);
             display: flex;
             flex-direction: column;
             position: relative;
@@ -88,76 +165,9 @@
             break-after: page;
         }
 
-            .page:last-of-type {
-                page-break-after: auto;
-                break-after: auto;
-            }
-
-        @media print {
-            html,
-            body {
-                background: #ffffff;
-                padding: 0;
-            }
-
-            .page {
-                margin: 0;
-                box-shadow: none;
-            }
-        }
-
-        h1,
-        h2,
-        h3,
-        h4 {
-            margin: 0;
-            color: var(--navy);
-            font-weight: 700;
-            letter-spacing: -0.01em;
-            line-height: 1.25;
-        }
-
-        p {
-            margin: 0;
-        }
-
-        strong {
-            font-weight: 700;
-            color: var(--navy);
-        }
-
-        code {
-            font-family: "JetBrains Mono", monospace;
-            font-size: 10px;
-            font-weight: 600;
-            background: #ffffff;
-            padding: 1px 5px;
-            border-radius: 4px;
-            border: 1px solid var(--border);
-            color: var(--navy);
-        }
-
-        /* FOOTER */
-        .page-footer {
-            margin-top: auto;
-            padding-top: 8px;
-            border-top: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-            font-size: 8.5px;
-            color: var(--text-muted);
-        }
-
-        .pf-brand {
-            font-weight: 700;
-            color: var(--purple);
-        }
-
-        .pf-page {
-            font-weight: 700;
-            color: var(--navy-2);
+        .page:last-of-type {
+            page-break-after: auto;
+            break-after: auto;
         }
 
         /* BRAND BAR */
@@ -165,238 +175,221 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding-bottom: 8px;
-            border-bottom: 1px solid var(--border);
-            margin-bottom: 14px;
+            padding-bottom: 6px;
+            border-bottom: 1.5px solid var(--border);
+            margin-bottom: 10px;
         }
-
         .brand-mark {
             display: flex;
             align-items: center;
             gap: 8px;
         }
-
-        .brand-logo {
+        .brand-logo-img {
             width: 22px;
             height: 22px;
-            border-radius: 6px;
-            background: linear-gradient(135deg, var(--purple), var(--sky));
-            color: #ffffff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 9px;
-            font-weight: 800;
-            box-shadow: 0 3px 8px -2px rgba(124, 58, 237, 0.5);
+            object-fit: contain;
         }
-
         .brand-name {
             font-size: 11px;
             font-weight: 800;
             color: var(--navy);
-            text-transform: uppercase;
             letter-spacing: 0.02em;
         }
-
         .brand-school {
             font-size: 9px;
-            font-weight: 500;
+            font-weight: 700;
             color: var(--text-muted);
             text-transform: uppercase;
             letter-spacing: 0.06em;
         }
 
-        /* HERO */
+        /* HERO COVER */
         .hero {
             position: relative;
-            background: linear-gradient(135deg, #0f172a 0%, #4c1d95 100%);
-            border-radius: 14px;
-            padding: 20px 24px 18px;
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 60%, #0369a1 100%);
+            border-radius: 12px;
+            padding: 16px 20px 14px;
             color: #ffffff;
             overflow: hidden;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
-
-            .hero::before {
-                content: "";
-                position: absolute;
-                top: -70px;
-                right: -70px;
-                width: 280px;
-                height: 280px;
-                border-radius: 50%;
-                background: radial-gradient(circle, rgba(167, 139, 250, 0.4), transparent 65%);
-                pointer-events: none;
-            }
-
-            .hero::after {
-                content: "";
-                position: absolute;
-                bottom: -90px;
-                right: 40px;
-                width: 220px;
-                height: 220px;
-                border-radius: 50%;
-                border: 1.5px dashed rgba(255, 255, 255, 0.14);
-                pointer-events: none;
-            }
-
+        .hero::before {
+            content: "";
+            position: absolute;
+            top: -60px;
+            right: -60px;
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(56, 189, 248, 0.35), transparent 70%);
+            pointer-events: none;
+        }
         .hero-badge {
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            padding: 4px 11px;
-            background: rgba(255, 255, 255, 0.12);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 3px 10px;
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.25);
             border-radius: 999px;
-            font-size: 8.5px;
-            font-weight: 700;
-            letter-spacing: 0.1em;
+            font-size: 8px;
+            font-weight: 800;
+            letter-spacing: 0.08em;
             text-transform: uppercase;
-            color: #ddd6fe;
-            margin-bottom: 12px;
-            position: relative;
-            z-index: 1;
+            color: #bae6fd;
+            margin-bottom: 8px;
         }
-
-            .hero-badge::before {
-                content: "";
-                width: 6px;
-                height: 6px;
-                border-radius: 50%;
-                background: #4ade80;
-                box-shadow: 0 0 8px #4ade80;
-            }
-
+        .hero-badge::before {
+            content: "";
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #38bdf8;
+            box-shadow: 0 0 6px #38bdf8;
+        }
         .hero-grid {
             display: grid;
             grid-template-columns: 1fr auto;
-            gap: 16px;
+            gap: 12px;
             align-items: end;
-            position: relative;
-            z-index: 1;
         }
-
         .hero-title {
-            font-size: 52px;
-            font-weight: 800;
-            letter-spacing: -0.045em;
-            line-height: 0.92;
+            font-size: 38px;
+            font-weight: 900;
+            letter-spacing: -0.04em;
+            line-height: 0.95;
             color: #ffffff;
+            margin: 0;
         }
-
         .hero-subtitle {
-            font-size: 13px;
-            font-weight: 700;
-            letter-spacing: 0.04em;
-            color: #c4b5fd;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 0.03em;
+            color: #7dd3fc;
             text-transform: uppercase;
-            margin-top: 8px;
+            margin-top: 5px;
         }
-
         .hero-rule {
-            width: 44px;
+            width: 40px;
             height: 3px;
             border-radius: 999px;
-            background: linear-gradient(90deg, #a78bfa, #38bdf8);
-            margin: 10px 0;
+            background: linear-gradient(90deg, #38bdf8, #34d399);
+            margin: 8px 0;
         }
-
         .hero-line {
-            font-size: 11.5px;
+            font-size: 10.5px;
             font-weight: 500;
-            color: #cbd5e1;
+            color: #e2e8f0;
+            margin: 0;
         }
-
-        .hero-line-soft {
-            font-size: 9.5px;
-            font-style: italic;
-            font-weight: 400;
-            color: #94a3b8;
-            margin-top: 3px;
-        }
-
         .hero-class {
             text-align: right;
             display: flex;
             flex-direction: column;
             align-items: flex-end;
         }
-
         .hero-class-value {
-            font-size: 40px;
-            font-weight: 800;
-            letter-spacing: -0.03em;
+            font-size: 36px;
+            font-weight: 900;
+            color: #38bdf8;
             line-height: 1;
-            color: #a78bfa;
         }
-
         .hero-class-label {
-            font-size: 8.5px;
-            font-weight: 600;
-            letter-spacing: 0.14em;
+            font-size: 8px;
+            font-weight: 700;
+            letter-spacing: 0.12em;
             color: #94a3b8;
             text-transform: uppercase;
-            margin-top: 6px;
+            margin-top: 4px;
         }
 
-        /* TARGET CARD */
-        .target-card {
-            position: relative;
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-left: 4px solid var(--green);
-            border-radius: 10px;
-            padding: 12px 16px 12px 14px;
-            margin-bottom: 10px;
-        }
-
-        .target-head {
+        /* SECTION HEAD */
+        .section-head {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
+            padding: 8px 12px;
+            border-radius: 10px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--accent, var(--blue));
             margin-bottom: 8px;
         }
-
-        .target-head-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--green);
-            box-shadow: 0 0 0 3px var(--green-tint);
-        }
-
-        .target-head-title {
-            font-size: 10px;
+        .sh-num {
+            font-family: "JetBrains Mono", monospace;
+            font-size: 18px;
             font-weight: 800;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            color: var(--green);
+            color: var(--accent, var(--blue));
+            line-height: 1;
+        }
+        .sh-text h2 {
+            font-size: 12px;
+            font-weight: 800;
+            color: var(--navy);
+            margin: 0;
+        }
+        .sh-text p {
+            font-size: 9px;
+            color: var(--text-muted);
+            margin: 0;
         }
 
+        /* CARDS */
+        .card {
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 9px 12px;
+            margin-bottom: 8px;
+        }
+        .card-strip {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            margin-bottom: 6px;
+            padding-bottom: 5px;
+            border-bottom: 1px dashed var(--border);
+        }
+        .card-strip-label {
+            font-size: 9.5px;
+            font-weight: 800;
+            color: var(--navy);
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+        .badge-pill {
+            font-family: "JetBrains Mono", monospace;
+            font-size: 8px;
+            font-weight: 700;
+            padding: 2px 7px;
+            border-radius: 999px;
+            background: var(--accent-tint, var(--blue-tint));
+            color: var(--accent, var(--blue));
+            border: 1px solid var(--accent-border, var(--blue-border));
+        }
+
+        /* TARGET LIST */
         .target-list {
             list-style: none;
             padding: 0;
             margin: 0;
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 4px;
         }
-
-            .target-list li {
-                display: flex;
-                gap: 10px;
-                align-items: flex-start;
-                font-size: 10px;
-                line-height: 1.4;
-                color: var(--text);
-            }
-
+        .target-list li {
+            display: flex;
+            gap: 8px;
+            align-items: flex-start;
+            font-size: 9.5px;
+            line-height: 1.35;
+        }
         .tp-num {
             flex-shrink: 0;
-            width: 18px;
-            height: 18px;
-            border-radius: 5px;
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
             background: var(--green-tint);
             border: 1px solid var(--green-border);
             color: var(--green);
@@ -404,1300 +397,1009 @@
             align-items: center;
             justify-content: center;
             font-family: "JetBrains Mono", monospace;
-            font-size: 9px;
-            font-weight: 700;
+            font-size: 8.5px;
+            font-weight: 800;
             margin-top: 1px;
         }
 
         /* INFO GRID */
-        .grid-info-2 {
+        .grid-info-4 {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
-            margin-bottom: 10px;
-        }
-
-        .info-card {
-            position: relative;
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 10px 12px 12px;
-            overflow: hidden;
-        }
-
-            .info-card::before {
-                content: "";
-                position: absolute;
-                top: 0;
-                left: 0;
-                right: 0;
-                height: 3px;
-                background: var(--accent);
-            }
-
-            .info-card.info-sky {
-                --accent: var(--sky);
-            }
-
-            .info-card.info-purple {
-                --accent: var(--purple);
-            }
-
-            .info-card.info-amber {
-                --accent: var(--amber);
-            }
-
-            .info-card.info-green {
-                --accent: var(--green);
-            }
-
-        .info-label {
-            display: block;
-            font-size: 7.5px;
-            font-weight: 700;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            color: var(--text-muted);
-            margin-bottom: 3px;
-        }
-
-        .info-value {
-            display: block;
-            font-size: 11px;
-            font-weight: 700;
-            color: var(--navy);
-            line-height: 1.3;
-        }
-
-        /* CARD */
-        .card {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 12px 14px;
-            margin-bottom: 10px;
-        }
-
-        .card-strip {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding-bottom: 8px;
-            border-bottom: 1px solid var(--border);
-            margin-bottom: 10px;
-        }
-
-        .card-dots {
-            display: flex;
-            gap: 4px;
-            flex-shrink: 0;
-        }
-
-            .card-dots span {
-                width: 8px;
-                height: 8px;
-                border-radius: 50%;
-            }
-
-                .card-dots span:nth-child(1) {
-                    background: #fda4af;
-                }
-
-                .card-dots span:nth-child(2) {
-                    background: #fcd34d;
-                }
-
-                .card-dots span:nth-child(3) {
-                    background: #6ee7b7;
-                }
-
-        .card-strip-label {
-            font-size: 9.5px;
-            font-weight: 700;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            color: var(--accent, var(--purple));
-        }
-
-        /* CONTEXT COLORS */
-        .ctx-green {
-            --accent: var(--green);
-            --accent-tint: var(--green-tint);
-            --accent-border: var(--green-border);
-            --accent-shadow: rgba(5, 150, 105, 0.3);
-        }
-
-        .ctx-sky {
-            --accent: var(--sky);
-            --accent-tint: var(--sky-tint);
-            --accent-border: var(--sky-border);
-            --accent-shadow: rgba(2, 132, 199, 0.3);
-        }
-
-        .ctx-amber {
-            --accent: var(--amber);
-            --accent-tint: var(--amber-tint);
-            --accent-border: var(--amber-border);
-            --accent-shadow: rgba(217, 119, 6, 0.3);
-        }
-
-        .ctx-purple {
-            --accent: var(--purple);
-            --accent-tint: var(--purple-tint);
-            --accent-border: var(--purple-border);
-            --accent-shadow: rgba(124, 58, 237, 0.3);
-        }
-
-        .ctx-cyan {
-            --accent: var(--cyan);
-            --accent-tint: var(--cyan-tint);
-            --accent-border: var(--cyan-border);
-            --accent-shadow: rgba(8, 145, 178, 0.3);
-        }
-
-        .ctx-rose {
-            --accent: var(--rose);
-            --accent-tint: var(--rose-tint);
-            --accent-border: var(--rose-border);
-            --accent-shadow: rgba(225, 29, 72, 0.3);
-        }
-
-        /* SECTION HEAD */
-        .section-head {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 9px 14px 9px 12px;
-            background: var(--accent-tint);
-            border: 1px solid var(--accent-border);
-            border-left: 4px solid var(--accent);
-            border-radius: 10px;
-            margin-bottom: 10px;
-        }
-
-        .sh-num {
-            width: 36px;
-            height: 36px;
-            flex-shrink: 0;
-            border-radius: 50%;
-            background: var(--accent);
-            color: #ffffff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            font-weight: 800;
-            position: relative;
-            box-shadow: 0 4px 10px -3px var(--accent-shadow);
-        }
-
-            .sh-num::after {
-                content: "";
-                position: absolute;
-                inset: 3px;
-                border-radius: 50%;
-                border: 1.5px solid rgba(255, 255, 255, 0.42);
-            }
-
-        .sh-text {
-            flex: 1;
-            min-width: 0;
-        }
-
-            .sh-text h2 {
-                font-size: 12.5px;
-                font-weight: 800;
-                text-transform: uppercase;
-                color: var(--navy);
-                margin-bottom: 2px;
-            }
-
-            .sh-text p {
-                font-size: 9.5px;
-                font-weight: 500;
-                color: var(--text-muted);
-            }
-
-        /* STEP */
-        .step-row {
-            display: flex;
-            gap: 10px;
-            padding: 6px 0;
-            border-bottom: 1px dashed var(--border);
-            font-size: 10.5px;
-            line-height: 1.5;
-            align-items: flex-start;
-        }
-
-            .step-row:last-child {
-                border-bottom: none;
-            }
-
-        .step-num {
-            flex-shrink: 0;
-            width: 19px;
-            height: 19px;
-            border-radius: 50%;
-            background: var(--accent-tint, var(--purple-tint));
-            border: 1px solid var(--accent-border, var(--purple-border));
-            color: var(--accent, var(--purple));
-            font-size: 9.5px;
-            font-weight: 800;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: "JetBrains Mono", monospace;
-            margin-top: 1px;
-        }
-
-        .step-body {
-            flex: 1;
-        }
-
-        /* DATA TABLE */
-        .data-table {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 0;
-            font-size: 10.5px;
-            border: 1px solid var(--purple-border);
-            border-radius: 8px;
-            overflow: hidden;
-        }
-
-            .data-table th {
-                background: var(--purple-tint);
-                color: var(--purple);
-                font-weight: 800;
-                text-transform: uppercase;
-                letter-spacing: 0.06em;
-                font-size: 9px;
-                padding: 7px 10px;
-                text-align: left;
-            }
-
-            .data-table td {
-                padding: 7px 10px;
-                border-top: 1px dashed var(--border-strong);
-                vertical-align: top;
-                line-height: 1.5;
-            }
-
-                .data-table td:first-child {
-                    font-weight: 700;
-                    color: var(--navy);
-                    width: 26%;
-                    border-right: 1px dashed var(--border-strong);
-                    background: #fafbff;
-                }
-
-            .data-table tr.alt td:first-child {
-                background: #f5f3ff;
-            }
-
-            .data-table .dotted {
-                display: block;
-                min-height: 12px;
-                border-bottom: 1.5px dotted var(--border-strong);
-            }
-
-            .data-table.green {
-                border-color: var(--green-border);
-            }
-
-                .data-table.green th {
-                    background: var(--green-tint);
-                    color: var(--green);
-                }
-
-                .data-table.green td:first-child {
-                    border-right-color: var(--green-border);
-                }
-
-        /* NOTES BOX */
-        .notes-box {
-            background: var(--purple-tint);
-            border: 1px solid var(--purple-border);
-            border-radius: 10px;
-            padding: 10px 12px 12px;
-            margin-top: 6px;
-        }
-
-        .notes-list {
-            list-style: none;
-            padding: 0;
-            margin: 4px 0 0;
-            display: flex;
-            flex-direction: column;
+            grid-template-columns: repeat(4, 1fr);
             gap: 6px;
-        }
-
-            .notes-list li {
-                display: flex;
-                gap: 9px;
-                align-items: flex-start;
-                font-size: 10.5px;
-                line-height: 1.45;
-                color: var(--text);
-            }
-
-        .note-tag {
-            flex-shrink: 0;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: var(--purple);
-            color: #ffffff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: "JetBrains Mono", monospace;
-            font-size: 9px;
-            font-weight: 700;
-            margin-top: 1px;
-            box-shadow: 0 3px 8px -2px rgba(124, 58, 237, 0.4);
-        }
-
-            .note-tag.tag-g {
-                background: var(--sky);
-            }
-
-            .note-tag.tag-h {
-                background: var(--green);
-            }
-
-            .note-tag.tag-a {
-                background: var(--amber);
-            }
-
-            .note-tag.tag-r {
-                background: var(--rose);
-            }
-
-        /* CHECKLIST PILL */
-        .checklist-pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 3px 10px;
-            border-radius: 999px;
-            background: var(--accent-tint, var(--purple-tint));
-            border: 1px solid var(--accent-border, var(--purple-border));
-            color: var(--accent, var(--purple));
-            font-size: 8.5px;
-            font-weight: 800;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
             margin-bottom: 8px;
         }
-
-            .checklist-pill::before {
-                content: "";
-                width: 6px;
-                height: 6px;
-                border-radius: 50%;
-                background: var(--accent, var(--purple));
-            }
-
-        /* CHECKLIST */
-        .checklist {
-            margin-top: 10px;
-            padding-top: 10px;
-            border-top: 1px dashed var(--border-strong);
-        }
-
-            .checklist ul {
-                list-style: none;
-                padding: 0;
-                margin: 0;
-                display: flex;
-                flex-direction: column;
-                gap: 6px;
-            }
-
-            .checklist li {
-                display: flex;
-                gap: 9px;
-                align-items: flex-start;
-                font-size: 10.5px;
-                color: var(--text);
-                line-height: 1.45;
-            }
-
-        .check-box {
-            flex-shrink: 0;
-            width: 15px;
-            height: 15px;
-            border-radius: 4px;
-            background: var(--accent-tint, var(--purple-tint));
-            border: 1.5px solid var(--accent-border, var(--purple-border));
-            margin-top: 1px;
-        }
-
-        /* IDENTITY */
-        .identity-card {
-            padding: 14px 16px 16px;
+        .info-card {
             background: var(--card-bg);
             border: 1px solid var(--border);
-            border-left: 4px solid var(--purple);
-            border-radius: 10px;
-            margin-bottom: 10px;
+            border-radius: 8px;
+            padding: 7px 9px;
+            position: relative;
+            overflow: hidden;
         }
-
-        .identity-head {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding-bottom: 8px;
-            border-bottom: 1px solid var(--border);
-            margin-bottom: 12px;
+        .info-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2.5px;
+            background: var(--accent, var(--blue));
         }
-
-        .identity-head-left {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .identity-head-title {
-            font-size: 11.5px;
-            font-weight: 800;
-            letter-spacing: 0.02em;
+        .info-label {
+            font-size: 7.5px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
             text-transform: uppercase;
+            color: var(--text-muted);
+            display: block;
+        }
+        .info-value {
+            font-size: 9.5px;
+            font-weight: 700;
+            color: var(--navy);
+            margin-top: 2px;
+            display: block;
+        }
+
+        /* IDENTITY CARD */
+        .identity-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 9px 12px;
+            margin-bottom: 8px;
+        }
+        .id-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 8px;
+            margin-top: 6px;
+        }
+        .id-field label {
+            display: block;
+            font-size: 8px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 2px;
+        }
+        .id-input-box {
+            height: 22px;
+            border-bottom: 1.5px solid var(--border-strong);
+            background: #ffffff;
+            border-radius: 4px;
+            padding: 0 6px;
+            display: flex;
+            align-items: center;
+            font-size: 9.5px;
+            font-weight: 600;
             color: var(--navy);
         }
 
-        .identity-head-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--purple);
-            box-shadow: 0 0 0 3px var(--purple-tint);
-        }
-
-        .identity-head-hint {
+        /* TABLES */
+        .table-custom {
+            width: 100%;
+            border-collapse: collapse;
             font-size: 9px;
-            font-weight: 500;
-            font-style: italic;
-            color: var(--text-muted);
+            margin: 4px 0;
         }
-
-        .id-row {
-            display: grid;
-            grid-template-columns: 80px 1fr 80px;
-            gap: 12px;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-            .id-row:last-child {
-                margin-bottom: 0;
-            }
-
-        .id-badge {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 5px 10px;
-            border-radius: 6px;
-            font-size: 8.5px;
+        .table-custom th {
+            background: #f1f5f9;
+            color: var(--navy);
             font-weight: 800;
-            letter-spacing: 0.06em;
-            text-transform: uppercase;
-            color: #ffffff;
-            background: var(--purple);
+            padding: 5px 7px;
+            border: 1px solid var(--border);
+            text-align: left;
         }
-
-        .id-field {
-            display: flex;
-            flex-direction: column;
-            gap: 3px;
-        }
-
-            .id-field label {
-                font-size: 8px;
-                font-weight: 600;
-                color: var(--text-muted);
-            }
-
-        .id-line {
-            height: 11px;
-            border-bottom: 1px dashed var(--border-strong);
-        }
-
-        /* ANSWER BOX */
-        .answer-box {
-            position: relative;
-            background: #ffffff;
-            border: 1.5px dashed var(--border-strong);
-            border-radius: 8px;
-            padding: 8px 12px 10px;
-            margin-top: 6px;
-            min-height: 52px;
-        }
-
-            .answer-box .ab-hint {
-                display: block;
-                font-size: 8px;
-                font-weight: 700;
-                color: var(--text-muted);
-                font-style: italic;
-                letter-spacing: 0.04em;
-                margin-bottom: 4px;
-                text-transform: uppercase;
-            }
-
-            .answer-box .ab-lines {
-                height: 36px;
-                background-image: repeating-linear-gradient(to bottom, transparent 0 17px, #e2e8f0 17px 18px);
-            }
-
-            .answer-box.tall {
-                min-height: 76px;
-            }
-
-                .answer-box.tall .ab-lines {
-                    height: 56px;
-                }
-
-            .answer-box.xl {
-                min-height: 100px;
-            }
-
-                .answer-box.xl .ab-lines {
-                    height: 80px;
-                }
-
-        /* BLANK */
-        .blank {
-            display: inline-block;
-            min-width: 120px;
-            border-bottom: 1.5px dashed var(--border-strong);
-            padding: 1px 8px;
-            margin: 0 4px;
-            font-family: "JetBrains Mono", monospace;
-            font-size: 10.5px;
-            font-weight: 700;
-            color: var(--purple);
-            text-align: center;
+        .table-custom td {
+            padding: 4.5px 7px;
+            border: 1px solid var(--border);
             vertical-align: middle;
         }
-
-            .blank.sm {
-                min-width: 70px;
-            }
-
-            .blank.md {
-                min-width: 100px;
-            }
-
-            .blank.lg {
-                min-width: 150px;
-            }
-
-            .blank.xl {
-                min-width: 210px;
-            }
-
-        /* MINI INFO */
-        .mini-info {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 3px 10px;
-            border-radius: 999px;
-            font-size: 8.5px;
-            font-weight: 700;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
+        .table-custom tr:nth-child(even) td {
+            background: #fafafa;
         }
 
-            .mini-info.mi-amber {
-                background: var(--amber-tint);
-                color: var(--amber);
-                border: 1px solid var(--amber-border);
-            }
-
-            .mini-info.mi-green {
-                background: var(--green-tint);
-                color: var(--green);
-                border: 1px solid var(--green-border);
-            }
-
-            .mini-info.mi-sky {
-                background: var(--sky-tint);
-                color: var(--sky);
-                border: 1px solid var(--sky-border);
-            }
-
-            .mini-info.mi-purple {
-                background: var(--purple-tint);
-                color: var(--purple);
-                border: 1px solid var(--purple-border);
-            }
-
-            .mini-info.mi-cyan {
-                background: var(--cyan-tint);
-                color: var(--cyan);
-                border: 1px solid var(--cyan-border);
-            }
-
-            .mini-info.mi-rose {
-                background: var(--rose-tint);
-                color: var(--rose);
-                border: 1px solid var(--rose-border);
-            }
-
-        /* QA ITEM */
-        .qa-item {
+        /* STEP ITEM */
+        .step-row {
+            display: flex;
+            gap: 8px;
+            align-items: flex-start;
+            margin-bottom: 6px;
             background: #ffffff;
             border: 1px solid var(--border);
-            border-left: 3px solid var(--accent, var(--purple));
-            border-radius: 6px;
-            padding: 9px 11px;
-            margin-bottom: 7px;
+            border-radius: 8px;
+            padding: 6px 10px;
         }
-
-            .qa-item .qa-q {
-                font-size: 10.5px;
-                line-height: 1.45;
-                color: var(--text);
-                margin-bottom: 5px;
-                padding-left: 22px;
-                position: relative;
-            }
-
-        .qa-num {
-            position: absolute;
-            left: 0;
-            top: 1px;
-            display: inline-flex;
+        .step-num {
+            width: 18px;
+            height: 18px;
+            border-radius: 5px;
+            background: var(--accent, var(--blue));
+            color: #ffffff;
+            display: flex;
             align-items: center;
             justify-content: center;
-            width: 17px;
-            height: 17px;
-            border-radius: 50%;
-            background: var(--accent, var(--purple));
-            color: #ffffff;
-            font-size: 9.5px;
-            font-weight: 800;
-        }
-
-        .mini-head {
+            font-family: "JetBrains Mono", monospace;
             font-size: 9px;
             font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            margin: 8px 0 5px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+        .step-body {
+            flex: 1;
+            font-size: 9.5px;
+            line-height: 1.35;
         }
 
-            .mini-head.c-amber {
-                color: var(--amber);
-            }
+        /* CHECKLIST BOX */
+        .checklist-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+            margin: 4px 0;
+        }
+        .check-item {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            font-size: 9px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 4px 8px;
+        }
+        .check-box {
+            width: 12px;
+            height: 12px;
+            border: 1.5px solid var(--border-strong);
+            border-radius: 3px;
+            background: #ffffff;
+            flex-shrink: 0;
+        }
 
-            .mini-head.c-sky {
-                color: var(--sky);
-            }
+        /* CODE BLOCK INLINE */
+        code {
+            font-family: "JetBrains Mono", monospace;
+            font-size: 8.5px;
+            font-weight: 700;
+            background: #f1f5f9;
+            padding: 1px 4px;
+            border-radius: 3px;
+            border: 1px solid #cbd5e1;
+            color: #0f172a;
+        }
+        .code-box {
+            font-family: "JetBrains Mono", monospace;
+            font-size: 9px;
+            background: #0f172a;
+            color: #38bdf8;
+            padding: 6px 10px;
+            border-radius: 6px;
+            margin: 4px 0;
+            border: 1px solid #1e293b;
+            line-height: 1.4;
+        }
 
-            .mini-head.c-purple {
-                color: var(--purple);
-            }
-
-            .mini-head.c-green {
-                color: var(--green);
-            }
-
-            .mini-head.c-cyan {
-                color: var(--cyan);
-            }
-
-            .mini-head.c-rose {
-                color: var(--rose);
-            }
-
-        .hint-note {
-            font-size: 9.5px;
-            font-style: italic;
+        /* ANSWER LINES / BOX */
+        .fill-box {
+            border: 1px dashed var(--border-strong);
+            background: var(--card-bg);
+            border-radius: 6px;
+            padding: 6px 8px;
+            min-height: 38px;
+            font-size: 9px;
             color: var(--text-muted);
             margin-top: 4px;
         }
 
-        /* FLOW MINI */
-        .flow-mini {
-            text-align: center;
-            margin: 8px 0 6px;
+        /* FOOTER */
+        .page-footer {
+            margin-top: auto;
+            padding-top: 6px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 8px;
+            color: var(--text-muted);
         }
+        .pf-brand {
+            font-weight: 800;
+            color: var(--blue);
+        }
+        .pf-page {
+            font-weight: 800;
+            color: var(--navy);
+            font-family: "JetBrains Mono", monospace;
+        }
+
+        /* CONTEXT COLORS */
+        .ctx-blue { --accent: var(--blue); --accent-tint: var(--blue-tint); --accent-border: var(--blue-border); }
+        .ctx-sky { --accent: var(--sky); --accent-tint: var(--sky-tint); --accent-border: var(--sky-border); }
+        .ctx-green { --accent: var(--green); --accent-tint: var(--green-tint); --accent-border: var(--green-border); }
+        .ctx-amber { --accent: var(--amber); --accent-tint: var(--amber-tint); --accent-border: var(--amber-border); }
+        .ctx-purple { --accent: var(--purple); --accent-tint: var(--purple-tint); --accent-border: var(--purple-border); }
+        .ctx-rose { --accent: var(--rose); --accent-tint: var(--rose-tint); --accent-border: var(--rose-border); }
     </style>
 </head>
-
 <body>
-    <!-- ========== PAGE 1 — COVER ========== -->
+
+    <!-- SCREEN TOOLBAR (HANYA TAMPIL DI LAYAR, TIDAK TERCETAK) -->
+    <div class="screen-toolbar no-print">
+        <div class="toolbar-title">
+            <img src="images/Logo Patbhe.png" alt="Logo SMAN 4" style="width: 26px; height: 26px; object-fit: contain;" />
+            <span>Jobsheet Praktikum Mail Merge &middot; SMAN 4 Yogyakarta</span>
+        </div>
+        <div class="toolbar-actions">
+            <a href="Materi_MM/materi.html#lembarkerja" class="btn-tool btn-tool-secondary">
+                <i class="fa-solid fa-arrow-left"></i> Kembali ke Modul
+            </a>
+            <button onclick="window.print()" class="btn-tool btn-tool-primary">
+                <i class="fa-solid fa-print"></i> Cetak / Simpan PDF (A4)
+            </button>
+            <a href="Materi_MM/tugas.html" class="btn-tool btn-tool-success">
+                <i class="fa-solid fa-cloud-arrow-up"></i> Unggah Hasil Kerja
+            </a>
+        </div>
+    </div>
+
+    <!-- ========================================================
+         HALAMAN 1: COVER & INFORMASI PRAKTIKUM
+         ======================================================== -->
     <section class="page">
         <div class="brand-bar">
             <div class="brand-mark">
-                <div class="brand-logo">R</div>
-                <span class="brand-name">RuangInformatika</span>
+                <img src="images/Logo Patbhe.png" alt="Logo" class="brand-logo-img" />
+                <span class="brand-name">RuangInformatika &middot; SMA Negeri 4 Yogyakarta</span>
             </div>
-            <span class="brand-school">SMA Negeri 4 Yogyakarta</span>
+            <span class="brand-school">Informatika Fase E &middot; Kurikulum Merdeka</span>
         </div>
 
         <div class="hero">
-            <div class="hero-badge">LKPD Digital — Misi Eksplorasi Game</div>
+            <div class="hero-badge">Jobsheet Praktikum Laboratorium Komputer</div>
             <div class="hero-grid">
                 <div>
-                    <h1 class="hero-title">LKPD</h1>
-                    <div class="hero-subtitle">Sistem Komputer &amp; Sistem Operasi</div>
+                    <h1 class="hero-title">JOBSHEET</h1>
+                    <div class="hero-subtitle">Otomasi Dokumen Massal: Mail Merge (Word + Excel)</div>
                     <div class="hero-rule"></div>
-                    <p class="hero-line">Misi Eksplorasi Game — Mengenal Sistem Operasi</p>
-                    <p class="hero-line-soft">Booting &middot; Onion Layer &middot; Jenis OS &middot; Peran OS &middot; Informatika Kelas X</p>
+                    <p class="hero-line">Studi Kasus: Pembuatan Surat Undangan Pengambilan Rapor &amp; Sertifikat Digital</p>
                 </div>
                 <div class="hero-class">
                     <div class="hero-class-value">X</div>
-                    <div class="hero-class-label">SMA &middot; Fase E</div>
+                    <div class="hero-class-label">Fase E &middot; Kelas X</div>
                 </div>
             </div>
         </div>
 
-        <div class="target-card">
-            <div class="target-head">
-                <span class="target-head-dot"></span>
-                <span class="target-head-title">🎯 Tujuan Pembelajaran</span>
+        <!-- Tujuan Pembelajaran -->
+        <div class="card ctx-green" style="border-left: 4px solid var(--green)">
+            <div class="card-strip">
+                <span class="card-strip-label" style="color: var(--green)">🎯 Tujuan Praktikum (Capaian Pembelajaran)</span>
+                <span class="badge-pill">Target Kompetensi</span>
             </div>
             <ul class="target-list">
                 <li>
-                    <span class="tp-num">1</span><span>Menjelaskan pengertian Sistem Operasi dan mengurutkan tahapan proses <em>booting</em>.</span>
+                    <span class="tp-num">1</span>
+                    <span>Merancang arsitektur basis data penerima surat di <strong>Microsoft Excel</strong> sesuai <em>4 Aturan Emas Data Source</em>.</span>
                 </li>
                 <li>
-                    <span class="tp-num">2</span><span>Menganalisis struktur <strong>Model Lapisan Bawang (Onion Layer Model)</strong> pada sistem komputer.</span>
+                    <span class="tp-num">2</span>
+                    <span>Mendesain naskah master surat dinas resmi di <strong>Microsoft Word</strong> lengkap dengan Kop Sekolah dan field penanda.</span>
                 </li>
-                <li><span class="tp-num">3</span><span>Membedakan jenis-jenis Sistem Operasi (Desktop, Mobile, Embedded, Server).</span></li>
                 <li>
-                    <span class="tp-num">4</span><span>Menjelaskan <strong>5 peran utama Sistem Operasi</strong> (memori, proses, kernel, antarmuka, utilitas).</span>
+                    <span class="tp-num">3</span>
+                    <span>Mengintegrasikan Word dan Excel melalui tab <strong>Mailings</strong> (<em>Select Recipients &amp; Insert Merge Field</em>).</span>
+                </li>
+                <li>
+                    <span class="tp-num">4</span>
+                    <span>Menerapkan aturan logika (<strong>Rules If... Then... Else...</strong>) dan kode pengubah format (<strong>Switch Codes</strong> tanggal &amp; rupiah).</span>
+                </li>
+                <li>
+                    <span class="tp-num">5</span>
+                    <span>Melakukan audit pratinjau (<strong>Preview Results</strong>) dan mengekspor dokumen gabungan massal ke berkas <strong>PDF</strong> utuh.</span>
                 </li>
             </ul>
         </div>
 
-        <div class="grid-info-2">
-            <div class="info-card info-sky">
+        <!-- Grid Info Praktikum -->
+        <div class="grid-info-4">
+            <div class="info-card ctx-blue">
                 <span class="info-label">Alokasi Waktu</span>
-                <span class="info-value">90 Menit</span>
+                <span class="info-value">2 &times; 45 Menit</span>
             </div>
-            <div class="info-card info-purple">
-                <span class="info-label">Pendekatan</span>
-                <span class="info-value">Game-Based Exploration</span>
+            <div class="info-card ctx-purple">
+                <span class="info-label">Model Belajar</span>
+                <span class="info-value">Project-Based (PjBL)</span>
             </div>
-            <div class="info-card info-amber">
-                <span class="info-label">Mata Pelajaran</span>
-                <span class="info-value">Informatika &middot; Kelas X</span>
+            <div class="info-card ctx-amber">
+                <span class="info-label">Alat &amp; Aplikasi</span>
+                <span class="info-value">MS Word &amp; Excel</span>
             </div>
-            <div class="info-card info-green">
-                <span class="info-label">Bentuk Kegiatan</span>
-                <span class="info-value">Eksplorasi Game, Diskusi, Analisis</span>
+            <div class="info-card ctx-green">
+                <span class="info-label">Tempat Praktik</span>
+                <span class="info-value">Laboratorium Komputer</span>
             </div>
         </div>
 
-        <div class="identity-card">
-            <div class="identity-head">
-                <div class="identity-head-left">
-                    <span class="identity-head-dot"></span>
-                    <span class="identity-head-title">Identitas Peserta Didik</span>
-                </div>
-                <span class="identity-head-hint">Isi data dirimu</span>
+        <!-- Identitas Siswa -->
+        <div class="identity-card ctx-blue" style="border-left: 4px solid var(--blue)">
+            <div class="card-strip" style="margin-bottom: 4px;">
+                <span class="card-strip-label">👤 Identitas Peserta Didik</span>
+                <span style="font-size: 8px; color: var(--text-muted);">Diisi oleh siswa</span>
             </div>
-            <div class="id-row">
-                <span class="id-badge">Nama</span>
+            <div class="id-grid">
                 <div class="id-field">
-                    <label>Nama Lengkap / Kelompok</label>
-                    <div class="id-line"></div>
+                    <label>Nama Lengkap Siswa</label>
+                    <div class="id-input-box"></div>
                 </div>
-                <div class="id-field">
-                    <label>No. Absen</label>
-                    <div class="id-line"></div>
-                </div>
-            </div>
-            <div class="id-row">
-                <span class="id-badge">Kelas</span>
                 <div class="id-field">
                     <label>Kelas</label>
-                    <div class="id-line"></div>
+                    <div class="id-input-box"></div>
                 </div>
                 <div class="id-field">
-                    <label>Kelompok</label>
-                    <div class="id-line"></div>
+                    <label>No. Presensi</label>
+                    <div class="id-input-box"></div>
                 </div>
             </div>
-            <div class="id-row">
-                <span class="id-badge" style="background: var(--green)">Skor</span>
+            <div class="id-grid" style="margin-top: 5px;">
                 <div class="id-field">
-                    <label>Skor Akhir di Dalam Game (Poin)</label>
-                    <div class="id-line"></div>
+                    <label>Guru Pengampu</label>
+                    <div class="id-input-box">Ilyas Fandhi Anggara, S.Kom</div>
                 </div>
                 <div class="id-field">
-                    <label>Level</label>
-                    <div class="id-line"></div>
+                    <label>No. PC / Komputer Lab</label>
+                    <div class="id-input-box"></div>
+                </div>
+                <div class="id-field">
+                    <label>Tanggal Praktik</label>
+                    <div class="id-input-box"></div>
                 </div>
             </div>
         </div>
 
-        <div class="notes-box">
-            <span class="checklist-pill" style="--accent: var(--purple); --accent-tint: #ffffff; --accent-border: var(--purple-border)">📋 Petunjuk Pengerjaan (Aturan Main)</span>
-            <ul class="notes-list">
-                <li>
-                    <span class="note-tag">1</span><span>Buka dan mainkan <strong>Game Pembelajaran Sistem Operasi</strong> melalui perangkat komputer/HP sesuai arahan guru.</span>
-                </li>
-                <li>
-                    <span class="note-tag tag-g">2</span><span>LKPD ini adalah <strong>Jurnal Misi (Quest Log)</strong>-mu. Jawaban dari misi tersimpan di dalam materi, petunjuk, maupun tantangan di dalam game.</span>
-                </li>
-                <li><span class="note-tag tag-h">3</span><span>Jelajahi setiap tahapan di dalam game, temukan informasi kuncinya, lalu tuliskan jawabanmu pada lembar ini dengan tepat!</span></li>
-            </ul>
+        <!-- Prosedur Keselamatan Kerja Lab -->
+        <div class="card ctx-amber" style="margin-bottom: 0;">
+            <div class="card-strip">
+                <span class="card-strip-label" style="color: var(--amber)">⚠️ Petunjuk Keselamatan Kerja &amp; Prosedur Laboratorium</span>
+                <span class="badge-pill" style="--accent: var(--amber); --accent-tint: var(--amber-tint); --accent-border: var(--amber-border)">SOP Lab</span>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 9px; line-height: 1.35;">
+                <div style="display: flex; gap: 6px; align-items: flex-start;">
+                    <i class="fa-solid fa-chair text-amber-500" style="margin-top: 2px;"></i>
+                    <span><strong>Postur Ergonomis:</strong> Duduk tegak dengan jarak pandang monitor 50–70 cm.</span>
+                </div>
+                <div style="display: flex; gap: 6px; align-items: flex-start;">
+                    <i class="fa-solid fa-floppy-disk text-amber-500" style="margin-top: 2px;"></i>
+                    <span><strong>Simpan Berkala:</strong> Tekan <code>Ctrl + S</code> secara rutin agar pekerjaan aman dari mati lampu.</span>
+                </div>
+                <div style="display: flex; gap: 6px; align-items: flex-start;">
+                    <i class="fa-solid fa-folder-tree text-amber-500" style="margin-top: 2px;"></i>
+                    <span><strong>Satu Folder Khusus:</strong> Satukan file Word &amp; Excel dalam 1 folder di drive <code>D:\PRAKTIK_MM</code>.</span>
+                </div>
+                <div style="display: flex; gap: 6px; align-items: flex-start;">
+                    <i class="fa-solid fa-power-off text-amber-500" style="margin-top: 2px;"></i>
+                    <span><strong>Shutdown Tertib:</strong> Matikan PC sesuai prosedur sistem setelah selesai praktikum.</span>
+                </div>
+            </div>
         </div>
 
         <footer class="page-footer">
-            <span class="pf-brand">RuangInformatika</span>
-            <span>LKPD &middot; SMA Negeri 4 Yogyakarta &middot; Pak Ilyas</span>
-            <span class="pf-page">Halaman 1 / 7</span>
+            <span class="pf-brand">SMA Negeri 4 Yogyakarta &middot; Jobsheet Praktikum TIK</span>
+            <span class="pf-page">Halaman 1 dari 5</span>
         </footer>
     </section>
 
-    <!-- ========== PAGE 2 — MISI 1 ========== -->
+    <!-- ========================================================
+         HALAMAN 2: TAHAP 1 — BASIS DATA EXCEL
+         ======================================================== -->
     <section class="page">
-        <header class="section-head ctx-sky">
+        <div class="brand-bar">
+            <div class="brand-mark">
+                <img src="images/Logo Patbhe.png" alt="Logo" class="brand-logo-img" />
+                <span class="brand-name">RuangInformatika &middot; Modul Praktik TIK</span>
+            </div>
+            <span class="brand-school">Tahap 1: Arsitektur Data Source</span>
+        </div>
+
+        <header class="section-head ctx-green">
             <span class="sh-num">01</span>
             <div class="sh-text">
-                <h2>Misi 1 &mdash; Pengertian OS &amp; Tahapan Booting</h2>
-                <p>Konsep Booting &middot; Alokasi 12 Menit</p>
+                <h2>Tahap 1 &mdash; Merancang Basis Data Excel (Data Source)</h2>
+                <p>Aplikasi: Microsoft Excel &middot; Bobot: 20 Poin &middot; Alokasi: 20 Menit</p>
             </div>
         </header>
 
-        <div class="card ctx-sky">
+        <div class="card ctx-green">
             <div class="card-strip">
-                <div class="card-dots"><span></span><span></span><span></span></div>
-                <span class="card-strip-label">Pengertian &amp; Fungsi Utama OS</span>
+                <span class="card-strip-label">Skenario Proyek: Daftar Penerima Undangan Rapor</span>
+                <span class="badge-pill">Studi Kasus SMAN 4</span>
             </div>
-            <p style="font-size: 10.5px; margin-bottom: 4px">Cari tahu bagaimana Sistem Operasi mulai bekerja saat komputer pertama kali dinyalakan!</p>
-            <div class="qa-item">
-                <p class="qa-q"><span class="qa-num">1</span>Apa pengertian dan fungsi utama dari Sistem Operasi (OS)?</p>
-                <div class="answer-box tall">
-                    <span class="ab-hint">Jawabanmu</span>
-                    <div class="ab-lines"></div>
-                </div>
-            </div>
-        </div>
+            <p style="font-size: 9.5px; margin-bottom: 6px;">
+                Sebagai staf IT sekolah, Anda ditugaskan menyusun basis data penerima surat undangan pengambilan rapor semester ganjil untuk minimal <strong>10 siswa</strong>. Ikuti instruksi langkah kerja di bawah ini:
+            </p>
 
-        <div class="card ctx-sky">
-            <div class="card-strip">
-                <div class="card-dots"><span></span><span></span><span></span></div>
-                <span class="card-strip-label">Urutan 5 Langkah Proses Booting</span>
-            </div>
-            <p style="font-size: 10.5px; margin-bottom: 6px">Lengkapi alur tahapan booting yang kamu temukan di dalam game dari langkah ke-1 hingga ke-5:</p>
-
-            <div class="step-row" style="--accent: var(--sky); --accent-tint: var(--sky-tint); --accent-border: var(--sky-border)">
+            <div class="step-row ctx-green">
                 <span class="step-num">1</span>
-                <div class="step-body"><strong>Daya (Power) Dihidupkan</strong></div>
+                <div class="step-body">
+                    Buka aplikasi <strong>Microsoft Excel</strong>, buat workbook baru. Simpan berkas dengan nama: <code>Data_Siswa_XE6.xlsx</code> pada folder kerjamu.
+                </div>
             </div>
-            <div class="step-row" style="--accent: var(--sky); --accent-tint: var(--sky-tint); --accent-border: var(--sky-border)">
+            <div class="step-row ctx-green">
                 <span class="step-num">2</span>
-                <div class="step-body"><span class="blank xl"></span></div>
+                <div class="step-body">
+                    Ubah nama sheet (rename tab) dari <code>Sheet1</code> menjadi <code>Data_Rapor</code>.
+                </div>
             </div>
-            <div class="step-row" style="--accent: var(--sky); --accent-tint: var(--sky-tint); --accent-border: var(--sky-border)">
+            <div class="step-row ctx-green">
                 <span class="step-num">3</span>
-                <div class="step-body"><span class="blank xl"></span></div>
+                <div class="step-body">
+                    Ketik <strong>7 Kolom Header tepat di Baris 1</strong> (tanpa baris kosong dan tanpa merged cell):
+                    <code>No_Presensi</code>, <code>NISN</code>, <code>Nama_Siswa</code>, <code>Kelas</code>, <code>Nama_Wali</code>, <code>Ruang_Kelas</code>, <code>Tanggal_Ambil</code>, <code>Biaya_Komite</code>.
+                </div>
             </div>
-            <div class="step-row" style="--accent: var(--sky); --accent-tint: var(--sky-tint); --accent-border: var(--sky-border)">
+            <div class="step-row ctx-green">
                 <span class="step-num">4</span>
-                <div class="step-body"><span class="blank xl"></span></div>
-            </div>
-            <div class="step-row" style="--accent: var(--sky); --accent-tint: var(--sky-tint); --accent-border: var(--sky-border)">
-                <span class="step-num">5</span>
-                <div class="step-body"><strong>Pengalihan Kontrol ke Sistem Operasi</strong></div>
-            </div>
-
-            <div style="margin-top: 10px; padding-top: 8px; border-top: 1px dashed var(--border-strong)">
-                <p style="font-size: 10.5px; margin-bottom: 4px"><strong>Apa fungsi dari tahap POST (Power On Self Test)?</strong></p>
-                <div class="answer-box">
-                    <span class="ab-hint">Jawabanmu</span>
-                    <div class="ab-lines"></div>
+                <div class="step-body">
+                    Untuk kolom <code>NISN</code>, awali pengetikan dengan tanda petik satu (<code>'</code>), contoh: <code>'0081234567</code> agar digit 0 paling depan tidak hilang.
                 </div>
             </div>
         </div>
 
-        <div class="notes-box">
-            <span class="checklist-pill" style="--accent: var(--sky); --accent-tint: #ffffff; --accent-border: var(--sky-border)">💬 Tips Misi 1</span>
-            <ul class="notes-list">
-                <li>
-                    <span class="note-tag tag-g">1</span><span>Perhatikan <strong>urutan proses</strong> saat komputer dinyalakan — jangan terbalik.</span>
-                </li>
-                <li>
-                    <span class="note-tag tag-g">2</span><span><strong>POST</strong> adalah pengecekan awal perangkat keras sebelum OS dimuat.</span>
-                </li>
-                <li><span class="note-tag tag-g">3</span><span>Baca materi di dalam game dengan teliti agar urutan booting tepat.</span></li>
-            </ul>
+        <!-- Tabel Spesifikasi Struktur Kolom -->
+        <div class="card ctx-green">
+            <div class="card-strip">
+                <span class="card-strip-label">Struktur Kolom &amp; Contoh Data Tabel Excel (Data_Rapor)</span>
+                <span class="badge-pill">Standar Basis Data</span>
+            </div>
+            <table class="table-custom">
+                <thead>
+                    <tr>
+                        <th style="width: 25px; text-align: center;">Baris</th>
+                        <th style="width: 70px;">No_Presensi</th>
+                        <th style="width: 80px;">NISN</th>
+                        <th>Nama_Siswa</th>
+                        <th style="width: 50px;">Kelas</th>
+                        <th>Nama_Wali</th>
+                        <th style="width: 85px;">Ruang_Kelas</th>
+                        <th style="width: 75px;">Tanggal_Ambil</th>
+                        <th style="width: 75px;">Biaya_Komite</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr style="background: #fef3c7; font-weight: 700;">
+                        <td style="text-align: center;">1</td>
+                        <td>No_Presensi</td>
+                        <td>NISN</td>
+                        <td>Nama_Siswa</td>
+                        <td>Kelas</td>
+                        <td>Nama_Wali</td>
+                        <td>Ruang_Kelas</td>
+                        <td>Tanggal_Ambil</td>
+                        <td>Biaya_Komite</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: center; font-weight: 700;">2</td>
+                        <td>1</td>
+                        <td>'0081122331</td>
+                        <td>Agus Haryadi</td>
+                        <td>X-E6</td>
+                        <td>Bambang Haryadi</td>
+                        <td>Ruang 101</td>
+                        <td>18/12/2026</td>
+                        <td>150000</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: center; font-weight: 700;">3</td>
+                        <td>2</td>
+                        <td>'0081122332</td>
+                        <td>Dewi Lestari</td>
+                        <td>X-E6</td>
+                        <td>Surya Lestari</td>
+                        <td>Lab Komputer 1</td>
+                        <td>18/12/2026</td>
+                        <td>150000</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: center; font-weight: 700;">4</td>
+                        <td>3</td>
+                        <td>'0081122333</td>
+                        <td>Farhan Pratama</td>
+                        <td>X-E6</td>
+                        <td>Hendra Pratama</td>
+                        <td>Ruang 102</td>
+                        <td>19/12/2026</td>
+                        <td>200000</td>
+                    </tr>
+                    <tr>
+                        <td colspan="9" style="text-align: center; font-style: italic; color: var(--text-muted); padding: 4px;">
+                            ... lanjutkan pengisian hingga minimal 10 baris data siswa yang berbeda ...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 4 Aturan Emas Checklist -->
+        <div class="card ctx-amber">
+            <div class="card-strip">
+                <span class="card-strip-label" style="color: var(--amber)">📋 Audit 4 Aturan Emas Data Source (Verifikasi Sebelum ke Word)</span>
+                <span class="badge-pill" style="--accent: var(--amber); --accent-tint: var(--amber-tint); --accent-border: var(--amber-border)">Wajib Ceklis</span>
+            </div>
+            <p style="font-size: 9px; margin-bottom: 5px;">Centang kotak di bawah ini setelah Anda memeriksa berkas Excel Anda:</p>
+            <div class="checklist-grid">
+                <div class="check-item">
+                    <div class="check-box"></div>
+                    <span><strong>Aturan 1:</strong> Header kolom berada tepat di Baris 1 (tanpa judul di atasnya).</span>
+                </div>
+                <div class="check-item">
+                    <div class="check-box"></div>
+                    <span><strong>Aturan 2:</strong> Tidak ada sel yang digabung (<em>Merged Cells</em>) pada tabel.</span>
+                </div>
+                <div class="check-item">
+                    <div class="check-box"></div>
+                    <span><strong>Aturan 3:</strong> Tidak ada baris atau kolom kosong di tengah-tengah data.</span>
+                </div>
+                <div class="check-item">
+                    <div class="check-box"></div>
+                    <span><strong>Aturan 4:</strong> Tipe data seragam &amp; file Excel <strong>sudah disimpan dan ditutup (Close)</strong>.</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bukti Penyimpanan -->
+        <div class="card ctx-green" style="margin-bottom: 0;">
+            <div class="card-strip">
+                <span class="card-strip-label">Verifikasi Penyimpanan Berkas Excel</span>
+                <span class="badge-pill">Log Sistem</span>
+            </div>
+            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 8px;">
+                <div class="id-field">
+                    <label>Jalur Direktori Penyimpanan File Excel (File Path)</label>
+                    <div class="id-input-box" style="font-family: 'JetBrains Mono', monospace; font-size: 8.5px;">D:\PRAKTIK_MM\Data_Siswa_XE6.xlsx</div>
+                </div>
+                <div class="id-field">
+                    <label>Jumlah Baris Data Siswa</label>
+                    <div class="id-input-box" style="font-family: 'JetBrains Mono', monospace;">10 Siswa</div>
+                </div>
+            </div>
         </div>
 
         <footer class="page-footer">
-            <span class="pf-brand">RuangInformatika</span>
-            <span>LKPD &middot; SMA Negeri 4 Yogyakarta &middot; Pak Ilyas</span>
-            <span class="pf-page">Halaman 2 / 7</span>
+            <span class="pf-brand">SMA Negeri 4 Yogyakarta &middot; Jobsheet Praktikum TIK</span>
+            <span class="pf-page">Halaman 2 dari 5</span>
         </footer>
     </section>
 
-    <!-- ========== PAGE 3 — MISI 2 ========== -->
+    <!-- ========================================================
+         HALAMAN 3: TAHAP 2 & 3 — MASTER WORD & INTEGRASI
+         ======================================================== -->
     <section class="page">
-        <header class="section-head ctx-purple">
+        <div class="brand-bar">
+            <div class="brand-mark">
+                <img src="images/Logo Patbhe.png" alt="Logo" class="brand-logo-img" />
+                <span class="brand-name">RuangInformatika &middot; Modul Praktik TIK</span>
+            </div>
+            <span class="brand-school">Tahap 2 &amp; 3: Word Master &amp; Mailings</span>
+        </div>
+
+        <header class="section-head ctx-blue">
             <span class="sh-num">02</span>
             <div class="sh-text">
-                <h2>Misi 2 &mdash; Model Lapisan Bawang</h2>
-                <p>Onion Layer Model &middot; Alokasi 10 Menit</p>
+                <h2>Tahap 2 &amp; 3 &mdash; Desain Naskah Master &amp; Integrasi Mailings</h2>
+                <p>Aplikasi: Microsoft Word &middot; Bobot: 25 Poin &middot; Alokasi: 25 Menit</p>
             </div>
         </header>
 
-        <div class="card ctx-purple">
+        <!-- Tahap 2: Naskah Master Word -->
+        <div class="card ctx-blue">
             <div class="card-strip">
-                <div class="card-dots"><span></span><span></span><span></span></div>
-                <span class="card-strip-label">Mengupas Lapisan Sistem Operasi</span>
+                <span class="card-strip-label">Langkah Pembuatan Dokumen Master (Undangan_Rapor_Patbhe.docx)</span>
+                <span class="badge-pill">Template Surat</span>
             </div>
-            <p style="font-size: 10.5px; margin-bottom: 6px">Temukan diagram <strong>Lapisan Bawang Sistem Operasi</strong> di dalam game, lalu lengkapi urutan lapisannya dari bagian paling dalam (inti) hingga paling luar!</p>
+            <div class="step-row ctx-blue">
+                <span class="step-num">1</span>
+                <div class="step-body">
+                    Buka Microsoft Word, atur ukuran kertas ke <strong>A4</strong> dengan margin: Atas 2.5 cm, Bawah 2 cm, Kiri 2.5 cm, Kanan 2 cm. Simpan dengan nama <code>Undangan_Rapor_Patbhe.docx</code>.
+                </div>
+            </div>
+            <div class="step-row ctx-blue">
+                <span class="step-num">2</span>
+                <div class="step-body">
+                    Buat <strong>KOP Surat Resmi SMAN 4 Yogyakarta</strong>: Sisipkan logo sekolah, ketik identitas sekolah lengkap dengan font <em>Times New Roman / Arial</em>, lalu beri garis pembatas ganda (<em>Bottom Border: Double Line</em>).
+                </div>
+            </div>
+            <div class="step-row ctx-blue">
+                <span class="step-num">3</span>
+                <div class="step-body">
+                    Tulis struktur surat dinas: Nomor Surat (<code>421/UND/2026</code>), Lampiran (<code>-</code>), Perihal (<code>Undangan Pengambilan Laporan Hasil Belajar</code>), Tanggal Surat, Salam Pembuka, Paragraf Pembuka, dan Paragraf Penutup.
+                </div>
+            </div>
+        </div>
 
-            <table class="data-table">
+        <!-- Tahap 3: Integrasi Data -->
+        <div class="card ctx-sky">
+            <div class="card-strip">
+                <span class="card-strip-label">Langkah Menghubungkan File Excel ke Word (Select Recipients)</span>
+                <span class="badge-pill">Tab Mailings</span>
+            </div>
+            <div style="background: #f8fafc; border: 1px solid var(--border); border-radius: 8px; padding: 7px 10px; margin-bottom: 6px;">
+                <p style="font-size: 9px; line-height: 1.4;">
+                    <strong>Alur Klik:</strong> Tab <code>Mailings</code> &rarr; grup <em>Start Mail Merge</em> &rarr; klik <code>Select Recipients</code> &rarr; pilih <code>Use an Existing List...</code> &rarr; arahkan ke file <code>Data_Siswa_XE6.xlsx</code> &rarr; pilih tabel <code>Data_Rapor$</code> &rarr; centang <em>"First row of data contains column headers"</em> &rarr; klik <strong>OK</strong>.
+                </p>
+            </div>
+
+            <p style="font-size: 9.5px; font-weight: 700; margin-bottom: 4px;">Penyisipan Penanda Data (Merge Field) pada Naskah:</p>
+            <p style="font-size: 9px; color: var(--text-muted); margin-bottom: 6px;">
+                Gunakan menu <code>Insert Merge Field</code> untuk meletakkan kode kurung siku ganda <code>&laquo;...&raquo;</code> pada titik yang sesuai:
+            </p>
+
+            <table class="table-custom">
                 <thead>
                     <tr>
-                        <th style="width: 22%">Urutan Lapisan</th>
-                        <th style="width: 22%">Nama Lapisan</th>
-                        <th style="width: 56%">Peran / Penjelasan Singkat &amp; Contoh</th>
+                        <th style="width: 140px;">Elemen Surat di Word</th>
+                        <th style="width: 150px;">Nama Merge Field yang Dipanggil</th>
+                        <th>Tampilan Hasil Pratinjau (Preview Results)</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td style="font-size: 9.5px">Lapisan Ke-1<br /><span style="font-weight: 500; color: var(--text-muted)">(Inti Terdalam)</span></td>
-                        <td><strong style="color: var(--purple)">H</strong><span class="dotted" style="min-width: 100px"></span></td>
-                        <td style="font-size: 9.5px; color: var(--text-muted); font-style: italic">Berisi perangkat fisik seperti Terminals, Printers, dan Disks.</td>
-                    </tr>
-                    <tr class="alt">
-                        <td style="font-size: 9.5px">Lapisan Ke-2</td>
-                        <td><strong style="color: var(--purple)">K</strong><span class="dotted" style="min-width: 100px"></span></td>
-                        <td><span class="dotted"></span><span class="dotted" style="margin-top: 5px"></span></td>
+                        <td>Kepada Yth. Bapak/Ibu:</td>
+                        <td><code>&laquo;Nama_Wali&raquo;</code></td>
+                        <td>Bambang Haryadi</td>
                     </tr>
                     <tr>
-                        <td style="font-size: 9.5px">Lapisan Ke-3</td>
-                        <td><strong style="color: var(--purple)">S</strong><span class="dotted" style="min-width: 100px"></span></td>
-                        <td><span class="dotted"></span><span class="dotted" style="margin-top: 5px"></span></td>
+                        <td>Nama Peserta Didik:</td>
+                        <td><code>&laquo;Nama_Siswa&raquo;</code></td>
+                        <td>Agus Haryadi</td>
                     </tr>
-                    <tr class="alt">
-                        <td style="font-size: 9.5px">Lapisan Ke-4<br /><span style="font-weight: 500; color: var(--text-muted)">(Paling Luar)</span></td>
-                        <td><strong style="color: var(--purple)">A</strong><span class="dotted" style="min-width: 60px"></span><strong style="color: var(--purple)"> &amp; U</strong><span class="dotted" style="min-width: 60px"></span></td>
-                        <td><span class="dotted"></span><span class="dotted" style="margin-top: 5px"></span></td>
+                    <tr>
+                        <td>NISN / No. Presensi:</td>
+                        <td><code>&laquo;NISN&raquo;</code> / <code>&laquo;No_Presensi&raquo;</code></td>
+                        <td>0081122331 / 1</td>
+                    </tr>
+                    <tr>
+                        <td>Kelas Siswa:</td>
+                        <td><code>&laquo;Kelas&raquo;</code></td>
+                        <td>X-E6</td>
+                    </tr>
+                    <tr>
+                        <td>Ruang Pengambilan Rapor:</td>
+                        <td><code>&laquo;Ruang_Kelas&raquo;</code></td>
+                        <td>Ruang 101</td>
                     </tr>
                 </tbody>
             </table>
-            <p class="hint-note">💡 Petunjuk: Inisial <strong>H</strong>, <strong>K</strong>, <strong>S</strong>, <strong>A</strong>, <strong>U</strong> adalah huruf awal dari nama lapisan.</p>
         </div>
 
-        <div class="notes-box">
-            <span class="checklist-pill" style="--accent: var(--purple); --accent-tint: #ffffff; --accent-border: var(--purple-border)">📖 Tips Misi 2</span>
-            <ul class="notes-list">
-                <li>
-                    <span class="note-tag">1</span><span><strong>Lapisan terdalam (inti)</strong> adalah perangkat fisik yang bisa disentuh.</span>
-                </li>
-                <li>
-                    <span class="note-tag">2</span><span>Semakin ke luar, lapisan semakin dekat dengan <strong>pengguna</strong>.</span>
-                </li>
-                <li><span class="note-tag">3</span><span>Setiap lapisan punya peran berbeda — jangan tertukar urutannya.</span></li>
-            </ul>
+        <!-- Uji Coba Preview Results -->
+        <div class="card ctx-purple" style="margin-bottom: 0;">
+            <div class="card-strip">
+                <span class="card-strip-label" style="color: var(--purple)">🔍 Uji Coba Preview Results &amp; Pemeriksaan Navigasi Data</span>
+                <span class="badge-pill" style="--accent: var(--purple); --accent-tint: var(--purple-tint); --accent-border: var(--purple-border)">Verifikasi Data</span>
+            </div>
+            <p style="font-size: 9px; margin-bottom: 6px;">
+                Klik tombol <strong>Preview Results</strong> pada tab <em>Mailings</em>. Uji tombol navigasi record <code>&lt;</code> dan <code>&gt;</code> untuk memastikan setiap record berganti secara mulus:
+            </p>
+            <div class="checklist-grid">
+                <div class="check-item">
+                    <div class="check-box"></div>
+                    <span>Data Record 1 muncul atas nama <strong>Agus Haryadi</strong>.</span>
+                </div>
+                <div class="check-item">
+                    <div class="check-box"></div>
+                    <span>Data Record 2 muncul atas nama <strong>Dewi Lestari</strong>.</span>
+                </div>
+                <div class="check-item">
+                    <div class="check-box"></div>
+                    <span>Digit 0 pada nomor NISN tetap utuh terbaca (tidak terpotong).</span>
+                </div>
+                <div class="check-item">
+                    <div class="check-box"></div>
+                    <span>Format spasi dan tanda koma antar field tertata rapi.</span>
+                </div>
+            </div>
         </div>
 
         <footer class="page-footer">
-            <span class="pf-brand">RuangInformatika</span>
-            <span>LKPD &middot; SMA Negeri 4 Yogyakarta &middot; Pak Ilyas</span>
-            <span class="pf-page">Halaman 3 / 7</span>
+            <span class="pf-brand">SMA Negeri 4 Yogyakarta &middot; Jobsheet Praktikum TIK</span>
+            <span class="pf-page">Halaman 3 dari 5</span>
         </footer>
     </section>
 
-    <!-- ========== PAGE 4 — MISI 3 ========== -->
+    <!-- ========================================================
+         HALAMAN 4: TAHAP 4 & 5 — LOGIKA RULES, SWITCH & EXPORT
+         ======================================================== -->
     <section class="page">
-        <header class="section-head ctx-cyan">
+        <div class="brand-bar">
+            <div class="brand-mark">
+                <img src="images/Logo Patbhe.png" alt="Logo" class="brand-logo-img" />
+                <span class="brand-name">RuangInformatika &middot; Modul Praktik TIK</span>
+            </div>
+            <span class="brand-school">Tahap 4 &amp; 5: Logika &amp; Cetak Massal</span>
+        </div>
+
+        <header class="section-head ctx-purple">
             <span class="sh-num">03</span>
             <div class="sh-text">
-                <h2>Misi 3 &mdash; Berburu 4 Jenis Sistem Operasi</h2>
-                <p>Klasifikasi OS &middot; Alokasi 10 Menit</p>
+                <h2>Tahap 4 &amp; 5 &mdash; Logika Rules, Switch Codes &amp; Finish Merge</h2>
+                <p>Fitur Lanjutan &middot; Bobot: 30 Poin &middot; Alokasi: 25 Menit</p>
             </div>
         </header>
 
-        <div class="card ctx-cyan">
+        <!-- Tahap 4A: Aturan Percabangan If-Then-Else -->
+        <div class="card ctx-purple">
             <div class="card-strip">
-                <div class="card-dots"><span></span><span></span><span></span></div>
-                <span class="card-strip-label">4 Jenis Sistem Operasi &amp; Karakteristiknya</span>
+                <span class="card-strip-label">Langkah Praktik 4A: Logika Percabangan (Rules If... Then... Else...)</span>
+                <span class="badge-pill">Fitur Logika</span>
             </div>
-            <p style="font-size: 10.5px; margin-bottom: 6px">Di dalam game terdapat 4 jenis Sistem Operasi. Pasangkan dan lengkapi karakteristik serta contoh nyatanya pada tabel berikut!</p>
-
-            <table class="data-table">
+            <p style="font-size: 9px; margin-bottom: 5px;">
+                Dalam naskah surat, panitia ingin menampilkan <strong>instruksi khusus</strong> secara dinamis jika wali murid diarahkan ke ruang laboratorium komputer:
+            </p>
+            <div style="background: #f8fafc; border: 1px solid var(--border); border-radius: 6px; padding: 6px 10px; margin-bottom: 6px; font-size: 9px;">
+                <strong>Instruksi Klik:</strong> Tab <code>Mailings</code> &rarr; grup <em>Write &amp; Insert Fields</em> &rarr; klik <code>Rules</code> &rarr; pilih <code>If... Then... Else...</code>.
+            </div>
+            <table class="table-custom">
                 <thead>
                     <tr>
-                        <th style="width: 22%">Jenis OS</th>
-                        <th style="width: 45%">Perangkat &amp; Karakteristik</th>
-                        <th style="width: 33%">Contoh OS / Perangkat</th>
+                        <th style="width: 140px;">Parameter Dialog Rules</th>
+                        <th>Isian Konfigurasi Praktik Siswa</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td>Desktop OS</td>
-                        <td><span class="dotted"></span><span class="dotted" style="margin-top: 5px"></span></td>
-                        <td><span class="dotted"></span></td>
-                    </tr>
-                    <tr class="alt">
-                        <td>Mobile OS</td>
-                        <td><span class="dotted"></span><span class="dotted" style="margin-top: 5px"></span></td>
-                        <td><span class="dotted"></span></td>
+                        <td><strong>Field name:</strong></td>
+                        <td><code>Ruang_Kelas</code></td>
                     </tr>
                     <tr>
-                        <td>Embedded OS</td>
-                        <td><span class="dotted"></span><span class="dotted" style="margin-top: 5px"></span></td>
-                        <td><span class="dotted"></span></td>
+                        <td><strong>Comparison:</strong></td>
+                        <td><code>Equal to</code> (Sama dengan)</td>
                     </tr>
-                    <tr class="alt">
-                        <td>Server OS</td>
-                        <td><span class="dotted"></span><span class="dotted" style="margin-top: 5px"></span></td>
-                        <td><span class="dotted"></span></td>
+                    <tr>
+                        <td><strong>Compare to:</strong></td>
+                        <td><code>Lab Komputer 1</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Insert this text:</strong></td>
+                        <td><code>*Catatan: Harap melepas alas kaki sebelum memasuki ruang laboratorium komputer.</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Otherwise insert this text:</strong></td>
+                        <td><code>*Catatan: Silakan langsung menuju ruang kelas masing-masing sesuai nomor ruang.</code></td>
                     </tr>
                 </tbody>
             </table>
         </div>
 
-        <div class="notes-box">
-            <span class="checklist-pill" style="--accent: var(--cyan); --accent-tint: #ffffff; --accent-border: var(--cyan-border)">🔍 Tips Misi 3</span>
-            <ul class="notes-list">
-                <li>
-                    <span class="note-tag tag-g">1</span><span>Perhatikan <strong>konteks penggunaan</strong> setiap jenis OS — di perangkat apa OS itu dipasang?</span>
-                </li>
-                <li>
-                    <span class="note-tag tag-g">2</span><span><strong>Desktop</strong> untuk PC/laptop; <strong>Mobile</strong> untuk smartphone/tablet.</span>
-                </li>
-                <li>
-                    <span class="note-tag tag-g">3</span><span><strong>Embedded</strong> untuk perangkat khusus (IoT, mesin); <strong>Server</strong> untuk layanan jaringan.</span>
-                </li>
-            </ul>
+        <!-- Tahap 4B: Modifikasi Format Switch Codes Alt+F9 -->
+        <div class="card ctx-blue">
+            <div class="card-strip">
+                <span class="card-strip-label">Langkah Praktik 4B: Kode Pengubah Format (Switch Codes &mdash; Alt + F9)</span>
+                <span class="badge-pill">Formatting Code</span>
+            </div>
+            <p style="font-size: 9px; margin-bottom: 5px;">
+                Secara default, data tanggal dari Excel sering muncul format angka murni (misal: <code>12/18/2026</code>) dan nominal uang tanpa tanda rupiah. Modifikasi kode field menggunakan tombol pintasan <strong>Alt + F9</strong>:
+            </p>
+
+            <div style="display: flex; flex-direction: column; gap: 5px;">
+                <div style="border: 1px solid var(--border); border-radius: 6px; padding: 6px 8px; background: #ffffff;">
+                    <span style="font-weight: 700; font-size: 9px; color: var(--navy);">1. Format Tanggal Standar Bahasa Indonesia (18 Desember 2026):</span>
+                    <div class="code-box">{ MERGEFIELD Tanggal_Ambil \@ "dd MMMM yyyy" }</div>
+                </div>
+                <div style="border: 1px solid var(--border); border-radius: 6px; padding: 6px 8px; background: #ffffff;">
+                    <span style="font-weight: 700; font-size: 9px; color: var(--navy);">2. Format Mata Uang Rupiah Resmi (Rp 150.000,00):</span>
+                    <div class="code-box">{ MERGEFIELD Biaya_Komite \# "Rp #,##0.00" }</div>
+                </div>
+            </div>
+            <p style="font-size: 8.5px; color: var(--text-muted); margin-top: 4px;">
+                <em>*Catatan: Setelah mengetik kode di atas, tekan kembali <strong>Alt + F9</strong> untuk menutup kode, lalu tekan <strong>F9</strong> untuk memperbarui tampilan.</em>
+            </p>
         </div>
 
-        <footer class="page-footer">
-            <span class="pf-brand">RuangInformatika</span>
-            <span>LKPD &middot; SMA Negeri 4 Yogyakarta &middot; Pak Ilyas</span>
-            <span class="pf-page">Halaman 4 / 7</span>
-        </footer>
-    </section>
-
-    <!-- ========== PAGE 5 — MISI 4 BAGIAN 1 ========== -->
-    <section class="page">
-        <header class="section-head ctx-green">
-            <span class="sh-num">04</span>
-            <div class="sh-text">
-                <h2>Misi 4 &mdash; Di Balik Layar Sistem Operasi</h2>
-                <p>5 Peran &amp; Fungsi Utama &middot; Bagian 1 dari 2 &middot; Alokasi 12 Menit</p>
-            </div>
-        </header>
-
-        <div class="card ctx-green">
+        <!-- Tahap 5: Finish & Merge ke PDF -->
+        <div class="card ctx-rose">
             <div class="card-strip">
-                <div class="card-dots"><span></span><span></span><span></span></div>
-                <span class="card-strip-label">1 &middot; Pengelolaan Memori (Memory Management)</span>
+                <span class="card-strip-label" style="color: var(--rose)">Tahap 5: Cetak Gabung Akhir ke Berkas PDF (Finish &amp; Merge)</span>
+                <span class="badge-pill" style="--accent: var(--rose); --accent-tint: var(--rose-tint); --accent-border: var(--rose-border)">Ekspor PDF</span>
             </div>
-            <div class="qa-item" style="--accent: var(--green)">
-                <p class="qa-q"><span class="qa-num">1</span>Bagaimana cara Sistem Operasi mengatur data aplikasi di dalam RAM agar tidak saling bertabrakan?</p>
-                <div class="answer-box tall">
-                    <span class="ab-hint">Jawabanmu</span>
-                    <div class="ab-lines"></div>
+            <div class="step-row ctx-rose">
+                <span class="step-num" style="background: var(--rose);">1</span>
+                <div class="step-body">
+                    Klik tombol <strong>Finish &amp; Merge</strong> pada tab <em>Mailings</em> paling kanan &rarr; pilih <strong>Print Documents...</strong>.
+                </div>
+            </div>
+            <div class="step-row ctx-rose">
+                <span class="step-num" style="background: var(--rose);">2</span>
+                <div class="step-body">
+                    Pilih opsi <strong>All</strong> (semua record penerima) &rarr; klik <strong>OK</strong>.
+                </div>
+            </div>
+            <div class="step-row ctx-rose">
+                <span class="step-num" style="background: var(--rose);">3</span>
+                <div class="step-body">
+                    Pada kotak dialog Printer, pilih <strong>Microsoft Print to PDF</strong> &rarr; simpan berkas dengan format penamaan resmi:
+                    <code>PRAKTIK_MM_[KELAS]_[ABSEN]_[NAMA].pdf</code>. Pastikan berkas PDF yang dihasilkan memiliki <strong>10 halaman utuh</strong>.
                 </div>
             </div>
         </div>
 
-        <div class="card ctx-green">
+        <!-- Troubleshooting Log -->
+        <div class="card ctx-amber" style="margin-bottom: 0;">
             <div class="card-strip">
-                <div class="card-dots"><span></span><span></span><span></span></div>
-                <span class="card-strip-label">2 &middot; Pengelolaan Proses &amp; Multitasking Round Robin</span>
+                <span class="card-strip-label" style="color: var(--amber)">🛠️ Lembar Catatan Kendala Praktik (Troubleshooting Log)</span>
+                <span class="badge-pill">Analisis Siswa</span>
             </div>
-            <div class="qa-item" style="--accent: var(--green)">
-                <p class="qa-q">
-                    <span class="qa-num">2</span>Mengapa komputer dengan 1 CPU bisa menjalankan Spotify, Word, dan Browser secara bersamaan (Multitasking)? Jelaskan cara kerja metode <strong>Round Robin (Time Sharing)</strong>!
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                <div>
+                    <label style="font-size: 8px; font-weight: 700; text-transform: uppercase; color: var(--text-muted);">Kendala Teknis yang Dihadapi Saat Praktik:</label>
+                    <div class="fill-box" style="min-height: 28px;">Contoh: Angka 0 di NISN sempat hilang / Excel terkunci saat ditautkan...</div>
+                </div>
+                <div>
+                    <label style="font-size: 8px; font-weight: 700; text-transform: uppercase; color: var(--text-muted);">Solusi / Langkah Perbaikan yang Dilakukan:</label>
+                    <div class="fill-box" style="min-height: 28px;">Contoh: Menutup aplikasi Excel sebelum klik Select Recipients di Word...</div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="page-footer">
+            <span class="pf-brand">SMA Negeri 4 Yogyakarta &middot; Jobsheet Praktikum TIK</span>
+            <span class="pf-page">Halaman 4 dari 5</span>
+        </footer>
+    </section>
+
+    <!-- ========================================================
+         HALAMAN 5: REFLEKSI, RUBRIK ASESMEN & PENGESAHAN
+         ======================================================== -->
+    <section class="page">
+        <div class="brand-bar">
+            <div class="brand-mark">
+                <img src="images/Logo Patbhe.png" alt="Logo" class="brand-logo-img" />
+                <span class="brand-name">RuangInformatika &middot; Modul Praktik TIK</span>
+            </div>
+            <span class="brand-school">Tahap 6: Asesmen &amp; Refleksi</span>
+        </div>
+
+        <header class="section-head ctx-amber">
+            <span class="sh-num">04</span>
+            <div class="sh-text">
+                <h2>Tahap 6 &mdash; Refleksi Praktik &amp; Rubrik Asesmen Kinerja Guru</h2>
+                <p>Evaluasi Keterampilan Portofolio &middot; Alokasi: 20 Menit</p>
+            </div>
+        </header>
+
+        <!-- Refleksi Siswa -->
+        <div class="card ctx-purple">
+            <div class="card-strip">
+                <span class="card-strip-label">💡 Refleksi Mandiri Peserta Didik</span>
+                <span class="badge-pill">Refleksi Kritis</span>
+            </div>
+            <div style="margin-bottom: 6px;">
+                <p style="font-size: 9px; font-weight: 700; margin-bottom: 2px;">
+                    1. Dokumen massal apa lagi yang menurutmu sangat bermanfaat dibuat dengan Mail Merge di lingkungan sekolah?
                 </p>
-                <div class="answer-box xl">
-                    <span class="ab-hint">Jelaskan mekanisme Round Robin</span>
-                    <div class="ab-lines"></div>
+                <div class="fill-box" style="min-height: 24px;"></div>
+            </div>
+            <div>
+                <p style="font-size: 9px; font-weight: 700; margin-bottom: 2px;">
+                    2. Apa kemudahan terbesar yang kamu rasakan menggunakan Mail Merge dibandingkan mengetik surat secara manual?
+                </p>
+                <div class="fill-box" style="min-height: 24px;"></div>
+            </div>
+        </div>
+
+        <!-- Rubrik Penilaian Kinerja Guru -->
+        <div class="card ctx-green">
+            <div class="card-strip">
+                <span class="card-strip-label" style="color: var(--green)">📊 Rubrik Penilaian Kinerja Praktik (Diisi Guru Pengampu)</span>
+                <span class="badge-pill">Standar Asesmen</span>
+            </div>
+            <table class="table-custom">
+                <thead>
+                    <tr>
+                        <th style="width: 25px; text-align: center;">No</th>
+                        <th>Indikator Aspek Keterampilan Praktik</th>
+                        <th style="width: 60px; text-align: center;">Skor Maks</th>
+                        <th style="width: 60px; text-align: center;">Skor Siswa</th>
+                        <th>Catatan Khusus Pengamatan</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="text-align: center; font-weight: 700;">1</td>
+                        <td>
+                            <strong>Arsitektur Basis Data Excel:</strong> Memenuhi 4 Aturan Emas, header baris 1, tanpa merged cells, data minimal 10 siswa lengkap.
+                        </td>
+                        <td style="text-align: center; font-weight: 700;">20</td>
+                        <td style="text-align: center;"></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: center; font-weight: 700;">2</td>
+                        <td>
+                            <strong>Desain Dokumen Master Word:</strong> KOP resmi SMAN 4, garis ganda, nomor surat dinas, serta tata letak surat resmi yang proporsional.
+                        </td>
+                        <td style="text-align: center; font-weight: 700;">20</td>
+                        <td style="text-align: center;"></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: center; font-weight: 700;">3</td>
+                        <td>
+                            <strong>Integrasi Mail Merge:</strong> Berhasil menautkan file Excel, meletakkan seluruh Merge Field dengan tepat, dan lolos uji Preview Results.
+                        </td>
+                        <td style="text-align: center; font-weight: 700;">25</td>
+                        <td style="text-align: center;"></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: center; font-weight: 700;">4</td>
+                        <td>
+                            <strong>Logika Rules &amp; Switch Codes:</strong> Aturan percabangan If-Else berfungsi dinamis dan kode format tanggal/rupiah (Alt+F9) tampil rapi.
+                        </td>
+                        <td style="text-align: center; font-weight: 700;">20</td>
+                        <td style="text-align: center;"></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: center; font-weight: 700;">5</td>
+                        <td>
+                            <strong>Ekspor PDF &amp; Ketepatan Waktu:</strong> Hasil Finish &amp; Merge PDF 10 halaman utuh, rapi, dan dikumpulkan tepat waktu ke Drive.
+                        </td>
+                        <td style="text-align: center; font-weight: 700;">15</td>
+                        <td style="text-align: center;"></td>
+                        <td></td>
+                    </tr>
+                    <tr style="background: #f1f5f9; font-weight: 800;">
+                        <td colspan="2" style="text-align: right; padding-right: 12px;">TOTAL SKOR KINERJA KETERAMPILAN:</td>
+                        <td style="text-align: center; color: var(--blue);">100</td>
+                        <td style="text-align: center; font-size: 11px; color: var(--green);"></td>
+                        <td style="font-size: 8px;">Kategori: SB / B / C / K</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Umpan Balik Guru & Lembar Pengesahan -->
+        <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 10px; margin-bottom: 0;">
+            <div class="card ctx-blue" style="margin-bottom: 0;">
+                <div class="card-strip">
+                    <span class="card-strip-label">Catatan &amp; Umpan Balik Guru Pengampu</span>
+                </div>
+                <div class="fill-box" style="min-height: 52px; font-style: italic;">
+                    "Kerja bagus! Struktur database tertata rapi dan penerapan logika Mail Merge berjalan otomatis tanpa kendala."
+                </div>
+            </div>
+
+            <!-- Tanda Tangan Pengesahan -->
+            <div class="card ctx-navy" style="margin-bottom: 0; text-align: center;">
+                <div class="card-strip" style="justify-content: center;">
+                    <span class="card-strip-label">Pengesahan Hasil Praktik</span>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 8.5px; margin-top: 4px;">
+                    <div>
+                        <span>Peserta Didik,</span>
+                        <div style="height: 34px;"></div>
+                        <span style="font-weight: 700; text-decoration: underline;">( ........................................ )</span><br />
+                        <span style="color: var(--text-muted);">NISN.</span>
+                    </div>
+                    <div>
+                        <span>Guru Pengampu,</span>
+                        <div style="height: 34px;"></div>
+                        <span style="font-weight: 700; text-decoration: underline;">Ilyas Fandhi Anggara, S.Kom</span><br />
+                        <span style="color: var(--text-muted);">NIP. 19930815 202421 1 018</span>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="notes-box">
-            <span class="checklist-pill" style="--accent: var(--green); --accent-tint: #ffffff; --accent-border: var(--green-border)">💡 Tips Misi 4 (Bagian 1)</span>
-            <ul class="notes-list">
-                <li>
-                    <span class="note-tag tag-h">1</span><span><strong>Memory Management</strong> mengatur alokasi &amp; dealokasi RAM agar aplikasi tidak saling bertabrakan.</span>
-                </li>
-                <li>
-                    <span class="note-tag tag-h">2</span><span><strong>Round Robin</strong> membagi waktu CPU secara bergiliran (time sharing) ke setiap proses.</span>
-                </li>
-                <li><span class="note-tag tag-h">3</span><span>Hubungkan penjelasan dengan pengalamanmu saat bermain game atau membuka banyak aplikasi.</span></li>
-            </ul>
-        </div>
-
+        <!-- Footer Halaman 5 -->
         <footer class="page-footer">
-            <span class="pf-brand">RuangInformatika</span>
-            <span>LKPD &middot; SMA Negeri 4 Yogyakarta &middot; Pak Ilyas</span>
-            <span class="pf-page">Halaman 5 / 7</span>
+            <span class="pf-brand">SMA Negeri 4 Yogyakarta &middot; Jobsheet Praktikum TIK</span>
+            <span class="pf-page">Halaman 5 dari 5</span>
         </footer>
     </section>
 
-    <!-- ========== PAGE 6 — MISI 4 BAGIAN 2 ========== -->
-    <section class="page">
-        <header class="section-head ctx-green">
-            <span class="sh-num">04</span>
-            <div class="sh-text">
-                <h2>Misi 4 &mdash; Di Balik Layar Sistem Operasi</h2>
-                <p>5 Peran &amp; Fungsi Utama &middot; Bagian 2 dari 2 &middot; Alokasi 12 Menit</p>
-            </div>
-        </header>
-
-        <div class="card ctx-green">
-            <div class="card-strip">
-                <div class="card-dots"><span></span><span></span><span></span></div>
-                <span class="card-strip-label">3 &middot; Pengelolaan Antarmuka Kernel Hardware (Siklus IPO)</span>
-            </div>
-            <p style="font-size: 10.5px; margin-bottom: 6px">Jelaskan bagaimana Sistem Operasi bekerja sama dengan hardware saat kamu menekan tombol huruf di keyboard hingga huruf tersebut tampil di layar monitor!</p>
-            <div style="display: flex; flex-direction: column; gap: 7px; font-size: 10.5px">
-                <div><strong style="color: var(--amber)">Input:</strong> <span class="blank xl"></span></div>
-                <div><strong style="color: var(--purple)">Proses:</strong> <span class="blank xl"></span></div>
-                <div><strong style="color: var(--green)">Output:</strong> <span class="blank xl"></span></div>
-            </div>
-        </div>
-
-        <div class="card ctx-green">
-            <div class="card-strip">
-                <div class="card-dots"><span></span><span></span><span></span></div>
-                <span class="card-strip-label">4 &middot; Pengelolaan Interaksi dengan Pengguna (User Interface)</span>
-            </div>
-            <p style="font-size: 10.5px; margin-bottom: 6px">Tuliskan perbedaan antara kedua antarmuka berikut beserta contohnya yang ada di game:</p>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px">
-                <div style="background: #ffffff; border: 1px solid var(--border); border-left: 3px solid var(--purple); border-radius: 8px; padding: 8px 10px">
-                    <div class="mini-head c-purple" style="margin-top: 0">GUI &mdash; Instruksi Simbolik</div>
-                    <div style="font-size: 9.5px; margin-bottom: 4px">Deskripsi: <span class="blank md"></span></div>
-                    <div style="font-size: 9.5px">Contoh: <span class="blank md"></span></div>
-                </div>
-                <div style="background: #ffffff; border: 1px solid var(--border); border-left: 3px solid var(--sky); border-radius: 8px; padding: 8px 10px">
-                    <div class="mini-head c-sky" style="margin-top: 0">CLI &mdash; Instruksi Tekstual</div>
-                    <div style="font-size: 9.5px; margin-bottom: 4px">Deskripsi: <span class="blank md"></span></div>
-                    <div style="font-size: 9.5px">Contoh: <span class="blank md"></span></div>
-                </div>
-            </div>
-        </div>
-
-        <div class="card ctx-green">
-            <div class="card-strip">
-                <div class="card-dots"><span></span><span></span><span></span></div>
-                <span class="card-strip-label">5 &middot; Penyediaan Utilitas &amp; Pengelolaan File</span>
-            </div>
-            <p style="font-size: 10.5px; margin-bottom: 4px">Sebutkan minimal 3 aktivitas pengelolaan file atau program utilitas yang disediakan oleh Sistem Operasi!</p>
-            <div style="display: flex; flex-direction: column; gap: 6px; font-size: 10.5px">
-                <div><strong style="color: var(--green)">1.</strong> <span class="blank xl"></span></div>
-                <div><strong style="color: var(--green)">2.</strong> <span class="blank xl"></span></div>
-                <div><strong style="color: var(--green)">3.</strong> <span class="blank xl"></span></div>
-            </div>
-        </div>
-
-        <div class="notes-box">
-            <span class="checklist-pill" style="--accent: var(--green); --accent-tint: #ffffff; --accent-border: var(--green-border)">💡 Tips Misi 4 (Bagian 2)</span>
-            <ul class="notes-list">
-                <li>
-                    <span class="note-tag tag-h">1</span><span><strong>IPO</strong> menggambarkan alur <em>Input → Proses → Output</em> antara pengguna dan hardware.</span>
-                </li>
-                <li>
-                    <span class="note-tag tag-h">2</span><span><strong>GUI</strong> menggunakan ikon/simbol (klik); <strong>CLI</strong> menggunakan teks perintah.</span>
-                </li>
-                <li>
-                    <span class="note-tag tag-h">3</span><span><strong>Utilitas</strong> membantu pengelolaan file, backup, kompresi, dan pembersihan sistem.</span>
-                </li>
-            </ul>
-        </div>
-
-        <footer class="page-footer">
-            <span class="pf-brand">RuangInformatika</span>
-            <span>LKPD &middot; SMA Negeri 4 Yogyakarta &middot; Pak Ilyas</span>
-            <span class="pf-page">Halaman 6 / 7</span>
-        </footer>
-    </section>
-
-    <!-- ========== PAGE 7 — REFLEKSI ========== -->
-    <section class="page">
-        <header class="section-head ctx-purple">
-            <span class="sh-num">05</span>
-            <div class="sh-text">
-                <h2>Refleksi &amp; Bukti Penyelesaian Game</h2>
-                <p>Refleksi Mandiri &middot; Alokasi 5 Menit</p>
-            </div>
-        </header>
-
-        <div class="card ctx-purple">
-            <div class="card-strip">
-                <div class="card-dots"><span></span><span></span><span></span></div>
-                <span class="card-strip-label">Jawablah Secara Mandiri</span>
-            </div>
-
-            <div class="qa-item" style="--accent: var(--purple)">
-                <p class="qa-q"><span class="qa-num">1</span>Bagian mana di dalam game yang menurutmu <strong>paling seru</strong> atau paling membantumu memahami cara kerja Sistem Operasi? Mengapa?</p>
-                <div class="answer-box tall">
-                    <span class="ab-hint">Tulis refleksimu</span>
-                    <div class="ab-lines"></div>
-                </div>
-            </div>
-
-            <div class="qa-item" style="--accent: var(--purple)">
-                <p class="qa-q"><span class="qa-num">2</span>Tuliskan <strong>1 hal baru</strong> yang baru kamu ketahui hari ini setelah menyelesaikan game dan LKPD ini!</p>
-                <div class="answer-box tall">
-                    <span class="ab-hint">Tulis temuan barumu</span>
-                    <div class="ab-lines"></div>
-                </div>
-            </div>
-        </div>
-
-        <div class="card ctx-purple">
-            <div class="card-strip">
-                <div class="card-dots"><span></span><span></span><span></span></div>
-                <span class="card-strip-label">📌 Ringkasan Perjalanan Misi</span>
-            </div>
-            <div class="step-row" style="--accent: var(--purple); --accent-tint: var(--purple-tint); --accent-border: var(--purple-border)">
-                <span class="step-num">1</span>
-                <div class="step-body"><strong>Misi 1:</strong> Memahami pengertian OS dan 5 tahap booting.</div>
-            </div>
-            <div class="step-row" style="--accent: var(--purple); --accent-tint: var(--purple-tint); --accent-border: var(--purple-border)">
-                <span class="step-num">2</span>
-                <div class="step-body"><strong>Misi 2:</strong> Membedah Model Lapisan Bawang (Onion Layer).</div>
-            </div>
-            <div class="step-row" style="--accent: var(--purple); --accent-tint: var(--purple-tint); --accent-border: var(--purple-border)">
-                <span class="step-num">3</span>
-                <div class="step-body"><strong>Misi 3:</strong> Mengklasifikasikan 4 jenis Sistem Operasi.</div>
-            </div>
-            <div class="step-row" style="--accent: var(--purple); --accent-tint: var(--purple-tint); --accent-border: var(--purple-border)">
-                <span class="step-num">4</span>
-                <div class="step-body"><strong>Misi 4:</strong> Menganalisis 5 peran utama Sistem Operasi.</div>
-            </div>
-
-            <div class="checklist">
-                <span class="checklist-pill">✨ Checklist Refleksi</span>
-                <ul>
-                    <li><span class="check-box"></span><span>Sudah menyelesaikan seluruh 4 misi di dalam game</span></li>
-                    <li><span class="check-box"></span><span>Sudah melengkapi semua jawaban di LKPD ini</span></li>
-                    <li><span class="check-box"></span><span>Sudah menuliskan refleksi mandiri dengan jujur</span></li>
-                    <li><span class="check-box"></span><span>Sudah memahami peran tiap komponen &amp; dinamika sistem operasi</span></li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="notes-box" style="margin-top: 8px; text-align: center; background: linear-gradient(135deg, #4c1d95, #7c3aed); border: none">
-            <p style="font-size: 11px; font-weight: 700; color: #ffffff; line-height: 1.5">🎉 Terima kasih! Kamu telah menyelesaikan Misi Eksplorasi Game: Sistem Komputer &amp; Sistem Operasi. Teruslah menjelajah dan belajar! 🚀</p>
-        </div>
-
-        <footer class="page-footer">
-            <span class="pf-brand">RuangInformatika</span>
-            <span>LKPD &middot; SMA Negeri 4 Yogyakarta &middot; Pak Ilyas</span>
-            <span class="pf-page">Halaman 7 / 7</span>
-        </footer>
-    </section>
 </body>
 </html>
